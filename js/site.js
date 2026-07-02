@@ -64,9 +64,9 @@
   }
 
   var DATES = {
-    '/articles/crypto-research-fundamentals.html': '2026-07-01',
-    '/articles/onchain-data-analysis.html': '2026-06-27',
-    '/articles/stablecoin-crosschain-flows.html': '2026-06-23'
+    '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
+    '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
+    '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12'
   };
 
   // --- Sidebar: add date labels, keep the recent N, link the rest to the archive page ---
@@ -88,7 +88,8 @@
       if (date && body && !body.querySelector('.side-date')) {
         var badge = document.createElement('span');
         badge.className = 'side-date';
-        badge.innerHTML = '<svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span>发布于 <time datetime="' + date + '">' + date + '</time></span>';
+        var iso = date.replace(' ', 'T') + '+08:00';
+        badge.innerHTML = '<svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span>发布于 <time datetime="' + iso + '">' + date + '</time></span>';
         body.appendChild(badge);
       }
     });
