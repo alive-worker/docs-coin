@@ -69,9 +69,13 @@
     '/articles/stablecoin-crosschain-flows.html': '2026-06-23'
   };
 
+  // --- Sidebar: add date labels, keep the recent N, link the rest to the archive page ---
+  var SIDEBAR_LIMIT = 10;
+  var onArchive = location.pathname === '/articles.html';
   var nav = document.querySelector('.sidebar-nav');
   if (nav) {
-    Array.prototype.slice.call(nav.querySelectorAll('.side-item')).forEach(function (link) {
+    var items = Array.prototype.slice.call(nav.querySelectorAll('.side-item'));
+    items.forEach(function (link) {
       var href = link.getAttribute('href');
       var date = DATES[href];
       var body = link.querySelector('.side-body');
@@ -88,6 +92,21 @@
         body.appendChild(badge);
       }
     });
+    if (items.length > SIDEBAR_LIMIT) {
+      items.forEach(function (link, i) {
+        if (i >= SIDEBAR_LIMIT && !link.classList.contains('active')) link.style.display = 'none';
+      });
+      var aside = nav.closest('.sidebar');
+      var heading = aside && aside.querySelector('h2 .sidebar-heading-text');
+      if (heading) heading.textContent = '近期文章';
+      if (!onArchive) {
+        var more = document.createElement('a');
+        more.className = 'side-more';
+        more.href = '/articles.html';
+        more.textContent = '查看全部文章 →';
+        nav.appendChild(more);
+      }
+    }
   }
 
   if (location.pathname.indexOf('/articles/') === 0) {
@@ -99,9 +118,11 @@
   }
 
   var pager = document.querySelector('.pager');
-  var list = document.querySelector('.post-list');
-  if (list) paginate(list, Array.prototype.slice.call(list.querySelectorAll('.post-item')), 3, pager);
+  // --- Home: paginate the article cards (5 / page) ---
+  var grid = document.querySelector('.summary-grid');
+  if (grid) paginate(grid, Array.prototype.slice.call(grid.querySelectorAll('.summary-card')), 5, pager);
 
+  // --- Archive page: paginate the titles list ---
   var archive = document.querySelector('.archive-list');
-  if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 6, pager);
+  if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 20, pager);
 })();
