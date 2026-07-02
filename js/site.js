@@ -64,6 +64,7 @@
   }
 
   var DATES = {
+    '/articles/research-tools-virtual-card-guide.html': '2026-07-02 15:45:00',
     '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
     '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
     '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12'
