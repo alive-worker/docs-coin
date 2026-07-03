@@ -16,6 +16,8 @@
   --focus: #23557f;
   --wrap: 760px;             /* reading column width */
   --wrap-wide: 1080px;       /* header + layout width */
+  --header-offset: 65px;     /* header height; refined by JS to the exact rendered value */
+  --sticky-offset: 132px;    /* header + search bar height; refined by JS to the exact rendered value */
 }
 
 * { box-sizing: border-box; }
@@ -53,10 +55,9 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 /* --- top navigation bar --- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(251, 250, 247, 0.88);
-  backdrop-filter: saturate(150%) blur(8px);
-  -webkit-backdrop-filter: saturate(150%) blur(8px);
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
+  will-change: transform;
 }
 .header-inner {
   max-width: var(--wrap-wide); margin: 0 auto;
@@ -89,59 +90,65 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   margin: 0 auto;
   padding: 0 24px;
 }
-.layout-single { display: block; }
+.layout--single { grid-template-columns: minmax(0, 1fr); }
 .main { min-width: 0; padding-bottom: 8px; }
-.hero, .article-shell, .summary-grid, .breadcrumb {
+.hero, .article-shell, .breadcrumb {
   max-width: var(--wrap); margin-left: auto; margin-right: auto;
+}
+/* Archive + about pages have no sidebar competing for space, so let their content use the full column width. */
+.layout--single .hero, .layout--single .article-shell, .layout--single .archive-list {
+  max-width: none;
 }
 
 /* --- left sidebar: all articles, newest first --- */
 .sidebar {
   align-self: start;
-  position: sticky; top: 64px;
-  max-height: calc(100vh - 64px);
+  position: sticky; top: var(--sticky-offset);
+  max-height: calc(100vh - var(--sticky-offset));
   overflow-y: auto;
-  padding: 30px 0 24px;
+  padding: 0 20px 24px 0;
+  border-right: 1px solid var(--line);
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
+  will-change: transform;
 }
 .sidebar::-webkit-scrollbar { width: 8px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
 .sidebar h2 {
+  position: sticky; top: 0; z-index: 2;
   display: flex; align-items: center; gap: 6px;
-  margin: 0 0 14px; font-size: 12px; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  margin: 0 0 14px; padding: 16px 0 4px; background: var(--paper);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
 }
 .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
 .side-item {
-  display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 11px; align-items: center;
+  display: block;
   padding: 9px 10px; border-radius: 9px;
   color: inherit; text-decoration: none;
   transition: background-color .15s ease;
 }
 .side-item:hover { background: var(--accent-soft); }
 .side-item.active, .side-item[aria-current="page"] { background: var(--accent-soft); }
-.side-thumb {
-  width: 46px; height: 46px; border-radius: 8px; display: block;
-  object-fit: cover; object-position: center;
-  border: 1px solid var(--line); background: var(--soft);
-}
 .side-body { min-width: 0; }
+.side-tag { display: inline-flex; vertical-align: middle; margin: 0 6px 2px 0; min-width: 0; }
 .side-title {
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   font-size: 13px; line-height: 1.4; font-weight: 600; color: var(--muted-2);
 }
 .side-item:hover .side-title, .side-item.active .side-title, .side-item[aria-current="page"] .side-title { color: var(--accent); }
+.side-meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+.side-desc-wrap { flex: 1 1 auto; min-width: 0; }
 .side-desc {
   display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
-  margin-top: 2px; font-size: 12px; line-height: 1.4; color: var(--muted);
+  font-size: 12px; line-height: 1.4; color: var(--muted);
 }
 .side-date {
-  display: inline-flex; align-items: center; gap: 5px;
-  margin-top: 7px; padding: 3px 9px; border-radius: 999px;
+  display: inline-flex; flex: none; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 999px; white-space: nowrap;
   background: var(--soft); color: var(--muted-2);
-  font-size: 11px; line-height: 1.5; font-variant-numeric: tabular-nums;
+  font-size: 10.5px; line-height: 1.5; font-variant-numeric: tabular-nums;
 }
 .side-cal { flex: none; }
 .side-more {
@@ -150,8 +157,15 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 }
 .side-more:hover { background: var(--accent-soft); }
 
-/* --- home hero --- */
-.hero { padding: 54px 0 6px; }
+/* --- home hero: sticky so the section label + intro stay visible while the cards below scroll --- */
+.hero {
+  position: sticky; top: var(--sticky-offset); z-index: 2;
+  background: var(--paper); padding: 16px 0 16px;
+  will-change: transform;
+  /* Extra opaque bands above/below the box guard against a sub-pixel seam where scrolled
+     content behind a sticky element can peek through during compositing. */
+  box-shadow: 0 -2px 0 0 var(--paper), 0 2px 0 0 var(--paper);
+}
 .kicker {
   display: flex; align-items: center; gap: 6px;
   margin: 0 0 12px; color: var(--accent-2); font-size: 12.5px; font-weight: 700;
@@ -162,32 +176,39 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spacing: -.01em; }
 .lede { max-width: 62ch; margin: 18px 0 0; color: var(--muted-2); font-size: 17.5px; }
 
-/* --- cover images (home cards) --- */
-.card-cover {
-  display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover;
-  border-radius: 10px; border: 1px solid var(--line); background: var(--soft);
+/* --- compact card grid: home page post list --- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  margin-top: 30px;
 }
-
-/* --- home post list --- */
-.summary-grid { display: grid; gap: 20px; margin-top: 32px; }
-.summary-card {
-  display: grid; gap: 12px;
-  padding: 28px 28px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
+.post-card {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line); border-radius: 14px;
   background: var(--panel);
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.summary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--line-strong); }
-.summary-card h2 { margin: 0; font-size: 22px; line-height: 1.4; }
-.summary-card h2 a { text-decoration: none; color: var(--ink); }
-.summary-card h2 a:hover { color: var(--accent); }
-.post-meta { margin: 0; font-size: 13px; color: var(--muted); }
-.summary-card p { margin: 0; color: #3a352e; }
-.summary-card ul { margin: 2px 0 0; padding-left: 20px; color: var(--muted-2); font-size: 14.5px; }
-.summary-card li + li { margin-top: 6px; }
-.card-actions { display: flex; align-items: center; gap: 16px; padding-top: 4px; }
+.post-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+.post-card-cover-link { display: block; line-height: 0; }
+.post-card-cover { display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover; background: var(--soft); }
+.post-card-body { display: flex; flex-direction: column; gap: 9px; padding: 16px 18px 18px; flex: 1; }
+.post-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.post-card-title { margin: 0; font-size: 16.5px; line-height: 1.45; }
+.post-card-title a {
+  color: var(--ink); text-decoration: none;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.post-card-title a:hover { color: var(--accent); }
+.post-card-desc {
+  margin: 0; flex: 1; color: var(--muted-2); font-size: 13.5px; line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.post-card-meta { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 6px; margin-top: 2px; font-size: 11.5px; color: var(--muted); }
+.post-card-meta time { flex-shrink: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.post-card-meta .read-link { flex-shrink: 0; font-size: 12px; white-space: nowrap; }
 .read-link {
   display: inline-flex; align-items: center; gap: 6px;
   color: var(--accent); font-size: 14.5px; font-weight: 700; text-decoration: none;
@@ -222,7 +243,11 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 .archive-item > a:hover { background: var(--soft); }
 .archive-title { flex: 1 1 auto; min-width: 0; font-size: 15.5px; font-weight: 600; line-height: 1.5; }
 .archive-item > a:hover .archive-title { color: var(--accent); }
-.archive-date { flex: none; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.archive-date {
+  flex: none; display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.archive-date .side-cal { flex: none; }
 .archive-tag {
   flex: none; display: inline-flex; align-items: center; justify-content: center;
   min-width: 46px; padding: 4px 10px; border-radius: 999px;
@@ -233,6 +258,37 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 .archive-tag--green  { background: #eaf3de; color: #27500a; }
 .archive-tag--coral  { background: #faece7; color: #712b13; }
 .archive-tag--teal   { background: #e4f0ed; color: #0f6e56; }
+
+/* --- search bar: standalone full-width row between header and main layout --- */
+.search-bar {
+  position: sticky; top: var(--header-offset); z-index: 90;
+  background: var(--paper);
+  will-change: transform;
+  box-shadow: 0 -2px 0 0 var(--paper), 0 2px 0 0 var(--paper);
+}
+.search-bar-inner { max-width: var(--wrap-wide); margin: 0 auto; padding: 14px 24px; }
+.sidebar-search { position: relative; max-width: 420px; margin: 0 0 0 auto; }
+.sidebar-search svg {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); pointer-events: none;
+}
+.sidebar-search-input {
+  width: 100%; padding: 9px 30px 9px 34px;
+  border: 1px solid var(--line); border-radius: 9px;
+  background: var(--panel); font-size: 13.5px; font-family: inherit; color: var(--ink);
+}
+.sidebar-search-input:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.sidebar-search-input::placeholder { color: var(--muted); }
+.sidebar-search-clear {
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+  width: 24px; height: 24px; display: none; align-items: center; justify-content: center;
+  border: none; background: none; border-radius: 6px; color: var(--muted); cursor: pointer;
+}
+.sidebar-search-clear:hover { background: var(--soft); color: var(--ink); }
+.sidebar-search.has-value .sidebar-search-clear { display: inline-flex; }
+.sidebar-search-empty { margin: 4px 2px 0; padding: 0; font-size: 13px; color: var(--muted); }
 
 /* --- breadcrumb --- */
 .breadcrumb { padding-top: 28px; font-size: 13px; color: var(--muted); }
@@ -323,29 +379,33 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 /* --- responsive --- */
 @media (max-width: 880px) {
   .layout { grid-template-columns: 1fr; gap: 0; }
-  .main { order: 1; }
+  .main { order: 2; }
   .sidebar {
-    order: 2;
-    position: static; height: auto; max-height: 60vh; overflow-y: auto;
-    margin-top: 40px; padding: 26px 0 4px;
-    border-top: 1px solid var(--line);
+    order: 1;
+    position: static; height: auto; max-height: none; overflow-y: visible;
+    margin-top: 0; padding: 20px 0 4px;
+    border-top: none; border-bottom: 1px solid var(--line);
   }
-  .sidebar h2 { font-size: 12.5px; }
+  /* On mobile the sidebar is a normal block in the page's single scroll — a nested
+     scroll region + sticky heading here just traps the heading mid-list as the page scrolls. */
+  .sidebar h2 { position: static; font-size: 12.5px; }
   .side-item { padding: 11px 10px; }
   .side-title { font-size: 14px; }
   .side-desc { font-size: 12.5px; }
+  .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 720px) {
   .header-inner { padding: 6px 16px; min-height: 0; gap: 4px 16px; }
   .brand { padding: 6px 0; }
   .brand-logo { width: 28px; height: 28px; border-radius: 7px; }
   .site-nav a { padding: 7px 10px; font-size: 14px; }
+  .search-bar-inner { padding: 10px 16px; }
+  .sidebar-search { max-width: none; }
   .layout { padding: 0 16px; }
   .site-foot { padding-left: 16px; padding-right: 16px; }
   .hero { padding: 34px 0 4px; }
   .lede { font-size: 16.5px; }
-  .summary-card { padding: 22px 20px; border-radius: 12px; }
-  .summary-card h2 { font-size: 20px; }
+  .card-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .archive-item > a { flex-wrap: wrap; padding: 13px 6px; gap: 6px 10px; }
   .archive-title { order: 1; flex-basis: 100%; font-size: 15px; }
   .archive-tag { order: 0; }
@@ -356,5 +416,5 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .summary-card, .read-link::after, .foot-nav-title::before { transition: none; }
+  .post-card, .read-link::after, .foot-nav-title::before { transition: none; }
 }
