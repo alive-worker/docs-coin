@@ -168,10 +168,39 @@
       }
     }
     showDefaultSidebar();
-    mobileMedia.addEventListener('change', function () {
-      // Don't clobber an in-progress search — it'll pick up the new limit next time it's cleared.
+
+    // --- Mobile: the "近期文章" panel starts collapsed (heading only) since it now sits
+    // right under the search box, ahead of the page's actual content. Desktop never collapses.
+    var sidebarToggle = aside && aside.querySelector('h2');
+    function setSidebarCollapsed(collapsed) {
+      if (!aside) return;
+      aside.classList.toggle('is-collapsed', collapsed);
+      if (sidebarToggle) sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+    }
+    if (sidebarToggle) {
+      sidebarToggle.setAttribute('role', 'button');
+      sidebarToggle.setAttribute('tabindex', '0');
+      sidebarToggle.addEventListener('click', function () {
+        if (!mobileMedia.matches) return;
+        setSidebarCollapsed(!aside.classList.contains('is-collapsed'));
+      });
+      sidebarToggle.addEventListener('keydown', function (e) {
+        if (!mobileMedia.matches) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setSidebarCollapsed(!aside.classList.contains('is-collapsed'));
+        }
+      });
+    }
+    setSidebarCollapsed(mobileMedia.matches);
+
+    mobileMedia.addEventListener('change', function (e) {
+      // Don't clobber an in-progress search — it'll pick up the new limit/collapse state next time it's cleared.
       var searchInput = document.querySelector('.sidebar-search-input');
-      if (!searchInput || !searchInput.value.trim()) showDefaultSidebar();
+      if (!searchInput || !searchInput.value.trim()) {
+        showDefaultSidebar();
+        setSidebarCollapsed(e.matches);
+      }
     });
 
     // --- Sidebar search: filters the visible article list in place (reads titles/descriptions already in the DOM) ---
@@ -190,9 +219,11 @@
         searchWrap.classList.toggle('has-value', !!q);
         if (!q) {
           showDefaultSidebar();
+          setSidebarCollapsed(mobileMedia.matches);
           emptyMsg.hidden = true;
           return;
         }
+        setSidebarCollapsed(false);
         if (sidebarMoreLink) sidebarMoreLink.style.display = 'none';
         var anyMatch = false;
         sidebarItems.forEach(function (a) {

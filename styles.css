@@ -92,7 +92,7 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 }
 .layout--single { grid-template-columns: minmax(0, 1fr); }
 .main { min-width: 0; padding-bottom: 8px; }
-.hero, .article-shell, .breadcrumb {
+.hero, .article-shell {
   max-width: var(--wrap); margin-left: auto; margin-right: auto;
 }
 /* Archive + about pages have no sidebar competing for space, so let their content use the full column width. */
@@ -122,6 +122,7 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   font-size: 12px; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
 }
+.sidebar-toggle-chevron { display: none; }
 .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
 .side-item {
   display: block;
@@ -290,13 +291,6 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 .sidebar-search.has-value .sidebar-search-clear { display: inline-flex; }
 .sidebar-search-empty { margin: 4px 2px 0; padding: 0; font-size: 13px; color: var(--muted); }
 
-/* --- breadcrumb --- */
-.breadcrumb { padding-top: 28px; font-size: 13px; color: var(--muted); }
-.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
-.breadcrumb a { color: var(--accent); text-decoration: none; }
-.breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb li + li::before { content: "/"; margin-right: 6px; color: var(--line-strong); }
-
 /* --- article --- */
 .article-shell { padding-top: 8px; }
 .article-head { padding: 10px 0 24px; border-bottom: 1px solid var(--line); }
@@ -384,11 +378,15 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
     order: 1;
     position: static; height: auto; max-height: none; overflow-y: visible;
     margin-top: 0; padding: 20px 0 4px;
-    border-top: none; border-bottom: 1px solid var(--line);
+    border-top: none; border-right: none; border-bottom: 1px solid var(--line);
   }
   /* On mobile the sidebar is a normal block in the page's single scroll — a nested
      scroll region + sticky heading here just traps the heading mid-list as the page scrolls. */
-  .sidebar h2 { position: static; font-size: 12.5px; }
+  .sidebar h2 { position: static; font-size: 12.5px; cursor: pointer; }
+  .sidebar-toggle-chevron { display: inline-flex; flex: none; margin-left: auto; transition: transform .15s ease; }
+  .sidebar.is-collapsed .sidebar-toggle-chevron { transform: rotate(0deg); }
+  .sidebar:not(.is-collapsed) .sidebar-toggle-chevron { transform: rotate(180deg); }
+  .sidebar.is-collapsed .sidebar-nav { display: none; }
   .side-item { padding: 11px 10px; }
   .side-title { font-size: 14px; }
   .side-desc { font-size: 12.5px; }
