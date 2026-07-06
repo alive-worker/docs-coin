@@ -3,7 +3,7 @@
 
   // --- i18n: the /en/ tree shares this exact script with the zh-CN pages, so every
   // user-facing string it injects at runtime is looked up by language here. ---
-  var IS_EN = location.pathname.indexOf('/en/') === 0;
+  var IS_EN = location.pathname === '/en' || location.pathname.indexOf('/en/') === 0;
   var STR = IS_EN ? {
     prev: 'Previous', next: 'Next',
     recentHeading: 'Recent Articles', allHeading: 'All Articles', searchHeading: 'Search Results',
