@@ -97,11 +97,13 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/contract-security-audit-guide.html': '2026-07-06 09:20:00',
     '/articles/tokenomics-research-guide.html': '2026-07-03 10:15:32',
     '/articles/research-tools-virtual-card-guide.html': '2026-07-02 15:45:00',
     '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
     '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
     '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12',
+    '/en/articles/contract-security-audit-guide.html': '2026-07-06 09:20:00',
     '/en/articles/tokenomics-research-guide.html': '2026-07-03 10:15:32',
     '/en/articles/research-tools-virtual-card-guide.html': '2026-07-02 15:45:00',
     '/en/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
