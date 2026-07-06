@@ -1,6 +1,19 @@
 (function () {
   'use strict';
 
+  // --- i18n: the /en/ tree shares this exact script with the zh-CN pages, so every
+  // user-facing string it injects at runtime is looked up by language here. ---
+  var IS_EN = location.pathname.indexOf('/en/') === 0;
+  var STR = IS_EN ? {
+    prev: 'Previous', next: 'Next',
+    recentHeading: 'Recent Articles', allHeading: 'All Articles', searchHeading: 'Search Results',
+    viewAll: 'View all articles →', noMatch: 'No matching articles found', publishedOn: 'Published '
+  } : {
+    prev: '上一页', next: '下一页',
+    recentHeading: '近期文章', allHeading: '全部文章', searchHeading: '搜索结果',
+    viewAll: '查看全部文章 →', noMatch: '没有找到匹配的文章', publishedOn: '发布于 '
+  };
+
   // Measure the real rendered height of header + search bar and publish it as a CSS var,
   // so sticky offsets below never drift from a hardcoded guess (avoids a sub-pixel gap
   // where scrolled content could peek through between the sticky layers).
@@ -44,7 +57,7 @@
       });
       pager.innerHTML = '';
 
-      var prev = make('上一页', function () {
+      var prev = make(STR.prev, function () {
         if (current > 1) {
           current--;
           render();
@@ -68,7 +81,7 @@
         })(p);
       }
 
-      var next = make('下一页', function () {
+      var next = make(STR.next, function () {
         if (current < pageCount) {
           current++;
           render();
@@ -88,7 +101,12 @@
     '/articles/research-tools-virtual-card-guide.html': '2026-07-02 15:45:00',
     '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
     '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
-    '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12'
+    '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12',
+    '/en/articles/tokenomics-research-guide.html': '2026-07-03 10:15:32',
+    '/en/articles/research-tools-virtual-card-guide.html': '2026-07-02 15:45:00',
+    '/en/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
+    '/en/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
+    '/en/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12'
   };
 
   // --- Sidebar: add date labels, keep the recent N, link the rest to the archive page ---
@@ -100,7 +118,7 @@
   function currentSidebarLimit() {
     return mobileMedia.matches ? SIDEBAR_LIMIT_MOBILE : SIDEBAR_LIMIT_DESKTOP;
   }
-  var onArchive = location.pathname === '/articles.html';
+  var onArchive = location.pathname === '/articles.html' || location.pathname === '/en/articles.html';
   var nav = document.querySelector('.sidebar-nav');
   var sidebarItems = [];
   var sidebarHeading = null;
@@ -133,7 +151,7 @@
         var badge = document.createElement('span');
         badge.className = 'side-date';
         var iso = d.replace(' ', 'T') + '+08:00';
-        badge.innerHTML = '<svg class="side-cal" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span class="sr-only">发布于 </span><time datetime="' + iso + '">' + d + '</time>';
+        badge.innerHTML = '<svg class="side-cal" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span class="sr-only">' + STR.publishedOn + '</span><time datetime="' + iso + '">' + d + '</time>';
         metaWrap.appendChild(badge);
       }
     });
@@ -150,20 +168,20 @@
         sidebarItems.forEach(function (a, i) {
           a.style.display = (i >= limit && !a.classList.contains('active')) ? 'none' : '';
         });
-        if (sidebarHeading) sidebarHeading.textContent = '近期文章';
+        if (sidebarHeading) sidebarHeading.textContent = STR.recentHeading;
         if (!onArchive) {
           if (!sidebarMoreLink) {
             sidebarMoreLink = document.createElement('a');
             sidebarMoreLink.className = 'side-more';
-            sidebarMoreLink.href = '/articles.html';
-            sidebarMoreLink.textContent = '查看全部文章 →';
+            sidebarMoreLink.href = IS_EN ? '/en/articles.html' : '/articles.html';
+            sidebarMoreLink.textContent = STR.viewAll;
             nav.appendChild(sidebarMoreLink);
           }
           sidebarMoreLink.style.display = '';
         }
       } else {
         sidebarItems.forEach(function (a) { a.style.display = ''; });
-        if (sidebarHeading) sidebarHeading.textContent = '全部文章';
+        if (sidebarHeading) sidebarHeading.textContent = STR.allHeading;
         if (sidebarMoreLink) sidebarMoreLink.style.display = 'none';
       }
     }
@@ -211,7 +229,7 @@
       var emptyMsg = document.createElement('p');
       emptyMsg.className = 'sidebar-search-empty';
       emptyMsg.hidden = true;
-      emptyMsg.textContent = '没有找到匹配的文章';
+      emptyMsg.textContent = STR.noMatch;
       nav.parentNode.insertBefore(emptyMsg, nav.nextSibling);
 
       var applySearch = function () {
@@ -236,7 +254,7 @@
           if (match) anyMatch = true;
         });
         emptyMsg.hidden = anyMatch;
-        if (sidebarHeading) sidebarHeading.textContent = '搜索结果';
+        if (sidebarHeading) sidebarHeading.textContent = STR.searchHeading;
       };
 
       searchInput.addEventListener('input', applySearch);
@@ -265,7 +283,7 @@
       var emptyMsg2 = document.createElement('p');
       emptyMsg2.className = 'sidebar-search-empty';
       emptyMsg2.hidden = true;
-      emptyMsg2.textContent = '没有找到匹配的文章';
+      emptyMsg2.textContent = STR.noMatch;
       archiveList.parentNode.insertBefore(emptyMsg2, archiveList.nextSibling);
 
       var applyArchiveSearch = function () {
@@ -304,8 +322,8 @@
     }
   }
 
-  if (location.pathname.indexOf('/articles/') === 0) {
-    var articlesLink = document.querySelector('.site-nav a[href="/articles.html"]');
+  if (location.pathname.indexOf('/articles/') === 0 || location.pathname.indexOf('/en/articles/') === 0) {
+    var articlesLink = document.querySelector('.site-nav a[href="/articles.html"], .site-nav a[href="/en/articles.html"]');
     if (articlesLink) {
       articlesLink.classList.add('active');
       articlesLink.setAttribute('aria-current', 'page');
