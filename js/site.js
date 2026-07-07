@@ -14,6 +14,23 @@
     viewAll: '查看全部文章 →', noMatch: '没有找到匹配的文章', publishedOn: '发布于 '
   };
 
+  // Theme toggle: the inline anti-FOUC script in <head> already set [data-theme] before
+  // first paint based on localStorage / prefers-color-scheme; this just wires the click.
+  var themeToggle = document.querySelector('.theme-toggle');
+  if (themeToggle) {
+    themeToggle.setAttribute('aria-label', IS_EN ? 'Toggle dark mode' : '切换深色模式');
+    themeToggle.addEventListener('click', function () {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        try { localStorage.setItem('theme', 'light'); } catch (e) {}
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+      }
+    });
+  }
+
   // Measure the real rendered height of header + search bar and publish it as a CSS var,
   // so sticky offsets below never drift from a hardcoded guess (avoids a sub-pixel gap
   // where scrolled content could peek through between the sticky layers).
@@ -97,6 +114,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/exchange-reserves-research-guide.html': '2026-07-06 20:30:00',
     '/articles/dao-governance-research-guide.html': '2026-07-06 17:45:00',
     '/articles/contract-security-audit-guide.html': '2026-07-06 09:20:00',
     '/articles/tokenomics-research-guide.html': '2026-07-03 10:15:32',
@@ -104,6 +122,7 @@
     '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
     '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
     '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12',
+    '/en/articles/exchange-reserves-research-guide.html': '2026-07-06 20:30:00',
     '/en/articles/dao-governance-research-guide.html': '2026-07-06 17:45:00',
     '/en/articles/contract-security-audit-guide.html': '2026-07-06 09:20:00',
     '/en/articles/tokenomics-research-guide.html': '2026-07-03 10:15:32',
