@@ -17,7 +17,8 @@
   --wrap: 760px;             /* reading column width */
   --wrap-wide: 1080px;       /* header + layout width */
   --header-offset: 65px;     /* header height; refined by JS to the exact rendered value */
-  --sticky-offset: 132px;    /* header + search bar height; refined by JS to the exact rendered value */
+  --topics-offset: 132px;    /* header + search bar height; refined by JS to the exact rendered value */
+  --sticky-offset: 132px;    /* header + search bar (+ hot-topics, if present) height; refined by JS to the exact rendered value */
 }
 
 /* --- dark theme: toggled via [data-theme="dark"] on <html>, set by an inline
@@ -210,6 +211,21 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none;
 }
 .side-more:hover { background: var(--accent-soft); }
+
+/* --- home page hot-topics quick nav: sticky between the search bar and the hero --- */
+.hot-topics {
+  position: sticky; top: var(--topics-offset); z-index: 5;
+  background: var(--paper);
+  max-width: var(--wrap-wide);
+  margin: 0 auto;
+  padding: 18px 24px 24px;
+  text-align: center;
+}
+.hot-topics h2 { font-size: 16px; font-weight: 700; margin: 0 0 12px; color: var(--muted); }
+.hot-topics ul { margin: 0; padding: 0; list-style: none; }
+.hot-topics li { display: inline-block; margin: 0 6px 8px; }
+.hot-topics a.archive-tag { text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
+.hot-topics a.archive-tag:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
 
 /* --- home hero: sticky so the section label + intro stay visible while the cards below scroll --- */
 .hero {
@@ -461,6 +477,7 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
   .sidebar-search { max-width: none; }
   .layout { padding: 0 16px; }
   .site-foot { padding-left: 16px; padding-right: 16px; }
+  .hot-topics { padding: 14px 16px 18px; }
   .hero { padding: 34px 0 4px; }
   .lede { font-size: 16.5px; }
   .card-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }

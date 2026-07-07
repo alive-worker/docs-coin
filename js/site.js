@@ -41,11 +41,15 @@
   function syncStickyOffset() {
     var header = document.querySelector('.site-header');
     var bar = document.querySelector('.search-bar');
+    var topics = document.querySelector('.hot-topics');
     if (!header) return;
     var headerHeight = header.getBoundingClientRect().height;
     var barHeight = bar ? bar.getBoundingClientRect().height : 0;
+    var topicsOffset = headerHeight + barHeight;
+    var topicsHeight = topics ? topics.getBoundingClientRect().height : 0;
     document.documentElement.style.setProperty('--header-offset', Math.ceil(headerHeight) + 'px');
-    document.documentElement.style.setProperty('--sticky-offset', Math.ceil(headerHeight + barHeight) + 'px');
+    document.documentElement.style.setProperty('--topics-offset', Math.ceil(topicsOffset) + 'px');
+    document.documentElement.style.setProperty('--sticky-offset', Math.ceil(topicsOffset + topicsHeight) + 'px');
   }
   syncStickyOffset();
   window.addEventListener('resize', syncStickyOffset);
