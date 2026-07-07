@@ -118,6 +118,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/airdrop-sybil-detection-research-guide.html': '2026-07-07 16:00:00',
     '/articles/bridge-security-research-guide.html': '2026-07-07 12:30:00',
     '/articles/oracle-price-feed-research-guide.html': '2026-07-07 11:35:00',
     '/articles/team-developer-activity-research-guide.html': '2026-07-07 10:00:00',
@@ -129,6 +130,7 @@
     '/articles/crypto-research-fundamentals.html': '2026-07-02 09:30:09',
     '/articles/onchain-data-analysis.html': '2026-07-01 22:34:44',
     '/articles/stablecoin-crosschain-flows.html': '2026-07-01 17:33:12',
+    '/en/articles/airdrop-sybil-detection-research-guide.html': '2026-07-07 16:00:00',
     '/en/articles/bridge-security-research-guide.html': '2026-07-07 12:30:00',
     '/en/articles/oracle-price-feed-research-guide.html': '2026-07-07 11:35:00',
     '/en/articles/team-developer-activity-research-guide.html': '2026-07-07 10:00:00',
