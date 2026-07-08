@@ -41,15 +41,11 @@
   function syncStickyOffset() {
     var header = document.querySelector('.site-header');
     var bar = document.querySelector('.search-bar');
-    var topics = document.querySelector('.hot-topics');
     if (!header) return;
     var headerHeight = header.getBoundingClientRect().height;
     var barHeight = bar ? bar.getBoundingClientRect().height : 0;
-    var topicsOffset = headerHeight + barHeight;
-    var topicsHeight = topics ? topics.getBoundingClientRect().height : 0;
     document.documentElement.style.setProperty('--header-offset', Math.ceil(headerHeight) + 'px');
-    document.documentElement.style.setProperty('--topics-offset', Math.ceil(topicsOffset) + 'px');
-    document.documentElement.style.setProperty('--sticky-offset', Math.ceil(topicsOffset + topicsHeight) + 'px');
+    document.documentElement.style.setProperty('--sticky-offset', Math.ceil(headerHeight + barHeight) + 'px');
   }
   syncStickyOffset();
   window.addEventListener('resize', syncStickyOffset);
@@ -118,6 +114,7 @@
     }
 
     render();
+    return { render: render };
   }
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
@@ -163,6 +160,7 @@
   var sidebarHeading = null;
   var sidebarMoreLink = null;
   var sidebarCollapsed = false;
+  var gridPaginator = null; // set if .card-grid pagination is ever created; lets search-clear restore the current page instead of showing every item
 
   if (nav) {
     sidebarItems = Array.prototype.slice.call(nav.querySelectorAll('.side-item'));
@@ -312,36 +310,51 @@
       });
     }
   } else {
-    // Archive/about pages have no sidebar list — search filters the article list already shown in the main column instead.
+    // No sidebar list on this page — search filters whatever list is shown in the main
+    // column instead: the archive page's title list, or the homepage's teaser card grid.
     var archiveList = document.querySelector('.archive-list');
+    var cardGrid = document.querySelector('.post-list .card-grid');
+    var listEl = archiveList || cardGrid;
     var searchInput2 = document.querySelector('.sidebar-search-input');
     var searchWrap2 = document.querySelector('.sidebar-search');
     var searchClear2 = document.querySelector('.sidebar-search-clear');
-    if (archiveList && searchInput2 && searchWrap2) {
-      var archiveItems = Array.prototype.slice.call(archiveList.querySelectorAll('.archive-item'));
+    if (listEl && searchInput2 && searchWrap2) {
+      var itemSelector = archiveList ? '.archive-item' : '.post-card';
+      var titleSelector = archiveList ? '.archive-title' : '.post-card-title';
+      var descSelector = archiveList ? null : '.post-card-desc';
+      var archiveItems = Array.prototype.slice.call(listEl.querySelectorAll(itemSelector));
       var emptyMsg2 = document.createElement('p');
       emptyMsg2.className = 'sidebar-search-empty';
       emptyMsg2.hidden = true;
       emptyMsg2.textContent = STR.noMatch;
-      archiveList.parentNode.insertBefore(emptyMsg2, archiveList.nextSibling);
+      listEl.parentNode.insertBefore(emptyMsg2, listEl.nextSibling);
 
       var applyArchiveSearch = function () {
         var q = searchInput2.value.trim().toLowerCase();
         searchWrap2.classList.toggle('has-value', !!q);
+        // Homepage only: collapse the hero/featured sections while searching so the
+        // filtered "最新文章" grid sits right under the search box instead of way down the page.
+        document.body.classList.toggle('is-searching', !!q && !!cardGrid);
         if (!q) {
-          archiveItems.forEach(function (li) { li.style.display = ''; });
+          if (gridPaginator) { gridPaginator.render(); } else { archiveItems.forEach(function (li) { li.style.display = ''; }); }
           emptyMsg2.hidden = true;
+          if (pager) pager.style.display = '';
           return;
         }
         var anyMatch = false;
         archiveItems.forEach(function (li) {
-          var titleEl = li.querySelector('.archive-title');
+          var titleEl = li.querySelector(titleSelector);
+          var descEl = descSelector ? li.querySelector(descSelector) : null;
           var title = titleEl ? titleEl.textContent.toLowerCase() : '';
-          var match = title.indexOf(q) !== -1;
+          var desc = descEl ? descEl.textContent.toLowerCase() : '';
+          var match = title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
           li.style.display = match ? '' : 'none';
           if (match) anyMatch = true;
         });
         emptyMsg2.hidden = anyMatch;
+        // A search match may fall outside the current page's slice — show every match
+        // instead of leaving pagination's per-page display:none in charge while searching.
+        if (pager) pager.style.display = 'none';
       };
 
       searchInput2.addEventListener('input', applyArchiveSearch);
@@ -370,10 +383,9 @@
   }
 
   var pager = document.querySelector('.pager');
-  // --- Home: paginate the article card grid (9 / page = 3 rows of 3) ---
-  var grid = document.querySelector('.card-grid');
-  if (grid) paginate(grid, Array.prototype.slice.call(grid.querySelectorAll('.post-card')), 9, pager);
-
+  // Home: the teaser grid under "最新文章" is a fixed preview (no pagination) —
+  // "查看全部" links out to the full archive instead. gridPaginator stays null here on
+  // purpose, so the search-clear handler above just un-hides all cards.
   // --- Archive page: paginate the titles list ---
   var archive = document.querySelector('.archive-list');
   if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 20, pager);
