@@ -8,12 +8,12 @@
     prev: 'Previous', next: 'Next',
     recentHeading: 'Recent Articles', allHeading: 'All Articles', searchHeading: 'Search Results',
     viewAll: 'View all articles →', noMatch: 'No matching articles found', publishedOn: 'Published ',
-    toDark: 'Switch to dark mode', toLight: 'Switch to light mode'
+    toDark: 'Switch to dark mode', toLight: 'Switch to light mode', backToTop: 'Back to top'
   } : {
     prev: '上一页', next: '下一页',
     recentHeading: '近期文章', allHeading: '全部文章', searchHeading: '搜索结果',
     viewAll: '查看全部文章 →', noMatch: '没有找到匹配的文章', publishedOn: '发布于 ',
-    toDark: '切换到深色模式', toLight: '切换到浅色模式'
+    toDark: '切换到深色模式', toLight: '切换到浅色模式', backToTop: '回到顶部'
   };
 
   // Theme toggle: the <head> inline script already set data-theme before paint to
@@ -391,4 +391,24 @@
   // --- Archive page: paginate the titles list ---
   var archive = document.querySelector('.archive-list');
   if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 20, pager);
+
+  // --- Back-to-top button: injected on every page, shown after a small fixed scroll distance
+  // (not tied to viewport height, so it doesn't wait until the reader is nearly at the bottom
+  // on a tall/maximized browser window), scrolls smoothly back to the top on click. ---
+  var BACK_TO_TOP_THRESHOLD = 300;
+  var backToTop = document.createElement('button');
+  backToTop.type = 'button';
+  backToTop.className = 'back-to-top';
+  backToTop.setAttribute('aria-label', STR.backToTop);
+  backToTop.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>';
+  document.body.appendChild(backToTop);
+  var toggleBackToTop = function () {
+    backToTop.classList.toggle('is-visible', window.scrollY > BACK_TO_TOP_THRESHOLD);
+  };
+  window.addEventListener('scroll', toggleBackToTop, { passive: true });
+  toggleBackToTop();
+  backToTop.addEventListener('click', function () {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+  });
 })();

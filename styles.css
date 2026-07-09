@@ -144,14 +144,32 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   padding: 0 24px;
 }
 .layout--single { grid-template-columns: minmax(0, 1fr); }
+/* Article pages: no left sidebar — main content + a right-hand table-of-contents rail instead. */
+.layout--article { grid-template-columns: minmax(0, 1fr) 260px; }
 .main { min-width: 0; padding-bottom: 8px; }
 .hero, .article-shell {
   max-width: var(--wrap); margin-left: auto; margin-right: auto;
 }
-/* Archive + about pages have no sidebar competing for space, so let their content use the full column width. */
-.layout--single .hero, .layout--single .article-shell, .layout--single .archive-list {
+/* Archive + about + article pages have no left sidebar competing for space, so let their content use the full column width. */
+.layout--single .hero, .layout--single .article-shell, .layout--single .archive-list,
+.layout--article .article-shell {
   max-width: none;
 }
+/* Article pages: .main is a plain semantic wrapper (no visual box of its own) so its children —
+   title, cover image, and the body column — become direct items of the layout grid themselves.
+   The title and cover then span both grid tracks (full-bleed), while the body sits beside the TOC rail. */
+.layout--article .main { display: contents; }
+.layout--article .article-head,
+.layout--article .article-cover { grid-column: 1 / -1; }
+
+/* --- right-hand TOC rail (article pages) --- */
+.toc-rail {
+  align-self: start;
+  position: sticky; top: var(--sticky-offset);
+  max-height: calc(100vh - var(--sticky-offset));
+  overflow-y: auto;
+}
+.toc-rail .toc { margin-top: 0; }
 
 /* --- left sidebar: all articles, newest first --- */
 .sidebar {
@@ -250,21 +268,19 @@ body.is-searching .featured-article { display: none; }
   font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
 }
 .featured-card {
-  display: flex; align-items: stretch;
+  display: flex; flex-direction: column;
   border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
   background: var(--panel); box-shadow: var(--shadow-sm);
   color: inherit; text-decoration: none;
   transition: transform .15s ease, box-shadow .15s ease;
 }
 .featured-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-/* Our covers are diagram-style illustrations with content (title text, icon, legend) spread
-   across the full 2:1 canvas — unlike docs' photographic covers, a cover-crop clips that
-   content no matter the anchor. object-fit:contain shows the whole thing instead; the wrap's
-   background matches the covers' own dark navy start color so any letterboxed strip above/
-   below blends into the artwork rather than reading as empty space. */
-.featured-cover-wrap { flex: 0 0 300px; width: 300px; position: relative; overflow: hidden; background: #0a1622; }
-.featured-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.featured-body { flex: 1 1 auto; min-width: 0; padding: 26px 30px; display: flex; flex-direction: column; justify-content: center; }
+/* Full-width banner on top of the text, matching the cover art's native 2:1 ratio (width explicit,
+   height auto) — the only sizing combo that fills edge-to-edge with no crop and no gap. The card's
+   own border-radius + overflow:hidden clips the top corners, so no inner radius is needed here. */
+.featured-cover-wrap { width: 100%; aspect-ratio: 2 / 1; position: relative; overflow: hidden; }
+.featured-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.featured-body { min-width: 0; padding: 26px 30px; display: flex; flex-direction: column; justify-content: center; }
 .featured-title-row { margin-bottom: 10px; }
 .featured-body .archive-tag { margin-right: 10px; vertical-align: middle; transform: translateY(-1px); }
 .featured-title { margin: 0; font-size: clamp(19px, 2.2vw, 24px); line-height: 1.4; }
@@ -531,6 +547,10 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 @media (max-width: 880px) {
   .layout { grid-template-columns: 1fr; gap: 0; }
   .main { order: 2; }
+  .toc-rail {
+    order: 3; position: static; height: auto; max-height: none; overflow-y: visible;
+    margin-top: 28px;
+  }
   .sidebar {
     order: 1;
     position: static; height: auto; max-height: none; overflow-y: visible;
@@ -566,8 +586,6 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
   .hero-centered { margin: 36px auto 32px; padding: 0 16px; }
   .hero-centered .lede { font-size: 16px; }
   .featured-article, .post-list { padding: 0 16px; }
-  .featured-card { flex-direction: column; }
-  .featured-cover-wrap { flex-basis: auto; width: 100%; height: 180px; }
   .featured-body { padding: 20px; }
   .card-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .archive-item > a { flex-wrap: wrap; padding: 13px 6px; gap: 6px 10px; }
@@ -581,4 +599,24 @@ h1 { margin: 0; font-size: clamp(29px, 4vw, 42px); line-height: 1.18; letter-spa
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .post-card, .read-link::after, .foot-nav-title::before { transition: none; }
+}
+
+/* --- back-to-top button: fixed bottom-right, fades in once scrolled past one viewport --- */
+.back-to-top {
+  position: fixed; right: 24px; bottom: 24px; z-index: 40;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; padding: 0;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--panel); color: var(--muted-2); cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s, background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.back-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 880px) {
+  .back-to-top { right: 16px; bottom: 16px; width: 38px; height: 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top { transition: opacity .2s ease, visibility .2s; transform: none; }
 }
