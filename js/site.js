@@ -392,23 +392,50 @@
   var archive = document.querySelector('.archive-list');
   if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 20, pager);
 
-  // --- Back-to-top button: injected on every page, shown after a small fixed scroll distance
-  // (not tied to viewport height, so it doesn't wait until the reader is nearly at the bottom
-  // on a tall/maximized browser window), scrolls smoothly back to the top on click. ---
-  var BACK_TO_TOP_THRESHOLD = 300;
+  // --- Back-to-top: fades in once you've scrolled past ~one screen, not just near the bottom ---
   var backToTop = document.createElement('button');
   backToTop.type = 'button';
   backToTop.className = 'back-to-top';
   backToTop.setAttribute('aria-label', STR.backToTop);
   backToTop.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>';
   document.body.appendChild(backToTop);
-  var toggleBackToTop = function () {
-    backToTop.classList.toggle('is-visible', window.scrollY > BACK_TO_TOP_THRESHOLD);
+  var updateBackToTop = function () { backToTop.classList.toggle('is-visible', window.scrollY > 480); };
+  var backToTopTicking = false;
+  var requestBackToTopUpdate = function () {
+    if (backToTopTicking) return;
+    backToTopTicking = true;
+    requestAnimationFrame(function () { updateBackToTop(); backToTopTicking = false; });
   };
-  window.addEventListener('scroll', toggleBackToTop, { passive: true });
-  toggleBackToTop();
+  updateBackToTop();
+  window.addEventListener('scroll', requestBackToTopUpdate, { passive: true });
   backToTop.addEventListener('click', function () {
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
+
+  // --- Article page: highlight the current section in the right-rail TOC while scrolling ---
+  var tocRail = document.querySelector('.article-columns .toc');
+  if (tocRail && 'IntersectionObserver' in window) {
+    var tocLinks = Array.prototype.slice.call(tocRail.querySelectorAll('a[href^="#"]'));
+    var tocSections = tocLinks
+      .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+      .filter(Boolean);
+    var setActiveTocLink = function (id) {
+      tocLinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    };
+    var visibleTocSections = new Set();
+    var tocObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) visibleTocSections.add(entry.target.id);
+        else visibleTocSections.delete(entry.target.id);
+      });
+      if (visibleTocSections.size) {
+        var topMost = tocSections.find(function (s) { return visibleTocSections.has(s.id); });
+        if (topMost) setActiveTocLink(topMost.id);
+      }
+    }, { rootMargin: '-96px 0px -70% 0px', threshold: 0 });
+    tocSections.forEach(function (s) { tocObserver.observe(s); });
+  }
 })();

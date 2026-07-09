@@ -12,6 +12,7 @@
   <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/contract-security-audit-guide.html">
   <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/contract-security-audit-guide.html">
   <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="加密货币研究">
   <meta property="og:title" content="智能合约安全与审计报告研究入门：从审计结论到链上验证 - 加密货币研究">
@@ -38,11 +39,11 @@
   <meta name="twitter:image" content="https://coin.ponr.org/img/article-contract-security.svg">
   <link rel="preload" as="image" href="/img/article-contract-security.svg" fetchpriority="high">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="stylesheet" href="/styles.css?v=94bf99e9">
+  <link rel="stylesheet" href="/styles.css?v=7e182964">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:contact@coin.ponr.org", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "contact@coin.ponr.org", "contactType": "editorial" } },
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
     { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
     { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/contract-security-audit-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-contract-security.svg", "width": 1200, "height": 600 },
     { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/contract-security-audit-guide.html#webpage", "url": "https://coin.ponr.org/articles/contract-security-audit-guide.html", "name": "智能合约安全与审计报告研究入门：从审计结论到链上验证 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/contract-security-audit-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/contract-security-audit-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/articles/contract-security-audit-guide.html#article" }, "inLanguage": "zh-CN" },
@@ -75,13 +76,14 @@
   </header>
   <div class="layout layout--article">
     <main class="main" id="main" tabindex="-1">
-      <header class="article-head">
+      <article class="article-shell">
+        <header class="article-head">
         <h1>智能合约安全与审计报告研究入门：从审计结论到链上验证</h1>
         <p class="article-summary">在前五篇文章中，我们搭建了项目研究的整体框架，学习了链上数据与代币经济学的读法，也讨论了资金流动与工具支付的实操问题。这一篇转向一个经常被简化为「已通过审计」几个字就带过的领域：智能合约安全与审计报告研究。我们会讨论如何批判性地阅读一份审计报告、如何识别合约权限结构中的常见风险信号、如何在区块浏览器上直接核实多签门槛与时间锁延迟是否与文档描述一致，以及如何把审计结论和链上实际状态进行交叉验证。全文只谈研究方法，不对任何具体合约、项目或审计机构做安全性结论或价值判断，也不构成任何形式的投资建议。</p>
         <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-06T09:20:00+08:00">2026-07-06 09:20:00</time></p>
       </header>
-      <img class="article-cover" src="/img/article-contract-security.svg" alt="智能合约安全与审计报告研究入门：从审计结论到链上验证 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
-      <article class="article-shell">
+        <img class="article-cover" src="/img/article-contract-security.svg" alt="智能合约安全与审计报告研究入门：从审计结论到链上验证 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
         <div class="article-body">
         <section id="sec-1">
         <h2>1. 为什么合约安全与审计报告值得单独拿出来研究</h2>
@@ -150,6 +152,20 @@
         <p>最后再次强调，本文全部内容仅为学习与研究方法层面的探讨，不涉及对任何具体合约、项目或审计机构的安全性结论，不构成任何投资建议，智能合约存在代码漏洞、权限滥用、治理机制失效等多重风险，加密资产价格波动剧烈且风险较高，读者应自行独立判断并对自己的决策负责。</p>
         </section>
         </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么合约安全与审计报告值得单独拿出来研究</a></li>
+          <li><a href="#sec-2">2. 如何阅读一份审计报告：覆盖范围与「已审计」的真实含义</a></li>
+          <li><a href="#sec-3">3. 合约权限结构中的常见链上风险信号</a></li>
+          <li><a href="#sec-4">4. 在链上直接核实多签与时间锁配置</a></li>
+          <li><a href="#sec-5">5. 把审计结论和链上合约实际状态交叉验证</a></li>
+          <li><a href="#sec-6">6. 为什么「已审计」不是安全保证：常见误区</a></li>
+          <li><a href="#sec-7">7. 研究中值得记录的观察点</a></li>
+          <li><a href="#sec-8">8. 小结</a></li>
+          </ol>
+        </nav>
+        </div>
         <aside class="references" aria-label="参考来源与延伸阅读">
           <h2>参考来源与延伸阅读</h2>
           <ul>
@@ -179,21 +195,6 @@
         <div class="back-row"><a href="/">返回概览</a></div>
       </article>
     </main>
-    <aside class="toc-rail">
-      <nav class="toc" aria-label="本文目录">
-          <h2>本文目录</h2>
-          <ol>
-          <li><a href="#sec-1">1. 为什么合约安全与审计报告值得单独拿出来研究</a></li>
-          <li><a href="#sec-2">2. 如何阅读一份审计报告：覆盖范围与「已审计」的真实含义</a></li>
-          <li><a href="#sec-3">3. 合约权限结构中的常见链上风险信号</a></li>
-          <li><a href="#sec-4">4. 在链上直接核实多签与时间锁配置</a></li>
-          <li><a href="#sec-5">5. 把审计结论和链上合约实际状态交叉验证</a></li>
-          <li><a href="#sec-6">6. 为什么「已审计」不是安全保证：常见误区</a></li>
-          <li><a href="#sec-7">7. 研究中值得记录的观察点</a></li>
-          <li><a href="#sec-8">8. 小结</a></li>
-          </ol>
-        </nav>
-    </aside>
   </div>
   <footer class="site-foot site-foot--rich">
     <div class="site-foot-grid">
@@ -204,7 +205,7 @@
           <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
         </div>
       </div>
-      <div class="site-foot-col">
+      <div class="site-foot-col site-foot-col--topics">
         <h3>热门主题</h3>
         <ul>
           <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
@@ -231,6 +232,6 @@
       <p>本站内容仅供学习研究参考，不构成投资建议；加密资产价格波动剧烈、风险较高，请自行判断并承担相应决策后果。</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=45ec77fe"></script>
+  <script src="/js/site.js?v=90aa6e9e"></script>
 </body>
 </html>

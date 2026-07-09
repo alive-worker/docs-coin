@@ -12,6 +12,7 @@
   <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/oracle-price-feed-research-guide.html">
   <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/oracle-price-feed-research-guide.html">
   <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="加密货币研究">
   <meta property="og:title" content="预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险 - 加密货币研究">
@@ -38,11 +39,11 @@
   <meta name="twitter:image" content="https://coin.ponr.org/img/article-oracle-price-feed.svg">
   <link rel="preload" as="image" href="/img/article-oracle-price-feed.svg" fetchpriority="high">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="stylesheet" href="/styles.css?v=94bf99e9">
+  <link rel="stylesheet" href="/styles.css?v=7e182964">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:contact@coin.ponr.org", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全", "DAO治理", "储备证明", "团队与开发者活跃度研究", "预言机与价格数据研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "contact@coin.ponr.org", "contactType": "editorial" } },
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全", "DAO治理", "储备证明", "团队与开发者活跃度研究", "预言机与价格数据研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
     { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
     { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/oracle-price-feed-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-oracle-price-feed.svg", "width": 1200, "height": 600 },
     { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/oracle-price-feed-research-guide.html#webpage", "url": "https://coin.ponr.org/articles/oracle-price-feed-research-guide.html", "name": "预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/oracle-price-feed-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/oracle-price-feed-research-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
@@ -76,13 +77,14 @@
   </header>
   <div class="layout layout--article">
     <main class="main" id="main" tabindex="-1">
-      <header class="article-head">
+      <article class="article-shell">
+        <header class="article-head">
         <h1>预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险</h1>
         <p class="article-summary">在此前的方法论系列中，《智能合约安全与审计报告研究入门》指出审计结论不能替代对链上合约的直接核验，《交易所储备证明研究入门》指出储备快照不能替代对链上真实资金流向的核验，《团队背景与开发者活跃度研究入门》指出路线图与更新记录不能替代对真实提交与发布历史的核验——三篇文章共同确立了同一条方法论主线：任何文档或报告中的结论性表述本身都不是证据，必须回到其所声称总结的原始数据独立核验。本篇将同样的思路应用到一个新的对象上：当一个DeFi协议自称"采用去中心化预言机""设置了价格偏离断路器"或"接入多重独立数据源"时，这些表述同样只是协议自身的声称，研究者需要学习如何定位链上预言机合约、读取其更新频率与陈旧阈值、交叉比对独立价格来源，并识别价格操纵的抽象机制类别，从而判断协议关于其预言机设计的说法是否与链上实际实现相符。文中涉及的所有数值、比例与案例均为便于说明而虚构，不指向任何真实项目、协议或历史事件，全文仅为研究方法论探讨，不构成投资建议。</p>
         <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-07T11:35:00+08:00">2026-07-07 11:35:00</time></p>
       </header>
-      <img class="article-cover" src="/img/article-oracle-price-feed.svg" alt="预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
-      <article class="article-shell">
+        <img class="article-cover" src="/img/article-oracle-price-feed.svg" alt="预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
         <div class="article-body">
         <section id="sec-1">
         <h2>1. 为什么预言机与价格数据研究值得单独成篇</h2>
@@ -166,6 +168,20 @@
         <p>需要再次重申的是，本文通篇仅讨论方法论层面的核验路径，不对任何具体的DeFi协议、预言机网络、交易场所或历史安全事件作出真实性指认或结论性判断。本文内容不构成、也不应被理解为对任何具体项目安全性、可信度或投资价值的评价，更不构成任何形式的投资建议；研究者在将本文方法应用于具体协议时，仍需以自己独立获取和核实的链上数据为准，审慎得出结论。</p>
         </section>
         </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么预言机与价格数据研究值得单独成篇</a></li>
+          <li><a href="#sec-2">2. 预言机的运作机制与设计类别</a></li>
+          <li><a href="#sec-3">3. 如何独立于协议自身声称核验价格数据来源</a></li>
+          <li><a href="#sec-4">4. 价格操纵风险的抽象机制类别</a></li>
+          <li><a href="#sec-5">5. 把协议自称的防护机制同链上实际实现交叉核验</a></li>
+          <li><a href="#sec-6">6. 关于预言机安全的常见认知误区</a></li>
+          <li><a href="#sec-7">7. 值得系统记录的核验清单</a></li>
+          <li><a href="#sec-8">8. 总结</a></li>
+          </ol>
+        </nav>
+        </div>
         <aside class="references" aria-label="资料来源与延伸阅读">
           <h2>资料来源与延伸阅读</h2>
           <ul>
@@ -195,21 +211,6 @@
         <div class="back-row"><a href="/">返回首页</a></div>
       </article>
     </main>
-    <aside class="toc-rail">
-      <nav class="toc" aria-label="本文目录">
-          <h2>本文目录</h2>
-          <ol>
-          <li><a href="#sec-1">1. 为什么预言机与价格数据研究值得单独成篇</a></li>
-          <li><a href="#sec-2">2. 预言机的运作机制与设计类别</a></li>
-          <li><a href="#sec-3">3. 如何独立于协议自身声称核验价格数据来源</a></li>
-          <li><a href="#sec-4">4. 价格操纵风险的抽象机制类别</a></li>
-          <li><a href="#sec-5">5. 把协议自称的防护机制同链上实际实现交叉核验</a></li>
-          <li><a href="#sec-6">6. 关于预言机安全的常见认知误区</a></li>
-          <li><a href="#sec-7">7. 值得系统记录的核验清单</a></li>
-          <li><a href="#sec-8">8. 总结</a></li>
-          </ol>
-        </nav>
-    </aside>
   </div>
   <footer class="site-foot site-foot--rich">
     <div class="site-foot-grid">
@@ -220,7 +221,7 @@
           <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
         </div>
       </div>
-      <div class="site-foot-col">
+      <div class="site-foot-col site-foot-col--topics">
         <h3>热门主题</h3>
         <ul>
           <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
@@ -247,6 +248,6 @@
       <p>本站内容仅供学习与研究参考，不构成投资建议；加密资产波动剧烈、风险很高，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=45ec77fe"></script>
+  <script src="/js/site.js?v=90aa6e9e"></script>
 </body>
 </html>

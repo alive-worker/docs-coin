@@ -12,6 +12,7 @@
   <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/airdrop-sybil-detection-research-guide.html">
   <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html">
   <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="加密货币研究">
   <meta property="og:title" content="空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式 - 加密货币研究">
@@ -39,11 +40,11 @@
   <link rel="dns-prefetch" href="https://rdvcc.com">
   <link rel="preload" as="image" href="/img/article-airdrop-sybil.svg" fetchpriority="high">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="stylesheet" href="/styles.css?v=94bf99e9">
+  <link rel="stylesheet" href="/styles.css?v=7e182964">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:contact@coin.ponr.org", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全", "DAO治理", "储备证明", "团队与开发者活跃度研究", "预言机与价格数据研究", "跨链桥安全研究", "空投与女巫地址识别研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "contact@coin.ponr.org", "contactType": "editorial" } },
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究", "链上数据分析", "代币经济学", "稳定币", "跨链", "智能合约安全", "DAO治理", "储备证明", "团队与开发者活跃度研究", "预言机与价格数据研究", "跨链桥安全研究", "空投与女巫地址识别研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
     { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
     { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-airdrop-sybil.svg", "width": 1200, "height": 600 },
     { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html#webpage", "url": "https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html", "name": "空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/airdrop-sybil-detection-research-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
@@ -77,13 +78,14 @@
   </header>
   <div class="layout layout--article">
     <main class="main" id="main" tabindex="-1">
-      <header class="article-head">
+      <article class="article-shell">
+        <header class="article-head">
         <h1>空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式</h1>
         <p class="article-summary">在本系列中，《智能合约安全与审计报告研究入门》《交易所储备证明研究入门》《团队背景与开发者活跃度研究入门》《预言机与价格数据研究入门》《跨链桥安全研究入门》已先后确立一个方法论主线：任何摘要性结论都不能替代对其所声称之底层原始数据的独立核验；其中《预言机与价格数据研究入门》与《跨链桥安全研究入门》更进一步确立了一个可复用的子模式——先穷举某一机制在设计或攻击面上的抽象类别，再单独讲解如何核验某个具体真实案例落在哪一类别之中。与此同时，《链上数据分析入门》已引入地址与交易层面的链上指标作为研究基础，《代币经济学研究入门》已将代币分配与持币集中度作为研究对象，但两篇此前都未深入展开空投分发的公平性与女巫地址识别这一主题。本文承接上述两条线索，系统讲解如何独立于项目方的自我声称去核验空投分发的真实分散度、如何从地址聚类与行为特征等信号识别女巫模式、女巫农场与规避手法的抽象类别，以及如何将项目方自称的防女巫过滤机制同链上实际快照数据进行交叉核验。全文所有数字与比例均为虚构示例，不指向任何真实空投活动、项目方或历史女巫事件，仅用于说明研究方法，不构成投资建议，也不构成关于如何薅取空投的操作指导。</p>
         <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-07T16:00:00+08:00">2026-07-07 16:00:00</time></p>
       </header>
-      <img class="article-cover" src="/img/article-airdrop-sybil.svg" alt="空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
-      <article class="article-shell">
+        <img class="article-cover" src="/img/article-airdrop-sybil.svg" alt="空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
         <div class="article-body">
         <section id="sec-1">
         <h2>1. 为什么空投与女巫识别研究值得单独成篇</h2>
@@ -167,6 +169,20 @@
         <p>需要再次强调的是，全文所有论述均停留在方法论层面，未对任何具体的空投活动、真实项目或历史事件的公平性、可信度做出评判，文中出现的任何具体数字、比例或案例情形均属虚构的说明性示例，仅用于辅助理解抽象概念，不指向任何真实发生过的事件。本文内容不构成任何形式的投资建议，也不构成关于如何参与空投、如何提高空投资格或如何规避女巫地址识别机制的操作指导，其目的仅在于为研究者提供一套核验代币分发真实性与识别女巫模式的方法框架。</p>
         </section>
         </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么空投与女巫识别研究值得单独成篇</a></li>
+          <li><a href="#sec-2">2. 女巫地址的构造方式与识别信号类别</a></li>
+          <li><a href="#sec-3">3. 如何独立于项目方声称核验分发的真实分散度</a></li>
+          <li><a href="#sec-4">4. 女巫识别的规避手法抽象类别</a></li>
+          <li><a href="#sec-5">5. 把项目方自称的防女巫机制同链上实际实现交叉核验</a></li>
+          <li><a href="#sec-6">6. 关于空投与女巫识别的常见认知误区</a></li>
+          <li><a href="#sec-7">7. 值得系统记录的核验清单</a></li>
+          <li><a href="#sec-8">8. 总结</a></li>
+          </ol>
+        </nav>
+        </div>
         <aside class="references" aria-label="资料来源与延伸阅读">
           <h2>资料来源与延伸阅读</h2>
           <ul>
@@ -197,21 +213,6 @@
         <div class="back-row"><a href="/">返回首页</a></div>
       </article>
     </main>
-    <aside class="toc-rail">
-      <nav class="toc" aria-label="本文目录">
-          <h2>本文目录</h2>
-          <ol>
-          <li><a href="#sec-1">1. 为什么空投与女巫识别研究值得单独成篇</a></li>
-          <li><a href="#sec-2">2. 女巫地址的构造方式与识别信号类别</a></li>
-          <li><a href="#sec-3">3. 如何独立于项目方声称核验分发的真实分散度</a></li>
-          <li><a href="#sec-4">4. 女巫识别的规避手法抽象类别</a></li>
-          <li><a href="#sec-5">5. 把项目方自称的防女巫机制同链上实际实现交叉核验</a></li>
-          <li><a href="#sec-6">6. 关于空投与女巫识别的常见认知误区</a></li>
-          <li><a href="#sec-7">7. 值得系统记录的核验清单</a></li>
-          <li><a href="#sec-8">8. 总结</a></li>
-          </ol>
-        </nav>
-    </aside>
   </div>
   <footer class="site-foot site-foot--rich">
     <div class="site-foot-grid">
@@ -222,7 +223,7 @@
           <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
         </div>
       </div>
-      <div class="site-foot-col">
+      <div class="site-foot-col site-foot-col--topics">
         <h3>热门主题</h3>
         <ul>
           <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
@@ -249,6 +250,6 @@
       <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=45ec77fe"></script>
+  <script src="/js/site.js?v=90aa6e9e"></script>
 </body>
 </html>
