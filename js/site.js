@@ -119,6 +119,10 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/liquidity-mining-research-guide.html': '2026-07-10 10:44:36',
+    '/en/articles/liquidity-mining-research-guide.html': '2026-07-10 10:44:36',
+    '/articles/layer2-rollup-research-guide.html': '2026-07-10 10:34:23',
+    '/en/articles/layer2-rollup-research-guide.html': '2026-07-10 10:34:23',
     '/articles/nft-collection-research-guide.html': '2026-07-09 20:10:00',
     '/en/articles/nft-collection-research-guide.html': '2026-07-09 20:10:00',
     '/articles/lending-liquidation-research-guide.html': '2026-07-09 19:15:00',

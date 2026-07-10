@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>流动性挖矿研究入门 - 加密货币研究</title>
+  <meta name="description" content="讲解流动性挖矿的研究方法：如何拆解代币增发奖励与真实手续费收入、核验无常损失是否被账面APY掩盖、识别雇佣资本与挖提卖模式。仅为方法论探讨，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="流动性挖矿研究入门 - 加密货币研究">
+  <meta property="og:description" content="讲解流动性挖矿的研究方法：如何拆解代币增发奖励与真实手续费收入、核验无常损失是否被账面APY掩盖、识别雇佣资本与挖提卖模式。仅为方法论探讨，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <meta property="article:published_time" content="2026-07-10T10:44:36+08:00">
+  <meta property="article:modified_time" content="2026-07-10T10:44:36+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="流动性挖矿研究入门 - 加密货币研究">
+  <meta name="twitter:description" content="展示的APY里有多少来自真实手续费、多少来自代币增发；无常损失有没有被算进去；池子里的资金是不是随奖励迁移的雇佣资本——本文从研究者视角拆解流动性挖矿的核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-liquidity-mining.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="流动性挖矿研究入门：核验无常损失与雇佣资本风险">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-liquidity-mining.svg">
+  <link rel="preload" as="image" href="/img/article-liquidity-mining.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=e03a2d3c">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","团队与开发者活跃度研究","预言机与价格数据研究","跨链桥安全研究","DEX流动性与Swap价格研究","借贷协议清算机制研究","NFT项目研究","Layer2/Rollup研究","流动性挖矿与LP激励研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-liquidity-mining.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#webpage", "url": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html", "name": "流动性挖矿研究入门：核验无常损失与雇佣资本风险 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "流动性挖矿研究入门：核验无常损失与雇佣资本风险", "item": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#article", "headline": "流动性挖矿研究入门：核验无常损失与雇佣资本风险", "description": "讲解流动性挖矿的研究方法：如何拆解代币增发奖励与真实手续费收入、核验无常损失是否被账面APY掩盖、识别雇佣资本与挖提卖模式。仅为方法论探讨，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["流动性挖矿研究方法","无常损失核验","雇佣资本与挖提卖","代币增发奖励拆解","真实APY反推","LP激励机制核验清单"], "wordCount": 2517, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-10T10:44:36+08:00", "dateModified": "2026-07-10T10:44:36+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/liquidity-mining-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/liquidity-mining-research-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>流动性挖矿研究入门：核验无常损失与雇佣资本风险</h1>
+        <p class="article-summary">本文介绍流动性挖矿的研究方法：如何把混合APY拆解为真实手续费收入与代币增发奖励两部分、如何独立核算无常损失并与奖励收益对比、如何识别雇佣资本与挖提卖模式、以及奖励代币增发稀释如何影响长期真实收益。全文仅为方法论探讨，不针对任何真实项目作出判断，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-10T10:44:36+08:00">2026-07-10 10:44:36</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-liquidity-mining.svg" alt="流动性挖矿研究入门：核验无常损失与雇佣资本风险 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 为什么流动性挖矿激励值得单独研究</h2>
+<p>在《DEX流动性与Swap价格研究入门》中，我们讨论的是AMM如何定价、池子深度如何核验、以及做市行为如何被MEV套利影响——这些都建立在一个前提之上：已经有人把资金存进了池子。而流动性挖矿要回答的是前一层的问题：为什么流动性提供者（LP）愿意把资金存进来。这是一个独立的激励设计问题，和清算机制研究中"为什么清算人愿意执行清算"的逻辑结构类似，都属于让某类参与者持续提供服务所需要付出的经济代价。</p>
+<p>本篇的研究范围严格限定在方法论层面：我们只讨论抽象的激励机制类别（增发奖励、手续费分成、锁仓加成等），所有涉及具体数值的例子均为虚构示例，仅用于说明方法，不对应任何真实协议、代币或收益率。</p>
+<ul>
+<li>研究对象：LP为何愿意承担资金占用与风险，接受何种回报结构</li>
+<li>方法边界：仅讨论机制类别与核验框架，不给出真实数据或投资建议</li>
+<li>与前两篇的分工：定价核验（DEX篇）→激励设计（本篇）→执行激励（清算篇）</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 挖矿收益的两个来源：代币增发奖励 vs. 真实交易费收入</h2>
+<p>流动性挖矿页面上展示的"APY"几乎总是一个混合数字，背后由两种性质完全不同的收益构成。第一种是真实交易费收入：池子每发生一笔swap，LP按份额分得手续费，这部分收益与真实的交易量、真实的经济活动挂钩，具有可持续性。第二种是增发奖励：协议按固定或衰减速率增发自己的治理/奖励代币分给LP，这部分资金来自代币的通胀发行，并不对应任何真实的经济产出。研究者的第一步工作，就是把这两部分从一个混合APY中拆解出来，而不是直接接受官方展示的总数。</p>
+<p>虚构示例仅为说明方法：假设某流动性挖矿池展示"综合APY 42%"，经拆解后，其中来自交易费的部分约为6%，其余36%来自奖励代币增发。这意味着一旦增发停止或奖励代币价格下跌，实际到手的可持续收益可能只剩个位数。</p>
+<ul>
+<li>真实收益：来自实际手续费分成，随交易量波动，可持续</li>
+<li>增发收益：来自协议代币通胀发放，依赖代币价格与增发节奏</li>
+<li>研究步骤：分别核算两部分的历史数据，避免被单一混合数字误导</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 无常损失核验：为什么账面APY可能掩盖本金亏损</h2>
+<p>无常损失（Impermanent Loss, IL）是指当池内两种资产的相对价格发生偏离后，LP提取资金时的价值可能低于当初把两种资产分别持有不动的价值。这个损失不会出现在"APY"这个数字里——APY只统计手续费和奖励代币的流入，完全不反映本金因价格偏离而产生的账面变化。研究者的工作，是针对某个具体的价格偏离情景，独立计算IL的大小，再拿它与增发奖励APY相比较，判断奖励是否真的覆盖了本金层面的损失。</p>
+<p>虚构示例仅为说明方法：假设某资金池中两种资产的相对价格在一段时间内偏离20%，经计算对应的IL约为本金的1%；若同期增发奖励APY按年化折算到这段时间约为0.8%，则奖励尚不足以覆盖无常损失，LP实际是净亏损的，尽管挖矿页面显示的"综合APY"看起来相当可观。</p>
+<ul>
+<li>IL的触发条件：两种资产的相对价格出现偏离，偏离越大IL越显著</li>
+<li>核验方法：按具体偏离幅度独立计算IL，不依赖协议自身的展示</li>
+<li>对比标准：将IL与同期实际到手的奖励收益逐项比较，而非与总APY比较</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 雇佣资本与"挖提卖"模式识别</h2>
+<p>"雇佣资本"（mercenary capital）指的是那些只因为奖励率高而临时进入某个池子的资金——一旦奖励下调，或者别处出现收益更高的池子，这些资金会迅速撤出，并不构成对协议或交易对的长期信任。与之相伴的是"挖提卖"模式：LP领到奖励代币后立即在二级市场卖出变现，几乎不持有，这会对奖励代币价格形成持续的抛压，进一步压低后来者的实际收益。</p>
+<p>研究者可以通过链上数据区分"粘性资金"与"雇佣资金"：观察奖励代币的领取—卖出时间差（几乎同区块卖出通常意味着挖提卖）、观察LP存取款行为是否与奖励率调整的时间点高度同步（奖励一降存量立刻大幅撤出，说明资金对手续费收入本身并不敏感）。这些行为模式比TVL总量本身更能反映流动性的真实质量。</p>
+<ul>
+<li>识别信号一：奖励代币领取后短时间内即被卖出，形成规律性抛压</li>
+<li>识别信号二：LP存取款时点与奖励率调整高度同步，跟随激励迁移</li>
+<li>反面参照：手续费收入稳定、存取行为平稳的池子通常代表粘性流动性</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 奖励代币增发稀释与真实APY反推</h2>
+<p>挖矿页面展示的奖励APY通常是某一时间点的静态快照：用当前奖励代币价格乘以当前增发速率计算得出。但增发本身会持续增加奖励代币的流通量，在需求不变的情况下，这会对代币价格形成下行压力——这正是《代币经济学》系列文章中供给计划核验方法所关注的核心变量。对长期持有的LP而言，真正需要关心的不是挖矿首日的APY数字，而是在整个持有周期内，随着流通量增加、代币价格被稀释后，奖励的实际购买力还剩多少。</p>
+<p>虚构示例仅为说明方法：假设某奖励代币首日展示APY为50%，若按其增发计划推算，一年后流通量将增加3倍，在需求不变的保守假设下代币价格可能相应承压，实际反推出的长期真实APY可能远低于首日数字。研究者应结合供给计划做动态反推，而非只看静态快照。</p>
+<ul>
+<li>关键变量：奖励代币的增发速率与流通量增长曲线</li>
+<li>方法衔接：复用供给计划核验框架，评估价格被稀释的方向与量级</li>
+<li>结论方向：真实APY应基于持有周期内的动态反推，而非首日静态数字</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 常见认知误区与小结</h2>
+<p>第一个常见误区是把展示的综合APY当作可持续收益，忽略其中大部分可能来自增发而非真实交易费。第二个误区是把TVL的快速增长当作市场对协议的真实信任，而不去核查这些资金是否只是被高奖励率吸引来的雇佣资本，随时可能因奖励调整而撤离。第三个误区是"APY看起来足够高就能覆盖无常损失"的想当然判断，而不去对具体的价格偏离情景做实际计算。</p>
+<p>总的来说，流动性挖矿的研究可以拆成三层：先核验池子本身的定价与深度（对应DEX流动性一篇），再拆解激励结构、核算无常损失与雇佣资本（本篇），最后结合供给计划评估奖励代币的长期稀释效应。每一层都需要独立验证，不能依赖协议界面上的单一展示数字。本文所有数值均为虚构示例，仅用于说明方法论，不构成对任何真实项目的评价或投资建议。</p>
+<ul>
+<li>误区一：混合APY等于可持续收益</li>
+<li>误区二：TVL增长等于真实信任</li>
+<li>误区三：不计算就假设奖励能覆盖无常损失</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么流动性挖矿激励值得单独研究</a></li>
+          <li><a href="#sec-2">2. 挖矿收益的两个来源：代币增发奖励 vs. 真实交易费收入</a></li>
+          <li><a href="#sec-3">3. 无常损失核验：为什么账面APY可能掩盖本金亏损</a></li>
+          <li><a href="#sec-4">4. 雇佣资本与"挖提卖"模式识别</a></li>
+          <li><a href="#sec-5">5. 奖励代币增发稀释与真实APY反推</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/defi/" target="_blank" rel="noopener">Ethereum.org</a>：官方开发者文档中关于DeFi流动性挖矿与AMM机制的介绍</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于查询奖励代币的增发记录与领取-卖出交易模式</li>
+            <li><a href="https://defillama.com/" target="_blank" rel="noopener">DeFiLlama</a>：关于DeFi协议TVL与收益率数据的公开研究资源，供方法参考</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/layer2-rollup-research-guide.html">Layer2/Rollup研究入门：核验测序器风险与提款机制</a></li>
+          <li><a href="/articles/nft-collection-research-guide.html">NFT项目研究入门：核验稀有度、洗售交易与地板价深度</a></li>
+          <li><a href="/articles/lending-liquidation-research-guide.html">借贷清算机制研究入门：如何核验协议参数与连锁清算风险</a></li>
+          <li><a href="/articles/dex-liquidity-research-guide.html">DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制</a></li>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全研究入门：如何核验跨链桥的信任模型与资产托管风险</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队背景与开发者活跃度研究入门：从团队页面核验到GitHub代码活跃度分析</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所储备证明研究入门：从Merkle树原理到链上托管风险核验</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理研究入门：从提案流程到链上金库核验</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">智能合约安全与审计报告研究入门：从审计结论到链上验证</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学研究入门：读懂代币分配、解锁节奏与真实流通</a></li>
+          <li><a href="/articles/research-tools-virtual-card-guide.html">加密货币研究工具订阅支付指南：虚拟信用卡与稳定币充值实操</a></li>
+          <li><a href="/articles/crypto-research-fundamentals.html">加密货币研究入门：如何系统地研究一个加密项目</a></li>
+          <li><a href="/articles/onchain-data-analysis.html">链上数据分析入门：读懂地址、交易与核心指标</a></li>
+          <li><a href="/articles/stablecoin-crosschain-flows.html">稳定币、跨链与链上资金流：研究者的资产流动观察</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队研究</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">合约安全</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=43ed5876"></script>
+</body>
+</html>

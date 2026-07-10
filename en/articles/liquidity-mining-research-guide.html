@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Liquidity Mining Research 101 - Crypto Research Notes</title>
+  <meta name="description" content="A methodology guide to liquidity mining: decomposing emission rewards vs fee yield, verifying impermanent loss, and spotting mercenary capital.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/liquidity-mining-research-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Liquidity Mining Research 101 - Crypto Research Notes">
+  <meta property="og:description" content="A methodology guide to liquidity mining: decomposing emission rewards vs fee yield, verifying impermanent loss, and spotting mercenary capital.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html">
+  <meta property="article:published_time" content="2026-07-10T10:44:36+08:00">
+  <meta property="article:modified_time" content="2026-07-10T10:44:36+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Liquidity Mining Research 101 - Crypto Research Notes">
+  <meta name="twitter:description" content="How much of that APY is real fee income versus token emissions; is impermanent loss actually accounted for; is the liquidity sticky or just mercenary capital chasing rewards — a researcher's breakdown of liquidity-mining verification methods. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-liquidity-mining-en.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Getting Started with Liquidity Mining Research cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-liquidity-mining-en.svg">
+  <link rel="preload" as="image" href="/img/article-liquidity-mining-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=e03a2d3c">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-liquidity-mining-en.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html", "name": "Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital", "item": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#article", "headline": "Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital", "description": "A methodology guide to liquidity mining: decomposing emission rewards vs fee yield, verifying impermanent loss, and spotting mercenary capital.", "image": { "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["liquidity mining research methods","impermanent loss verification","mercenary capital farm and dump","emission reward decomposition","real APY reverse engineering","LP incentive checklist"], "wordCount": 1723, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-10T10:44:36+08:00", "dateModified": "2026-07-10T10:44:36+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/liquidity-mining-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/liquidity-mining-research-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</h1>
+        <p class="article-summary">This article introduces research methods for liquidity mining: how to decompose a blended APY into real fee revenue and token-emission rewards, how to independently calculate impermanent loss and compare it against reward income, how to spot mercenary capital and farm-and-dump patterns, and how emission dilution affects the real long-term yield. The entire piece is a methodology discussion only — it does not evaluate any real project, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-10T10:44:36+08:00">2026-07-10 10:44:36</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-liquidity-mining-en.svg" alt="Getting Started with Liquidity Mining Research cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Why Incentive Design Is Its Own Research Question</h2>
+<p>The earlier article in this series on DEX liquidity research focused on a mechanical question: given an automated market maker, how do you verify pool depth, price impact, and the ways thin liquidity gets exploited around MEV. That article assumed liquidity was already sitting in the pool and asked how it behaves once trades hit it. This article asks a different, prior question: why does that capital show up in the pool at all? Liquidity providers (LPs) are not depositing assets out of goodwill — they are underwriting price risk and opportunity cost, and someone has to compensate them for it. Understanding that compensation layer, separate from the pricing mechanics layer, is its own research discipline.</p>
+<p>It also sits next to, but is distinct from, the lending-liquidation article's focus on incentivizing liquidators. Liquidator incentives are a narrow bounty problem: pay enough to guarantee someone closes a bad position quickly. LP incentive design is broader and messier — it has to attract capital continuously, over long time horizons, against competing pools that may pay more. That makes it a design problem with its own failure modes: incentives that look generous on a dashboard but are economically unsustainable, or that attract capital that vanishes the moment terms change.</p>
+<p>As with the rest of this series, the scope here is methodology, not any specific protocol. Every numeric example below is invented purely to illustrate a mechanism category — a "reward token," a "blended APY," a "price-divergence scenario" — not a claim about any real pool, project, or token. The goal is a repeatable framework a researcher can apply to any liquidity-mining program, not a verdict on one.</p>
+<ul>
+<li>Prior article: DEX liquidity mechanics — how AMM pricing and depth work, and how to verify them.</li>
+<li>Prior article: lending liquidation mechanics — how liquidator incentives are structured.</li>
+<li>This article: why LPs participate at all, and how to evaluate whether that participation is durable.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Two Sources of Yield: Fees vs. Emissions</h2>
+<p>A liquidity-mining dashboard almost always shows a single blended APY number, but that number is typically the sum of two economically unrelated things. The first is real yield: a share of the trading fees the pool actually collects from swaps, funded directly by genuine trading volume. The second is emission-reward yield: additional tokens minted and distributed by the protocol as an incentive, funded by inflation of the reward token's supply rather than by any trade that happened in the pool. A researcher's first task with any mining program is to decompose the blended figure into these two components before treating it as meaningful.</p>
+<p>Consider a purely fictional example, invented only to illustrate the split: a pool displays a "42% APY." Digging into the fee-accrual data shows the pool generates fee revenue equivalent to roughly 6% annualized on deposited capital — this is the real-yield component, tied to actual swap volume and collectible regardless of what happens to the reward token's price. The remaining 36% is paid out in newly emitted reward tokens, valued at their current market price at the moment the dashboard calculated the figure. Those two slices behave completely differently under stress: fee revenue persists as long as people trade in the pool, while emission-reward value depends entirely on the reward token holding its price, which, as later sections discuss, emissions themselves put pressure on.</p>
+<ul>
+<li>Real yield: derived from trading fees, tied to actual usage, does not depend on a token's price holding up.</li>
+<li>Emission yield: derived from newly minted reward tokens, funded by inflation, valued at a snapshot price.</li>
+<li>A single blended APY conceals which of the two a researcher is actually being paid in.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verifying Impermanent Loss Against the Headline Number</h2>
+<p>Impermanent loss (IL) is the gap between what an LP's position is worth on withdrawal and what the same capital would be worth simply held outside the pool, and it arises whenever the relative price of the two pooled assets diverges after deposit. Crucially, IL never appears in the headline APY figure — that number describes fee and emission income, not principal-value change. A pool can advertise a high APY while an LP quietly loses more in IL than the rewards ever pay back. Verifying this requires calculating IL independently for a plausible price-divergence scenario, not assuming the advertised APY already accounts for it.</p>
+<p>Take a fictional, illustrative case: an LP deposits into a two-asset pool split evenly by value. Over some period, one asset's price doubles relative to the other. Standard constant-product IL math shows the LP's withdrawn value would be roughly 5.7% lower than if the two assets had simply been held separately, unpooled. If the pool's emission-reward APY over that same period paid out the equivalent of 8% of deposited value, the rewards more than offset the IL, and the position was net positive. If the reward APY had instead been 3%, the LP would have been better off never depositing at all, despite the pool's dashboard showing a positive-looking number throughout. The point is not the specific figures — again, entirely invented for illustration — but the discipline: IL and reward APY must be compared directly, for the specific divergence scenario a researcher considers plausible, not assumed to cancel out.</p>
+<ul>
+<li>IL is a function of price divergence between pooled assets, independent of any reward program.</li>
+<li>IL does not appear anywhere in a displayed APY figure.</li>
+<li>Net outcome = reward income (fees + emissions) minus IL, calculated for a specific scenario, not assumed.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Mercenary Capital and the Farm-and-Dump Pattern</h2>
+<p>"Mercenary capital" describes liquidity that is present in a pool only because of an attractive emission rate, with no loyalty to the pool, the protocol, or the trading pair itself. This capital arrives quickly when a new mining program launches with high rewards and leaves just as quickly when the emission rate is cut or a better-paying pool opens up elsewhere. A closely related behavior is the "farm and dump" pattern: participants claim reward tokens and sell them immediately rather than holding them, since their only interest was the yield, not the reward token's long-term value. Aggregated across many LPs, this creates persistent sell pressure on the reward token that has nothing to do with the protocol's fundamentals.</p>
+<p>Both patterns leave on-chain traces a researcher can look for. Reward-claim transactions followed within a short window by a transfer to an exchange deposit address, repeated across many wallets, is a signature of farm-and-dump behavior. Sharp pool-TVL (total value locked) declines that line up closely with an announced emission-rate cut, rather than with any change in trading activity, is a signature of mercenary capital rather than fee-driven, sticky liquidity. Distinguishing the two matters because a pool full of mercenary capital can look identical to a genuinely trusted pool on a simple TVL chart, while behaving completely differently the moment incentives change.</p>
+<ul>
+<li>Mercenary capital: liquidity present only for reward yield, absent any loyalty to the pool.</li>
+<li>Farm and dump: reward tokens claimed and sold immediately, creating steady sell pressure.</li>
+<li>On-chain tell: claim-to-exchange transfer patterns and TVL moves that track emission-rate changes rather than volume.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Emission Dilution: Reverse-Engineering a "Real" APY</h2>
+<p>An advertised reward APY is almost always a single-point-in-time calculation: it takes the current emission rate, multiplies it by the reward token's price at that moment, and annualizes it. What it does not capture is that continuous emission expands the reward token's circulating supply over time, and, all else equal, expanding supply puts downward pressure on that token's own price. This is the same supply-schedule logic the tokenomics article in this series applies to a project's overall token — unlock and emission schedules matter for valuation — applied here specifically to a mining reward token's price trajectory rather than the main governance token.</p>
+<p>A researcher trying to estimate a durable, long-term APY rather than a day-one snapshot should therefore model the emission schedule forward: purely for illustration, say a reward token emits at a constant rate that grows circulating supply by 15% over a year, and historical patterns for comparable reward tokens under similar dilution suggest a roughly proportional price decline absent new demand. A day-one advertised APY of 40% might, once the reward token's price is projected to soften under that supply growth, be closer to a 25-28% realized APY by the end of the period — still potentially attractive, but materially different from the headline figure, and worth stress-testing before treating the initial number as a stable expectation.</p>
+<ul>
+<li>Advertised APY = snapshot calculation at current reward-token price, not a forward projection.</li>
+<li>Continuous emission grows supply, which tends to pressure the reward token's price downward over time.</li>
+<li>Ties to the tokenomics article's method: model the emission/vesting schedule forward before trusting a yield figure.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Common Misconceptions and Conclusion</h2>
+<p>A few recurring misconceptions show up when researchers evaluate liquidity-mining programs. First, treating a headline blended APY as a stable, sustainable figure, when it may be almost entirely emission-funded and subject to both reward cuts and reward-token price decay. Second, reading rapid TVL growth in a new pool as evidence of genuine user trust, when it may simply reflect mercenary capital chasing a temporarily generous emission rate, with no underlying commitment to stay. Third, skipping an explicit impermanent-loss calculation on the assumption that "the APY looks high enough to cover it" — a judgment that is only valid once IL has actually been computed for a specific price-divergence scenario, not assumed away.</p>
+<p>Pulled together, this article's framework sits alongside the two it builds on: the DEX-liquidity article's methods verify that a pool's depth and pricing behave as expected once capital is there; this article asks whether the capital should be expected to stay, by decomposing yield into fee and emission components, checking that IL is actually covered, watching for mercenary and farm-and-dump behavior, and discounting headline APY for emission-driven dilution going forward. None of this amounts to a verdict on any specific pool or protocol — every figure used here was invented solely to illustrate a mechanism category. The purpose is a repeatable checklist a researcher can apply to any liquidity-mining program encountered in the wild, not investment guidance for any of them.</p>
+<ul>
+<li>Misconception: a blended headline APY is a sustainable, forward-looking number.</li>
+<li>Misconception: fast TVL growth signals trust rather than emission-chasing.</li>
+<li>Misconception: assuming rewards cover impermanent loss without calculating it directly.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why Incentive Design Is Its Own Research Question</a></li>
+          <li><a href="#sec-2">2. Two Sources of Yield: Fees vs. Emissions</a></li>
+          <li><a href="#sec-3">3. Verifying Impermanent Loss Against the Headline Number</a></li>
+          <li><a href="#sec-4">4. Mercenary Capital and the Farm-and-Dump Pattern</a></li>
+          <li><a href="#sec-5">5. Emission Dilution: Reverse-Engineering a "Real" APY</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Conclusion</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/defi/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation on DeFi liquidity mining and AMM mechanics</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying reward-token emission records and claim-to-sell transaction patterns</li>
+            <li><a href="https://defillama.com/" target="_blank" rel="noopener">DeFiLlama</a>: a public research resource on DeFi protocol TVL and yield data, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">An Introduction to Lending Protocol Liquidation Mechanics: How to Verify Parameters and Cascading Risk</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</a></li>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Getting Started with Airdrop and Sybil Address Detection Research: How to Verify Genuine Token Distribution and Spot Sybil Patterns</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Introduction to Cross-Chain Bridge Security Research: How to Verify a Bridge's Trust Model and Custody Risks</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">An Introduction to Oracle and Price Data Research: How to Verify DeFi Protocols' Price Sources and Manipulation Risk</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">A Practical Introduction to Proof of Reserves: From Merkle Tree Mechanics to Verifying Custodial Risk On-Chain</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research 101: Proposal Lifecycles, Voting Power, and On-Chain Treasury Verification</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">A Beginner's Guide to Smart Contract Security and Audit Reports: Reading Between the Lines</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research 101: Understanding Allocation, Vesting, and On-Chain Verification</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Getting Started with Crypto Project Research: A Systematic Approach</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis for Beginners: Understanding Addresses, Transactions, and Core Metrics</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Airdrops</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Bridge Security</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Team</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">Exchange</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">Governance</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">Security</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=43ed5876"></script>
+</body>
+</html>
