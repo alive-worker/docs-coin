@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funding Rate Divergence Explained - Crypto Research Notes</title>
+  <meta name="description" content="A deep dive into perpetual funding rate: decomposing interest vs premium, mark-index price divergence, farming risk, and liquidation-cascade signals.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/funding-rate-divergence.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/funding-rate-divergence.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/funding-rate-divergence.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/funding-rate-divergence.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Funding Rate Divergence Explained - Crypto Research Notes">
+  <meta property="og:description" content="A deep dive into perpetual funding rate: decomposing interest vs premium, mark-index price divergence, farming risk, and liquidation-cascade signals.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/funding-rate-divergence.html">
+  <meta property="article:published_time" content="2026-07-10T16:00:05+08:00">
+  <meta property="article:modified_time" content="2026-07-10T16:00:05+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Funding Rate Divergence Explained - Crypto Research Notes">
+  <meta name="twitter:description" content="Is a funding-rate spike really just extreme bullishness, can mark price actually be manipulated, is funding-rate arbitrage really risk-free — a deep dive into the structure and risk behind perpetual funding rates. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-funding-rate-en.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Funding Rate Divergence cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-funding-rate-en.svg">
+  <link rel="preload" as="image" href="/img/article-funding-rate-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=18cdd351">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#primaryimage", "url": "https://coin.ponr.org/img/article-funding-rate-en.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#webpage", "url": "https://coin.ponr.org/en/articles/funding-rate-divergence.html", "name": "Funding Rate Divergence: The Most Misread Signal in Perpetual Futures - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Funding Rate Divergence: The Most Misread Signal in Perpetual Futures", "item": "https://coin.ponr.org/en/articles/funding-rate-divergence.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#article", "headline": "Funding Rate Divergence: The Most Misread Signal in Perpetual Futures", "description": "A deep dive into perpetual funding rate: decomposing interest vs premium, mark-index price divergence, farming risk, and liquidation-cascade signals.", "image": { "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["funding rate mechanism","interest vs premium decomposition","mark price manipulation risk","funding rate arbitrage risk","open interest liquidation signal","perpetual futures liquidation cascade"], "wordCount": 2140, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-10T16:00:05+08:00", "dateModified": "2026-07-10T16:00:05+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/funding-rate-divergence.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/funding-rate-divergence.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Funding Rate Divergence: The Most Misread Signal in Perpetual Futures</h1>
+        <p class="article-summary">This article takes a deep dive into the perpetual futures funding-rate mechanism: why funding rate is the core mechanism anchoring contract price to spot rather than a simple holding cost, how to decompose the rate into its interest and premium components, why mark price can still diverge from index price, the real risk composition of funding-rate arbitrage strategies, and how open interest and liquidation-price clustering together signal a coming liquidation cascade. The entire piece discusses abstract mechanism principles only — it does not name any real exchange or contract product, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-10T16:00:05+08:00">2026-07-10 16:00:05</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-funding-rate-en.svg" alt="Funding Rate Divergence cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Funding Rate as an Anchor, Not a Fee Line Item</h2>
+<p>A perpetual futures contract has no expiry, which means it has no built-in mechanism forcing convergence to spot at some future settlement date. A traditional dated future converges to spot because it must — delivery or cash settlement enforces it. A perpetual has nothing analogous, so exchanges bolt on a funding mechanism: periodic payments exchanged directly between long and short position holders, sized to the divergence between the contract's price and an underlying index price. That payment flow is the entire anchoring mechanism. Without it, a perpetual contract could in principle drift indefinitely from spot, limited only by traders' willingness to arbitrage the gap manually.</p>
+<p>Most researchers encounter funding rate as a line item — "I paid 0.01% today" — and stop there. That framing misses what the number actually encodes. Funding rate is a live readout of positioning imbalance: when far more capital wants to be long than short, longs must pay a premium to short holders as compensation for taking the other side, and that payment rate is set precisely so it becomes economically uncomfortable to keep piling into the crowded side. The more extreme the rate, the more one-sided the market's leveraged positioning has become — and one-sided leveraged positioning is exactly the precondition for a sharp reversal or a liquidation cascade, a theme this piece returns to in Section 5.</p>
+<p>It is worth placing this mechanism relative to a related one already covered in this series. An earlier article examined AMM pricing and price impact — how a spot swap's execution price is determined by pool composition and trade size. Funding rate operates one layer up: it is not about how a spot price is formed, but about how a separate, expiry-less derivative price is pulled back toward whatever spot/index price already exists. The two mechanisms are adjacent, not identical, and conflating them causes researchers to misdiagnose which layer a given price anomaly actually originates in.</p>
+<ul>
+<li>Funding rate exists specifically because perpetuals lack a delivery date to force convergence.</li>
+<li>The payment flows directly between position holders, not to or from the exchange as a fee.</li>
+<li>Extreme funding readings are a crowding signal, not merely a cost or rebate figure.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Decomposing the Number: Interest Rate Versus Premium</h2>
+<p>The figure displayed as "funding rate" is almost never a single quantity — it is typically the sum of two structurally different components, and treating it as one number is the single most common source of misreading. The first component is an interest-rate term, reflecting the cost-of-carry differential between the two assets implicitly borrowed and lent in a perpetual position (for example, the base asset against a quote-currency stablecoin). This component tends to be small, changes slowly, and is often close to a fixed default absent unusual funding-market conditions elsewhere. The second component is a premium term, calculated from the actual observed gap between the contract's trading price and its index price over the funding interval. This is the volatile, fast-moving part, and it is the part that genuinely reflects positioning pressure.</p>
+<p>Social commentary and headline coverage routinely collapse both into "funding spiked, therefore extremely bullish." That shortcut breaks down the moment the interest-rate component itself shifts — which can happen for reasons entirely unrelated to directional sentiment on the contract in question.</p>
+<p>Consider a purely illustrative, invented example. Suppose a given perpetual product's displayed funding rate rises from 0.01% to 0.04% over a single interval. A researcher who decomposes the figure might find the interest-rate component held flat at roughly 0.01% throughout, while the premium component moved from effectively zero to roughly 0.03% — meaning the entire increase is attributable to a genuine widening of contract-versus-index premium, a real crowding signal. Alternatively, the same headline number could arise from the interest-rate component itself jumping to 0.035% with premium barely moving — a far less dramatic story about relative borrowing costs, not sentiment. These figures are invented purely to illustrate the decomposition, not observed values.</p>
+<ul>
+<li>Interest-rate component: small, slow-moving, tied to relative borrowing costs.</li>
+<li>Premium component: volatile, tied directly to contract-vs-index price divergence.</li>
+<li>Only the premium component reliably signals positioning sentiment.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Mark Price and Index Price: Who Is Actually Moving Whom</h2>
+<p>Liquidation triggers and unrealized PnL on most perpetual venues are calculated against a "mark price," deliberately distinct from the contract's raw last-traded price. The reason is defensive: if liquidations were triggered off the thin, easily-nudged order book of the derivatives contract itself, a relatively small amount of capital could push the last-traded price briefly, trip a wave of liquidations, and profit from the resulting cascade. Mark price is designed to blunt that attack by blending in external spot/index price data — typically an average or weighted composite drawn from multiple reference sources — rather than relying solely on the venue's own book.</p>
+<p>But this defense is not absolute, and understanding its limits matters more than trusting the label. The mark price formula still incorporates a sampling of the perpetual venue's own price alongside the index reference, and the weighting is finite, not infinite. If the venue's own order book is itself thin at the relevant moment — low depth, wide spreads, few resting orders near the touch — a comparatively modest amount of capital can still move the venue's own price input enough to nudge the composite mark price away from what genuine, deep spot markets are showing. The result is a brief but sharp divergence between mark price and true index price, occurring right as leveraged positions are most sensitive to it.</p>
+<p>This is structurally the same phenomenon an earlier article in this series described for spot AMM pools: thin liquidity leaves a venue vulnerable to disproportionate price impact from limited capital. Here it recurs one layer up, at the derivatives pricing mechanism rather than the spot swap mechanism, but the underlying vulnerability — depth insufficient to absorb the capital attempting to move it — is the same shape of risk in a different venue.</p>
+<ul>
+<li>Mark price exists specifically to decouple liquidation triggers from a thin, manipulable last-traded price.</li>
+<li>The mark price formula still partly samples the venue's own book, so it is not fully insulated.</li>
+<li>Thin depth on the derivatives venue reproduces the same manipulation vector AMM research already identified at the spot layer.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Funding-Rate Farming: The Economics Behind the "Free Yield" Pitch</h2>
+<p>A funding-rate arbitrage — often marketed informally as "funding farming" — has a simple structural skeleton: buy a unit of the underlying asset on spot, and simultaneously short an equivalent notional amount of the same asset's perpetual contract. If funding rate is positive, longs pay shorts, and the strategy collects that flow while the spot and short-perpetual legs largely offset each other's directional price exposure, leaving a theoretically price-neutral position that harvests funding as its return.</p>
+<p>The word "theoretically" is load-bearing. This is not risk-free arbitrage in the way a textbook cash-and-carry trade with guaranteed convergence might be. The short leg is a leveraged derivatives position and carries real liquidation risk of its own: if margin is managed loosely, or if a brief, violent price wick temporarily blows through the position's liquidation price even if the market quickly reverts, the short leg can be forcibly closed at a loss that the spot leg's paper gain does nothing to offset in that moment — the two legs are not perfectly and instantaneously fungible under stress. Funding rate itself is also not stable: it can flip from positive to negative as positioning shifts, turning what was collected income into an ongoing cost the strategy must now pay out of the same position. There is additionally venue and counterparty risk layered on top, independent of the trade's own mechanics.</p>
+<p>An earlier article on liquidity mining drew a distinction worth reapplying here: how much of an advertised annualized return is genuine, durable income versus a temporary subsidy tied to current conditions. The same decomposition applies to funding farming. A high advertised annualized yield built from a funding rate pinned at an unusually elevated level during a strongly one-sided bull market is closer to a temporary dividend from that positioning imbalance than a durable, structural fee-like income stream — and it can shrink or invert the moment positioning normalizes or flips.</p>
+<ul>
+<li>The strategy pairs a spot long with a perpetual short to target price-neutral funding capture.</li>
+<li>The short leg retains genuine liquidation risk despite the spot leg's offsetting exposure.</li>
+<li>Advertised annualized yield often mixes durable income with a temporary, positioning-dependent subsidy.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Open Interest, Crowding, and the Liquidation Waterfall</h2>
+<p>Funding rate alone is a snapshot; open interest is what tells a researcher whether that snapshot is a passing blip or a structural buildup. When open interest keeps climbing while funding rate stays pinned at an extreme reading for an extended stretch, the combination signals that one-sided leveraged positioning is not just present but actively accumulating — more capital continuing to pile onto the already-crowded side even as the cost of doing so (the funding payment) keeps rising. That combination is structurally fragile in a specific, mechanical way.</p>
+<p>The fragility plays out as a liquidation cascade, sometimes called a liquidation waterfall. An initial adverse price move — which need not be large — pushes the most thinly margined positions on the crowded side to their liquidation price. Those forced closures are themselves market orders that push price further in the same adverse direction, which in turn triggers the next tier of positions sitting just beyond the first liquidation cluster, and so on. The result is a positive feedback loop: liquidations cause price movement, and price movement causes more liquidations, independent of any new information entering the market.</p>
+<p>This closely parallels the cascading-liquidation dynamic described in an earlier article on lending-protocol liquidation mechanics, but the trigger chain is different in kind. There, the cascade originated from insufficient collateralization ratios against a falling collateral asset price. Here, the cascade originates from directional crowding in leveraged perpetual positioning — the risk is not that collateral is undervalued, but that too much leveraged exposure sits on one side of a single price axis, clustered at liquidation levels close enough together to trigger each other sequentially.</p>
+<p>The practical implication is that no single metric should be read in isolation. Open interest, funding-rate extremity, and the clustering of liquidation price levels together describe one structural picture; any one of them alone is an incomplete and potentially misleading fragment of it.</p>
+<ul>
+<li>Rising open interest alongside pinned extreme funding indicates accumulating, not merely momentary, crowding.</li>
+<li>Liquidation cascades are self-reinforcing: forced closures move price, which triggers further forced closures.</li>
+<li>The trigger differs from lending liquidations — directional leverage crowding, not collateralization shortfall.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misreadings and Scope of This Note</h2>
+<p>Three misreadings recur often enough among researchers and commentators alike to warrant stating plainly. First, treating a funding-rate spike as simply "extremely bullish" or "extremely bearish" without decomposing the interest-rate component from the premium component, as described in Section 2 — a headline number can move for reasons that have little to do with directional crowding. Second, treating funding-rate arbitrage as a risk-free trade, overlooking the short leg's genuine liquidation exposure under sudden volatility and the possibility that the rate itself flips sign mid-position, converting collected income into an ongoing cost, as described in Section 4. Third, reading funding rate in isolation rather than alongside open interest and the clustering of liquidation price levels — an extreme funding reading on its own says less than the same reading paired with climbing open interest and a visible cluster of liquidation levels nearby, as described in Section 5.</p>
+<p>Underlying all three is a single habit worth cultivating: funding rate is not a verdict, it is an input. It is one signal among several that, read together, describe how crowded and how fragile current leveraged positioning has become — and crowding is a statement about structure, not a prediction about direction.</p>
+<p>This piece has stayed deliberately at the level of abstract mechanism categories. No real exchange, protocol, or specific contract product has been named or implied to operate in any particular way; the numeric examples in Section 2 were invented purely to illustrate a decomposition method and do not describe any observed market condition. Nothing here constitutes investment advice or a recommendation regarding any specific position, strategy, or venue. The aim is narrower and more durable than any single market snapshot: giving a researcher a clearer mechanical vocabulary for what funding-rate divergence actually represents, so that the next time a rate spikes, the instinct is to decompose and cross-check rather than to react to a single number.</p>
+<ul>
+<li>Decompose funding rate into interest and premium components before drawing a directional conclusion.</li>
+<li>Treat funding-rate farming as a leveraged, liquidation-exposed strategy, not a risk-free yield source.</li>
+<li>Read funding rate together with open interest and liquidation clustering, never as a standalone signal.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Funding Rate as an Anchor, Not a Fee Line Item</a></li>
+          <li><a href="#sec-2">2. Decomposing the Number: Interest Rate Versus Premium</a></li>
+          <li><a href="#sec-3">3. Mark Price and Index Price: Who Is Actually Moving Whom</a></li>
+          <li><a href="#sec-4">4. Funding-Rate Farming: The Economics Behind the "Free Yield" Pitch</a></li>
+          <li><a href="#sec-5">5. Open Interest, Crowding, and the Liquidation Waterfall</a></li>
+          <li><a href="#sec-6">6. Common Misreadings and Scope of This Note</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/defi/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation on DeFi derivatives mechanics</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying on-chain perpetual protocol positioning and liquidation records</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>: a public example of a cross-chain swap aggregation product, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/stablecoin-peg-mechanism-research-guide.html">Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk</a></li>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Getting Started with On-Chain Insurance Research: Verifying Coverage Scope and Payout Capacity</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Getting Started with Restaking Research: Verifying Slashing Risk and Operator Concentration</a></li>
+          <li><a href="/en/articles/swap-routing-research-guide.html">Getting Started with Cross-Chain Swap Routing Research: Verifying Best Paths and Hidden Costs</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Getting Started with Vote-Market Research: Verifying Vote-Locking and Bribe Economics</a></li>
+          <li><a href="/en/articles/liquidity-mining-research-guide.html">Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">An Introduction to Lending Protocol Liquidation Mechanics: How to Verify Parameters and Cascading Risk</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</a></li>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Getting Started with Airdrop and Sybil Address Detection Research: How to Verify Genuine Token Distribution and Spot Sybil Patterns</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Introduction to Cross-Chain Bridge Security Research: How to Verify a Bridge's Trust Model and Custody Risks</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">An Introduction to Oracle and Price Data Research: How to Verify DeFi Protocols' Price Sources and Manipulation Risk</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">A Practical Introduction to Proof of Reserves: From Merkle Tree Mechanics to Verifying Custodial Risk On-Chain</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research 101: Proposal Lifecycles, Voting Power, and On-Chain Treasury Verification</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">A Beginner's Guide to Smart Contract Security and Audit Reports: Reading Between the Lines</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research 101: Understanding Allocation, Vesting, and On-Chain Verification</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Getting Started with Crypto Project Research: A Systematic Approach</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis for Beginners: Understanding Addresses, Transactions, and Core Metrics</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Airdrops</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Bridge Security</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Team</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">Exchange</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">Governance</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">Security</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c4e298da"></script>
+</body>
+</html>

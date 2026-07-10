@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/funding-rate-divergence.html': '2026-07-10 16:00:05',
+    '/en/articles/funding-rate-divergence.html': '2026-07-10 16:00:05',
     '/articles/stablecoin-peg-mechanism-research-guide.html': '2026-07-10 15:36:59',
     '/en/articles/stablecoin-peg-mechanism-research-guide.html': '2026-07-10 15:36:59',
     '/articles/onchain-insurance-research-guide.html': '2026-07-10 15:17:28',
