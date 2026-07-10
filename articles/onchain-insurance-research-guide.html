@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>链上保险协议研究入门 - 加密货币研究</title>
+  <meta name="description" content="讲解链上保险（Cover）协议的研究方法：如何核验承保范围的真实触发条件、保险池赔付能力与相关性坍塌风险、承保方真实收益、理赔仲裁的治理集中度。仅为方法论探讨，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/onchain-insurance-research-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/onchain-insurance-research-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/onchain-insurance-research-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/onchain-insurance-research-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="链上保险协议研究入门 - 加密货币研究">
+  <meta property="og:description" content="讲解链上保险（Cover）协议的研究方法：如何核验承保范围的真实触发条件、保险池赔付能力与相关性坍塌风险、承保方真实收益、理赔仲裁的治理集中度。仅为方法论探讨，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/onchain-insurance-research-guide.html">
+  <meta property="article:published_time" content="2026-07-10T15:17:28+08:00">
+  <meta property="article:modified_time" content="2026-07-10T15:17:28+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="链上保险协议研究入门 - 加密货币研究">
+  <meta name="twitter:description" content="营销页面说的承保范围和条款原文一致吗、保险池的储备会不会在最需要赔付时同步缩水、承保方的高收益有多少是代币补贴、理赔到底谁说了算——本文从研究者视角拆解链上保险协议的核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-insurance.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="链上保险协议研究入门：核验承保范围与赔付能力">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-insurance.svg">
+  <link rel="preload" as="image" href="/img/article-insurance.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=9f27e7ee">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","团队与开发者活跃度研究","预言机与价格数据研究","跨链桥安全研究","DEX流动性与Swap价格研究","借贷协议清算机制研究","NFT项目研究","Layer2/Rollup研究","流动性挖矿与LP激励研究","投票权贿选市场研究","跨链聚合与Swap路由研究","再质押机制研究","链上保险协议研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-insurance.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#webpage", "url": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html", "name": "链上保险协议研究入门：核验承保范围与赔付能力 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "链上保险协议研究入门：核验承保范围与赔付能力", "item": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#article", "headline": "链上保险协议研究入门：核验承保范围与赔付能力", "description": "讲解链上保险（Cover）协议的研究方法：如何核验承保范围的真实触发条件、保险池赔付能力与相关性坍塌风险、承保方真实收益、理赔仲裁的治理集中度。仅为方法论探讨，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["链上保险协议研究方法","承保触发条件核验","保险池赔付能力核验","相关性坍塌风险","承保方收益拆解","理赔仲裁治理集中度"], "wordCount": 2662, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-10T15:17:28+08:00", "dateModified": "2026-07-10T15:17:28+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/onchain-insurance-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/onchain-insurance-research-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>链上保险协议研究入门：核验承保范围与赔付能力</h1>
+        <p class="article-summary">本文介绍链上保险（Cover）协议的研究方法：如何核验条款原文里的真实承保触发条件而非营销描述、如何评估保险池承保总额与实际储备资产的赔付能力及相关性坍塌风险、如何拆解承保方收益中真实保费与代币补贴的占比、以及理赔仲裁背后的治理集中度与利益冲突。全文仅为方法论探讨，不针对任何真实协议作出判断，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-10T15:17:28+08:00">2026-07-10 15:17:28</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-insurance.svg" alt="链上保险协议研究入门：核验承保范围与赔付能力 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 为什么链上保险协议值得单独研究：与再质押、流动性挖矿、清算机制的分工关系</h2>
+<p>前几篇文章分别识别了不同来源的风险：《再质押机制研究入门》讨论了同一份抵押品同时backing多个独立惩罚条件时的惩罚风险叠加；《流动性挖矿与LP激励机制研究入门》讨论了做市过程中的无常损失；《借贷清算机制研究入门》讨论了价格波动触发的连锁清算风险。这三类风险各自都存在对冲需求，链上保险（或称cover）协议正是围绕"承保这些风险"设计的产品——用户支付保费，换取在特定事故发生时获得赔付的权利。</p>
+<p>但一份保单是否真的能在事故发生时保护你，和它的营销描述是两回事。本文要回答的核心问题是：研究者应该如何核验一份链上保单的实际保护力，而不是它的宣传力度。以下讨论均使用抽象机制类别与虚构数值说明方法，不针对任何真实保险协议做事实性判断，也不构成投资建议。</p>
+<ul>
+<li>研究对象：智能合约漏洞利用保险、稳定币脱锚保险、再质押惩罚保险等抽象类别</li>
+<li>核验重点：条款原文、储备资产、承保方收益构成、理赔仲裁机制</li>
+<li>方法论边界：所有数值均为虚构示例，仅用于说明分析框架</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 承保范围的边界核验：条款文字 vs 实际触发条件</h2>
+<p>保险产品的营销页面通常使用"防止黑客攻击""保护你的资产安全"这类宽泛表述，容易让用户以为只要发生了广义上的"资产损失"就能获得赔付。但实际保单条款里对"承保事件"的定义往往非常具体和技术化：例如某保单可能只承保"由合约代码逻辑错误导致的资金直接被盗"，而明确排除"因治理攻击导致的资金挪用"或"因预言机价格延迟导致的清算损失"——这两类事件在用户直觉里都属于"被黑"，但在条款里可能完全不在承保范围内。</p>
+<p>研究者应该核验的是条款原文里的确切触发条件与除外条款清单，而不是营销摘要。举一个虚构示例：某保单承保"稳定币脱锚超过5%且持续超过1小时"，如果实际脱锚幅度是4.8%或持续45分钟就恢复，即便用户主观上遭受了损失，也可能不满足赔付条件。很多真实的理赔纠纷正是源于事故细节与条款技术定义之间的缝隙。</p>
+<ul>
+<li>核验承保事件的具体定义，而非营销摘要中的概括性描述</li>
+<li>逐条检查除外条款（governance attack、oracle延迟、前端劫持等常见除外项）</li>
+<li>关注触发条件里的量化阈值（幅度、持续时间）是否清晰可验证</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 保险池赔付能力核验：承保总额 vs 实际储备资产</h2>
+<p>这一步呼应《交易所储备证明研究》一篇的核验方法：研究者应该核实一个保险协议对外承保的总价值（类似传统保险公司的总负债敞口），是否有对应的、真实、可验证、流动性充足的储备资产支撑。举例说明，若某保险协议对外承保总额为一亿美元（虚构数值），但其保险池实际储备资产链上可查仅为三千万美元，且其中一部分是流动性较差的自身治理代币，那么在多笔理赔同时发生时，池子很可能无法足额兑付。</p>
+<p>更需要特别核验的是"相关性坍塌"风险：保险池自身的储备资产，会不会恰好在保单要赔付的那类危机场景下同时贬值。例如某保单承保某类抵押借贷协议的清算穿仓风险，而保险池自身的储备又大量持有与该借贷协议高度相关的资产，一旦触发理赔的市场崩溃场景出现，储备资产本身也在同步缩水，导致真正需要赔付时"账面承保额"和"实际可动用资产"出现严重落差。</p>
+<ul>
+<li>核实承保总敞口与链上可验证储备资产的比例关系</li>
+<li>检查储备资产的构成：稳定资产 vs 波动性资产 vs 协议自身代币</li>
+<li>评估储备资产与承保标的之间是否存在危机场景下的相关性坍塌</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 保费定价与承保方的真实收益构成</h2>
+<p>把《流动性挖矿与LP激励机制研究入门》一篇的收益拆解方法应用到保险市场的另一侧：为保险池提供资本的承保方（underwriters）在锁定资金、承担理赔风险的同时，会获得保费收入作为回报。研究者应核验的问题是——这部分收益究竟是真实的、经过风险定价的保费收入，还是主要靠协议自身代币增发在补贴承保方参与。</p>
+<p>虚构示例：某保险池向承保方展示的年化收益为18%，若拆解后发现其中仅3%来自实际保费收入，其余15%来自协议代币增发奖励，那么这个收益率反映的更多是补贴力度而非真实的风险溢价——一旦增发停止或代币价格下跌，承保方的真实报酬可能远低于表面数字，甚至不足以覆盖其承担的理赔风险。这与流动性挖矿一篇里"真实手续费收入 vs 代币补贴"的辨析是同一套方法在不同市场侧的应用。</p>
+<ul>
+<li>拆分承保方收益来源：实际保费收入 vs 协议代币增发奖励</li>
+<li>核验保费定价是否反映了真实的历史理赔频率与损失规模</li>
+<li>评估补贴撤出后承保方收益是否仍能覆盖其承担的风险敞口</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 理赔流程与治理仲裁的信任面</h2>
+<p>很多链上保险协议并非"理赔条件一触发就自动链上赔付"，而是由DAO投票或一个"审核委员会"来裁定某次报案是否构成有效理赔——因为很多现实事故的边界情况难以用纯代码逻辑自动判定，需要人工审议证据。这重新引入了《DAO治理机制研究》与《投票权贿选市场研究》两篇讨论过的治理集中度风险主题。</p>
+<p>研究者应该核验的关键问题是：真正决定一笔理赔能否通过的，是不是集中在极少数地址或委员会成员手中；以及这些裁决者是否可能存在利益冲突。一个值得警惕的虚构场景是：审核委员会成员同时也是该保险池的承保方，如果理赔申请获批，意味着他们自己要按比例承担赔付成本——这种角色重叠会在无形中扭曲裁决的公正性，即便没有任何明面上的违规操作。查验裁决权的分布集中度和裁决者的身份重叠情况,是研究链上保险信任面时不可跳过的一步。</p>
+<ul>
+<li>核实理赔裁定权是自动链上触发,还是依赖DAO投票或委员会审议</li>
+<li>查验裁决地址/委员会成员的集中度,是否存在少数方主导裁决的情况</li>
+<li>排查裁决者与承保方之间是否存在角色重叠导致的潜在利益冲突</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 常见认知误区与小结</h2>
+<p>第一个误区是把营销页面上的承保描述当作条款原文——"保护你免受黑客攻击"这类表述往往和条款里技术化、窄义的触发条件之间存在明显落差,真正决定能否赔付的是后者。第二个误区是认为保险池的储备规模只要名义上覆盖了承保总额就足够安全,而忽视了相关性坍塌风险——储备资产可能恰好在需要赔付的危机场景下同步贬值。第三个误区是把理赔仲裁默认当作全自动、无人为裁量的链上机制,实际上多数协议依赖DAO投票或委员会审议,裁决权的集中度和裁决者身份重叠都是需要核实的信任面。</p>
+<p>总体而言,链上保险协议的价值恰恰在于它试图为再质押、流动性挖矿、借贷清算等场景里已经识别出的风险提供对冲工具,但一份保单能不能真正兑现保护承诺,取决于条款细节、储备资产质量与治理裁决的公正性这三重核验,而不是营销页面上的承保范围描述。本文讨论的所有机制类别与数值均为方法论说明用途,不构成对任何具体协议的评价,也不构成投资建议。</p>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么链上保险协议值得单独研究：与再质押、流动性挖矿、清算机制的分工关系</a></li>
+          <li><a href="#sec-2">2. 承保范围的边界核验：条款文字 vs 实际触发条件</a></li>
+          <li><a href="#sec-3">3. 保险池赔付能力核验：承保总额 vs 实际储备资产</a></li>
+          <li><a href="#sec-4">4. 保费定价与承保方的真实收益构成</a></li>
+          <li><a href="#sec-5">5. 理赔流程与治理仲裁的信任面</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/defi/" target="_blank" rel="noopener">Ethereum.org</a>：官方开发者文档中关于DeFi保险与风险对冲机制的介绍</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于查询保险池储备资产与理赔交易记录</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>：一个公开的跨链聚合与Swap路由产品示例，供方法参考</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/restaking-research-guide.html">再质押机制研究入门：核验惩罚风险叠加与运营商集中度</a></li>
+          <li><a href="/articles/swap-routing-research-guide.html">跨链聚合与Swap路由研究入门：核验最优路径与隐藏成本</a></li>
+          <li><a href="/articles/vote-market-research-guide.html">治理投票权贿选市场研究入门：核验锁仓机制与贿选回报</a></li>
+          <li><a href="/articles/liquidity-mining-research-guide.html">流动性挖矿研究入门：核验无常损失与雇佣资本风险</a></li>
+          <li><a href="/articles/layer2-rollup-research-guide.html">Layer2/Rollup研究入门：核验测序器风险与提款机制</a></li>
+          <li><a href="/articles/nft-collection-research-guide.html">NFT项目研究入门：核验稀有度、洗售交易与地板价深度</a></li>
+          <li><a href="/articles/lending-liquidation-research-guide.html">借贷清算机制研究入门：如何核验协议参数与连锁清算风险</a></li>
+          <li><a href="/articles/dex-liquidity-research-guide.html">DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制</a></li>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全研究入门：如何核验跨链桥的信任模型与资产托管风险</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队背景与开发者活跃度研究入门：从团队页面核验到GitHub代码活跃度分析</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所储备证明研究入门：从Merkle树原理到链上托管风险核验</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理研究入门：从提案流程到链上金库核验</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">智能合约安全与审计报告研究入门：从审计结论到链上验证</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学研究入门：读懂代币分配、解锁节奏与真实流通</a></li>
+          <li><a href="/articles/research-tools-virtual-card-guide.html">加密货币研究工具订阅支付指南：虚拟信用卡与稳定币充值实操</a></li>
+          <li><a href="/articles/crypto-research-fundamentals.html">加密货币研究入门：如何系统地研究一个加密项目</a></li>
+          <li><a href="/articles/onchain-data-analysis.html">链上数据分析入门：读懂地址、交易与核心指标</a></li>
+          <li><a href="/articles/stablecoin-crosschain-flows.html">稳定币、跨链与链上资金流：研究者的资产流动观察</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队研究</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">合约安全</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=1b1109f4"></script>
+</body>
+</html>
