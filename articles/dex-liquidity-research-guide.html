@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制 - 加密货币研究</title>
-  <meta name="description" content="本文介绍DEX流动性与链上Swap价格的研究方法，说明AMM定价机制与预言机价格来源的分工差异，讲解如何独立核验流动性池真实深度、计算价格影响与滑点，并归纳MEV与三明治攻击的抽象机制类别，附小额跨链实测记录方法与常见认知误区。全文仅为方法论探讨，不针对任何真实DEX、协议或历史事件作出结论性判断，不构成投资建议，也不构成套利或攻击操作指南。">
+  <title>DEX流动性研究入门 - 加密货币研究</title>
+  <meta name="description" content="讲解DEX流动性与Swap价格的研究方法：如何核验流动性池真实深度、计算价格影响与滑点、识别MEV与三明治攻击的抽象机制。仅为方法论探讨，不构成投资建议。">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="ipfsWeb">
   <link rel="canonical" href="https://coin.ponr.org/articles/dex-liquidity-research-guide.html">
@@ -15,16 +15,16 @@
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="加密货币研究">
-  <meta property="og:title" content="DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制 - 加密货币研究">
-  <meta property="og:description" content="本文介绍DEX流动性与链上Swap价格的研究方法，说明AMM定价机制与预言机价格来源的分工差异，讲解如何独立核验流动性池真实深度、计算价格影响与滑点，并归纳MEV与三明治攻击的抽象机制类别，附小额跨链实测记录方法与常见认知误区。全文仅为方法论探讨，不针对任何真实DEX、协议或历史事件作出结论性判断，不构成投资建议，也不构成套利或攻击操作指南。">
+  <meta property="og:title" content="DEX流动性研究入门 - 加密货币研究">
+  <meta property="og:description" content="讲解DEX流动性与Swap价格的研究方法：如何核验流动性池真实深度、计算价格影响与滑点、识别MEV与三明治攻击的抽象机制。仅为方法论探讨，不构成投资建议。">
   <meta property="og:url" content="https://coin.ponr.org/articles/dex-liquidity-research-guide.html">
   <meta property="article:published_time" content="2026-07-08T15:01:32+08:00">
   <meta property="article:modified_time" content="2026-07-08T15:01:32+08:00">
-  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
   <meta property="article:section" content="加密货币研究">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制 - 加密货币研究">
-  <meta name="twitter:description" content="AMM如何定价、流动性有多深、滑点怎么算、MEV与三明治攻击是什么机制——本文从研究者视角拆解DEX价格发现过程，附小额实测方法与常见认知误区，仅为方法论探讨，不构成投资建议。">
+  <meta name="twitter:title" content="DEX流动性研究入门 - 加密货币研究">
+  <meta name="twitter:description" content="讲解DEX流动性与Swap价格的研究方法：如何核验流动性池真实深度、计算价格影响与滑点、识别MEV与三明治攻击的抽象机制。仅为方法论探讨，不构成投资建议。">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -40,7 +40,7 @@
   <link rel="dns-prefetch" href="https://allswap.io">
   <link rel="preload" as="image" href="/img/article-dex-liquidity.svg" fetchpriority="high">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="stylesheet" href="/styles.css?v=e03a2d3c">
+  <link rel="stylesheet" href="/styles.css?v=04510946">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -53,7 +53,7 @@
         { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
         { "@type": "ListItem", "position": 3, "name": "DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制", "item": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html" }
     ] },
-    { "@type": "Article", "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#article", "headline": "DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制", "description": "本文介绍DEX流动性与链上Swap价格的研究方法，说明AMM定价机制与预言机价格来源的分工差异，讲解如何独立核验流动性池真实深度、计算价格影响与滑点，并归纳MEV与三明治攻击的抽象机制类别，附小额跨链实测记录方法与常见认知误区。全文仅为方法论探讨，不针对任何真实DEX、协议或历史事件作出结论性判断，不构成投资建议，也不构成套利或攻击操作指南。", "image": { "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DEX流动性研究方法", "AMM定价机制核验", "流动性池真实深度评估", "价格影响与滑点计算", "MEV与三明治攻击识别", "集中流动性池设计类别", "跨链Swap实测方法", "TVL与可用深度区分", "链上储备数据核验"], "wordCount": 16944, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-08T15:01:32+08:00", "dateModified": "2026-07-08T15:01:32+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#article", "headline": "DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制", "description": "讲解DEX流动性与Swap价格的研究方法：如何核验流动性池真实深度、计算价格影响与滑点、识别MEV与三明治攻击的抽象机制。仅为方法论探讨，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DEX流动性研究方法", "AMM定价机制核验", "流动性池真实深度评估", "价格影响与滑点计算", "MEV与三明治攻击识别", "集中流动性池设计类别", "跨链Swap实测方法", "TVL与可用深度区分", "链上储备数据核验"], "wordCount": 16944, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-08T15:01:32+08:00", "dateModified": "2026-07-08T15:01:32+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/dex-liquidity-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
   ]
 }</script>
 </head>
@@ -62,7 +62,7 @@
   <header class="site-header" id="top">
     <div class="header-inner">
       <a class="brand" href="/" aria-label="加密货币研究首页">
-        <img class="brand-logo" src="/favicon.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
         <span class="brand-text">
           <span class="brand-name">加密货币研究</span>
         </span>
@@ -81,7 +81,7 @@
       <article class="article-shell">
         <header class="article-head">
         <h1>DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制</h1>
-        <p class="article-summary">本文介绍DEX流动性与链上Swap价格的研究方法，说明AMM定价机制与预言机价格来源的分工差异，讲解如何独立核验流动性池真实深度、计算价格影响与滑点，并归纳MEV与三明治攻击的抽象机制类别，附小额跨链实测记录方法与常见认知误区。全文仅为方法论探讨，不针对任何真实DEX、协议或历史事件作出结论性判断，不构成投资建议，也不构成套利或攻击操作指南。</p>
+        <p class="article-summary">讲解DEX流动性与Swap价格的研究方法：如何核验流动性池真实深度、计算价格影响与滑点、识别MEV与三明治攻击的抽象机制。仅为方法论探讨，不构成投资建议。</p>
         <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-08T15:01:32+08:00">2026-07-08 15:01:32</time></p>
       </header>
         <img class="article-cover" src="/img/article-dex-liquidity.svg" alt="DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
@@ -252,6 +252,7 @@
           <li><a href="/articles/nft-collection-research-guide.html">NFT项目研究入门：核验稀有度、洗售交易与地板价深度</a></li>
           <li><a href="/articles/layer2-rollup-research-guide.html">Layer2/Rollup研究入门：核验测序器风险与提款机制</a></li>
           <li><a href="/articles/liquidity-mining-research-guide.html">流动性挖矿研究入门：核验无常损失与雇佣资本风险</a></li>
+          <li><a href="/articles/vote-market-research-guide.html">治理投票权贿选市场研究入门：核验锁仓机制与贿选回报</a></li>
           </ul>
         </aside>
         <div class="back-row"><a href="/">返回首页</a></div>
@@ -261,7 +262,7 @@
   <footer class="site-foot site-foot--rich">
     <div class="site-foot-grid">
       <div class="site-foot-brand">
-        <img src="/favicon.svg" alt="" aria-hidden="true">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
         <div>
           <span class="site-foot-brand-name">加密货币研究</span>
           <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
@@ -294,6 +295,6 @@
       <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=43ed5876"></script>
+  <script src="/js/site.js?v=4c0f3aa1"></script>
 </body>
 </html>

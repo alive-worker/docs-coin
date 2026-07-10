@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms - Crypto Research Notes</title>
-  <meta name="description" content="This article introduces research methods for DEX liquidity and on-chain swap prices, covering the division of labor between AMM pricing mechanisms and oracle price sources, how to independently verify the true depth of liquidity pools, how to calculate price impact and slippage, and the abstract mechanism categories behind MEV and sandwich attacks, along with a method for recording small-scale cross-chain test transactions and common misconceptions. The entire piece is a methodology discussion only — it does not draw conclusions about any real DEX, protocol, or historical event, does not constitute investment advice, and is not a guide for arbitrage or attack operations.">
+  <title>DEX Liquidity & Swap Research 101 - Crypto Research Notes</title>
+  <meta name="description" content="How to verify true AMM pool depth, calculate price impact and slippage, and understand the mechanism categories behind MEV and sandwich attacks.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="ipfsWeb">
   <link rel="canonical" href="https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html">
@@ -15,16 +15,16 @@
   <meta property="og:locale:alternate" content="zh_CN">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Crypto Research Notes">
-  <meta property="og:title" content="An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms - Crypto Research Notes">
-  <meta property="og:description" content="This article introduces research methods for DEX liquidity and on-chain swap prices, covering the division of labor between AMM pricing mechanisms and oracle price sources, how to independently verify the true depth of liquidity pools, how to calculate price impact and slippage, and the abstract mechanism categories behind MEV and sandwich attacks, along with a method for recording small-scale cross-chain test transactions and common misconceptions. The entire piece is a methodology discussion only — it does not draw conclusions about any real DEX, protocol, or historical event, does not constitute investment advice, and is not a guide for arbitrage or attack operations.">
+  <meta property="og:title" content="DEX Liquidity & Swap Research 101 - Crypto Research Notes">
+  <meta property="og:description" content="How to verify true AMM pool depth, calculate price impact and slippage, and understand the mechanism categories behind MEV and sandwich attacks.">
   <meta property="og:url" content="https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html">
   <meta property="article:published_time" content="2026-07-08T15:01:32+08:00">
   <meta property="article:modified_time" content="2026-07-08T15:01:32+08:00">
-  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
   <meta property="article:section" content="Crypto Research">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms - Crypto Research Notes">
-  <meta name="twitter:description" content="How AMMs price assets, how deep liquidity really is, how slippage is calculated, and the mechanisms behind MEV and sandwich attacks — this piece breaks down the DEX price-discovery process from a researcher's perspective, with a small-scale test method and common misconceptions. Methodology only — not investment advice.">
+  <meta name="twitter:title" content="DEX Liquidity & Swap Research 101 - Crypto Research Notes">
+  <meta name="twitter:description" content="How to verify true AMM pool depth, calculate price impact and slippage, and understand the mechanism categories behind MEV and sandwich attacks.">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -40,7 +40,7 @@
   <link rel="dns-prefetch" href="https://allswap.io">
   <link rel="preload" as="image" href="/img/article-dex-liquidity-en.svg" fetchpriority="high">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="stylesheet" href="/styles.css?v=e03a2d3c">
+  <link rel="stylesheet" href="/styles.css?v=04510946">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -53,7 +53,7 @@
         { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
         { "@type": "ListItem", "position": 3, "name": "An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms", "item": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html" }
     ] },
-    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#article", "headline": "An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms", "description": "This article introduces research methods for DEX liquidity and on-chain swap prices, covering the division of labor between AMM pricing mechanisms and oracle price sources, how to independently verify the true depth of liquidity pools, how to calculate price impact and slippage, and the abstract mechanism categories behind MEV and sandwich attacks, along with a method for recording small-scale cross-chain test transactions and common misconceptions. The entire piece is a methodology discussion only — it does not draw conclusions about any real DEX, protocol, or historical event, does not constitute investment advice, and is not a guide for arbitrage or attack operations.", "image": { "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DEX liquidity research methods", "AMM pricing mechanism verification", "liquidity pool depth assessment", "price impact and slippage calculation", "MEV and sandwich attack identification", "concentrated liquidity pool design", "cross-chain swap testing method", "TVL vs. usable depth", "on-chain reserve data verification"], "wordCount": 9421, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-08T15:01:32+08:00", "dateModified": "2026-07-08T15:01:32+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#article", "headline": "An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms", "description": "How to verify true AMM pool depth, calculate price impact and slippage, and understand the mechanism categories behind MEV and sandwich attacks.", "image": { "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DEX liquidity research methods", "AMM pricing mechanism verification", "liquidity pool depth assessment", "price impact and slippage calculation", "MEV and sandwich attack identification", "concentrated liquidity pool design", "cross-chain swap testing method", "TVL vs. usable depth", "on-chain reserve data verification"], "wordCount": 9421, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-08T15:01:32+08:00", "dateModified": "2026-07-08T15:01:32+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/dex-liquidity-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
   ]
 }</script>
 </head>
@@ -62,7 +62,7 @@
   <header class="site-header" id="top">
     <div class="header-inner">
       <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
-        <img class="brand-logo" src="/favicon-en.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
         <span class="brand-text">
           <span class="brand-name">Crypto Research Notes</span>
         </span>
@@ -81,7 +81,7 @@
       <article class="article-shell">
         <header class="article-head">
         <h1>An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</h1>
-        <p class="article-summary">This article introduces research methods for DEX liquidity and on-chain swap prices, covering the division of labor between AMM pricing mechanisms and oracle price sources, how to independently verify the true depth of liquidity pools, how to calculate price impact and slippage, and the abstract mechanism categories behind MEV and sandwich attacks, along with a method for recording small-scale cross-chain test transactions and common misconceptions. The entire piece is a methodology discussion only — it does not draw conclusions about any real DEX, protocol, or historical event, does not constitute investment advice, and is not a guide for arbitrage or attack operations.</p>
+        <p class="article-summary">How to verify true AMM pool depth, calculate price impact and slippage, and understand the mechanism categories behind MEV and sandwich attacks.</p>
         <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-08T15:01:32+08:00">2026-07-08 15:01:32</time></p>
       </header>
         <img class="article-cover" src="/img/article-dex-liquidity-en.svg" alt="An Introduction to DEX Liquidity and Swap Price Research cover image" width="1200" height="600" fetchpriority="high" decoding="async">
@@ -252,6 +252,7 @@
           <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
           <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
           <li><a href="/en/articles/liquidity-mining-research-guide.html">Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Getting Started with Vote-Market Research: Verifying Vote-Locking and Bribe Economics</a></li>
           </ul>
         </aside>
         <div class="back-row"><a href="/en/">Back to overview</a></div>
@@ -261,7 +262,7 @@
   <footer class="site-foot site-foot--rich">
     <div class="site-foot-grid">
       <div class="site-foot-brand">
-        <img src="/favicon-en.svg" alt="" aria-hidden="true">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
         <div>
           <span class="site-foot-brand-name">Crypto Research Notes</span>
           <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
@@ -294,6 +295,6 @@
       <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=43ed5876"></script>
+  <script src="/js/site.js?v=4c0f3aa1"></script>
 </body>
 </html>
