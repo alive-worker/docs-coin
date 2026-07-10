@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/swap-routing-research-guide.html': '2026-07-10 13:47:53',
+    '/en/articles/swap-routing-research-guide.html': '2026-07-10 13:47:53',
     '/articles/vote-market-research-guide.html': '2026-07-10 11:20:08',
     '/en/articles/vote-market-research-guide.html': '2026-07-10 11:20:08',
     '/articles/liquidity-mining-research-guide.html': '2026-07-10 10:44:36',
