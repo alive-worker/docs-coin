@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/stablecoin-peg-mechanism-research-guide.html': '2026-07-10 15:36:59',
+    '/en/articles/stablecoin-peg-mechanism-research-guide.html': '2026-07-10 15:36:59',
     '/articles/onchain-insurance-research-guide.html': '2026-07-10 15:17:28',
     '/en/articles/onchain-insurance-research-guide.html': '2026-07-10 15:17:28',
     '/articles/restaking-research-guide.html': '2026-07-10 14:53:46',

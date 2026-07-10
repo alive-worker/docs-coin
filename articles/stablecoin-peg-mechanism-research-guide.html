@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>稳定币挂钩机制研究入门 - 加密货币研究</title>
+  <meta name="description" content="讲解稳定币挂钩机制的研究方法：三类抵押模型的失效差异、如何压力测试赎回路径、核验抵押品相关性坍塌风险、独立核查历史脱锚记录。仅为方法论探讨，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="稳定币挂钩机制研究入门 - 加密货币研究">
+  <meta property="og:description" content="讲解稳定币挂钩机制的研究方法：三类抵押模型的失效差异、如何压力测试赎回路径、核验抵押品相关性坍塌风险、独立核查历史脱锚记录。仅为方法论探讨，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <meta property="article:published_time" content="2026-07-10T15:36:59+08:00">
+  <meta property="article:modified_time" content="2026-07-10T15:36:59+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="稳定币挂钩机制研究入门 - 加密货币研究">
+  <meta name="twitter:description" content="赎回路径在挤兑发生时是不是真的能用、抵押品会不会和稳定币一起跌、「从未脱锚」的说法可信吗——本文从研究者视角拆解稳定币挂钩机制的核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-stablecoin-peg.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="稳定币挂钩机制研究入门：核验抵押模型与脱锚风险">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-stablecoin-peg.svg">
+  <link rel="preload" as="image" href="/img/article-stablecoin-peg.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=02204954">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","团队与开发者活跃度研究","预言机与价格数据研究","跨链桥安全研究","DEX流动性与Swap价格研究","借贷协议清算机制研究","NFT项目研究","Layer2/Rollup研究","流动性挖矿与LP激励研究","投票权贿选市场研究","跨链聚合与Swap路由研究","再质押机制研究","链上保险协议研究","稳定币挂钩机制研究"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-stablecoin-peg.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#webpage", "url": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html", "name": "稳定币挂钩机制研究入门：核验抵押模型与脱锚风险 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "稳定币挂钩机制研究入门：核验抵押模型与脱锚风险", "item": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#article", "headline": "稳定币挂钩机制研究入门：核验抵押模型与脱锚风险", "description": "讲解稳定币挂钩机制的研究方法：三类抵押模型的失效差异、如何压力测试赎回路径、核验抵押品相关性坍塌风险、独立核查历史脱锚记录。仅为方法论探讨，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["稳定币挂钩机制研究方法","抵押模型失效模式","赎回路径压力测试","相关性坍塌风险","历史脱锚记录核查","挂钩机制核验清单"], "wordCount": 2473, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-10T15:36:59+08:00", "dateModified": "2026-07-10T15:36:59+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/stablecoin-peg-mechanism-research-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>稳定币挂钩机制研究入门：核验抵押模型与脱锚风险</h1>
+        <p class="article-summary">本文介绍稳定币挂钩机制的研究方法：超额抵押、算法机制与真实资产储备三类模型各自的失效方式、如何压力测试铸造赎回套利路径在极端行情下是否仍然可用、如何核验抵押品与脱锚触发场景之间的相关性坍塌风险、以及如何独立核查稳定币的历史脱锚记录与真实恢复机制。全文仅为方法论探讨，不针对任何真实稳定币作出判断，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-10T15:36:59+08:00">2026-07-10 15:36:59</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-stablecoin-peg.svg" alt="稳定币挂钩机制研究入门：核验抵押模型与脱锚风险 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 为什么挂钩机制值得单独研究：与资金流观察、链上保险两篇的分工</h2>
+<p>此前《稳定币、跨链与链上资金流》一篇讨论的是如何观察稳定币的链上流动信号——增发节奏、跨链桥流入流出、巨鲸地址的持仓变化，回答的是"资金正在往哪里流动"。《链上保险协议研究入门》一篇讨论的是脱锚事件真正发生之后，一份链上保单能否兑现赔付，其中特别提到了"相关性坍塌"风险：保险池的储备资产可能在保单本该赔付的同一场危机中同步贬值。这两篇都建立在一个尚未回答的前提之上：稳定币自身的挂钩维持机制是否稳固。</p>
+<p>本篇要处理的正是这个更前置的问题：稳定币为什么能维持在1美元附近，支撑这个价格的机制设计究竟是什么，脱锚风险从何而来。全文只讨论抽象的机制类别与虚构数值，不点名任何真实稳定币，方法论边界与此前各篇保持一致。</p>
+<ul>
+<li>资金流观察回答"钱在动吗"，本篇回答"机制本身牢不牢"</li>
+<li>链上保险回答"赔得出吗"，本篇回答"为什么会脱锚"</li>
+<li>三者是研究同一风险的三个不同层次，互不重复</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 三类抵押模型的分工：超额抵押、算法机制与真实资产储备</h2>
+<p>稳定币的挂钩机制大体可以归纳为三类抽象设计。第一类是加密资产超额抵押型：用户存入价值高于所铸稳定币面值的加密资产（例如抵押价值150美元的资产铸造100美元稳定币，数值为虚构示例）作为担保。第二类是算法或低抵押型：不依赖足额抵押物，而是通过市场供需与套利激励、辅助代币的增发销毁等机制自动调节供给来维持价格。第三类是链下真实资产储备型：由法币存款或短期国债等现实世界资产（RWA）作为储备背书，由发行方承诺按需兑付。</p>
+<p>三类模型的失效模式完全不同，不能用同一套核验标准套用。超额抵押型最怕抵押品价格暴跌击穿清算线，引发连环清算；算法型最怕市场信心出现螺旋式崩溃，套利机制在极端行情下反而加速脱锚；储备型最怕储备资产的真实性、构成与流动性无法被独立核验，存在信息不对称。</p>
+<ul>
+<li>超额抵押型——核验清算机制与抵押率缓冲空间</li>
+<li>算法/低抵押型——核验信心螺旋触发条件与最坏情形</li>
+<li>真实资产储备型——核验储备披露的独立性与可验证性</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 挂钩机制的压力测试核验：赎回路径是否在压力下仍然畅通</h2>
+<p>理论上，稳定币价格能贴住1美元附近，靠的是"铸造/赎回套利"这条路径：价格高于1美元时，有人以1美元成本铸造并在市场上卖出，把价格拉低；价格低于1美元时，有人在市场上低价买入并按1美元赎回，把价格拉高。这条路径能否成立，决定了挂钩是否只是纸面设计。</p>
+<p>研究者需要核验的是，这条套利路径在真正需要它的压力时刻是否依然可用。常见的削弱因素包括：是否存在单日或单账户赎回额度上限、是否要求通过身份审核门槛而普通用户无法直接参与、合约是否含有管理员可暂停铸造或赎回的权限。虚构示例：某稳定币白皮书宣称赎回随时可用，但实际合约中设置了单日赎回上限为总供应量的2%（虚构数值），且赎回权限集中在少数白名单地址，这意味着在挤兑发生的第一天，大部分持有者根本无法通过官方路径赎回，只能在二级市场折价抛售。</p>
+<ul>
+<li>核验是否存在赎回额度、频次或白名单限制</li>
+<li>核验合约中是否含有可暂停铸造/赎回的管理员权限</li>
+<li>核验历史上赎回权限是否曾被实际使用过</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 储备资产质量与相关性风险核验</h2>
+<p>这一节呼应《链上保险协议研究入门》中提到的"相关性坍塌"概念：保险池的储备资产可能在保单本该赔付的同一场危机中同步贬值，而这个概念同样适用于稳定币自身的抵押品。对于加密资产超额抵押型稳定币，研究者应该核验抵押品构成是否与"市场信心崩溃"这类脱锚触发场景高度相关——如果抵押品本身在市场恐慌时会同步大幅贬值，那么理论上充足的抵押率，在压力测试下可能迅速跌破安全线。</p>
+<p>虚构示例：某抵押型稳定币的抵押品中，有约40%（虚构数值）是与其自身生态高度绑定的治理代币或关联协议代币。一旦该生态出现信心动摇，抵押品和稳定币可能在同一轮下跌中同步贬值，原本200%的抵押率可能在数小时内跌破清算线。研究者应追问的不是"抵押率是多少"，而是"抵押品和稳定币的价格，在压力情形下是否会一起跌"。</p>
+<ul>
+<li>统计抵押品构成中与发行方自身生态相关的比例</li>
+<li>假设极端行情下抵押品同步下跌，重新测算有效抵押率</li>
+<li>核验是否存在抵押品集中度过高的单点风险</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 脱锚历史与恢复速度的核验方法</h2>
+<p>研究者不应只采信项目方"从未脱锚"或"始终稳定"的宣传说法，而应该独立在链上历史数据与交易所历史成交价中核查该稳定币过去是否出现过脱锚，哪怕幅度较小、持续时间较短（例如虚构情形：某稳定币曾短暂跌至0.97美元并在6小时内恢复）。单纯统计"是否脱锚过"意义有限，更关键的是核实每一次脱锚实际上是靠什么机制恢复的。</p>
+<p>可能的恢复路径包括：套利机制自然发挥作用、做市商自发介入、项目方动用应急储备金干预、或是中心化发行方直接暂停交易等待情绪平息。这几种恢复方式反映的机制稳固程度完全不同——前者说明设计本身经受住了压力测试，后两者则说明挂钩的维持更依赖人为干预而非机制本身。恢复速度与恢复机制的真实性，是判断挂钩稳固程度的重要历史证据，应当与前一节的资金流观察方法结合使用来交叉验证。</p>
+<ul>
+<li>在链上及交易所历史价格中独立核查脱锚记录</li>
+<li>区分是套利机制自愈，还是依赖人为干预恢复</li>
+<li>记录每次脱锚的幅度、持续时间与恢复速度</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 常见认知误区与小结</h2>
+<p>第一个误区是把"目前尚未脱锚"直接等同于"挂钩机制稳固"，两者并无必然联系——许多机制上存在缺陷的设计只是恰好还没遇到触发条件。第二个误区是把抵押率数字本身当作安全保证，而不核验抵押品与脱锚触发场景之间的相关性，如第四节所述，高抵押率在相关性坍塌情形下可能瞬间失去意义。第三个误区是忽视赎回路径在压力下可能被限制、暂停甚至由白名单垄断，误以为白皮书里写的套利机制在任何时候都真实可用。</p>
+<p>本篇讨论的三类抵押模型、赎回路径压力测试、相关性风险核验与历史脱锚核查方法，均为抽象方法论与虚构数值，不构成对任何真实稳定币的评价或投资建议。结合此前的资金流观察与链上保险核验方法，三篇共同构成了对稳定币风险由浅入深、由结构到事件的研究框架。</p>
+<ul>
+<li>误区一：未脱锚不等于机制稳固</li>
+<li>误区二：抵押率数字不等于安全，需核验相关性</li>
+<li>误区三：忽视赎回路径可能被限制或暂停</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么挂钩机制值得单独研究：与资金流观察、链上保险两篇的分工</a></li>
+          <li><a href="#sec-2">2. 三类抵押模型的分工：超额抵押、算法机制与真实资产储备</a></li>
+          <li><a href="#sec-3">3. 挂钩机制的压力测试核验：赎回路径是否在压力下仍然畅通</a></li>
+          <li><a href="#sec-4">4. 储备资产质量与相关性风险核验</a></li>
+          <li><a href="#sec-5">5. 脱锚历史与恢复速度的核验方法</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/stablecoins/" target="_blank" rel="noopener">Ethereum.org</a>：官方开发者文档中关于稳定币机制类别的介绍</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于查询稳定币合约的抵押品构成与赎回交易记录</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>：一个公开的跨链聚合与Swap路由产品示例，供方法参考</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/onchain-insurance-research-guide.html">链上保险协议研究入门：核验承保范围与赔付能力</a></li>
+          <li><a href="/articles/restaking-research-guide.html">再质押机制研究入门：核验惩罚风险叠加与运营商集中度</a></li>
+          <li><a href="/articles/swap-routing-research-guide.html">跨链聚合与Swap路由研究入门：核验最优路径与隐藏成本</a></li>
+          <li><a href="/articles/vote-market-research-guide.html">治理投票权贿选市场研究入门：核验锁仓机制与贿选回报</a></li>
+          <li><a href="/articles/liquidity-mining-research-guide.html">流动性挖矿研究入门：核验无常损失与雇佣资本风险</a></li>
+          <li><a href="/articles/layer2-rollup-research-guide.html">Layer2/Rollup研究入门：核验测序器风险与提款机制</a></li>
+          <li><a href="/articles/nft-collection-research-guide.html">NFT项目研究入门：核验稀有度、洗售交易与地板价深度</a></li>
+          <li><a href="/articles/lending-liquidation-research-guide.html">借贷清算机制研究入门：如何核验协议参数与连锁清算风险</a></li>
+          <li><a href="/articles/dex-liquidity-research-guide.html">DEX流动性与Swap价格研究入门：如何核验AMM真实深度与识别MEV操纵机制</a></li>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投与女巫地址识别研究入门：如何核验代币分发的真实分散度与女巫模式</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全研究入门：如何核验跨链桥的信任模型与资产托管风险</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机与价格数据研究入门：如何核验DeFi协议的价格来源与操纵风险</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队背景与开发者活跃度研究入门：从团队页面核验到GitHub代码活跃度分析</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所储备证明研究入门：从Merkle树原理到链上托管风险核验</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理研究入门：从提案流程到链上金库核验</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">智能合约安全与审计报告研究入门：从审计结论到链上验证</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学研究入门：读懂代币分配、解锁节奏与真实流通</a></li>
+          <li><a href="/articles/research-tools-virtual-card-guide.html">加密货币研究工具订阅支付指南：虚拟信用卡与稳定币充值实操</a></li>
+          <li><a href="/articles/crypto-research-fundamentals.html">加密货币研究入门：如何系统地研究一个加密项目</a></li>
+          <li><a href="/articles/onchain-data-analysis.html">链上数据分析入门：读懂地址、交易与核心指标</a></li>
+          <li><a href="/articles/stablecoin-crosschain-flows.html">稳定币、跨链与链上资金流：研究者的资产流动观察</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投研究</a></li>
+          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机</a></li>
+          <li><a href="/articles/team-developer-activity-research-guide.html">团队研究</a></li>
+          <li><a href="/articles/exchange-reserves-research-guide.html">交易所</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">合约安全</a></li>
+          <li><a href="/articles/tokenomics-research-guide.html">代币经济学</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=2a47d853"></script>
+</body>
+</html>

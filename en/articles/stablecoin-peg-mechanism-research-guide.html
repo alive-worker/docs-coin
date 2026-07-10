@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stablecoin Peg Mechanism Research - Crypto Research Notes</title>
+  <meta name="description" content="A methodology guide to stablecoin peg mechanisms: collateral models, redemption-path stress testing, correlated collapse risk, and depeg history.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/stablecoin-peg-mechanism-research-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Stablecoin Peg Mechanism Research - Crypto Research Notes">
+  <meta property="og:description" content="A methodology guide to stablecoin peg mechanisms: collateral models, redemption-path stress testing, correlated collapse risk, and depeg history.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html">
+  <meta property="article:published_time" content="2026-07-10T15:36:59+08:00">
+  <meta property="article:modified_time" content="2026-07-10T15:36:59+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stablecoin Peg Mechanism Research - Crypto Research Notes">
+  <meta name="twitter:description" content="Would the redemption path actually work during a real run, could the collateral crash alongside the stablecoin itself, is a 'never depegged' claim actually true — a researcher's breakdown of stablecoin peg-mechanism verification. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-stablecoin-peg-en.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Getting Started with Stablecoin Peg Mechanism Research cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-stablecoin-peg-en.svg">
+  <link rel="preload" as="image" href="/img/article-stablecoin-peg-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=02204954">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-stablecoin-peg-en.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html", "name": "Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk", "item": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#article", "headline": "Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk", "description": "A methodology guide to stablecoin peg mechanisms: collateral models, redemption-path stress testing, correlated collapse risk, and depeg history.", "image": { "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["stablecoin peg mechanism research","collateral model failure modes","redemption path stress test","correlated collapse risk","depeg history verification","peg mechanism checklist"], "wordCount": 1772, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-10T15:36:59+08:00", "dateModified": "2026-07-10T15:36:59+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/stablecoin-peg-mechanism-research-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/stablecoin-peg-mechanism-research-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk</h1>
+        <p class="article-summary">This article introduces research methods for stablecoin peg mechanisms: how the three collateral models (over-collateralized, algorithmic, and reserve-backed) each fail differently, how to stress-test whether the mint/redeem arbitrage path actually holds up under pressure, how to verify correlated-collapse risk between a stablecoin's collateral and its depeg triggers, and how to independently research a stablecoin's actual depeg history and recovery mechanisms. The entire piece is a methodology discussion only — it does not evaluate any real stablecoin, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-10T15:36:59+08:00">2026-07-10 15:36:59</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-stablecoin-peg-en.svg" alt="Getting Started with Stablecoin Peg Mechanism Research cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. A Question Beneath Fund Flows and Insurance Coverage</h2>
+<p>Two earlier pieces in this series looked at stablecoins from adjacent angles. The article on stablecoins, cross-chain bridges, and on-chain fund flows covered how a researcher observes signals like new issuance, bridge inflows and outflows, and whale wallet movements to infer where capital is going and how confident holders currently are. The piece on on-chain insurance research covered a downstream question: if a depeg does happen, would a given cover policy actually pay out, including the risk that a pool's own reserve assets could collapse in value in exactly the crisis the policy is meant to cover. Both of those assume the stablecoin itself is a given input — something already circulating, already tracked, already potentially insured.</p>
+<p>This article steps back to a more foundational question that sits underneath both: is the stablecoin's own mechanism for holding its peg near $1 actually sound to begin with, independent of how anyone observes its flows or insures against its failure. That means examining the design of the peg mechanism itself — what backs it, how the peg is theoretically restored when price drifts, and whether that restoration path survives contact with a real stress event rather than just working in calm markets. As with the rest of this series, everything here is discussed as abstract mechanism categories and methodology, not as an evaluation of any specific real-world stablecoin, and any numeric figures used to illustrate a point are explicitly invented rather than drawn from any actual project's data. The goal is a repeatable checklist a researcher can apply to any stablecoin design, not a verdict on any named token.</p>
+<ul>
+<li>Fund-flow observation answers "where is the money moving"; this article answers "is the mechanism itself sound."</li>
+<li>Insurance research answers "would a claim get paid"; this article answers "why would a depeg happen in the first place."</li>
+<li>Scope: abstract mechanism categories and invented figures only, no real stablecoin named.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Three Collateral Models, Three Different Ways to Fail</h2>
+<p>Stablecoin peg mechanisms broadly fall into three abstract categories, and each carries a distinct failure mode rather than a shared one. The first is over-collateralized crypto-backed design, where users lock crypto assets worth more than the stablecoin they mint — for example depositing $150 of a volatile asset to mint $100 of the stablecoin. This model tends to fail when the collateral's market price falls fast enough to breach liquidation thresholds before positions can be closed out in an orderly way, especially during network congestion or a broader market crash that hits many positions simultaneously.</p>
+<p>The second category is algorithmic or under-collateralized design, which relies primarily on market supply-and-demand incentives and arbitrage rather than hard collateral to hold the peg. This model tends to fail through a confidence-driven spiral: once holders doubt the mechanism will hold, selling pressure itself becomes the thing that breaks the peg, and the same incentive structure that is supposed to restore $1 can instead accelerate a collapse once trust is gone. The third category is off-chain reserve-backed design, typically fiat or real-world-asset reserves held outside the chain, redeemable in principle for the stablecoin. This model tends to fail not through market mechanics but through opacity: reserves that cannot be independently verified, are partially illiquid, or are legally encumbered in ways that are not visible on-chain at all. A researcher's first task is simply classifying which category — or which blend of categories — a given design actually falls into, since the right stress questions to ask differ substantially across the three.</p>
+<ul>
+<li>Over-collateralized crypto-backed: check liquidation thresholds and collateral price behavior under stress.</li>
+<li>Algorithmic/under-collateralized: check what could trigger a confidence-driven spiral.</li>
+<li>Off-chain reserve-backed: check reserve verifiability, liquidity, and legal encumbrance.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Stress-Testing the Redemption Path, Not Just the Whitepaper</h2>
+<p>Nearly every peg design rests on the same theoretical loop: when the stablecoin trades above $1, someone is incentivized to mint new units and sell them until the price falls back; when it trades below $1, someone is incentivized to buy cheap units and redeem them for the underlying collateral or reserve, shrinking supply until the price recovers. On paper this arbitrage loop is what holds the peg, but a researcher needs to verify that the redemption side of that loop is actually usable at the scale and speed a real stress event would require, not merely that it exists in the contract or the whitepaper.</p>
+<p>That means checking for mechanisms that can quietly disable redemption exactly when it is needed most: hard redemption caps that throttle how much can be redeemed per day, KYC or whitelist gating that restricts who is even eligible to redeem directly, and admin-controlled pause functions that can halt minting or redemption outright during an incident. As a purely illustrative example invented for this discussion, imagine a reserve-backed stablecoin whose contract permits only $10 million in redemptions per day; under calm conditions that cap is never binding, but during a confidence shock where holders attempt to redeem far more than that in a single day, the cap itself becomes the active constraint — the arbitrage loop that is supposed to restore the peg is legally and technically unable to operate at the volume the crisis demands, and the market price can drift well below $1 for as long as the cap remains binding, regardless of how solvent the reserves technically are.</p>
+<ul>
+<li>Check for daily or per-account redemption caps that could bind under stress.</li>
+<li>Check for KYC/whitelist gating that limits who can redeem directly.</li>
+<li>Check whether an admin key can pause minting or redemption, and whether it ever has.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Correlated Collapse: When the Collateral and the Peg Share a Crisis</h2>
+<p>The on-chain insurance article in this series introduced the idea of correlated collapse in the context of a cover pool: a pool's reserve assets losing value in precisely the scenario the policy is supposed to cover. The same logic applies directly to a stablecoin's own backing collateral, and arguably matters even more, since it concerns the primary mechanism rather than a secondary safety net. For an over-collateralized crypto-backed design, a researcher should map out what the collateral basket actually consists of and ask whether those assets tend to lose value in the same market conditions that would also trigger a confidence-driven run on the stablecoin itself.</p>
+<p>As a fictional example invented purely to illustrate the pattern, imagine a crypto-backed stablecoin where 40% of the collateral basket is the native governance token of the same protocol issuing the stablecoin. In calm markets this looks like ordinary collateral diversification. But in a genuine crisis — say a large exploit or a governance failure affecting that protocol — both the stablecoin's confidence and the market price of its own governance token would plausibly fall together, since holders' willingness to trust the protocol and the market's valuation of the protocol's token are driven by the same underlying event. The collateral cushion that is supposed to absorb a shock instead shrinks at the same time the shock hits, which is the defining signature of correlated collapse. A researcher should look for this pattern by checking collateral composition against the issuing protocol's own tokens and ecosystem-adjacent assets, not just against broad market volatility.</p>
+<ul>
+<li>Map collateral composition and flag assets tied to the issuing protocol's own ecosystem.</li>
+<li>Recompute the effective collateral ratio assuming correlated assets fall together.</li>
+<li>Check for concentration risk in any single correlated collateral type.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Reading a Stablecoin's Own Depeg History Instead of Its Marketing</h2>
+<p>Many stablecoin projects describe themselves as having "never depegged," but that framing is self-reported and often defines depeg narrowly enough to exclude minor or short-lived events. A more reliable approach is for a researcher to independently pull historical price data across multiple exchanges and, where available, on-chain oracle feeds, and look for every meaningful deviation from $1 — including brief dips of a cent or two that a project would not describe as a depeg at all but that still reveal how the mechanism behaves under mild pressure.</p>
+<p>For each deviation found, the more informative question is not just how far the price moved but what actually brought it back. A researcher should try to distinguish between a few different recovery mechanisms: organic arbitrage activity, where independent market participants used the mint/redeem loop as designed; emergency reserves or backstop capital that the issuing team deployed proactively; and discretionary intervention, such as an exchange halting trading, a team pausing contracts, or an off-chain party stepping in outside the stated mechanism. A peg that recovered through organic arbitrage is meaningfully stronger evidence of a sound mechanism than one that recovered only after a team's discretionary rescue, since the latter implies the on-paper mechanism did not actually hold on its own. The magnitude, duration, and recovery pathway of each past incident together form a track record that is far more informative than a single self-reported claim of having never depegged.</p>
+<ul>
+<li>Independently check historical price data across multiple venues, not just the project's own claims.</li>
+<li>For each deviation, identify magnitude, duration, and recovery mechanism.</li>
+<li>Weight organic-arbitrage recoveries more heavily than discretionary-rescue recoveries.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Common Misconceptions and Scope Recap</h2>
+<p>A few recurring misconceptions are worth naming directly. First, treating a clean track record of "no depeg so far" as proof the mechanism itself is sound — a design can simply not yet have been tested by a severe enough stress event, and the absence of failure is not the same as evidence of resilience. Second, treating a stated collateralization ratio, such as 150%, as inherent safety without checking whether that collateral correlates with the exact conditions that would also trigger a run; a high ratio built from correlated assets can evaporate faster than a lower ratio built from genuinely diversified ones. Third, overlooking that a redemption path advertised as always available can in practice be capped, gated, or paused, and that these controls are most likely to bind precisely during the stress event a researcher actually cares about.</p>
+<p>Taken together, this article's scope sits beneath the two prior pieces in this series: rather than observing fund flows after the fact or verifying whether insurance would pay out after an incident, the goal here is judging whether the underlying peg mechanism itself was ever designed to survive the stress it will eventually face. As throughout this series, this is a methodology for classifying mechanism categories, stress-testing redemption paths, and reading historical evidence — not an evaluation of any specific real-world stablecoin.</p>
+<ul>
+<li>No-depeg-so-far is not the same as a stress-tested mechanism.</li>
+<li>A collateralization ratio is only meaningful once correlation with depeg scenarios is checked.</li>
+<li>A theoretically available redemption path can be capped or paused exactly when needed.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. A Question Beneath Fund Flows and Insurance Coverage</a></li>
+          <li><a href="#sec-2">2. Three Collateral Models, Three Different Ways to Fail</a></li>
+          <li><a href="#sec-3">3. Stress-Testing the Redemption Path, Not Just the Whitepaper</a></li>
+          <li><a href="#sec-4">4. Correlated Collapse: When the Collateral and the Peg Share a Crisis</a></li>
+          <li><a href="#sec-5">5. Reading a Stablecoin's Own Depeg History Instead of Its Marketing</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Scope Recap</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/stablecoins/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation on stablecoin mechanism categories</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying a stablecoin contract's collateral composition and redemption transaction records</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>: a public example of a cross-chain swap aggregation product, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Getting Started with On-Chain Insurance Research: Verifying Coverage Scope and Payout Capacity</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Getting Started with Restaking Research: Verifying Slashing Risk and Operator Concentration</a></li>
+          <li><a href="/en/articles/swap-routing-research-guide.html">Getting Started with Cross-Chain Swap Routing Research: Verifying Best Paths and Hidden Costs</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Getting Started with Vote-Market Research: Verifying Vote-Locking and Bribe Economics</a></li>
+          <li><a href="/en/articles/liquidity-mining-research-guide.html">Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">An Introduction to Lending Protocol Liquidation Mechanics: How to Verify Parameters and Cascading Risk</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</a></li>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Getting Started with Airdrop and Sybil Address Detection Research: How to Verify Genuine Token Distribution and Spot Sybil Patterns</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Introduction to Cross-Chain Bridge Security Research: How to Verify a Bridge's Trust Model and Custody Risks</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">An Introduction to Oracle and Price Data Research: How to Verify DeFi Protocols' Price Sources and Manipulation Risk</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">A Practical Introduction to Proof of Reserves: From Merkle Tree Mechanics to Verifying Custodial Risk On-Chain</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research 101: Proposal Lifecycles, Voting Power, and On-Chain Treasury Verification</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">A Beginner's Guide to Smart Contract Security and Audit Reports: Reading Between the Lines</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research 101: Understanding Allocation, Vesting, and On-Chain Verification</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Getting Started with Crypto Project Research: A Systematic Approach</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis for Beginners: Understanding Addresses, Transactions, and Core Metrics</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Airdrops</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Bridge Security</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Team</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">Exchange</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">Governance</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">Security</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=2a47d853"></script>
+</body>
+</html>
