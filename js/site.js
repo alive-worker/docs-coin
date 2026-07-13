@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/rwa-tokenization-trust-structure.html': '2026-07-13 17:49:22',
+    '/en/articles/rwa-tokenization-trust-structure.html': '2026-07-13 17:49:22',
     '/articles/mev-private-order-flow.html': '2026-07-10 17:26:57',
     '/en/articles/mev-private-order-flow.html': '2026-07-10 17:26:57',
     '/articles/funding-rate-divergence.html': '2026-07-10 16:00:05',
