@@ -192,6 +192,24 @@ function updateItemLists() {
   console.log(`[3/9] ItemList JSON-LD updated: ${count}`);
 }
 
+// Topic count = number of curated "READING PATHS" categories on articles.html
+// (研究方法基础 / 协议与基础设施风险 / 市场结构与流动性 / 治理资产与专项核验 — currently
+// 4). This is a hand-curated taxonomy, not a per-article tag count: every new
+// article gets manually slotted into one of these <section class="topic-path">
+// groups (see insertArchiveItem or the manual step it replaced), so the count
+// only changes when a category is added/split/removed, never on a routine
+// per-article publish. Must be called after that categorization step, not
+// derived from archive-tag labels (which are per-article and always ~= article
+// count, not a meaningful "topics" number).
+function countDistinctTopics(lang) {
+  const file = lang === 'en' ? 'en/articles.html' : 'articles.html';
+  const t = fs.readFileSync(path.join(root, file), 'utf-8');
+  const gridMatch = t.match(/<div class="topic-path-grid">([\s\S]*?)<\/div>\s*<\/section>/);
+  if (!gridMatch) return null; // no reading-paths section found — leave the stat untouched
+  const categories = [...gridMatch[1].matchAll(/<section class="topic-path">/g)];
+  return categories.length;
+}
+
 // --- Step 4: homepage featured + grid ------------------------------------------
 function updateHomepage(lang) {
   const file = lang === 'en' ? 'en/index.html' : 'index.html';
@@ -206,10 +224,28 @@ function updateHomepage(lang) {
   const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
   const coverSuffix = lang === 'en' ? '-en.svg' : '.svg';
 
-  // bump hero-stats counts (both instances share the same old number)
-  const oldCount = CONFIG.existingSlugsNewestFirst.length; // articles before this one
-  const newCount = oldCount + 1;
-  t = t.split(`<span class="hero-stat-num">${oldCount}</span>`).join(`<span class="hero-stat-num">${newCount}</span>`);
+  // "篇文章" is a plain count. "个主题" is NOT the same number by coincidence —
+  // it must NOT be blindly bumped alongside the article count (see git history:
+  // prior to this fix the two counters were bumped in lockstep every publish,
+  // which drifted from reality the moment a new article's tag wasn't a brand
+  // new category). It now reflects the curated reading-paths category count —
+  // see countDistinctTopics() — which this repo intentionally keeps fixed at 4.
+  // A brand-new article usually slots into an EXISTING category, so 个主题 stays
+  // unchanged on a routine publish; only bump it by hand if you add a new
+  // <section class="topic-path"> category.
+  const oldArticleCount = CONFIG.existingSlugsNewestFirst.length;
+  const newArticleCount = oldArticleCount + 1;
+  const topicCount = countDistinctTopics(lang);
+  t = t.replace(
+    /(<span class="hero-stat-num">)\d+(<\/span><span class="hero-stat-label">(?:篇文章|Articles))/,
+    `$1${newArticleCount}$2`
+  );
+  if (topicCount !== null) {
+    t = t.replace(
+      /(<span class="hero-stat-num">)\d+(<\/span><span class="hero-stat-label">(?:个主题|Topics))/,
+      `$1${topicCount}$2`
+    );
+  }
 
   // swap featured card
   const featuredRe = /<section class="featured-article"[\s\S]*?<\/section>/;
@@ -416,10 +452,10 @@ function main() {
   insertSidebarItems();
   insertRelatedItems();
   updateItemLists();
-  updateHomepage('zh');
-  updateHomepage('en');
   insertArchiveItem('zh');
   insertArchiveItem('en');
+  updateHomepage('zh');
+  updateHomepage('en');
   updateSitemap();
   regenerateFeeds();
   updateSiteJsDates();
