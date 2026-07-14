@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/liquid-staking-token-price-deviation.html': '2026-07-14 14:43:00',
+    '/en/articles/liquid-staking-token-price-deviation.html': '2026-07-14 14:43:00',
     '/articles/rwa-tokenization-trust-structure.html': '2026-07-13 17:49:22',
     '/en/articles/rwa-tokenization-trust-structure.html': '2026-07-13 17:49:22',
     '/articles/mev-private-order-flow.html': '2026-07-10 17:26:57',
@@ -430,6 +432,22 @@
   // --- Archive page: paginate the titles list ---
   var archive = document.querySelector('.archive-list');
   if (archive) paginate(archive, Array.prototype.slice.call(archive.querySelectorAll('.archive-item')), 20, pager);
+
+  // Makes footer/nav "hot topic" links addressable: /articles.html?topic=protocol
+  // pre-selects and applies that chip's filter on load, same idea as the ?q= search backfill.
+  // Must run AFTER the paginate() call above, which otherwise re-shows/hides items by
+  // page position and clobbers whatever display values a filter set during page load.
+  if (typeof topicButtons !== 'undefined' && typeof applyArchiveSearch !== 'undefined') {
+    var urlTopic = new URLSearchParams(location.search).get('topic');
+    if (urlTopic) {
+      var matchBtn = topicButtons.filter(function (b) { return b.getAttribute('data-topic') === urlTopic; })[0];
+      if (matchBtn) {
+        activeTopic = urlTopic;
+        matchBtn.classList.add('is-active');
+        applyArchiveSearch();
+      }
+    }
+  }
 
   // --- Back-to-top: fades in once you've scrolled past ~one screen, not just near the bottom ---
   var backToTop = document.createElement('button');
