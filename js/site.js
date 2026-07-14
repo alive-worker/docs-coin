@@ -344,6 +344,10 @@
     var searchInput2 = document.querySelector('.sidebar-search-input');
     var searchWrap2 = document.querySelector('.sidebar-search');
     var searchClear2 = document.querySelector('.sidebar-search-clear');
+    // Topic-tag row atop the archive page (articles.html only) — clicking a tag filters
+    // the list below by each item's data-topic, combined with any active text search.
+    var topicButtons = archiveList ? Array.prototype.slice.call(document.querySelectorAll('.topic-tag-btn[data-topic]')) : [];
+    var activeTopic = null;
     if (listEl && searchInput2 && searchWrap2) {
       var itemSelector = archiveList ? '.archive-item' : '.post-card';
       var titleSelector = archiveList ? '.archive-title' : '.post-card-title';
@@ -361,7 +365,7 @@
         // Homepage only: collapse the hero/featured sections while searching so the
         // filtered "最新文章" grid sits right under the search box instead of way down the page.
         document.body.classList.toggle('is-searching', !!q && !!cardGrid);
-        if (!q) {
+        if (!q && !activeTopic) {
           if (gridPaginator) { gridPaginator.render(); } else { archiveItems.forEach(function (li) { li.style.display = ''; }); }
           emptyMsg2.hidden = true;
           if (pager) pager.style.display = '';
@@ -369,19 +373,30 @@
         }
         var anyMatch = false;
         archiveItems.forEach(function (li) {
+          var topicOk = !activeTopic || li.getAttribute('data-topic') === activeTopic;
+          if (!topicOk) { li.style.display = 'none'; return; }
           var titleEl = li.querySelector(titleSelector);
           var descEl = descSelector ? li.querySelector(descSelector) : null;
           var title = titleEl ? titleEl.textContent.toLowerCase() : '';
           var desc = descEl ? descEl.textContent.toLowerCase() : '';
-          var match = title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
+          var match = !q || title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
           li.style.display = match ? '' : 'none';
           if (match) anyMatch = true;
         });
         emptyMsg2.hidden = anyMatch;
-        // A search match may fall outside the current page's slice — show every match
-        // instead of leaving pagination's per-page display:none in charge while searching.
+        // A search/topic match may fall outside the current page's slice — show every match
+        // instead of leaving pagination's per-page display:none in charge while filtering.
         if (pager) pager.style.display = 'none';
       };
+
+      topicButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var topic = btn.getAttribute('data-topic');
+          activeTopic = activeTopic === topic ? null : topic;
+          topicButtons.forEach(function (b) { b.classList.toggle('is-active', b === btn && activeTopic !== null); });
+          applyArchiveSearch();
+        });
+      });
 
       searchInput2.addEventListener('input', applyArchiveSearch);
       if (searchClear2) {
