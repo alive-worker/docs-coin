@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verifying Auto-Deleveraging Risk - Crypto Research</title>
+  <meta name="description" content="A deep dive into auto-deleveraging (ADL): the liquidation waterfall's last defense, why profitable positions close first, and how to verify insurance fund size.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/auto-deleveraging-insurance-fund.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/auto-deleveraging-insurance-fund.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Verifying Auto-Deleveraging Risk - Crypto Research">
+  <meta property="og:description" content="A deep dive into auto-deleveraging (ADL): the liquidation waterfall's last defense, why profitable positions close first, and how to verify insurance fund size.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html">
+  <meta property="article:published_time" content="2026-07-15T17:56:32+08:00">
+  <meta property="article:modified_time" content="2026-07-15T17:56:32+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Verifying Auto-Deleveraging Risk - Crypto Research">
+  <meta name="twitter:description" content="Once the insurance fund runs dry, where does the loss actually go, why are the most profitable positions usually the ones force-closed, can an exchange's claimed insurance fund size actually be verified — a deep dive into the structural risk behind perpetual futures auto-deleveraging. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-adl-mechanism-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Auto-Deleveraging cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-adl-mechanism-en.png">
+  <link rel="preload" as="image" href="/img/article-adl-mechanism-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=955b88f8">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#primaryimage", "url": "https://coin.ponr.org/img/article-adl-mechanism-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#webpage", "url": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html", "name": "Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed", "item": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#article", "headline": "Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed", "description": "A deep dive into auto-deleveraging (ADL): the liquidation waterfall's last defense, why profitable positions close first, and how to verify insurance fund size.", "image": { "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["auto-deleveraging explained","ADL liquidation waterfall","profitable position force-close","insurance fund verification","ADL trigger frequency risk","perpetual futures cascade stress test"], "wordCount": 2100, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-15T17:56:32+08:00", "dateModified": "2026-07-15T17:56:32+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/auto-deleveraging-insurance-fund.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/auto-deleveraging-insurance-fund.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed</h1>
+        <p class="article-summary">This article takes a deep dive into perpetual futures auto-deleveraging (ADL): why it exists as the last line of defense in the liquidation waterfall once the insurance fund is exhausted; how ADL ranks counterparties by profit percentage and leverage, and why profitable positions get force-closed first rather than randomly; how to verify whether an exchange's claimed insurance fund size is actually checkable; why the absence of historical ADL trigger disclosure is itself a risk signal; and how to stress-test a single-symbol liquidation cascade that exhausts the insurance fund. The entire piece discusses abstract mechanism principles only — it does not name any real exchange or protocol, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-15T17:56:32+08:00">2026-07-15 17:56:32</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-adl-mechanism-en.svg" alt="Auto-Deleveraging cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Why Auto-Deleveraging Exists: The Last Line of Defense in the Liquidation Waterfall</h2>
+<p>A perpetual futures exchange handles a liquidated position through a sequence of escalating fallbacks, and understanding that sequence as a waterfall — rather than as a single event — is the starting point for reasoning about auto-deleveraging at all. The first tier is ordinary liquidation: once a position's margin falls below the maintenance threshold, the exchange closes it in the open market, ideally at or near its bankruptcy price, the price at which the position's remaining margin is exactly exhausted. Under normal depth conditions this tier absorbs the vast majority of liquidations without any further consequence.</p>
+<p>The second tier activates when the market cannot absorb the closure at a reasonable price — thin order-book depth, a fast-moving symbol, or a liquidation large relative to available liquidity means the position gets closed worse than its bankruptcy price, leaving a shortfall. This is precisely what an insurance fund is engineered for: a pooled reserve, typically seeded from liquidation surplus on the opposite, well-behaved cases, that absorbs exactly this kind of gap so the loss does not have to be passed anywhere else.</p>
+<p>The third tier is the one this article is about. If the shortfall exceeds what the insurance fund can cover — a large enough move, a thin enough fund, or both — the exchange has no further capital of its own to draw on. It is not a bank; it does not warehouse the loss on a balance sheet. Instead it claws the loss back from the other side of the same contract: the winning counterparties. Auto-deleveraging is that clawback mechanism, and its existence as a last resort, invoked only after two prior layers have already failed, is precisely why it should be read as a structural circuit breaker rather than a routine cost of doing business.</p>
+<ul>
+<li>Tier one: ordinary liquidation closes the position in the market, ideally at its bankruptcy price.</li>
+<li>Tier two: the insurance fund absorbs any shortfall when the market cannot close the position cleanly.</li>
+<li>Tier three: when the fund itself is insufficient, ADL claws the unpaid loss back from profitable counterparties.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. How ADL Selects Counterparties: Why Profitable Positions, Not Random Ones</h2>
+<p>When ADL activates, the exchange does not select which opposing positions to force-close arbitrarily, nor does it spread the closure proportionally across every open position on that side of the market. Most venues instead maintain a continuously updated ranking of counterparties, computed from a combination of unrealized profit percentage and leverage used. Positions scoring highest on both dimensions sit at the top of the queue and are the first candidates to be force-closed, partially or in full, to absorb the shortfall left behind by the liquidated trader.</p>
+<p>The reasoning behind that ranking is worth making explicit rather than treating as a black box. Profit percentage and leverage together function as a proxy for surplus capacity: a position that is both highly profitable and highly leveraged has, relative to its margin footprint, the largest cushion of unrealized gain available to absorb an involuntary closure without itself being pushed into a loss it cannot bear. A marginally profitable or low-leverage position has far less room to give.</p>
+<p>This is also why the mechanism deliberately targets profitable positions rather than distributing the loss randomly or pro-rata across the whole open-interest base. A random or proportional approach risks touching positions that are near their own liquidation threshold, which could convert a single shortfall into a second wave of forced closures — precisely the cascading dynamic a researcher should already be alert to. Ranking by profit and leverage concentrates the clawback on accounts best equipped to absorb it, and the closure itself executes at the liquidated trader's bankruptcy price, not the prevailing market price, which is why an ADL-closed position is a materially worse outcome than an ordinary market exit.</p>
+<ul>
+<li>Counterparties are ranked by a combined profit-percentage and leverage score, not chosen randomly.</li>
+<li>High rank signals surplus capacity: room to absorb a forced closure without cascading into further liquidation.</li>
+<li>Forced closures execute at the liquidated trader's bankruptcy price, not the market price at the time.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verifying Insurance Fund Size: Is the Claimed Number Actually Checkable</h2>
+<p>A displayed insurance fund balance carries the same epistemic status as any other headline figure this series has repeatedly cautioned against accepting at face value: it is a claim made by an interface, not a fact a researcher has independently confirmed. The first question to ask is structural — is the fund held in an identifiable, publicly queryable on-chain address, or is it simply a number rendered on a dashboard with no address attached at all? The former is independently verifiable by any researcher with a block explorer; the latter is self-reported and rests entirely on the exchange's own accounting.</p>
+<p>Where an address is published, verification does not stop at confirming the address exists. A researcher should check whether the balance can be queried in real time rather than only through a static, periodically refreshed snapshot, and whether the exchange (or a third party) publishes a historical balance chart rather than a single point-in-time figure. A time series matters because it reveals drawdown behavior — how much the fund actually depleted during past volatile episodes and how quickly it was replenished — which a single current balance cannot show at all.</p>
+<p>A further wrinkle worth checking is custody structure: some funds span multiple chains or multiple wallets that need to be aggregated to reconstruct the true total, and an on-chain balance, even when verifiable, does not by itself prove the fund is segregated from the exchange's other operating capital. That last point echoes a lesson from proof-of-reserves research elsewhere in this series — verifying that a balance exists is not the same as verifying what it is legally or operationally reserved for.</p>
+<ul>
+<li>Check whether the fund sits at a public, queryable on-chain address or only appears as a dashboard number.</li>
+<li>Prefer real-time balance access and historical drawdown charts over a single point-in-time snapshot.</li>
+<li>An address-level balance is not proof of segregation from the exchange's other operating capital.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Historical ADL Trigger Frequency as a Risk Signal: The Absence of Disclosure Is Itself a Signal</h2>
+<p>Beyond the fund's size, a second and distinct research question is how often the fund has actually been exhausted in practice. Many exchanges surface an ADL indicator on individual positions — commonly a light or bar scale showing a trader's current rank in the clawback queue — and some go further, publishing a historical log of ADL events by contract, including which symbols triggered it and how often. Both are worth locating before treating any specific market as safe from this mechanism.</p>
+<p>Where that history is available, frequency itself is informative. A symbol whose ADL log shows repeated triggers over a given period indicates that the insurance fund's coverage is thin relative to that specific market's volatility and open interest — the fund is being exhausted by liquidation flow that, on a deeper or better-capitalized market, would have been absorbed at tier two without ever reaching the clawback stage. This is a per-symbol signal, not necessarily an exchange-wide one, since fund allocation and market depth both vary by contract.</p>
+<p>The more consequential finding, however, is often the absence of any disclosure mechanism at all. If an exchange provides no historical ADL log and no queryable trigger history for a contract, a researcher has no way to distinguish two very different underlying realities: a market where ADL genuinely never happens because the fund is deep relative to that symbol's risk, and a market where it happens routinely but simply is not surfaced. The absence of a verification channel does not prove frequent triggering, but it removes the researcher's ability to rule it out — which itself belongs in any risk assessment of that market.</p>
+<ul>
+<li>Locate any per-symbol ADL indicator and any published historical trigger log before assuming a market is unaffected.</li>
+<li>Repeated triggers on one symbol signal thin fund coverage relative to that market's volatility and open interest.</li>
+<li>No disclosure mechanism means "never triggered" and "not disclosed" are indistinguishable from the outside.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Stress-Testing a Single-Symbol Liquidation Cascade That Exhausts the Insurance Fund</h2>
+<p>An earlier article in this series modeled cascading liquidation risk in lending protocols as a feedback loop: a price decline triggers liquidations, those liquidations generate forced selling, the forced selling pushes price further, and the loop restarts. The same feedback structure applies to a single perpetual futures symbol, with one addition specific to this venue: each liquidation shortfall draws down the insurance fund, and once the fund is exhausted, the remaining liquidations in the cascade have nowhere left to go except ADL.</p>
+<p>Consider a fully invented illustrative scenario, with every figure fabricated purely to demonstrate the mechanics. A fictional symbol carries $200 million of open interest concentrated in leveraged long positions, and the exchange's fund allocated to that symbol sits at a fictional $8 million. A sharp 12% adverse price move pushes a first tranche of the most thinly margined longs to liquidation; thin order-book depth means they close at an average of 1.5% worse than their bankruptcy price, generating a fictional $3 million shortfall absorbed by the fund, leaving $5 million. The price continues sliding as liquidation-driven selling adds its own pressure, triggering a second, larger tranche whose shortfall — now $6 million, because depth has thinned further exactly when it is needed most — exceeds what remains. The fund is exhausted mid-tranche, and the unpaid remainder of that shortfall is the trigger point for ADL against the highest-ranked profitable short positions.</p>
+<p>The methodological takeaway is that a researcher can approximate this exposure without waiting for it to happen: mapping liquidation price clustering on a symbol (the same open-interest crowding signal covered elsewhere in this series), estimating shortfall per tranche under a plausible depth-erosion assumption, and comparing the running total against the fund balance verified per Section 3 gives an approximate sense of how much further stress that specific market could absorb before ADL becomes a realistic outcome rather than a theoretical one.</p>
+<ul>
+<li>Cascading risk on a perpetual symbol mirrors lending-protocol cascades, with insurance-fund drawdown as the added constraint.</li>
+<li>All figures above are invented solely to illustrate tranche-by-tranche fund depletion, not observed data from any exchange.</li>
+<li>Comparing estimated shortfall per liquidation tranche against a verified fund balance approximates a symbol's ADL exposure.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Conclusion</h2>
+<p>Three misconceptions recur often enough to state directly. The first is assuming that the mere existence of an insurance fund means losses can never reach a profitable trader's position — the fund is a finite buffer sized for typical shortfalls, not an unlimited guarantee, and ADL exists specifically for the scenario where that buffer runs out, as laid out in Section 1. The second is treating a stated insurance fund figure as a verified fact rather than a claim requiring on-chain confirmation, conflating a dashboard number with independently checkable evidence, as addressed in Section 3. The third is assuming ADL is a rare, largely theoretical mechanism rather than checking the actual historical trigger data for the specific symbol being traded, which Section 4 argued is often unavailable in the first place — and that unavailability should itself lower confidence rather than be read as reassurance.</p>
+<p>Taken together, the six sections trace a single continuous line of inquiry: why the mechanism exists as the final tier of a liquidation waterfall, how it selects which counterparties absorb the clawback and why that selection specifically targets profit and leverage, how to verify the capital that is supposed to prevent the mechanism from ever needing to activate, how to check whether it has activated historically on a given market, and how to build an independent, order-of-magnitude estimate of how close a specific symbol currently sits to that threshold. None of these steps produces a certainty; together they replace a dashboard's assurances with a researcher's own evidence trail.</p>
+<p>This article discusses abstract mechanism categories common to perpetual futures exchange design in general. It does not name, evaluate, or draw conclusions about any real exchange or protocol, and every figure used in the illustrative example in Section 5 was invented solely to demonstrate a calculation method. Nothing here constitutes investment advice or a recommendation regarding any specific position, market, or venue.</p>
+<ul>
+<li>An insurance fund is a finite buffer, not a guarantee that losses can never reach profitable positions.</li>
+<li>A stated fund balance is a claim until confirmed against a queryable on-chain address and its history.</li>
+<li>Treat missing ADL trigger disclosure as a gap in evidence, not as proof the mechanism rarely activates.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why Auto-Deleveraging Exists: The Last Line of Defense in the Liquidation Waterfall</a></li>
+          <li><a href="#sec-2">2. How ADL Selects Counterparties: Why Profitable Positions, Not Random Ones</a></li>
+          <li><a href="#sec-3">3. Verifying Insurance Fund Size: Is the Claimed Number Actually Checkable</a></li>
+          <li><a href="#sec-4">4. Historical ADL Trigger Frequency as a Risk Signal: The Absence of Disclosure Is Itself a Signal</a></li>
+          <li><a href="#sec-5">5. Stress-Testing a Single-Symbol Liquidation Cascade That Exhausts the Insurance Fund</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Conclusion</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying on-chain addresses and balances</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying an on-chain insurance fund address's real-time balance and history</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>: a public example of a cross-chain swap aggregation product, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/liquid-staking-token-price-deviation.html">Liquid Staking Tokens: Why the Derivative Token's Price Isn't Always Equal to the Underlying Staked Asset</a></li>
+          <li><a href="/en/articles/rwa-tokenization-trust-structure.html">RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset</a></li>
+          <li><a href="/en/articles/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Just Changed Hands</a></li>
+          <li><a href="/en/articles/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetual Futures</a></li>
+          <li><a href="/en/articles/stablecoin-peg-mechanism-research-guide.html">Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk</a></li>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Getting Started with On-Chain Insurance Research: Verifying Coverage Scope and Payout Capacity</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Getting Started with Restaking Research: Verifying Slashing Risk and Operator Concentration</a></li>
+          <li><a href="/en/articles/swap-routing-research-guide.html">Getting Started with Cross-Chain Swap Routing Research: Verifying Best Paths and Hidden Costs</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Getting Started with Vote-Market Research: Verifying Vote-Locking and Bribe Economics</a></li>
+          <li><a href="/en/articles/liquidity-mining-research-guide.html">Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">An Introduction to Lending Protocol Liquidation Mechanics: How to Verify Parameters and Cascading Risk</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</a></li>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Getting Started with Airdrop and Sybil Address Detection Research: How to Verify Genuine Token Distribution and Spot Sybil Patterns</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Introduction to Cross-Chain Bridge Security Research: How to Verify a Bridge's Trust Model and Custody Risks</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">An Introduction to Oracle and Price Data Research: How to Verify DeFi Protocols' Price Sources and Manipulation Risk</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">A Practical Introduction to Proof of Reserves: From Merkle Tree Mechanics to Verifying Custodial Risk On-Chain</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research 101: Proposal Lifecycles, Voting Power, and On-Chain Treasury Verification</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">A Beginner's Guide to Smart Contract Security and Audit Reports: Reading Between the Lines</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research 101: Understanding Allocation, Vesting, and On-Chain Verification</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Getting Started with Crypto Project Research: A Systematic Approach</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis for Beginners: Understanding Addresses, Transactions, and Core Metrics</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=2d8dc61b"></script>
+</body>
+</html>
