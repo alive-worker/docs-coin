@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verifying Vote-Escrow Token Locks - Crypto Research</title>
+  <meta name="description" content="A deep dive into vote-escrow (ve) locks: on-chain facts vs marketing claims, liquid wrapper risk, voting power vs economic alignment, unlock-cliff mapping.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/vote-escrow-lock-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/vote-escrow-lock-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Verifying Vote-Escrow Token Locks - Crypto Research">
+  <meta property="og:description" content="A deep dive into vote-escrow (ve) locks: on-chain facts vs marketing claims, liquid wrapper risk, voting power vs economic alignment, unlock-cliff mapping.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html">
+  <meta property="article:published_time" content="2026-07-16T10:07:11+08:00">
+  <meta property="article:modified_time" content="2026-07-16T10:07:11+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Verifying Vote-Escrow Token Locks - Crypto Research">
+  <meta name="twitter:description" content="Does a high locked-supply percentage really mean low sell pressure, can locked positions actually be exited early, does holding voting power mean genuine alignment with a protocol's long-term health — a deep dive into the verification methodology and structural risk behind vote-escrow locks. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-ve-lock-mechanism-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Vote-Escrow Token Lock cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-ve-lock-mechanism-en.png">
+  <link rel="preload" as="image" href="/img/article-ve-lock-mechanism-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=5b9c9e90">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research","Vote-Escrow Lock Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-ve-lock-mechanism-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html", "name": "Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation", "item": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#article", "headline": "Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation", "description": "A deep dive into vote-escrow (ve) locks: on-chain facts vs marketing claims, liquid wrapper risk, voting power vs economic alignment, unlock-cliff mapping.", "image": { "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["vote-escrow lock verification","ve token lock explained","liquid wrapper token risk","voting power economic alignment","unlock cliff mapping","locked supply verification method"], "wordCount": 2357, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-16T10:07:11+08:00", "dateModified": "2026-07-16T10:07:11+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/vote-escrow-lock-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/vote-escrow-lock-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation</h1>
+        <p class="article-summary">This article takes a deep dive into vote-escrow (ve) token locking mechanisms: why a claim that tokens are locked requires verification rather than being an automatic fact; how to verify on-chain contract lock duration and unlock progress against marketing claims; how liquid wrapper tokens let locked positions be re-tokenized and effectively exited early, undermining the meaning of the lock; why acquiring voting power through locking does not necessarily mean genuine long-term economic alignment; and how to compare disclosed locked supply against on-chain contract balances while mapping the unlock-expiry distribution. The entire piece discusses abstract mechanism principles only — it does not name any real protocol or token, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-16T10:07:11+08:00">2026-07-16 10:07:11</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-ve-lock-mechanism-en.svg" alt="Vote-Escrow Token Lock cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Why "Locked" Is a Claim Requiring Verification, Not an Automatic Fact</h2>
+<p>A vote-escrow (commonly abbreviated "ve") design asks holders to deposit a governance token into a locking contract for a duration they choose — weeks, months, or up to some multi-year maximum — in exchange for voting power that typically scales with how long the lock is set to run. A four-year lock might grant close to the maximum possible voting weight per token, while a one-month lock grants only a small fraction of that weight for the same token amount. Many implementations pair this with boosted rewards: locked positions often earn a multiplier on staking or liquidity-provision yield that unlocked holdings do not receive, giving holders a second reason to lock beyond the vote itself.</p>
+<p>Once a meaningful share of supply sits in these contracts, protocols routinely report it as "locked supply" or "supply removed from circulation," and dashboards subtract it from total supply to produce a smaller, more flattering circulating-supply figure. The implicit claim bundled into that framing is twofold: that the removed tokens will not reach the open market for the stated duration, and that locking itself signals holders who are aligned with the protocol's long-term health rather than short-term extraction.</p>
+<p>Neither half of that claim is self-evidently true simply because a lock exists. The tokens have not left existence — they still sit on a balance sheet somewhere, now recorded as a balance inside a smart contract instead of a wallet. Whether that balance is genuinely inaccessible before its stated expiry, whether the contract's actual rules match what marketing material describes, and whether locking reflects real conviction rather than a vote-power or yield-farming strategy are all separate, checkable questions — the subject of the rest of this piece, and a natural continuation of how this series has treated locked voting power and circulating-supply figures in earlier articles.</p>
+<ul>
+<li>Ve locks convert a token deposit into voting power and often a reward boost, typically scaled by chosen lock duration.</li>
+<li>"Removed from circulating supply" is a claim about future behavior and contract enforcement, not a statement about tokens ceasing to exist.</li>
+<li>The tokens remain intact and reassignable in principle; the interesting question is what actually stands between a holder and re-entering circulation.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verifying Lock Duration and Unlock Progress: On-Chain Contract Facts vs. Marketing Claims</h2>
+<p>A protocol's documentation or landing page will typically describe the locking mechanism in a few sentences: available lock durations, a formula linking duration to voting weight, and perhaps a note about an early-exit penalty. None of that text is binding — the deployed contract's bytecode and current parameter values are what actually govern what happens to a locked token. Governance votes can and do change these parameters after launch (adjusting the maximum lock length, the penalty curve for early withdrawal, or the decay rate applied to voting power as a lock approaches expiry), and a documentation page is frequently the last thing updated when that happens. A researcher should pull the current values directly from the contract — reading its verified source and calling its view functions, or using a block explorer's "read contract" interface — rather than trusting a paragraph of prose.</p>
+<p>Two contract-level details matter most in practice. The first is whether early withdrawal is actually blocked, or merely discouraged through a penalty such as a fee, a burn, or a forfeiture of accrued rewards. A "locked" position that can be exited at any time for a cost is a materially weaker claim than one that is contractually immovable until expiry, even though both might be described as "locked" in a summary dashboard. The second is the decay schedule: many ve designs decay voting power linearly as a lock approaches its end date, and some allow holders to top up or re-lock to reset that decay, which matters when interpreting any single voting-power snapshot.</p>
+<p>Beyond parameters, the contract also holds the ground truth for volume and timing: the total token balance currently held by the locking contract, and, critically, the distribution of individual lock-end timestamps across all positions. Aggregating that distribution into unlocks-per-month or unlocks-per-quarter turns a single "X% locked" headline into a timeline, which Section 5 develops into a full methodology.</p>
+<ul>
+<li>Read the deployed contract's live parameters directly; documentation can lag behind governance-approved changes.</li>
+<li>Distinguish contractually-blocked withdrawal from a penalty-discouraged withdrawal — both get called "locked."</li>
+<li>Pull the locking contract's total balance and the full distribution of lock-end timestamps, not just a dashboard's single aggregate figure.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Liquid Wrapper Tokens: How Much Does Tokenizing a Locked Position Undermine the Meaning of "Locked"</h2>
+<p>A separate layer of complexity appears once a locking mechanism becomes popular enough to attract third-party protocols built on top of it. A common pattern: a wrapper protocol accepts either a fresh token deposit or an existing lock, commits it to a long — often maximum-duration — lock under its own control, and in return issues the depositor a freely tradeable token representing a claim on that locked position's economics, and sometimes a share of the voting power, though the wrapper issuer frequently retains actual voting control itself. The depositor can then sell that wrapper token on a secondary market at any time, for whatever price it will fetch, effectively converting an illiquid multi-year lock into a liquid, exit-at-will position.</p>
+<p>This does not break the base protocol's contract-level lock: the underlying tokens genuinely remain inside the locking contract, still counted in whatever balance a block explorer reports, still generating the wrapper protocol's voting power and rewards. What has moved is the economic exposure. The original depositor who wanted out has exited, in substance, by selling the wrapper; the buyer on the other side of that trade now holds the "locked, long-term-aligned" position, but may hold it for minutes rather than years, with no particular interest in the base protocol's governance beyond arbitraging the wrapper's price against the underlying.</p>
+<p>The consequence for a researcher reading a "locked supply" figure is that the number can be technically accurate and economically misleading at the same time. A token is only meaningfully removed from circulating supply if the entity holding the economic claim on it is actually choosing not to sell — once a liquid wrapper exists, that choice has been decoupled from the lock itself and can change hands every block. Checking whether a wrapper market exists for a given locking mechanism, how large it is relative to total locked value, and whether the wrapper trades at a persistent discount to the underlying — itself a signal of exit demand exceeding available liquidity — should be a standard step before accepting a locked-supply claim at face value.</p>
+<ul>
+<li>Wrapper protocols tokenize a locked position, letting the original depositor exit early by selling the wrapper rather than waiting out the lock.</li>
+<li>The base contract's locked balance stays technically correct; what changes is who bears the economic exposure and holding intent.</li>
+<li>A wrapper trading at a persistent discount to the underlying is itself evidence of exit demand the headline "locked supply" number does not capture.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. The Misalignment Between Voting Power and Economic Interest: Locking for Votes Doesn't Mean Genuine Long-Term Alignment</h2>
+<p>The vote-bribery article in this series examined what happens once locked voting power becomes something that can be bought and sold on a bribe market: a locker's vote stops being solely a governance decision and becomes an income-generating asset that outside parties will pay to direct. That earlier analysis has a direct bearing on how a "locked equals aligned" marketing narrative should be read. Locking a token for maximum voting weight is, on its own, evidence only that the holder wanted maximum voting weight — it says nothing about why they wanted it.</p>
+<p>Three distinct motives can produce an identical maximum-duration lock. A holder might lock because they genuinely believe in the protocol's multi-year trajectory and want governance influence to match. A holder might lock purely to harvest a reward boost that is only available to locked positions, treating the vote as an incidental byproduct. And a holder might lock specifically to capture bribe income, in which case the optimal strategy each round is to direct votes toward whichever bribe pays best, regardless of which outcome is actually good for the protocol — the same mercenary-voting dynamic this series has already described. From outside the contract, all three lockers look identical: same lock duration, same voting weight, same contribution to the "locked supply" figure.</p>
+<p>A researcher trying to separate these motives has to look past the lock itself and at behavior over time. Does an address's vote target shift every round toward whatever is currently paying the highest bribe, or does it stay consistent regardless of bribe availability? Does the locker hold other exposure to the protocol beyond the locked governance token, or is the lock its only stake in the outcome? A large locked balance that also collects substantial, inconsistent bribe income across rounds is better read as a yield position wearing governance clothing than as evidence of long-term alignment.</p>
+<ul>
+<li>A lock proves only that a holder wanted voting weight — not whether the motive was governance conviction, a reward boost, or bribe extraction.</li>
+<li>Vote-target consistency across multiple rounds, independent of bribe size, is a stronger alignment signal than lock duration alone.</li>
+<li>Check whether a locker holds other protocol exposure beyond the locked token itself, or whether the lock is a standalone, extractable voting asset.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. A Verification Method: Comparing Disclosed Locked Supply Against On-Chain Contract Balances and Mapping the Unlock-Expiry Distribution</h2>
+<p>The verification exercise has two parts, and both rely on data a locking contract exposes directly rather than on a project's self-reported summary. The first is a reconciliation: pull the token balance actually held by the locking contract address from a block explorer, and compare it against whatever "total locked" figure the protocol's dashboard or tokenomics page reports. These two numbers should sit close together; a persistent gap — the dashboard figure running higher than the contract balance — suggests the disclosed number may be counting positions that have already unlocked but not yet been withdrawn, or may simply be stale.</p>
+<p>The second, more revealing part extends the unlock-pressure methodology from the tokenomics article in this series to the ve-lock context specifically. Rather than reading a single "X% locked" headline, pull every individual lock's end timestamp from the contract and bucket them into a timeline — by week, month, or quarter, depending on total lock volume. The resulting histogram is an unlock-cliff map: it shows not just how much is locked in aggregate, but when it stops being locked.</p>
+<p>Consider a purely illustrative, invented example: a fictional protocol discloses "62% of supply locked," which reads as a single stable figure. Mapping the underlying contract's lock-end timestamps might instead show that 40% of that locked total shares a single expiry date eighteen months out, because an early bulk-lock incentive campaign pushed a large cohort of holders toward the maximum lock length in the same week, while the remaining 60% is spread evenly across the following three years. The 62% headline is accurate, but it obscures a concentrated future date on which a large single tranche becomes freely transferable at once — a materially different risk profile than a smoothly distributed unlock schedule, even though both could be summarized identically as "62% locked" today.</p>
+<ul>
+<li>Reconcile the disclosed "total locked" figure against the locking contract's actual on-chain token balance; a persistent gap is a research flag.</li>
+<li>Bucket every position's lock-end timestamp into a timeline to build an unlock-cliff map, not just a single aggregate percentage.</li>
+<li>A concentrated cluster of expiries on one future date carries different risk than the same total locked amount spread evenly over time — the numbers above are invented for illustration only.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Conclusion</h2>
+<p>Three misconceptions recur when researchers first encounter a vote-escrow locking mechanism. The first is treating a large "locked supply" percentage as automatically meaning low sell pressure and strong long-term alignment — as Sections 1 and 5 covered, the headline percentage says nothing about contract-level enforcement, nothing about how that total is distributed across future expiry dates, and nothing about the motives behind any individual lock. The second is failing to check whether a liquid-wrapper market exists for the locked position; if one does, a meaningful share of the "locked" balance's real economic exposure may have already changed hands, and the original conviction the lock was meant to signal may no longer be present at all. The third is conflating voting power with genuine economic alignment, when a locker's dominant incentive — as the bribe-market dynamics discussed in Section 4 and in this series' earlier vote-market article make clear — may point toward short-term bribe extraction rather than any interest in the protocol's sustainable trajectory.</p>
+<p>Taken together, these checks form a single research discipline: read the locking contract's actual parameters and balances rather than a dashboard summary, check whether a secondary market has been built on top of the lock that lets economic exposure move independently of contract state, and separate the existence of voting power from any assumption about what its holder actually wants. This article has treated the ve-lock mechanism as the point of origin for both dynamics this series examined earlier — the bribeable voting power studied in the vote-market article, and the circulating-supply arithmetic studied in the tokenomics article — and argued that the "locked, removed from circulation" claim sitting upstream of both deserves the same on-chain scrutiny as the claims built on top of it.</p>
+<p>This article discusses abstract categories of vote-escrow locking mechanisms only. It does not name, describe, or evaluate any specific real-world protocol or token, and all figures presented as examples are invented for methodology illustration only. Nothing in this article constitutes investment advice; readers should conduct independent research and are responsible for their own decisions.</p>
+<ul>
+<li>Misconception: a large locked-supply percentage automatically implies low sell pressure and long-term alignment.</li>
+<li>Misconception: assuming no liquid-wrapper market exists for a locked position without checking, when one may let holders exit early in substance.</li>
+<li>Misconception: equating voting power obtained through locking with genuine economic alignment, when the locker's real incentive may be short-term bribe income.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why "Locked" Is a Claim Requiring Verification, Not an Automatic Fact</a></li>
+          <li><a href="#sec-2">2. Verifying Lock Duration and Unlock Progress: On-Chain Contract Facts vs. Marketing Claims</a></li>
+          <li><a href="#sec-3">3. Liquid Wrapper Tokens: How Much Does Tokenizing a Locked Position Undermine the Meaning of "Locked"</a></li>
+          <li><a href="#sec-4">4. The Misalignment Between Voting Power and Economic Interest: Locking for Votes Doesn't Mean Genuine Long-Term Alignment</a></li>
+          <li><a href="#sec-5">5. A Verification Method: Comparing Disclosed Locked Supply Against On-Chain Contract Balances and Mapping the Unlock-Expiry Distribution</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Conclusion</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying smart contract state</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying a locking contract's on-chain balance and unlock timestamp distribution</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored noopener">AllSwap</a>: a public example of a cross-chain swap aggregation product, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/auto-deleveraging-insurance-fund.html">Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed</a></li>
+          <li><a href="/en/articles/liquid-staking-token-price-deviation.html">Liquid Staking Tokens: Why the Derivative Token's Price Isn't Always Equal to the Underlying Staked Asset</a></li>
+          <li><a href="/en/articles/rwa-tokenization-trust-structure.html">RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset</a></li>
+          <li><a href="/en/articles/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Just Changed Hands</a></li>
+          <li><a href="/en/articles/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetual Futures</a></li>
+          <li><a href="/en/articles/stablecoin-peg-mechanism-research-guide.html">Getting Started with Stablecoin Peg Mechanism Research: Verifying Collateral Models and Depeg Risk</a></li>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Getting Started with On-Chain Insurance Research: Verifying Coverage Scope and Payout Capacity</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Getting Started with Restaking Research: Verifying Slashing Risk and Operator Concentration</a></li>
+          <li><a href="/en/articles/swap-routing-research-guide.html">Getting Started with Cross-Chain Swap Routing Research: Verifying Best Paths and Hidden Costs</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Getting Started with Vote-Market Research: Verifying Vote-Locking and Bribe Economics</a></li>
+          <li><a href="/en/articles/liquidity-mining-research-guide.html">Getting Started with Liquidity Mining Research: Verifying Impermanent Loss and Mercenary Capital</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Getting Started with Layer2/Rollup Research: Verifying Sequencer Risk and Withdrawal Mechanisms</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Getting Started with NFT Collection Research: Verifying Rarity, Wash Trading, and Floor-Price Depth</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">An Introduction to Lending Protocol Liquidation Mechanics: How to Verify Parameters and Cascading Risk</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">An Introduction to DEX Liquidity and Swap Price Research: How to Verify True AMM Depth and Identify MEV Manipulation Mechanisms</a></li>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Getting Started with Airdrop and Sybil Address Detection Research: How to Verify Genuine Token Distribution and Spot Sybil Patterns</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Introduction to Cross-Chain Bridge Security Research: How to Verify a Bridge's Trust Model and Custody Risks</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">An Introduction to Oracle and Price Data Research: How to Verify DeFi Protocols' Price Sources and Manipulation Risk</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">A Practical Introduction to Proof of Reserves: From Merkle Tree Mechanics to Verifying Custodial Risk On-Chain</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research 101: Proposal Lifecycles, Voting Power, and On-Chain Treasury Verification</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">A Beginner's Guide to Smart Contract Security and Audit Reports: Reading Between the Lines</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research 101: Understanding Allocation, Vesting, and On-Chain Verification</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Getting Started with Crypto Project Research: A Systematic Approach</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis for Beginners: Understanding Addresses, Transactions, and Core Metrics</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=86265048"></script>
+</body>
+</html>

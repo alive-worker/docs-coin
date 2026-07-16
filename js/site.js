@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/vote-escrow-lock-verification.html': '2026-07-16 10:07:11',
+    '/en/articles/vote-escrow-lock-verification.html': '2026-07-16 10:07:11',
     '/articles/auto-deleveraging-insurance-fund.html': '2026-07-15 17:56:32',
     '/en/articles/auto-deleveraging-insurance-fund.html': '2026-07-15 17:56:32',
     '/articles/liquid-staking-token-price-deviation.html': '2026-07-14 14:43:00',
