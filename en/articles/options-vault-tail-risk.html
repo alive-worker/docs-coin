@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Options Vault (DOV) Tail Risk Verification - Crypto Research</title>
+  <meta name="description" content="A deep dive into decentralized options vaults: covered calls, cash-secured puts, APY verification, and strike/delta checks.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/options-vault-tail-risk.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/options-vault-tail-risk.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/options-vault-tail-risk.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/options-vault-tail-risk.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Options Vault (DOV) Tail Risk Verification - Crypto Research">
+  <meta property="og:description" content="A deep dive into decentralized options vaults: covered calls, cash-secured puts, APY verification, and strike/delta checks.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/options-vault-tail-risk.html">
+  <meta property="article:published_time" content="2026-07-20T11:12:01+08:00">
+  <meta property="article:modified_time" content="2026-07-20T11:12:01+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Options Vault (DOV) Tail Risk Verification - Crypto Research">
+  <meta name="twitter:description" content="What is the stable weekly yield a DOV shows you actually made of, how much can a single assignment event cost the vault, is a protocol's claimed strike-management strategy actually verifiable — a deep dive into the tail risk and verification methodology behind decentralized options vaults. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-options-vault-tail-risk-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Decentralized Options Vault cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-options-vault-tail-risk-en.png">
+  <link rel="preload" as="image" href="/img/article-options-vault-tail-risk-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=035e73ac">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research","Vote-Escrow Lock Research","Perpetual DEX Vault Research","Decentralized Options Vault Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#primaryimage", "url": "https://coin.ponr.org/img/article-options-vault-tail-risk-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#webpage", "url": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html", "name": "Decentralized Options Vaults: The Stable Weekly Yield Is Actually a Tail-Risk Premium - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Decentralized Options Vaults: The Stable Weekly Yield Is Actually a Tail-Risk Premium", "item": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#article", "headline": "Decentralized Options Vaults: The Stable Weekly Yield Is Actually a Tail-Risk Premium", "description": "A deep dive into decentralized options vaults: covered calls, cash-secured puts, APY verification, and strike/delta checks.", "image": { "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["decentralized options vault explained","DOV tail risk","options vault APY verification","strike delta verification","options vault stress test","covered call cash secured put risk"], "wordCount": 1990, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-20T11:12:01+08:00", "dateModified": "2026-07-20T11:12:01+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/options-vault-tail-risk.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/options-vault-tail-risk.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Decentralized Options Vaults: The Stable Weekly Yield Is Actually a Tail-Risk Premium</h1>
+        <p class="article-summary">This article takes a deep dive into decentralized options vaults (DOVs): depositor assets are used to write options and what's collected is a premium, not interest, distinguishing covered-call and cash-secured-put structures; why a stable weekly yield corresponds to a real directional risk exposure, since an assignment event is a structural norm rather than an anomaly; how to verify whether disclosed APY nets in real settlement losses from assignment rather than only showing premium income; whether strike selection and delta management are verifiable and whether the protocol publishes real-time position parameters; and how to stress-test how much vault NAV could drop during a single settlement period. The entire piece discusses abstract mechanism principles only — it does not name any real protocol, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-20T11:12:01+08:00">2026-07-20 11:12:01</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-options-vault-tail-risk-en.svg" alt="Decentralized Options Vault cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. How Decentralized Options Vaults Actually Work: Depositors Are Underwriting Options, Not Farming Yield</h2>
+<p>A decentralized options vault (DOV) pools depositor assets and, each settlement cycle — typically weekly — writes (sells) options against that pool to buyers on an options market, on-chain or off. What flows back to depositors is the option premium those buyers paid, not interest owed by a borrower and not a cut of trading fees from unrelated users. This matters because premium is compensation for accepting an asymmetric contractual obligation: the vault, as seller, must perform if the option finishes in the money, while the buyer's downside was capped the moment they paid the premium. Marketing copy describing this as a "yield" product obscures that the vault is functioning as an underwriter of insurance-like contracts, and its real return depends on how often, and by how much, those contracts are exercised against it.</p>
+<p>Two structures account for most of what exists in this category. A covered-call vault holds the underlying asset itself and sells call options against that holding: if price stays below the strike through expiry, the vault keeps both the asset and the premium, but if price rallies past the strike, the vault must deliver the asset at the strike price, forfeiting any further upside beyond that level. A cash-secured-put vault instead holds a stablecoin and sells put options: if price stays above the strike, the vault keeps the stablecoin and the premium, but if price falls below the strike at expiry, the vault must buy the underlying at the strike — a price now above the market rate, effectively catching a falling knife at a fixed, disadvantageous price.</p>
+<ul>
+<li>A DOV's return is option premium paid by option buyers, not interest or a share of unrelated trading fees.</li>
+<li>The vault functions as an options underwriter, contractually obligated to perform whenever the option finishes in the money.</li>
+<li>Covered-call vaults cap upside on a held asset; cash-secured-put vaults risk buying a falling asset at a fixed strike.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Why a "Stable Weekly Yield" Is Actually Payment for Carrying Directional Tail Risk</h2>
+<p>Premium income has a specific statistical shape: it accrues in small, steady positive increments in every settlement period where the underlying stays within a range roughly bounded by the strike, which for a reasonably chosen strike distance is most periods most of the time. This is exactly why a dashboard showing several consecutive weeks of positive, low-variance returns looks like a stable yield product — in calm conditions, the mechanism produces precisely that appearance. But the same mechanism behaves entirely differently the moment a single settlement period sees the underlying move sharply through the strike, because the vault's obligation as seller does not scale down in unusual periods; it is triggered precisely by them. A single bad settlement can offset many periods of accumulated premium in one stroke.</p>
+<p>The two structures fail in related but distinct ways. A covered-call vault breached to the upside does not lose deposited principal in nominal terms, but it forgoes all further gains above the strike for that cycle — a real economic cost measured against simply holding the asset, even though it never appears as a negative number in the vault's own accounting. A cash-secured-put vault breached to the downside loses principal directly: it must buy the underlying at a strike price now above the crashed market price, and that loss is real and immediate. Neither outcome is a bug sitting outside the vault's design — it is the structurally inevitable consequence of selling protection against a large move, and by construction it will occur in some fraction of settlement periods.</p>
+<ul>
+<li>Premium income looks stable in every calm period, but the underwriting obligation is defined precisely for the periods that are not calm.</li>
+<li>Covered-call vaults suffer opportunity cost from forgone upside; cash-secured-put vaults suffer real, immediate principal loss.</li>
+<li>A breached settlement is not an anomaly — it is a structurally inevitable outcome of selling options, guaranteed to occur eventually.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verifying Disclosed APY: Does It Net In Real Assignment Losses, or Only Show Premium Income</h2>
+<p>An earlier article in this series on perpetual DEX vaults established a general principle for any vault-shaped product: a headline APY is only meaningful once verified as derived from actual net-asset-value history, not from an isolated slice of income. That principle applies directly here, though the failure mode differs. A DOV's displayed weekly or annualized yield is frequently computed from premium collected during a run of recent settlement periods that happened not to breach the strike — a genuinely calm stretch, but one that says nothing about how the product behaves once assignment or exercise actually occurs. A yield figure built this way is a premium-income number wearing the label of a total return, equal to it only in periods where nothing was ever exercised against the vault.</p>
+<p>The correct verification method mirrors the NAV-curve approach used for perpetual vaults: request the vault's per-share NAV history across a period long enough to include at least one settlement where the underlying moved through the strike, then compute the realized return over that full window rather than annualizing a partial one. If a covered-call vault's NAV chart never shows a flattening from a period when the underlying rallied hard, or a cash-secured-put vault's chart never shows a drop from a sharp decline, that absence likely means the record has not yet lived through the event the strategy is exposed to, not that it cannot happen. A clean run of green weeks is not evidence of a resilient strategy; it may only be evidence of a short observation window.</p>
+<ul>
+<li>Apply the NAV-curve verification method from the perpetual-DEX-vault article: judge return from full per-share NAV history, not isolated income.</li>
+<li>A weekly yield computed only from calm, unbreached settlement periods is a premium-income figure, not a verified total return.</li>
+<li>A NAV chart with no visible dip from a breach settlement likely reflects a short observation window, not a resilient strategy.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Strike Selection and Delta Management: Is the Protocol's "Conservative Strategy" Actually Verifiable</h2>
+<p>Every DOV strategy reduces to one recurring decision: how far out-of-the-money to set the strike for the next cycle, equivalent to choosing a target delta and an implied assignment probability. A strike set far out-of-the-money lowers both the probability of assignment and the premium collected; a strike set closer to spot raises both. Some protocols encode this choice as a fixed, on-chain-readable parameter — a target delta band the strategy contract enforces mechanically every cycle — while others describe it only as a discretionary decision made by a manager or algorithm off-chain, adjusted week to week against conditions never independently specified. These are not equivalent claims, and a researcher should not treat a discretionary process described in prose as carrying the same verifiability as an enforced parameter.</p>
+<p>The practical test is disclosure, not description: does the protocol publish the current cycle's actual strike price, expiry date, and notional size being sold, somewhere a researcher can check independently of the marketing page, ideally on-chain or through a queryable interface? If so, that data is sufficient to compute an implied assignment probability from the underlying's observed volatility, independent of whatever the protocol's own materials claim about the strategy being conservative. If the protocol discloses only a backward-looking summary of premium already collected, with no visibility into the current cycle's live strike and notional, there is no way to independently check whether this week's positioning resembles last month's, and the word conservative is doing no verifiable work at all.</p>
+<ul>
+<li>Strike distance, delta, and assignment probability are one recurring decision — check whether it is fixed on-chain or purely discretionary.</li>
+<li>A hard, on-chain-readable delta or strike parameter is verifiable; a described discretionary process managed off-chain is not.</li>
+<li>Demand real-time disclosure of the current strike, expiry, and notional so assignment probability can be estimated, not merely asserted.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Stress-Testing a Single Settlement: How Much Could a Vault Lose When the Underlying Blows Through the Strike</h2>
+<p>The same order-of-magnitude discipline used elsewhere in this series to stress-test vault-shaped products applies here: before trusting that a fund's stated size comfortably absorbs a bad outcome, build an independent estimate from the strike distance, the notional size, and a plausible volatility scenario for the underlying, rather than assuming that "conservative strategy" language covers the case that actually matters. The inputs needed are the same three factors discussed in Section 4 — this cycle's strike distance from spot, the notional size being written, and the magnitude of the underlying's move relative to that strike — combined with how many days remain before settlement, since a move confirmed in the final two days before expiry leaves no time for the strike to be rolled or the position adjusted.</p>
+<p>Consider an entirely fictional scenario, invented solely to illustrate the method and unrelated to any real protocol. A hypothetical vault holds $50 million in deposits and this cycle has written options 8% out-of-the-money. Two days before settlement the underlying moves more than 25% in one direction — far beyond that buffer. In a covered-call structure, assets get called away at the strike, so the vault captures only the first 8 points of the move and forfeits the remaining 17 points of upside on its committed notional, a fictional opportunity cost in the low millions. In a cash-secured-put structure, the vault instead must buy the underlying at a strike roughly 17 points above the crashed price, a comparable fictional loss. The loss scales with how far the move exceeded the buffer and the notional committed, not total deposit size.</p>
+<ul>
+<li>Stress-test with three inputs: strike distance from spot, notional committed to that strike, and the underlying's move relative to the strike.</li>
+<li>All figures here — a $50M vault, 8% strike distance, a 25% move — are entirely fictional and illustrate the method only.</li>
+<li>Loss magnitude scales with how far the move exceeds the strike buffer and the notional exposed, not with total vault size alone.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Conclusion</h2>
+<p>Three errors recur often enough to state directly. The first, addressed in Sections 1 and 2, is treating DOV premium income as equivalent to a stable, fixed-income-like product, when the underlying position is that of an options underwriter carrying structural tail risk guaranteed to materialize eventually. The second, addressed in Section 3, is reading a dashboard's run of positive weekly periods as proof of a resilient strategy without checking whether the record has ever covered a full cycle including an actual assignment event — a short calm window proves nothing about behavior under stress. The third, addressed in Section 4, is accepting a protocol's claimed strike-selection or delta-management discipline as fact, rather than checking whether current strike, expiry, and notional are disclosed in a form a researcher can verify independently in real time.</p>
+<p>Taken together, the reasoning above traces one line: premium collected by a DOV compensates for underwriting directional risk, not a yield in the conventional sense; that risk surfaces as forgone upside or realized loss precisely in the periods a calm-window dashboard is least likely to show; strike and delta decisions are only as verifiable as the data a protocol discloses in real time; and any loss scenario should be estimated from strike distance, notional, and volatility, not assumed away by marketing language. This article discusses abstract categories of options-vault mechanism design only, does not name or evaluate any real protocol, and every figure in the Section 5 example was invented solely to demonstrate a calculation method. Nothing here constitutes investment advice or a recommendation regarding any specific vault, strategy, or asset.</p>
+<ul>
+<li>DOV premium income compensates for options-underwriting tail risk; it is not a fixed-income-like stable yield regardless of dashboard appearance.</li>
+<li>A run of calm, positive settlement periods proves nothing until the track record has covered a full cycle including an actual assignment event.</li>
+<li>Treat strike and delta strategy claims as verifiable only to the extent the protocol discloses current parameters in real time, not as established fact.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. How Decentralized Options Vaults Actually Work: Depositors Are Underwriting Options, Not Farming Yield</a></li>
+          <li><a href="#sec-2">2. Why a "Stable Weekly Yield" Is Actually Payment for Carrying Directional Tail Risk</a></li>
+          <li><a href="#sec-3">3. Verifying Disclosed APY: Does It Net In Real Assignment Losses, or Only Show Premium Income</a></li>
+          <li><a href="#sec-4">4. Strike Selection and Delta Management: Is the Protocol's "Conservative Strategy" Actually Verifiable</a></li>
+          <li><a href="#sec-5">5. Stress-Testing a Single Settlement: How Much Could a Vault Lose When the Underlying Blows Through the Strike</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Conclusion</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying smart contract state</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying an options vault contract's on-chain positions and settlement history</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/airdrop-sybil-detection-research-guide.html">Verifying Airdrop Distribution: A High Address Count Can Still Be One Person's Sybil Farm</a></li>
+          <li><a href="/en/articles/auto-deleveraging-insurance-fund.html">Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridges: Assets Never Actually Cross — They're Locked on One Side, Minted on the Other</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">An Audit Report Says “Audited” — But Audited What, Exactly: From Conclusions to On-Chain Verification</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance: When Voting Power Concentrates in a Few Addresses, Does “Decentralized” Still Hold</a></li>
+          <li><a href="/en/articles/dex-liquidity-research-guide.html">Verifying DEX Liquidity: Beyond the TVL Number, What Is an AMM Pool's Real Depth</a></li>
+          <li><a href="/en/articles/exchange-reserves-research-guide.html">What Proof of Reserves Actually Proves: A Merkle Tree Verifies Inclusion, Not Solvency</a></li>
+          <li><a href="/en/articles/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetual Futures</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Verifying the Layer2 Sequencer: Who Packages Your Transaction, and Who Can Censor It</a></li>
+          <li><a href="/en/articles/lending-liquidation-research-guide.html">Verifying Lending Liquidation: How One Oracle Delay Triggers a Cascade</a></li>
+          <li><a href="/en/articles/liquid-staking-token-price-deviation.html">Liquid Staking Tokens: Why the Derivative Token's Price Isn't Always Equal to the Underlying Staked Asset</a></li>
+          <li><a href="/en/articles/liquidity-mining-research-guide.html">Liquidity Mining Yield: How Much Does Impermanent Loss Eat Into That APY</a></li>
+          <li><a href="/en/articles/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Just Changed Hands</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Verifying NFT Floor Price: One Wash Trade Can Inflate the “Floor” by Multiples</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis: An Address Is Not an Identity, a Transaction Is Not Intent</a></li>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Verifying On-Chain Insurance: Coverage Looks Broad Until You File a Claim</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Verifying Oracle Prices: A Few Blocks of Feed Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/articles/perpetual-dex-vault-counterparty.html">Perpetual DEX Vaults: LPs Aren't Bystanders — They're the Counterparty to Every Trade</a></li>
+          <li><a href="/en/articles/research-tools-virtual-card-guide.html">Paying for Crypto Research Tool Subscriptions: A Practical Guide to Virtual Credit Cards</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Verifying Restaking: How Slashing Risk Stacks When One Collateral Backs Multiple Protocols</a></li>
+          <li><a href="/en/articles/rwa-tokenization-trust-structure.html">RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset</a></li>
+          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a></li>
+          <li><a href="/en/articles/stablecoin-peg-mechanism-research-guide.html">Verifying Stablecoin Pegs: Does the Redemption Path Actually Deliver on the $1 Promise</a></li>
+          <li><a href="/en/articles/swap-routing-research-guide.html">Verifying Swap Routing: What Costs Hide Behind the “Best Path” Quote</a></li>
+          <li><a href="/en/articles/team-developer-activity-research-guide.html">Researching Team Background and Developer Activity: From Verifying Team Pages to Reading GitHub Signals</a></li>
+          <li><a href="/en/articles/tokenomics-research-guide.html">Tokenomics Research: How Much Unlock Pressure Hides Behind the Circulating Supply Number</a></li>
+          <li><a href="/en/articles/vote-escrow-lock-verification.html">Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Vote-Bribery Markets: When Governance Votes Have a Price Tag, Is It Still Governance</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=0ee2d8ac"></script>
+</body>
+</html>
