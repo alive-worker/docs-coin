@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prediction Market Resolution Risk - Crypto Research</title>
+  <meta name="description" content="A deep dive into prediction market resolution: propose-and-dispute mechanics, adjudicator verification, and manipulation-cost stress tests.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/prediction-market-resolution-risk.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/prediction-market-resolution-risk.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Prediction Market Resolution Risk - Crypto Research">
+  <meta property="og:description" content="A deep dive into prediction market resolution: propose-and-dispute mechanics, adjudicator verification, and manipulation-cost stress tests.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html">
+  <meta property="article:published_time" content="2026-07-23T18:06:51+08:00">
+  <meta property="article:modified_time" content="2026-07-23T18:06:51+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prediction Market Resolution Risk - Crypto Research">
+  <meta name="twitter:description" content="Who actually decides a prediction market's outcome, is the challenge window and dispute bond a real deterrent or just theater, could the final adjudicator also be a market participant — a deep dive into the manipulation risk and verification methodology behind prediction market resolution. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-prediction-market-resolution-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Prediction Market Resolution cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-prediction-market-resolution-en.png">
+  <link rel="preload" as="image" href="/img/article-prediction-market-resolution-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=4de2f0e1">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research","Vote-Escrow Lock Research","Perpetual DEX Vault Research","Decentralized Options Vault Research","Real-World Credit Pool Research","Prediction Market Resolution Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#primaryimage", "url": "https://coin.ponr.org/img/article-prediction-market-resolution-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#webpage", "url": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html", "name": "Prediction Market Resolution Risk: Who Actually Holds Final Authority - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Prediction Market Resolution Risk: Who Actually Holds Final Authority", "item": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#article", "headline": "Prediction Market Resolution Risk: Who Actually Holds Final Authority", "description": "A deep dive into prediction market resolution: propose-and-dispute mechanics, adjudicator verification, and manipulation-cost stress tests.", "image": { "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["prediction market resolution explained","propose and dispute mechanism","final adjudicator verification","resolution evidence verification","prediction market stress test","prediction market manipulation risk method"], "wordCount": 1658, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-23T18:06:51+08:00", "dateModified": "2026-07-23T18:06:51+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/prediction-market-resolution-risk.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/prediction-market-resolution-risk.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Prediction Market Resolution Risk: Who Actually Holds Final Authority</h1>
+        <p class="article-summary">This article takes a deep dive into prediction market resolution mechanisms: why real-world event adjudication is a fundamentally different verification problem from price oracles; how the propose-and-dispute mechanism actually works and its key parameters; whether final adjudication authority sits with a token vote, a committee, or a dedicated arbitration protocol, and whether adjudicators overlap with market participants in ways that create manipulation incentives; whether the evidence behind a resolution is traceable and whether the protocol has pre-specified rules for ambiguous events; and how to stress-test the manipulation and delayed-settlement cost of a high-value, ambiguous-outcome market. The entire piece discusses abstract mechanism principles only — it does not name any real protocol, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-23T18:06:51+08:00">2026-07-23 18:06:51</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-prediction-market-resolution-en.svg" alt="Prediction Market Resolution cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. A Different Kind of Oracle Problem</h2>
+<p>A price-feed oracle answers a question that is, in principle, mechanical: what is the current spot price of an asset across a set of venues? The value exists continuously, is observable by anyone with market data access, and converges across sources within a narrow tolerance. Verification reduces to checking aggregation methodology, update latency, and source diversity — the underlying fact is not in dispute, only its faithful reporting. A prediction market resolver faces a categorically different task: it must determine whether a discrete real-world event occurred, often based on incomplete, delayed, or contested information, with no continuously-observable ground truth to check against.</p>
+<p>This distinction matters because the entire verification playbook built for price oracles — redundant data sources, deviation thresholds, heartbeat updates — does not transfer cleanly to event resolution. There is no median of five news outlets that resolves whether an ambiguous contract clause was breached, or whether a contested election outcome is final. The resolver is not reporting a number; it is rendering a judgment, and judgment is where subjectivity, delay, and manipulation incentives enter. Any framework for evaluating a prediction market must therefore start by asking not 'how accurate is the data feed' but 'who is making this judgment call, and what constrains them.'</p>
+<ul>
+<li>Price oracles report an observable number; event resolvers render a judgment — the verification methods are not interchangeable.</li>
+<li>Ambiguous or contested real-world events have no objective ground truth to check a resolver's output against.</li>
+<li>Evaluating a prediction market starts with identifying who makes the resolution judgment and what constrains them, not with data-feed accuracy.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. The Propose-and-Dispute Mechanism</h2>
+<p>Most decentralized prediction markets resolve outcomes through a propose-then-challenge flow rather than a single authoritative report. A party — sometimes anyone willing to post a bond, sometimes a designated reporter role — submits a proposed outcome once the underlying event has concluded. This opens a challenge window: a fixed period during which any observer who disagrees can post a dispute bond, triggering escalation to a higher-authority adjudication step. If no one challenges within the window, the proposed outcome finalizes automatically and funds settle accordingly. The design assumes that economically rational disputers will police incorrect proposals, making silence during the window a proxy for correctness.</p>
+<p>That assumption only holds if challenging is actually accessible and worthwhile. Three parameters determine this: the length of the challenge window, the size of the bond required to dispute, and the value at stake in the market. A short window gives observers little time to notice and organize a challenge, especially across time zones or for events resolved outside normal business hours. A large bond requirement — even one nominally set to deter frivolous disputes — can simultaneously price out the ordinary users most likely to notice a wrong proposal, leaving only large, well-capitalized actors with practical standing to dispute. Reading these three parameters together, rather than in isolation, is the first concrete check.</p>
+<ul>
+<li>Propose-and-dispute relies on someone finding it worthwhile to challenge a wrong outcome during a fixed window.</li>
+<li>Challenge window length and dispute bond size jointly determine who can realistically police a bad proposal.</li>
+<li>A bond set to deter spam can also deter the legitimate disputers the mechanism depends on.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Who Holds Final Adjudication Authority</h2>
+<p>When a dispute escalates past the initial challenge window, some final backstop must render a binding decision, and its structure varies widely across designs: an on-chain vote weighted by governance-token holdings, a small centralized arbitration committee, or a dedicated decentralized arbitration protocol built specifically for cross-application dispute resolution. Each model carries a different trust assumption. A token-weighted vote assumes large holders act as neutral arbiters; a committee assumes a small set of named or pseudonymous individuals are both competent and disinterested; a dedicated arbitration layer assumes its own incentive design (staking, slashing, cross-case reputation) is sound and hasn't itself been captured.</p>
+<p>The verification question that matters is not which category is used but whether the adjudicator's incentives track truth-finding independent of the outcome. This breaks down when the same large token holders who vote on disputes are also sizable traders in the market under dispute — a structural conflict where ruling in one's own favor is a rational, undetectable action rather than an aberration. It also breaks down when a committee's membership overlaps with a protocol's founding team or investors who have a stake in a particular resolution outcome for reasons unrelated to the facts. Checking for these overlaps, not just confirming that a mechanism exists, is the actual due-diligence step.</p>
+<ul>
+<li>Final adjudication takes different forms — token vote, committee, dedicated arbitration protocol — each with distinct trust assumptions.</li>
+<li>The real question is incentive alignment with truth-finding, not merely which adjudication category is used.</li>
+<li>Overlap between adjudicators and market participants creates a structural conflict of interest that is easy to overlook.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Verifying the Transparency of Evidence</h2>
+<p>A resolution is only as trustworthy as the evidence a resolver cites in support of it. The first check is traceability: does the proposed outcome point to a specific, checkable source — an official results page, a named news report, a timestamped announcement — or does it rest on an unsubstantiated assertion of the resolver's personal judgment with nothing an outside observer can independently verify? Traceable evidence lets a disputer contest the resolution on its merits within the challenge window; an assertion without a citable source effectively forces disputers to argue against a black box, which discourages exactly the challenges the mechanism depends on to catch errors.</p>
+<p>The second check applies specifically to genuinely ambiguous events — a sports result later overturned on review, an election result subject to recount or legal challenge, an economic data point subsequently revised. Does the protocol have pre-specified rules for handling these cases (for example, a defined cutoff time after which later corrections are ignored, or an explicit reference to a single canonical source of record), or is the treatment of ambiguity left entirely to whatever the resolver decides in the moment it happens to propose? Pre-specified rules constrain discretion before anyone has a financial stake in a particular outcome; ad hoc discretion invites post hoc rationalization once the stakes are known.</p>
+<ul>
+<li>Traceable, citable evidence lets disputers evaluate a proposed outcome; bare assertions of judgment do not.</li>
+<li>Pre-specified rules for ambiguous events constrain discretion before financial stakes are known.</li>
+<li>Discretion exercised after outcomes and money are already at stake is far more vulnerable to bias.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Stress-Testing Manipulation Cost: A Fictional Example</h2>
+<p>Consider an entirely fictional, illustrative market with no correspondence to any real protocol: $5,000,000 in total volume, a proposed-outcome challenge window of 48 hours, and a dispute bond of $20,000. A large trader holding a position that benefits from a false proposed outcome faces a straightforward calculation — post the (comparatively small) proposal cost, and the only way to be stopped is if some other party notices within 48 hours and is willing to risk $20,000 to dispute. If the true outcome is genuinely ambiguous or slow to become publicly evident, the 48-hour window may simply elapse before enough outside observers even become aware a market needs checking, let alone organize a challenge.</p>
+<p>In this fictional scenario, the manipulation cost is not the $20,000 bond itself — a proposer who is confident no one will dispute never pays it — but the expected cost of the bond multiplied by the probability of being challenged and losing. If the trader's position gain from the false outcome exceeds that expected cost, pushing the false proposal through is rational. This shows why market size, bond size, and window length must be read jointly: a $20,000 bond is a meaningful deterrent against a $50,000 position but negligible against a multi-million-dollar one, and a 48-hour window that is generous for a domestic sports score may be inadequate for a contested cross-border event report. All figures here are illustrative only.</p>
+<ul>
+<li>Manipulation cost is the expected cost of the dispute bond weighted by the probability of a challenge, not the bond amount alone.</li>
+<li>The same bond and window can be an effective deterrent at one market size and negligible at another.</li>
+<li>All figures in this section are fictional and illustrate a method, not a claim about any real market.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Summary</h2>
+<p>Three errors recur when evaluating decentralized prediction markets. First, treating outcome resolution as an objective, automated process analogous to a price oracle, when real-world event adjudication inherently carries subjectivity, interpretation, and dispute risk that no amount of aggregation eliminates. Second, taking language such as 'decentralized resolution' or 'community governance vote' at face value as a guarantee of fairness, without checking whether the identities of final adjudicators overlap with large market participants in ways that create a direct incentive to rule in their own favor. Third, skipping the evidentiary check entirely — never asking whether the sources behind a resolution are traceable, or whether the protocol has pre-specified rules for handling genuinely ambiguous or contested events rather than leaving it to a resolver's in-the-moment discretion.</p>
+<p>The throughline across this article is that resolution mechanics — who proposes, who can dispute and at what cost, how long the window runs, and who holds final authority — determine a prediction market's real risk profile far more than its trading interface or liquidity design ever will, and most of this structure is invisible unless a user goes looking for it. This article discusses abstract categories of resolution mechanism only; it does not name, evaluate, or endorse any real protocol, and the numeric example in Section 5 is a fictional illustration of a method, not a description of any actual market. Nothing here constitutes investment advice.</p>
+<ul>
+<li>Event resolution is inherently subjective and dispute-prone; treating it as an automated oracle process is the core misconception.</li>
+<li>Decentralization or governance-vote language does not by itself rule out adjudicator-participant conflicts of interest.</li>
+<li>This article covers abstract mechanism categories only, uses fictional figures, names no real protocol, and offers no investment advice.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. A Different Kind of Oracle Problem</a></li>
+          <li><a href="#sec-2">2. The Propose-and-Dispute Mechanism</a></li>
+          <li><a href="#sec-3">3. Who Holds Final Adjudication Authority</a></li>
+          <li><a href="#sec-4">4. Verifying the Transparency of Evidence</a></li>
+          <li><a href="#sec-5">5. Stress-Testing Manipulation Cost: A Fictional Example</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Summary</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying smart contract state</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying a prediction market contract's proposal, dispute, and resolution records</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/liquid-staking-token-price-deviation.html">Liquid Staking Tokens: Why the Derivative Token's Price Isn't Always Equal to the Underlying Staked Asset</a></li>
+          <li><a href="/en/articles/restaking-research-guide.html">Verifying Restaking: How Slashing Risk Stacks When One Collateral Backs Multiple Protocols</a></li>
+          <li><a href="/en/articles/layer2-rollup-research-guide.html">Verifying the Layer2 Sequencer: Who Packages Your Transaction, and Who Can Censor It</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridges: Assets Never Actually Cross — They're Locked on One Side, Minted on the Other</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Verifying Oracle Prices: A Few Blocks of Feed Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">An Audit Report Says “Audited” — But Audited What, Exactly: From Conclusions to On-Chain Verification</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ff5d61fb"></script>
+</body>
+</html>
