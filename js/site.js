@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/credit-pool-tranche-risk.html': '2026-07-23 13:41:58',
+    '/en/articles/credit-pool-tranche-risk.html': '2026-07-23 13:41:58',
     '/articles/options-vault-tail-risk.html': '2026-07-20 11:12:01',
     '/en/articles/options-vault-tail-risk.html': '2026-07-20 11:12:01',
     '/articles/perpetual-dex-vault-counterparty.html': '2026-07-20 10:07:57',

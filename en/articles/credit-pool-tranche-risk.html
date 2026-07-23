@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Pool Tranche Risk Verification - Crypto Research</title>
+  <meta name="description" content="A deep dive into real-world credit pools: senior/junior tranche loss order, default-rate verification, borrower due-diligence checks, and stress testing.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/credit-pool-tranche-risk.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/credit-pool-tranche-risk.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Credit Pool Tranche Risk Verification - Crypto Research">
+  <meta property="og:description" content="A deep dive into real-world credit pools: senior/junior tranche loss order, default-rate verification, borrower due-diligence checks, and stress testing.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html">
+  <meta property="article:published_time" content="2026-07-23T13:41:58+08:00">
+  <meta property="article:modified_time" content="2026-07-23T13:41:58+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Credit Pool Tranche Risk Verification - Crypto Research">
+  <meta name="twitter:description" content="A senior tranche sounds safe, but is the junior buffer actually sized for a stress scenario, is the disclosed default-rate history backed by independent audit, is borrower concentration actually disclosed — a deep dive into the tranche risk and verification methodology behind real-world credit pools. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-credit-pool-tranche-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Credit Pool Tranche cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-credit-pool-tranche-en.png">
+  <link rel="preload" as="image" href="/img/article-credit-pool-tranche-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=e066d493">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research","Vote-Escrow Lock Research","Perpetual DEX Vault Research","Decentralized Options Vault Research","Real-World Credit Pool Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#primaryimage", "url": "https://coin.ponr.org/img/article-credit-pool-tranche-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#webpage", "url": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html", "name": "Credit Pool Tranche Risk: What Does a Senior Share Actually Get You - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Credit Pool Tranche Risk: What Does a Senior Share Actually Get You", "item": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#article", "headline": "Credit Pool Tranche Risk: What Does a Senior Share Actually Get You", "description": "A deep dive into real-world credit pools: senior/junior tranche loss order, default-rate verification, borrower due-diligence checks, and stress testing.", "image": { "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["real world credit pool explained","senior junior tranche risk","default rate verification","borrower due diligence verification","credit pool stress test","real world asset credit risk method"], "wordCount": 1729, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-23T13:41:58+08:00", "dateModified": "2026-07-23T13:41:58+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/credit-pool-tranche-risk.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/credit-pool-tranche-risk.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Credit Pool Tranche Risk: What Does a Senior Share Actually Get You</h1>
+        <p class="article-summary">This article takes a deep dive into real-world credit pools: why these pools differ fundamentally from overcollateralized DeFi lending, since the real security is a borrower's off-chain creditworthiness and legal agreement rather than on-chain collateral; how senior/junior tranche structure determines loss order, and whether junior sizing matches real default-rate data; how to verify whether disclosed APY and historical default rates are backed by independent third parties and cover a credit-tightening cycle; whether borrower due diligence and concentration are independently verifiable; and how to stress-test the loss distribution across tranches during a credit-tightening cycle. The entire piece discusses abstract mechanism principles only — it does not name any real protocol, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-23T13:41:58+08:00">2026-07-23 13:41:58</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-credit-pool-tranche-en.svg" alt="Credit Pool Tranche cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. A Different Risk Entirely: Lending Against a Legal Promise, Not a Locked Asset</h2>
+<p>Standard overcollateralized lending pools hold on-chain collateral that can be liquidated automatically the moment a borrower's position deteriorates — the security is a token sitting in a smart contract, verifiable by anyone reading the chain state. Real-world credit pools work on a different premise. Deposited capital is routed to borrowers — invoice financiers, trade-finance operators, working-capital borrowers, or fintech lenders drawing on a warehouse facility — with little or no on-chain collateral backing the bulk of the loan. The actual security is the borrower's real-world creditworthiness and a legal loan agreement enforceable in an off-chain court, not a liquidatable asset an observer can inspect.</p>
+<p>This shift matters because it moves the entire risk-verification problem off the chain. A depositor in an overcollateralized pool can, in principle, verify solvency by reading contract state. A depositor in a real-world credit pool is underwriting a borrower's balance sheet, repayment history, and legal standing — none of which live on-chain in any checkable form. The pool's smart contract can faithfully record deposits, tranche allocations, and repayment flows, but it has no mechanism for verifying whether the underlying invoice is real, whether the trade-finance shipment cleared customs, or whether the borrower is solvent. Depositors are, functionally, underwriting credit risk they cannot independently confirm.</p>
+<ul>
+<li>Real-world credit pools replace liquidatable on-chain collateral with off-chain legal agreements as the primary security.</li>
+<li>The chain can verify cash flows and balances, but not the underlying borrower reality — invoices, shipments, solvency — that those flows are supposed to represent.</li>
+<li>Depositors are underwriting real-world credit risk largely on trust in disclosures they cannot independently audit from the chain alone.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Tranche Structure: Who Actually Absorbs the First Dollar of Loss</h2>
+<p>Most real-world credit pools split deposits into at least two tranches — a senior tranche and a junior (sometimes called mezzanine) tranche — with different risk and return profiles funding the same underlying loan book. When a borrower defaults, losses flow first into the junior tranche: junior capital is the buffer that gets wiped out before senior holders see any impairment. Junior depositors are compensated with a higher stated yield precisely because they are contractually first in line to absorb charge-offs. Senior depositors accept a lower yield in exchange for a nominally protected position — protected, that is, only up to the point where junior capital is exhausted.</p>
+<p>The critical variable is not the existence of tranching but its sizing relative to plausible loss scenarios. A junior tranche that represents a thin sliver of total pool value offers a correspondingly thin buffer; once realized defaults exceed that sliver, senior capital starts absorbing losses directly, regardless of the senior label. Depositors need to identify which tranche they actually hold, what percentage of the pool sits below them, and — critically — whether that percentage was calibrated against real historical default-rate data for comparable borrowers, rather than set arbitrarily to make the senior tranche appealing on a marketing page.</p>
+<ul>
+<li>Junior tranche capital absorbs losses first; senior capital is only exposed once junior capital is fully depleted.</li>
+<li>A senior label provides no inherent safety — the actual protection depends on how large the junior buffer is relative to plausible default rates.</li>
+<li>Depositors should confirm both which tranche they hold and whether the junior percentage was sized against real default data, not chosen for marketing appeal.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Interrogating the Disclosed APY and Default-Rate Numbers</h2>
+<p>A pool's headline APY and historical default rate are the two figures most likely to be taken at face value, and both deserve scrutiny before either is treated as informative. The first question is provenance: is the default or charge-off rate self-reported by the protocol team or an affiliated originator, or is it backed by an independent third-party audit, servicer report, or credit-rating input that a depositor could, at least in principle, cross-check? A number produced and verified entirely by the party that benefits from a low reported figure carries an obvious conflict of interest, and the absence of independent attestation should itself be treated as a data point.</p>
+<p>The second question is the time window. A track record covering only a benign, low-rate-environment period tells a depositor little about performance under stress; the number that matters is whether the disclosed history spans at least one credit-tightening cycle, when defaults among comparable real-world borrowers typically rise. Finally, check whether the advertised APY already nets out realized charge-offs or reflects only gross interest income before losses — a pool advertising gross yield while burying charge-offs in a separate disclosure (or omitting them) is presenting a materially different number than one reporting net, loss-adjusted returns.</p>
+<ul>
+<li>Distinguish self-reported default rates from those backed by independent audit, servicer reporting, or third-party credit-rating input.</li>
+<li>A default-rate track record limited to calm-economy periods says little about performance in a credit-tightening cycle — check the window length and macro conditions covered.</li>
+<li>Confirm whether the disclosed APY is net of realized charge-offs or only gross interest income before losses.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Borrower Due Diligence: Independently Verifiable, or Just Asserted?</h2>
+<p>The quality of a real-world credit pool ultimately rests on how rigorously borrowers were screened before receiving capital, yet this is precisely the step furthest removed from on-chain verification. The threshold question is whether the KYB (know-your-business), credit-scoring, and financial-audit process applied to borrowers is disclosed in enough detail to evaluate, and whether it is performed by an independent third party — an external auditor, credit bureau, or licensed underwriter — or is entirely determined internally by the protocol team or an entity affiliated with it. A due-diligence process controlled end-to-end by the party originating and profiting from the loans has an obvious incentive misalignment that self-attestation alone cannot resolve.</p>
+<p>A second, equally important disclosure is borrower concentration: what share of total pool exposure sits with the largest handful of borrowers. A pool describing itself as holding a diversified portfolio while disclosing no concentration metrics is asking depositors to accept a conclusion without the underlying data. Genuine diversification should be demonstrable — a top-borrower or top-five-borrower exposure percentage, updated periodically — rather than asserted in prose. Where concentration figures are absent entirely, a depositor has no basis for distinguishing a genuinely diversified book from one dependent on a small number of large obligors whose failure would be disproportionate.</p>
+<ul>
+<li>Check whether borrower KYB, credit-scoring, and audit processes are performed by an independent third party or solely by the protocol team or an affiliate.</li>
+<li>Demand disclosed borrower-concentration metrics (e.g., top-borrower or top-five exposure share) rather than accepting vague diversified portfolio language.</li>
+<li>Self-attested due diligence with no independent verification and no concentration disclosure should be treated as an unresolved risk, not a resolved one.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Stress-Testing a Credit-Tightening Scenario (Fictional Illustration)</h2>
+<p>Consider an entirely fictional pool used only to illustrate the mechanics, with no correspondence to any real protocol. A $30M real-world credit pool is structured 8:2 senior to junior — a $24M senior tranche and a $6M junior tranche, meaning the junior buffer represents 20% of total pool value. Under normal conditions the borrower book carries a 2% default rate, producing roughly $600K in expected annual losses — comfortably absorbed within the $6M junior tranche with a wide margin to spare. This is the scenario most marketing materials implicitly reference when describing the pool's risk profile, and on its face the tranche structure looks conservatively sized.</p>
+<p>Now shift to a crisis-period assumption: the default rate rises to 15%, producing roughly $4.5M in losses against the same $30M book. The $6M junior tranche absorbs the full $4.5M, leaving only $1.5M of junior buffer intact — the senior tranche remains untouched in this illustrative case, but only because losses stayed just under the junior ceiling. If borrower concentration means a small number of large defaults push losses past $6M — for instance, two large borrowers representing $2M each failing simultaneously on top of baseline losses — senior capital begins absorbing losses directly. The exercise shows that tranche sizing, the assumed default-rate shift, and concentration jointly determine whether senior capital is ever actually tested.</p>
+<ul>
+<li>In this fictional example, a rise from a 2% to 15% default rate moves losses from roughly $600K to $4.5M against a $30M pool.</li>
+<li>The $6M (20%) junior tranche absorbs the full illustrative crisis loss in this scenario, but with a shrinking margin as the default rate climbs further.</li>
+<li>Borrower concentration can push realized losses past the junior buffer even where the aggregate default rate alone would not, exposing senior capital sooner than expected.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Summary</h2>
+<p>Three recurring errors distort how depositors evaluate these pools. First, treating a senior tranche label as inherently equivalent to a safe asset, without checking whether the junior tranche beneath it is actually sized to absorb plausible stress-scenario losses — a thin junior buffer can be exhausted quickly, exposing senior capital far sooner than the label implies. Second, accepting a protocol's self-reported historical default rate as reliable on its face, without confirming independent third-party audit backing or checking whether the reported window actually spans a credit-tightening cycle rather than only calm-economy conditions. Third, treating descriptive language such as thorough due diligence or a diversified borrower base as an established fact rather than a claim requiring evidence — the relevant question is always whether borrower concentration figures and the due-diligence process itself are publicly disclosed and independently checkable.</p>
+<p>Across all six sections, the throughline is the same: on-chain infrastructure can faithfully record deposits, tranche allocations, and repayment flows, but it cannot verify the off-chain reality — borrower solvency, invoice authenticity, legal enforceability, default-rate accuracy — that those flows are meant to represent. Verifying a real-world credit pool means chasing disclosures about tranche sizing, default-rate provenance, due-diligence independence, and borrower concentration, not accepting labels or prose descriptions as settled fact. This article discusses only abstract mechanism categories; it does not name or evaluate any real protocol, all figures presented are fictional illustrative examples constructed solely to demonstrate a method, and nothing here constitutes investment advice.</p>
+<ul>
+<li>A senior tranche label is not a safety guarantee — verify the junior buffer's size against realistic stress scenarios.</li>
+<li>Self-reported default rates without independent audit backing or credit-cycle coverage should not be treated as reliable.</li>
+<li>Diversification and due-diligence claims require disclosed, checkable data on borrower concentration and process independence — this article uses only fictional figures and names no real protocol; nothing here is investment advice.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. A Different Risk Entirely: Lending Against a Legal Promise, Not a Locked Asset</a></li>
+          <li><a href="#sec-2">2. Tranche Structure: Who Actually Absorbs the First Dollar of Loss</a></li>
+          <li><a href="#sec-3">3. Interrogating the Disclosed APY and Default-Rate Numbers</a></li>
+          <li><a href="#sec-4">4. Borrower Due Diligence: Independently Verifiable, or Just Asserted?</a></li>
+          <li><a href="#sec-5">5. Stress-Testing a Credit-Tightening Scenario (Fictional Illustration)</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Summary</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying smart contract state</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying a credit pool contract's on-chain tranche and repayment records</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/vote-escrow-lock-verification.html">Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation</a></li>
+          <li><a href="/en/articles/rwa-tokenization-trust-structure.html">RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset</a></li>
+          <li><a href="/en/articles/stablecoin-peg-mechanism-research-guide.html">Verifying Stablecoin Pegs: Does the Redemption Path Actually Deliver on the $1 Promise</a></li>
+          <li><a href="/en/articles/onchain-insurance-research-guide.html">Verifying On-Chain Insurance: Coverage Looks Broad Until You File a Claim</a></li>
+          <li><a href="/en/articles/vote-market-research-guide.html">Vote-Bribery Markets: When Governance Votes Have a Price Tag, Is It Still Governance</a></li>
+          <li><a href="/en/articles/nft-collection-research-guide.html">Verifying NFT Floor Price: One Wash Trade Can Inflate the “Floor” by Multiples</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c05fc205"></script>
+</body>
+</html>
