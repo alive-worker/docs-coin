@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits - Crypto Research</title>
+  <meta name="description" content="AI × On-Chain series (1): a deep dive into the custody risk of on-chain AI agents — key-custody models, spending limits, execution traceability, prompt injection and data dependence, plus a reusable verification checklist. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits - Crypto Research">
+  <meta property="og:description" content="AI × On-Chain series (1): a deep dive into the custody risk of on-chain AI agents — key-custody models, spending limits, execution traceability, prompt injection and data dependence, plus a reusable verification checklist. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html">
+  <meta property="article:published_time" content="2026-07-24T10:32:14+08:00">
+  <meta property="article:modified_time" content="2026-07-24T10:32:14+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits - Crypto Research">
+  <meta name="twitter:description" content="An AI agent that trades, compounds and rebalances for you sounds great — but how much authority does it actually hold, whose keys custody it, are per-transaction and daily caps enforced on-chain, and what happens if it is hijacked by prompt injection? A methodology-only deep dive. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-ai-agent-onchain-en.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="On-chain AI agent verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-ai-agent-onchain-en.svg">
+  <link rel="preload" as="image" href="/img/article-ai-agent-onchain-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=4de2f0e1">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Prediction Market Resolution Research","On-Chain AI Agent Research","AI Agent Fund Custody Verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-ai-agent-onchain-en.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html", "name": "On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits", "item": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#article", "headline": "On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits", "description": "AI × On-Chain series (1): a deep dive into the custody risk of on-chain AI agents — key-custody models, spending limits, execution traceability, prompt injection and data dependence, plus a reusable verification checklist. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["on-chain ai agent verification","ai agent key custody model","spending limit boundary","prompt injection risk","ai agent execution traceability","automation agent stress test"], "wordCount": 1900, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-24T10:32:14+08:00", "dateModified": "2026-07-24T10:32:14+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/ai-agent-onchain-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits</h1>
+        <p class="article-summary">This is the first article in the "AI × On-Chain" series. As more products claim an AI agent will trade, compound yield and rebalance on your behalf, one fact the marketing quietly downplays is this: to spend your money on-chain, the program must hold signing authority over your funds in some form. This article is not about how smart the model is — it focuses on a more fundamental verification question: who sets this agent's permission boundary, and what technically enforces it. It covers five dimensions: the key- and signing-custody model, hard caps on per-transaction and cumulative spending, the traceability of every on-chain action, the new attack surface from prompt injection and external data dependence, and a reusable stress-test checklist. The entire piece discusses abstract mechanism principles only — it does not name any real product, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <time datetime="2026-07-24T10:32:14+08:00">2026-07-24 10:32:14</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-ai-agent-onchain-en.svg" alt="On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Why verifying an "AI agent" is about permissions, not intelligence</h2>
+<p>Over the past year or two, "let AI manage your on-chain assets" has become a selling point for many products: it monitors the market and rebalances automatically, moves idle stablecoins into higher-yielding pools, and compounds rewards while you sleep. These narratives steer all attention toward "how smart the model is, how advanced the strategy is," while systematically avoiding a plainer fact — to spend your money on-chain, the program, however intelligent, must obtain signing authority over your funds in some form. In other words, what you are evaluating is never a chatbot, but an automated executor holding wallet permissions. However advanced its model, if the permission design is flawed, the losses are real money.</p>
+<p>This means the verification framework for an AI agent is entirely different from assessing a model's Q&amp;A quality. Model evaluation cares about accuracy, hallucination rate and latency; verifying a fund custodian cares about a cold set of permission questions: whose keys or signing authority are actually in play, is there a hard cap on the funds the agent can move, can every transaction it sends be independently reconstructed afterward, and what is the worst case when its external inputs are poisoned. Later in this series we will extend to AI oracles and trusted on-chain model execution, but as the first article we anchor on the question closest to wallet security: who sets an automated agent's permission boundary, and what enforces it.</p>
+<ul>
+<li>To spend your money on-chain, an AI agent must hold some form of signing authority — the object of verification is "permission," not "intelligence."</li>
+<li>No amount of model capability can compensate for a permission-design flaw; the two are independent evaluation dimensions.</li>
+<li>This article treats "who sets the permission boundary and how it is enforced" as the thread running throughout.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Keys and signing authority: in whose name does the agent spend</h2>
+<p>The first question to settle when verifying an on-chain AI agent is: whose private key does it sign with? In practice there are several very different custody models with wildly different trust assumptions. The first is "the agent holds the full private key" — you hand your wallet key or seed phrase directly to the service, and the agent has total power over that address; this is essentially handing your whole wallet to a third-party program. The second is the "approval (approve) model" — your assets stay in your own wallet, you merely grant a token approval to the agent contract, and the agent can move funds within that allowance; the key trap here is unlimited approval, because once the allowance is uncapped, the agent or the contract behind it can in theory drain the entire balance of that token.</p>
+<p>The third, and the more prudent design, is the "session key / permission module" model built on account abstraction — the agent receives not the master key but a tightly scoped temporary key: it can only call specific contracts, only perform specific actions, with an expiry and a spending cap, and any out-of-scope transaction is rejected at the account level. The worst cases differ completely: full key custody means "all assets to zero"; unlimited approval means "the approved token can be emptied"; a scoped session key confines the worst loss to preset bounds. The verifier's first step is to establish which of these they face, rather than being waved past by marketing words like "non-custodial" and "secure" — many so-called "non-custodial" setups merely shift the risk from the private key onto an unlimited approval.</p>
+<ul>
+<li>The three typical custody models — full key custody, approval model, scoped session key — have completely different worst-case losses.</li>
+<li>"Unlimited approval" is the most overlooked trap; it can make "non-custodial" a misnomer.</li>
+<li>Step one is to confirm whose key the agent signs with and whether permission is technically bounded at the account level — not to trust the marketing wording.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Spending limits: do per-transaction, daily and cumulative hard caps exist</h2>
+<p>Once the signing model is settled, the second dimension is hard limits on spending. A well-designed automated agent should encode "how much it can move at once, per day, and in total" as rules the agent itself cannot bypass — not merely as front-end settings or verbal promises. Distinguish two kinds of limit: a "soft limit" — a parameter in the app UI or server logic that the service can change at any time, and that can be bypassed once the system is breached; and a "hard limit" — a rule enforced at the smart-contract or account-permission-module level, so that even if the agent's servers are fully compromised and its key logic hijacked, the on-chain contract still rejects over-limit transactions. Only the latter actually bounds the worst-case loss.</p>
+<p>Limits worth probing item by item include: the maximum amount per transaction, the cumulative cap per unit of time (e.g. daily), the whitelist of contracts the agent may interact with, and whether withdrawal destination addresses are restricted to addresses you pre-set. That last one is especially critical — if the agent can send funds to any address, then however fine-grained the "limits" are, they cannot stop funds from being drained step by step to an attacker-controlled address through a series of "compliant" transactions. Conversely, if on-chain rules enforce "funds can only flow among whitelisted contracts and only be withdrawn to your main wallet," then even if the agent logic is fully manipulated, the realizable loss is sharply compressed. The verifier should try to confirm on a block explorer that these restrictions actually exist as contract code or permission config, not just how the product documentation phrases it.</p>
+<ul>
+<li>Soft limits (front-end/server parameters) can be changed by the service or bypassed once breached; only on-chain hard limits bound the worst-case loss.</li>
+<li>Verify item by item: per-transaction cap, daily cumulative cap, contract whitelist, and whether withdrawal destinations are restricted.</li>
+<li>A "funds can only return to the main wallet" destination constraint often blocks gradual drain paths better than amount caps alone.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Traceability: can every automated action be independently reconstructed</h2>
+<p>A fundamental difference between an AI agent and manual operation is execution frequency: it may initiate dozens or hundreds of transactions a day, mostly while you are not watching in real time. This raises an easily overlooked dimension — after-the-fact traceability. When an automated transaction causes an unexpected loss, can you reconstruct, independently and without relying on the service's self-attestation, exactly when the agent sent that transaction, based on what input, and under what rule? If all decision logs live only in the service's private database while the chain shows an isolated transfer, then in a dispute you have almost no ability to reconstruct events on your own.</p>
+<p>Ideal traceability rests on two layers. On-chain, every action should leave a clear, attributable transaction record, ideally with event logs marking the strategy intent, so anyone can follow the address on a block explorer to trace the agent's full behavioral history. Off-chain, the decision basis that triggered a transaction (e.g. the price read at the time, the threshold condition tripped) should have a verifiable trail — even if not fully on-chain, at least a tamper-resistant record. A simple test: find the agent's on-chain address and try to reconstruct its recent behavior using only a block explorer, and see whether you can explain "what it did and why." If on-chain data alone is unintelligible and you must rely on the service's explanation, that itself is a transparency signal — it means that if the service disappears or refuses to cooperate, you lose the ability to interpret your own fund history.</p>
+<ul>
+<li>The high-frequency, unattended nature of AI agents makes "independent after-the-fact reconstruction" the key verification point distinguishing it from manual operation.</li>
+<li>On-chain there should be attributable transactions and event logs; off-chain the decision basis should have at least a tamper-resistant trail.</li>
+<li>Test method: can you reconstruct recent behavior from a block explorer alone; needing the service's explanation is a sign of insufficient transparency.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. New attack surface: prompt injection and external data dependence</h2>
+<p>AI agents introduce a class of attack surface that traditional smart contracts lack: their behavior is partly driven by natural-language instructions and external data, and those inputs are exactly what can be poisoned. The most typical is prompt injection — if the agent reads external content (social signals, announcement text, even a web page) as decision input, an attacker may embed instruction-like text in that content to induce the agent to perform actions it should not, such as "transfer funds to this address" or "approve this contract." When the agent also holds fund-signing authority, one successful prompt injection can translate directly into a loss. This is exactly why sections 2 and 3 stress "hard permission and spending limits": even if the decision layer is hijacked at the language level, account-level hard limits should be the last line of defense.</p>
+<p>Another dependence risk comes from data sources. An agent's strategy is often built on external data such as prices, yields and on-chain metrics; if that data comes from a single, manipulable source, then however rational the agent's decision logic, poisoned data will steer it astray — the same class of problem as the oracle manipulation and flash-loan price manipulation discussed earlier on this site, only the decision-maker is now an automated agent. Verifiers should ask: which external data do the agent's key decisions depend on, is that data cross-verified across multiple sources, and when a source misbehaves (returns extreme values or stops updating) does the agent have a safe fallback (e.g. pausing trading rather than acting on bad data). An agent that encodes "when data is anomalous, default to standing down" is far more trustworthy than one that "executes no matter how absurd the input."</p>
+<ul>
+<li>Prompt injection lets attackers induce dangerous actions via poisoned external text; account-level hard limits are the last line of defense.</li>
+<li>An agent relying on a single manipulable data source will be steered astray by bad data — the same root as oracle/flash-loan price manipulation.</li>
+<li>Verify fallback behavior under data anomalies: good design is "anomaly means stand down," not "execute regardless of absurd input."</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Stress-test checklist and summary</h2>
+<p>Condensing the five sections into a reusable checklist, you can run through it against any product claiming "AI automatically handles your on-chain assets": First, what is the signing model — full key custody, approval model, or scoped session key? Is there an unlimited approval? Second, are there on-chain hard limits — are per-transaction, daily and cumulative caps and a contract whitelist actually written into the contract, and are withdrawal destinations restricted to your own wallet? Third, how is traceability — can you independently reconstruct the agent's behavioral history from on-chain data alone? Fourth, is the attack surface contained — against prompt injection and data-source anomalies, are there account-level hard limits and "anomaly means stand down" fallback logic as a backstop? Fifth, is the exit usable — can you unilaterally revoke authorization and reclaim control at any time, without the service's cooperation?</p>
+<p>It bears repeating: this checklist evaluates "permissions and constraints" throughout, not "how smart the model is." An agent with a mediocre strategy but strictly bounded permissions has a worst case of poor returns; an agent with a brilliant strategy but unlimited approval, no on-chain caps and no independent reconstruction has a worst case of principal to zero. For ordinary users, the most pragmatic principle is: only entrust an automated agent with an amount you can afford to lose, and prefer designs that write limits on-chain and let you exit unilaterally at any time. This entire piece discusses abstract mechanism categories and verification methods only — it does not name or evaluate any real product or protocol, and does not constitute any form of investment advice. As the opener of the "AI × On-Chain" series, the next article turns to AI-driven on-chain data and oracles — when the model is no longer merely an executor but starts to become the source of "truth," how does the verification problem change.</p>
+<ul>
+<li>Five checklist questions: signing model, on-chain hard limits, traceability, contained attack surface, and unilateral exit.</li>
+<li>Pragmatic principle: entrust only what you can afford to lose, and prefer on-chain limits with an anytime unilateral exit.</li>
+<li>The piece is a discussion of mechanism categories and methodology, names no real product, and is not investment advice; the next in the series turns to AI oracles and trusted on-chain data sources.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why verifying an "AI agent" is about permissions, not intelligence</a></li>
+          <li><a href="#sec-2">2. Keys and signing authority: in whose name does the agent spend</a></li>
+          <li><a href="#sec-3">3. Spending limits: do per-transaction, daily and cumulative hard caps exist</a></li>
+          <li><a href="#sec-4">4. Traceability: can every automated action be independently reconstructed</a></li>
+          <li><a href="#sec-5">5. New attack surface: prompt injection and external data dependence</a></li>
+          <li><a href="#sec-6">6. Stress-test checklist and summary</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/roadmap/account-abstraction/" target="_blank" rel="noopener">Ethereum.org Account Abstraction</a>: useful for understanding session keys, permission modules and account-level limits</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer for checking an agent address's approvals and transaction history</li>
+          </ul>
+          <p class="ref-note">The tools, data sources and third-party platform features mentioned may change over time; please refer to the latest official information. This article is for learning and research reference only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/prediction-market-resolution-risk.html">Prediction Market Resolution Risk: Who Actually Holds Final Authority</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/articles/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Changed Tactics, It Didn't Disappear</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance Research: When Voting Power Concentrates, Is It Still Decentralized</a></li>
+          <li><a href="/en/articles/onchain-data-analysis.html">On-Chain Data Analysis: An Address Is Not an Identity, a Transaction Is Not Intent</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods and on-chain data, documenting research frameworks, on-chain metric interpretation and capital-flow observations to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Topics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap Cross-Chain</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Go-Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute any investment advice; crypto asset prices are highly volatile and risky, so please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ff5d61fb"></script>
+</body>
+</html>

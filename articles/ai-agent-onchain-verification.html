@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>链上 AI 代理核验：自动化程序握着你的私钥，权限边界由谁设定 - 加密货币研究</title>
+  <meta name="description" content="AI×链上系列（一）：深度拆解链上 AI 代理的资金托管风险——密钥托管模型、权限与额度边界、执行可追溯性、提示注入与预言机依赖，以及一套可复用的自动化代理核验清单。不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/ai-agent-onchain-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="链上 AI 代理核验：自动化程序握着你的私钥，权限边界由谁设定 - 加密货币研究">
+  <meta property="og:description" content="AI×链上系列（一）：深度拆解链上 AI 代理的资金托管风险——密钥托管模型、权限与额度边界、执行可追溯性、提示注入与预言机依赖，以及一套可复用的自动化代理核验清单。不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/ai-agent-onchain-verification.html">
+  <meta property="article:published_time" content="2026-07-24T10:32:14+08:00">
+  <meta property="article:modified_time" content="2026-07-24T10:32:14+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="链上 AI 代理核验：自动化程序握着你的私钥，权限边界由谁设定 - 加密货币研究">
+  <meta name="twitter:description" content="AI 代理帮你自动交易、复投、调仓听起来很美，但它究竟握着多大的权限、私钥托管在谁手里、单笔与单日额度是否有硬上限、被提示注入劫持后会发生什么——本文拆解链上 AI 代理的资金托管风险与核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-ai-agent-onchain.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-ai-agent-onchain.svg">
+  <link rel="preload" as="image" href="/img/article-ai-agent-onchain.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=4de2f0e1">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","预测市场裁定机制研究","链上AI代理研究","AI代理资金托管核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-ai-agent-onchain.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#webpage", "url": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html", "name": "链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定", "item": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#article", "headline": "链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定", "description": "AI×链上系列（一）：深度拆解链上 AI 代理的资金托管风险——密钥托管模型、权限与额度边界、执行可追溯性、提示注入与预言机依赖，以及一套可复用的自动化代理核验清单。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["链上AI代理核验","AI代理私钥托管模型","代理权限与额度边界","提示注入攻击风险","AI代理执行可追溯性","自动化代理压力测试"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-24T10:32:14+08:00", "dateModified": "2026-07-24T10:32:14+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/ai-agent-onchain-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/ai-agent-onchain-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定</h1>
+        <p class="article-summary">这是「AI×链上」系列的第一篇。当越来越多产品宣称由 AI 代理（AI Agent）替你自动交易、复投收益、动态调仓时，一个被广告语刻意淡化的事实是：要替你在链上花钱，这个程序就必须以某种方式握有对你资金的签名权。本文不讨论模型有多聪明，而是聚焦一个更根本的核验问题——这个代理的权限边界究竟由谁设定、如何被技术手段强制约束。全文围绕五个维度展开：私钥与签名权的托管模型、单笔与累计额度的硬约束、每一笔链上动作的可追溯性、提示注入与外部数据依赖带来的新攻击面，以及一套可复用的压力测试清单。全文仅讨论抽象机制原理，不点名任何真实产品，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-24T10:32:14+08:00">2026-07-24 10:32:14</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-ai-agent-onchain.svg" alt="链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 为什么「AI 代理」的核验问题，本质是权限而非智能</h2>
+<p>过去一两年，「让 AI 帮你打理链上资产」成了大量产品的卖点：它可以监控行情自动调仓、把闲置稳定币自动搬到收益更高的池子、在你睡觉时替你复投奖励。这些叙事把注意力全部引向「模型有多聪明、策略有多先进」，却系统性地回避了一个更朴素的事实——要在链上替你花钱，这个程序无论多智能，都必须以某种方式获得对你资金的签名权。换句话说，你评估的从来不是一个聊天机器人，而是一个握着钱包权限的自动化执行者。它的模型再先进，如果权限设计有缺陷，损失都是真金白银的。</p>
+<p>这就决定了 AI 代理的核验框架，和评估一个模型的问答质量完全是两回事。模型评测关心的是准确率、幻觉率、响应速度；而作为资金托管者的核验，关心的是一组冷冰冰的权限问题：私钥或签名权到底在谁手里、代理能动用的资金有没有硬性上限、它发出的每一笔交易能不能被事后独立复盘、当它接收的外部输入被污染时最坏会发生什么。本系列后续会延伸到 AI 预言机、链上模型可信执行等主题，但作为第一篇，我们先锚定最贴近钱包安全的问题：一个自动化代理的权限边界，究竟由谁设定、又靠什么强制约束。</p>
+<ul>
+<li>AI 代理要替你在链上花钱，就必然握有某种形式的签名权——核验对象是「权限」，不是「智能」。</li>
+<li>模型能力再强，也无法弥补权限设计缺陷；两者是相互独立的评估维度。</li>
+<li>本文把「权限边界由谁设定、如何被强制约束」作为贯穿全文的主线。</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 私钥与签名权：代理究竟以谁的名义花钱</h2>
+<p>核验一个链上 AI 代理，第一个必须问清楚的问题是：它到底是用谁的私钥签名的。现实中大致存在几种截然不同的托管模型，信任假设天差地别。第一种是「代理托管完整私钥」——你把钱包私钥或助记词直接交给服务方，代理拥有对该地址的全部权力，这本质上等同于把钱包完整交给了一个第三方程序。第二种是「授权额度（approve）模型」——你的资产仍在自己钱包里，只是对代理合约做了代币授权，代理在授权范围内可以动用；这里的关键陷阱是无限授权（unlimited approve），一旦授权额度是无上限的，代理或其背后的合约在理论上就能转走该代币的全部余额。</p>
+<p>第三种，也是设计上更审慎的一种，是基于账户抽象的「会话密钥 / 权限模块」模型——代理拿到的不是主私钥，而是一把被严格限定用途的临时密钥：只能调用特定合约、只能执行特定动作、且带有到期时间和额度上限，超出范围的交易在账户层面直接被拒绝执行。这三种模型对应的最坏情况完全不同：托管完整私钥意味着最坏情况是「全部资产归零」；无限授权意味着「被授权代币可被清空」；而受限会话密钥则把最坏损失约束在了预设边界内。核验者的第一步，就是弄清楚自己面对的是哪一种，而不是被「非托管」「安全」这类营销词一笔带过——很多所谓「非托管」其实只是把风险从私钥转移到了无限授权上。</p>
+<ul>
+<li>三种典型托管模型——完整私钥托管、授权额度模型、受限会话密钥——的最坏情况损失完全不同。</li>
+<li>「无限授权（unlimited approve）」是最容易被忽视的陷阱，它可能让「非托管」名不副实。</li>
+<li>核验第一步是确认代理以谁的私钥签名、权限在账户层面是否被技术性限定，而非听信营销措辞。</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 额度边界：单笔、单日与累计的硬约束是否存在</h2>
+<p>确认了签名权模型之后，第二个核验维度是额度的硬约束。一个设计良好的自动化代理，应当把「它一次能动多少钱、一天能动多少钱、总共能动多少钱」写成不可被代理自身绕过的规则，而不是仅仅停留在前端设置或口头承诺里。这里要区分两类限额：一类是「软限额」——写在应用界面或服务器逻辑里的参数，理论上服务方随时可以改动，甚至在被攻破后可以被绕过；另一类是「硬限额」——在智能合约或账户权限模块层面强制执行的规则，即便代理的服务器完全被攻破、私钥逻辑被劫持，链上合约也会拒绝超额交易。真正能约束最坏损失的，只有后者。</p>
+<p>核验时值得逐项追问的额度包括：单笔交易的最大金额上限、单位时间（如每日）的累计动用上限、代理可交互的合约白名单、以及可提取到的目标地址是否被限定为你自己预先设定的地址。最后这一条尤其关键——如果代理可以把资金转到任意地址，那么「限额」再精细，也挡不住资金在一系列「合规」交易后被逐步导出到攻击者控制的地址。相反，如果链上规则强制「资金只能在白名单合约间流转、只能提回你的主钱包」，那么即便代理逻辑被完全操纵，攻击者能造成的实际损失也会被大幅压缩。核验者应当尝试在区块浏览器上核对这些限制是否真的以合约代码或权限配置的形式存在，而不是只看产品文档怎么写。</p>
+<ul>
+<li>软限额（前端/服务器参数）可被服务方修改或在被攻破后绕过，只有链上硬限额才能约束最坏损失。</li>
+<li>需要逐项核验：单笔上限、单日累计上限、合约白名单、提款目标地址是否被限定。</li>
+<li>「资金只能提回主钱包」这类目标地址约束，往往比金额限制更能封堵资产被逐步导出的路径。</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 可追溯性：每一笔自动动作能否被事后独立复盘</h2>
+<p>AI 代理相比人工操作的一个本质区别是执行频率：它可能在一天内自动发起几十上百笔交易，而这些交易大多发生在你没有实时盯盘的时候。这就带来一个容易被忽视的核验维度——事后可追溯性。当某笔自动交易造成了意料之外的损失，你能否独立地、不依赖服务方自证清白地还原出：这笔交易是代理在什么时间、基于什么输入、按什么规则发出的？如果所有决策日志都只保存在服务方的私有数据库里，而链上只能看到一个孤立的转账记录，那么一旦发生纠纷，你几乎没有独立复盘的能力。</p>
+<p>理想的可追溯性建立在两个层面。链上层面，代理的每一笔动作都应当留下清晰、可归因的交易记录，最好能通过事件日志（event）标注出这笔交易对应的策略意图，使任何人都能在区块浏览器上顺着地址追踪代理的完整行为历史。链下层面，触发交易的决策依据（例如当时读取到的价格、触发的阈值条件）是否有可验证的留痕，哪怕不是完全上链，至少应有防篡改的记录机制。核验者可以做一个简单测试：找到代理的链上地址，尝试仅凭区块浏览器还原它最近一段时间的行为，看能否说清楚「它在做什么、为什么这么做」。如果单靠链上数据完全看不懂、必须依赖服务方解释，这本身就是一个透明度信号——它意味着一旦服务方消失或拒绝配合，你将失去对自己资金历史的解释权。</p>
+<ul>
+<li>AI 代理高频、无人值守的执行特性，使「事后独立复盘」成为区别于人工操作的关键核验点。</li>
+<li>链上应有可归因的交易与事件日志，链下决策依据至少应有防篡改留痕。</li>
+<li>实测方法：仅凭区块浏览器能否还原代理近期行为；若必须依赖服务方解释，即是透明度不足的信号。</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 新攻击面：提示注入与外部数据依赖</h2>
+<p>AI 代理引入了传统智能合约所没有的一类攻击面：它的行为部分由自然语言指令和外部数据驱动，而这些输入恰恰是可以被污染的。最典型的是提示注入（prompt injection）——如果代理会读取外部内容（比如社交媒体信号、公告文本、甚至某个网页）作为决策输入，攻击者就可能在这些内容里嵌入伪装成指令的文本，诱导代理执行本不该执行的操作，例如「把资金转到某地址」或「授权某个合约」。当代理同时握有资金签名权时，一次成功的提示注入就可能被直接转化为资金损失。这正是第 2、3 节强调「权限与额度硬约束」的意义所在：即便决策层被语言层面劫持，账户层的硬限制仍应是最后一道防线。</p>
+<p>另一类依赖风险来自数据源。AI 代理的策略往往建立在价格、收益率、链上指标等外部数据之上，如果这些数据来自单一、可被操纵的来源，那么代理再理性的决策逻辑也会被喂进来的错误数据带偏——这与本站此前讨论的预言机操纵、闪电贷价格操纵是同一类问题，只是决策主体换成了自动化代理。核验者需要追问：代理的关键决策依赖哪些外部数据、这些数据是否有多源交叉验证、当数据源异常（返回极端值或停止更新）时代理有没有安全的降级行为（例如暂停交易而非按错误数据继续操作）。一个把「数据异常时默认停手」写进逻辑的代理，远比一个「无论输入多离谱都坚持执行」的代理更值得信任。</p>
+<ul>
+<li>提示注入让攻击者可能通过污染外部文本诱导代理执行危险操作，账户层硬限额是最后一道防线。</li>
+<li>依赖单一可操纵数据源的代理，会被错误数据带偏——本质与预言机/闪电贷价格操纵同源。</li>
+<li>核验数据异常时的降级行为：优秀设计是「异常即停手」，而非「无视离谱输入照常执行」。</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 压力测试清单与小结</h2>
+<p>把前面五节收敛成一套可复用的核验清单，面对任何一个声称「AI 自动帮你操作链上资产」的产品，都可以逐项过一遍：其一，签名权模型是什么——是完整私钥托管、授权额度模型，还是受限会话密钥？是否存在无限授权？其二，额度是否有链上硬约束——单笔、单日、累计上限与合约白名单是否真实写在合约里，提款目标地址是否被限定为你自己的钱包？其三，可追溯性如何——能否仅凭链上数据独立复盘代理的行为历史？其四，攻击面是否被收敛——面对提示注入和数据源异常，是否有账户层硬限制与「异常即停手」的降级逻辑作为兜底？其五，退出机制是否可用——你能否在任意时刻单方面撤销授权、收回控制权，而不需要服务方配合？</p>
+<p>需要反复强调的是：这套清单评估的自始至终是「权限与约束」，而不是「模型有多聪明」。一个策略平庸但权限被严格限定的代理，最坏情况是收益不佳；一个策略惊艳但握有无限授权、无链上限额、不可独立复盘的代理，最坏情况是本金归零。对普通用户而言，最务实的原则是：只把「输得起」的额度交给自动化代理，并优先选择那些把限制写在链上、允许你随时单方面退出的设计。本文通篇讨论的是抽象的机制类别与核验方法，不点名、不评价任何真实存在的产品或协议，全文不构成任何形式的投资建议。作为「AI×链上」系列的开篇，下一篇我们将把镜头转向 AI 驱动的链上数据与预言机——当模型不再只是执行者，而开始成为「事实」的来源时，核验的难题又会如何变化。</p>
+<ul>
+<li>核验清单五问：签名权模型、链上额度硬约束、可追溯性、攻击面收敛、单方面退出机制。</li>
+<li>务实原则：只把「输得起」的额度交给代理，优先选择链上限制、可随时退出的设计。</li>
+<li>全文为机制类别与方法论讨论，不点名任何真实产品，不构成投资建议；系列下一篇将转向 AI 预言机与链上数据可信来源。</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么「AI 代理」的核验问题，本质是权限而非智能</a></li>
+          <li><a href="#sec-2">2. 私钥与签名权：代理究竟以谁的名义花钱</a></li>
+          <li><a href="#sec-3">3. 额度边界：单笔、单日与累计的硬约束是否存在</a></li>
+          <li><a href="#sec-4">4. 可追溯性：每一笔自动动作能否被事后独立复盘</a></li>
+          <li><a href="#sec-5">5. 新攻击面：提示注入与外部数据依赖</a></li>
+          <li><a href="#sec-6">6. 压力测试清单与小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/roadmap/account-abstraction/" target="_blank" rel="noopener">Ethereum.org 账户抽象</a>：可用于理解会话密钥、权限模块与账户级限额的基础概念</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核查代理地址的授权（approve）记录与历史交易</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/prediction-market-resolution-risk.html">预测市场结果裁定核验：裁决权到底落在谁手里</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">审计报告说「已审计」，到底审计了什么：从结论到链上复核</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li>
+          <li><a href="/articles/mev-private-order-flow.html">MEV与私有交易通道：三明治攻击换了打法，没有消失</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理研究：投票权集中在少数地址，「去中心化」还成立吗</a></li>
+          <li><a href="/articles/onchain-data-analysis.html">链上数据分析：地址不是身份，交易不是意图</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ff5d61fb"></script>
+</body>
+</html>
