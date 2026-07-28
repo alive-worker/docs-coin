@@ -119,6 +119,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/zkml-onchain-model-verification.html': '2026-07-28 10:35:54',
+    '/en/articles/zkml-onchain-model-verification.html': '2026-07-28 10:35:54',
     '/articles/ai-oracle-data-verification.html': '2026-07-27 15:18:36',
     '/en/articles/ai-oracle-data-verification.html': '2026-07-27 15:18:36',
     '/articles/prediction-market-resolution-risk.html': '2026-07-23 18:06:51',
