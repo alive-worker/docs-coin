@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks</title>
+  <meta name="description" content="AI x On-Chain series (4): agent economy structure, delegated authority cascades, runaway call loops, agent identity and reputation, and who has final say when settlement disputes arise. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks - Crypto Research">
+  <meta property="og:description" content="AI x On-Chain series (4): agent economy structure, delegated authority cascades, runaway call loops, agent identity and reputation, and who has final say when settlement disputes arise. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html">
+  <meta property="article:published_time" content="2026-07-29T11:24:08+08:00">
+  <meta property="article:modified_time" content="2026-07-29T11:24:08+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks - Crypto Research">
+  <meta name="twitter:description" content="When one AI agent automatically orders and pays another agent to get a task done, who is backing every transfer in that chain? A methodology-only deep dive into agent-to-agent settlement risk. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-agent-payment-en.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Agent-to-agent settlement and credit chain cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-agent-payment-en.svg">
+  <link rel="preload" as="image" href="/img/article-agent-payment-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=6b2c1a90">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","on-chain AI agent verification","AI oracle verification","zkML and trusted on-chain model execution","agent-to-agent settlement"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-agent-payment-en.svg", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html", "name": "Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks", "item": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#article", "headline": "Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks", "description": "AI x On-Chain series (4): agent economy structure, delegated authority cascades, runaway call loops, agent identity and reputation, and who has final say when settlement disputes arise. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["agent-to-agent settlement verification","agent economy","delegated authority cascade","runaway call loop spending","settlement layer arbitration","agent identity and reputation verification"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-29T11:24:08+08:00", "dateModified": "2026-07-29T11:24:08+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/agent-to-agent-payment-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks</h1>
+        <p class="article-summary">This is the fourth piece in the "AI x On-Chain" series. The first three covered AI agents as fund executors, AI oracles as sources of "truth," and the limits of proof techniques like zkML; this piece shifts the lens from "how do you verify a single agent" to "how does risk propagate when multiple agents transact with each other." When an AI agent, to finish a task, needs to call on another agent's compute, data, or sub-task service and automatically settles payment for it, an entirely new credit chain appears: who backs every transfer along that chain, does one agent's bad judgment cascade to the agent it delegates to next, and can a call loop quietly drain an authorization limit before anyone notices. The piece covers six angles: the basic structure of the agent economy, the cascading nature of delegated authority, runaway call loops and uncontrolled spending, the credibility of agent identity and reputation, who holds final say at the settlement layer, and a reusable verification checklist. The entire piece discusses abstract mechanism categories only, names no real product, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-07-29T11:24:08+08:00">2026-07-29 11:24:08</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-agent-payment-en.svg" alt="Agent-to-agent settlement verification theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. The Basic Structure of the Agent Economy: From "Single-Agent Execution" to "Multi-Agent Transactions"</h2>
+<p>The AI agent discussed in the first piece of this series followed a relatively simple one-to-one model: a user authorizes an agent, and the agent executes on-chain actions within a spending limit. But as agents become more specialized and better at particular sub-tasks, a more complex structure naturally emerges — a "primary agent" completing a user's overall task may need to temporarily hire other agents to handle parts it isn't good at: calling a data-retrieval specialist to verify a fact, calling a pricing specialist for a quote, calling an execution specialist to complete a swap. These calls are often accompanied by instant, automated micro-settlements — the primary agent transfers funds directly to the called agent's address in exchange for the service, with no human in the loop.</p>
+<p>The value proposition of this "agent economy" is straightforward: breaking a complex task into pieces handled by specialized agents should, in theory, be more efficient. But it also introduces a dimension absent from the single-agent model — funds no longer flow only from "user" to "agent," they start flowing "agent to agent," and often at a scale and granularity the user never sees, potentially dozens of tiny agent-to-agent settlements within a single task. The first step in verifying such a system is mapping the topology of this fund flow: how many layers of agents does a task's spending authorization pass through? Does each layer keep an independent, auditable record of its spending, or are all agent-to-agent settlements bundled into a black box where the user only sees a final total afterward?</p>
+<ul>
+<li>The agent economy breaks complex tasks into pieces for specialized sub-agents, who coordinate through automated micro-settlements between themselves.</li>
+<li>Fund flow shifts from a single "user to agent" layer to a multi-layer "agent to agent" structure, often at a granularity invisible to the user.</li>
+<li>The starting point for verification is mapping the fund-flow topology: how many agent layers does the authorization pass through, and does each layer keep an independent, auditable spending record.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. The Cascade of Delegated Authority: Is the Limit Copied, or Re-Derived</h2>
+<p>The first piece in this series stressed that the core of single-agent verification is a "hard, on-chain-enforced spending cap" — a limit that should be enforced by smart contract or wallet-layer rules, not the agent's own self-restraint. This principle needs refinement in the multi-agent setting, because the limit now has to be "passed along": once the primary agent receives a user's authorization and delegates a sub-task to a sub-agent, is that payment deducted from the primary agent's own limit, or does the sub-agent get issued a brand-new authorization that might be decoupled from the original limit entirely?</p>
+<p>The key risk here is "limit duplication" rather than "limit derivation." A sound delegation model should guarantee that no matter how many layers of sub-agents a task chain delegates through, every sub-agent's spending is traceably deducted from the same original user-granted pool, and no single layer can exceed that shared total. But if the system's actual implementation has the primary agent issue a fresh, independent spending permission each time it delegates to a sub-agent — and that new permission isn't hard-bound to the original limit, just set to some number the primary agent judged "reasonable" — then in theory, with enough layers of delegation each opening a new allowance, total actual spending could far exceed the user's original cap. This isn't cheating by any single actor; it's a structural gap in the limit-propagation mechanism itself. Verifiers should ask directly: does multi-layer delegated spending share the same hard-constrained fund pool, or can every layer draft a fresh authorization decoupled from the original?</p>
+<ul>
+<li>In a multi-agent setting, a spending limit is no longer a simple one-time cap — it must be propagated through a delegation chain, and the distinction between "limit duplication" and "limit derivation" is critical.</li>
+<li>Sound model: every sub-agent's spending is traceably deducted from the same original user-granted pool, forming a shared hard-constrained fund pool.</li>
+<li>Risky model: each delegation layer issues an independent new authorization; if decoupled from the original limit, more delegation layers can push total spending far beyond the user's intended cap.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Runaway Call Loops and Uncontrolled Spending: A Deadlock No One Designed</h2>
+<p>A more subtle class of risk than authorization-propagation gaps is the calling relationship between agents itself forming a loop or unexpectedly amplifying. Consider a scenario: Agent A delegates to Agent B to finish a task, Agent B decides it needs more data support and delegates to Agent C, and Agent C happens to call back into some sub-service that Agent A itself provides — without an explicit call-depth limit or loop-detection mechanism, this chain could in theory continue indefinitely, with every hop producing a real, automated on-chain transfer, until some layer's authorization is exhausted. This requires no malicious attacker at all; each agent acting on its own locally rational judgment ("delegating here is worth it") is enough to produce a runaway spending loop at the system level.</p>
+<p>An even more realistic risk comes from misaligned pricing incentives: if a sub-agent's fee scales with task complexity or call count, it has an economic incentive to make a task "appear" to need more calls — repeatedly claiming the data is incomplete, repeatedly requesting more verification — each round generating a new settlement. This behavior is hard to classify as an "attack," since it may simply be a natural evolution of agent strategy under a particular incentive structure, but for the user footing the final bill, the outcome is indistinguishable from being attacked. Verifiers should ask whether the system enforces a call-depth cap, a total-call-count cap, or a hard rate limit on spending per unit time, and whether there's monitoring capable of detecting "abnormally rising spend rate" signals and triggering a pause — rather than letting agents drain the authorization while staying entirely within normal protocol rules.</p>
+<ul>
+<li>Without a call-depth limit or loop detection, purely locally-rational delegation decisions by each agent can, in aggregate, produce a runaway spending loop.</li>
+<li>When fees scale with call count or task complexity, a delegated agent has an economic incentive to make a task "appear" to need more calls — producing attack-like effects through otherwise normal behavior.</li>
+<li>Verification direction: is there a call-depth cap, a hard spend-rate limit, and monitoring that can detect abnormal spending and trigger a pause?</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Agent Identity and Reputation: Who Exactly Did You Delegate To</h2>
+<p>In the single-agent model, the user at least knows which agent they trust. In the agent economy, though, which sub-agent the primary agent chooses to delegate to is often an automated decision made through some discovery mechanism — a service registry, a bidding auction, a reputation score — that the user has essentially no visibility into, let alone the chance to vet in advance. This introduces a new verification dimension: is that sub-agent's "identity" stable and verifiable — does it have a persistent on-chain address and history, or can it simply reappear under a new address and wipe its bad track record clean? If the reputation mechanism itself can be cheaply forged (for example, by self-trading to manufacture fake transaction history), then the primary agent's delegation decisions based on that reputation are effectively no better than a blind pick.</p>
+<p>Another easily overlooked issue is whether the sub-agent's service quality has actually been verified at the moment settlement occurs, or whether it's pay-first-deliver-later on pure trust. If settlement happens before service delivery, with no escrow or installment mechanism as a buffer, then a malicious or simply unreliable sub-agent can take payment and never deliver the promised service, leaving the primary agent — and ultimately the user footing the bill — with no recourse. Verifiers should ask whether the system has a credible identity-registration and reputation-tracking mechanism, whether reputation data can be independently verified rather than self-reported, and whether payment and delivery are decoupled in time and logic — via escrow, installment payment, or after-the-fact arbitration — to reduce the risk of "take the money and don't deliver."</p>
+<ul>
+<li>The user typically has no visibility into how or which sub-agent the primary agent chooses to delegate to, making sub-agent identity stability and reputation credibility new verification targets.</li>
+<li>If reputation can be cheaply forged (e.g. via self-trading), a delegation decision based on that reputation is effectively equivalent to a blind pick.</li>
+<li>Without a time/logic decoupling buffer between payment and delivery (escrow, installments), the risk of "take payment, don't deliver" falls on the primary agent and the user.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Final Say at the Settlement Layer: Can the Money Be Clawed Back When Something Goes Wrong</h2>
+<p>Stacking up the risks from the previous sections reveals a common landing point: whether it's an authorization-propagation gap, a runaway loop, or a non-delivery caused by fake reputation, all of it eventually surfaces as one or a series of on-chain transfers that "already happened, but shouldn't have." What actually determines whether such a system is robust is whether the settlement layer has a mechanism for handling disputes — not whether upfront prevention was flawless, because the complexity of multi-agent systems makes it nearly unrealistic to plug every gap in advance. Verifiers should focus on: is this kind of automated agent-to-agent transfer instant and final with no recourse, or is there a feasible dispute window that lets a user or the primary agent request a rollback or arbitration after spotting an anomaly?</p>
+<p>If settlement is based purely on native on-chain transfers with no escrow layer at all, the answer is usually "once the money moves, it's gone for good" — meaning the entire system's security rests entirely on the preventive mechanisms covered in the previous four sections, and once any gap is triggered, the loss is already final. A more robust design will typically introduce some form of delayed settlement, an escrow account, or an on-chain arbitrable dispute-resolution protocol on the critical agent-to-agent settlement paths — even if it sacrifices some of the automation's instant-finality, it provides a stop-loss and correction window for failure modes the designers never anticipated. When evaluating any agent-economy product, researchers should treat "is settlement reversible, who arbitrates disputes, and is the cost of arbitration realistic" as verification dimensions every bit as important as spending caps and loop detection — rather than resting all trust on the self-declaration that "our architecture was designed rigorously."</p>
+<ul>
+<li>All of these risk categories eventually surface as transfers that already happened; system robustness depends on having a mechanism for handling disputes after the fact, not solely on the completeness of upfront prevention.</li>
+<li>Settlement based purely on native on-chain transfers with no escrow layer is irreversible once executed, putting the entire burden of safety on preventive mechanisms — a single failure becomes a permanent loss.</li>
+<li>More robust designs introduce delayed settlement, escrow accounts, or arbitrable protocols, trading some instant-finality for a stop-loss and correction window when the unexpected happens.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Summary</h2>
+<p>Consolidating the previous five sections into a reusable checklist, here is what to run through for any system or protocol that claims to support "AI agents automatically paying other agents": First, fund-flow topology — how many layers of agents does a task's spending authorization pass through, does each layer keep an independent auditable spending record, or is it bundled into a black box the user can't see? Second, how authority propagates — does multi-layer delegated spending share the same hard-constrained pool tied to the user's original authorization, or can each layer draft a fresh, decoupled authorization? Third, loop and amplification risk — is there a call-depth cap, a hard spend-rate limit, and monitoring that can detect abnormal spending patterns and trigger a pause? Fourth, identity and reputation credibility — is a sub-agent's identity stable and verifiable, and can its reputation data be independently checked rather than self-reported? Fifth, settlement reversibility — are agent-to-agent transfers instant and final, or is there an escrow, delayed-settlement, or arbitrable dispute window?</p>
+<p>Looking back across these four "AI x On-Chain" pieces, the methodological throughline has stayed consistent: every time a new layer of automation gets introduced on-chain — whether it's an agent's autonomous execution, a model's generation of "facts," a zero-knowledge proof's computational verification, or, in this piece, automated agent-to-agent settlement — the efficiency gains almost always come at the cost of some ceded verifiability. What's distinct about this piece is that the risk is no longer confined to a single agent and its user; it propagates and amplifies along a delegation chain, involving multiple agent actors who don't know each other and share no direct basis for trust. A researcher's job remains the same: pull that propagation path apart and ask whether the spending cap is really a hard constraint, whether loops are really bounded, whether settlement is really recoverable — rather than letting descriptive efficiency narratives like "multi-agent collaboration" or "automated economy" carry the argument. The entire piece discusses abstract mechanism categories only, names no real product or protocol, and is not investment advice of any kind. As the fourth entry in the "AI x On-Chain" series, we'll keep following how these mechanisms evolve — subscribe via RSS for future updates.</p>
+<ul>
+<li>Five-question checklist: fund-flow topology, how authority propagates, loop and amplification risk, identity and reputation credibility, settlement reversibility.</li>
+<li>What's distinct here: risk is no longer confined to a single agent and its user, but propagates and amplifies along a delegation chain among multiple unrelated agent actors.</li>
+<li>The entire piece is a discussion of abstract mechanism categories and methodology, names no real product, and is not investment advice; the series will keep tracking how the agent economy evolves.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Basic Structure of the Agent Economy</a></li>
+          <li><a href="#sec-2">2. The Cascade of Delegated Authority</a></li>
+          <li><a href="#sec-3">3. Runaway Call Loops and Uncontrolled Spending</a></li>
+          <li><a href="#sec-4">4. Agent Identity and Reputation</a></li>
+          <li><a href="#sec-5">5. Final Say at the Settlement Layer</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Summary</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/" target="_blank" rel="noopener">Ethereum.org smart contracts</a>: useful background on on-chain spending caps, multisig, and authorization mechanisms</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: block explorer, useful for checking an agent address's transaction history and authorization changes</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; refer to official sources for the latest information. This article is for learning and research reference only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/zkml-onchain-model-verification.html">zkML and Trusted On-Chain Model Execution</a></li>
+          <li><a href="/en/articles/ai-oracle-data-verification.html">AI Oracles and Trusted On-Chain Data: When a Model Produces "Truth," Who Verifies It</a></li>
+          <li><a href="/en/articles/ai-agent-onchain-verification.html">On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits (series part 1)</a></li>
+          <li><a href="/en/articles/dao-governance-research-guide.html">DAO Governance: When Voting Power Concentrates in a Few Addresses, Does "Decentralized" Still Hold</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">An Audit Report Says "Audited" — But Audited What, Exactly</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods and on-chain data — research frameworks, on-chain metric interpretation, and fund-flow observation, aimed at helping readers understand crypto projects more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap Cross-Chain</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC Virtual Cards</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Chain Reading</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute any form of investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and be responsible for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ff5d61fb"></script>
+</body>
+</html>
