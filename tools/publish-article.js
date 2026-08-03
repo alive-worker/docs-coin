@@ -38,25 +38,51 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'REPLACE-ME-slug-here',           // e.g. 'dex-liquidity-research-guide'
-  publishedISO: '2026-01-01T00:00:00+08:00',
-  tagColor: 'violet',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'agent-strategy-execution-verification',
+  publishedISO: '2026-08-03T11:18:42+08:00',
+  tagColor: 'jade',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'REPLACE ME',
-    tagLabel: 'REPLACE ME',                // short sidebar/tag label, e.g. "DEX流动性"
-    cardDesc: 'REPLACE ME',                // short one-liner used in sidebar + featured-desc
+    h1: 'AI代理策略执行核验：一句「按策略执行」，到底是谁在把关',
+    tagLabel: 'AI×链上',
+    cardDesc: 'AI×链上系列（七）：拆解AI交易/资管代理「按策略执行」声明的核验方法——策略描述精度、下单一致性审计、越权检测窗口与止损触发核验。',
   },
   en: {
-    h1: 'REPLACE ME',
-    tagLabel: 'REPLACE ME',
-    cardDesc: 'REPLACE ME',
+    h1: 'Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'',
+    tagLabel: 'AI x On-Chain',
+    cardDesc: 'AI x On-Chain series (7): verifying an AI trading/asset-management agent’s claim to strictly follow its strategy — description precision, order consistency, breach-detection lag and stop-loss triggers.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'agent-identity-credential-verification',
+    'agent-service-marketplace-verification',
+    'agent-to-agent-payment-verification',
+    'zkml-onchain-model-verification',
+    'ai-oracle-data-verification',
+    'ai-agent-onchain-verification',
+    'prediction-market-resolution-risk',
+    'credit-pool-tranche-risk',
+    'options-vault-tail-risk',
+    'perpetual-dex-vault-counterparty',
+    'vote-escrow-lock-verification',
+    'auto-deleveraging-insurance-fund',
+    'liquid-staking-token-price-deviation',
+    'rwa-tokenization-trust-structure',
+    'mev-private-order-flow',
+    'funding-rate-divergence',
+    'stablecoin-peg-mechanism-research-guide',
+    'onchain-insurance-research-guide',
+    'restaking-research-guide',
+    'swap-routing-research-guide',
+    'vote-market-research-guide',
+    'liquidity-mining-research-guide',
+    'layer2-rollup-research-guide',
+    'nft-collection-research-guide',
+    'lending-liquidation-research-guide',
+    'dex-liquidity-research-guide',
     'airdrop-sybil-detection-research-guide',
     'bridge-security-research-guide',
     'oracle-price-feed-research-guide',
@@ -175,7 +201,7 @@ function updateItemLists() {
     let block = content.slice(start, blockEnd);
     const numMatch = block.match(/"numberOfItems": (\d+)/);
     if (numMatch) block = block.replace(numMatch[0], `"numberOfItems": ${parseInt(numMatch[1], 10) + 1}`);
-    const anchor = /(itemListElement": \[\n)/;
+    const anchor = /(itemListElement": \[\r?\n)/;
     if (!anchor.test(block)) { console.log('  [itemlist] SKIP (anchor not found):', t.file); continue; }
     const newItem = `        { "@type": "ListItem", "position": 1, "name": "${t.name}", "item": "${t.prefix}/articles/${CONFIG.slug}.html" },\n`;
     block = block.replace(anchor, (m, g1) => g1 + newItem);
@@ -292,12 +318,12 @@ function updateHomepage(lang) {
       </article>
 
 `;
-  const gridOpenRe = new RegExp(`(<div class="card-grid" aria-label="[^"]*">\\n)`);
+  const gridOpenRe = new RegExp(`(<div class="card-grid" aria-label="[^"]*">\\r?\\n)`);
   if (!gridOpenRe.test(t)) throw new Error(`[homepage-${lang}] card-grid opening not found`);
   t = t.replace(gridOpenRe, (m, g1) => g1 + newGridCard);
 
   // drop the oldest grid card (last one) to keep the grid at a fixed size
-  const dropCardRe = new RegExp(`\\n?      <article class="post-card" id="${dropSlug}">[\\s\\S]*?<\\/article>\\n`);
+  const dropCardRe = new RegExp(`\\r?\\n?      <article class="post-card" id="${dropSlug}">[\\s\\S]*?<\\/article>\\r?\\n`);
   if (dropCardRe.test(t)) {
     t = t.replace(dropCardRe, '');
   } else {
@@ -325,7 +351,7 @@ function insertArchiveItem(lang) {
           </a>
         </li>
 `;
-  const re = /(<ul class="archive-list"[^>]*>\n)(\s*<li class="archive-item">)/;
+  const re = /(<ul class="archive-list"[^>]*>\r?\n)(\s*<li class="archive-item">)/;
   if (!re.test(t)) { console.log(`  [archive-${lang}] SKIP (anchor not found)`); return; }
   t = t.replace(re, (m, g1, g2) => g1 + item + g2);
   fs.writeFileSync(p, t, 'utf-8');
@@ -414,7 +440,7 @@ function updateSiteJsDates() {
 
 // --- Step 9: hash propagation (only if content changed) -------------------------
 function sha1(filePath) {
-  return execSync(`sha1sum "${filePath}"`).toString().trim().split(/\s+/)[0].slice(0, 8);
+  return execSync(`sha1sum "${filePath}"`).toString().trim().split(/\s+/)[0].replace(/^\\/, '').slice(0, 8);
 }
 function propagateHashesIfChanged() {
   const cssPath = path.join(root, 'styles.css');
