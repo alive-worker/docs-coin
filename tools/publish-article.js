@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'agent-strategy-execution-verification',
-  publishedISO: '2026-08-03T11:18:42+08:00',
-  tagColor: 'jade',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'agent-audit-log-integrity-verification',
+  publishedISO: '2026-08-04T10:24:07+08:00',
+  tagColor: 'azure',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'AI代理策略执行核验：一句「按策略执行」，到底是谁在把关',
+    h1: 'AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过',
     tagLabel: 'AI×链上',
-    cardDesc: 'AI×链上系列（七）：拆解AI交易/资管代理「按策略执行」声明的核验方法——策略描述精度、下单一致性审计、越权检测窗口与止损触发核验。',
+    cardDesc: 'AI×链上系列（八）：拆解AI代理审计日志的防篡改核验方法——日志完整性证明、静默删除检测、时间戳可信来源与独立存证机制。',
   },
   en: {
-    h1: 'Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'',
+    h1: "Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered",
     tagLabel: 'AI x On-Chain',
-    cardDesc: 'AI x On-Chain series (7): verifying an AI trading/asset-management agent’s claim to strictly follow its strategy — description precision, order consistency, breach-detection lag and stop-loss triggers.',
+    cardDesc: "AI x On-Chain series (8): verifying the tamper-resistance of an AI agent's audit logs - integrity proofs, silent-deletion detection, trustworthy timestamp sourcing and independent attestation.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'agent-strategy-execution-verification',
     'agent-identity-credential-verification',
     'agent-service-marketplace-verification',
     'agent-to-agent-payment-verification',
@@ -241,7 +242,8 @@ function updateHomepage(lang) {
   const file = lang === 'en' ? 'en/index.html' : 'index.html';
   const p = path.join(root, file);
   let t = fs.readFileSync(p, 'utf-8');
-  if (t.includes(`${CONFIG.slug}.html`)) { console.log(`  [homepage-${lang}] already updated, skip`); return; }
+  const featuredCheckRe = new RegExp(`<section class="featured-article"[\\s\\S]{0,400}${CONFIG.slug}\\.html`);
+  if (featuredCheckRe.test(t)) { console.log(`  [homepage-${lang}] already updated, skip`); return; }
 
   const prevFeaturedSlug = CONFIG.existingSlugsNewestFirst[0];
   const prevFeatured = extractArticleMeta(prevFeaturedSlug, lang);
@@ -339,9 +341,9 @@ function insertArchiveItem(lang) {
   const file = lang === 'en' ? 'en/articles.html' : 'articles.html';
   const p = path.join(root, file);
   let t = fs.readFileSync(p, 'utf-8');
-  if (t.includes(`${CONFIG.slug}.html`)) return;
   const cfgLang = lang === 'en' ? CONFIG.en : CONFIG.zh;
   const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
+  if (t.includes(`<a href="${artPrefix}${CONFIG.slug}.html">\n            <span class="archive-tag`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
   const item = `        <li class="archive-item">
           <a href="${artPrefix}${CONFIG.slug}.html">
@@ -351,7 +353,7 @@ function insertArchiveItem(lang) {
           </a>
         </li>
 `;
-  const re = /(<ul class="archive-list"[^>]*>\r?\n)(\s*<li class="archive-item">)/;
+  const re = /(<ul class="archive-list"[^>]*>\r?\n)(\s*<li class="archive-item")/;
   if (!re.test(t)) { console.log(`  [archive-${lang}] SKIP (anchor not found)`); return; }
   t = t.replace(re, (m, g1, g2) => g1 + item + g2);
   fs.writeFileSync(p, t, 'utf-8');
