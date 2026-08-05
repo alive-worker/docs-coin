@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'onchain-forensics',
-  publishedISO: '2026-08-05T11:08:20+08:00',
-  tagColor: 'steel',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'intent-centric-solver-verification',
+  publishedISO: '2026-08-05T17:20:11+08:00',
+  tagColor: 'cyan',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: '链上取证与资金追踪方法论：被盗资金流向哪里，怎么查',
-    tagLabel: '链上取证',
-    cardDesc: '拆解链上取证的核心研究方法：地址聚类算法的原理与局限、混币服务与隐私工具的识别难点、跨链跳转追踪的断裂点、交易所出金节点识别，以及一套可复用的资金流向复盘清单。',
+    h1: '意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径',
+    tagLabel: '意图驱动交易',
+    cardDesc: '拆解意图驱动交易（intent-centric trading）的核验方法：意图撮合与传统路由报价的本质区别、求解者竞价与批量拍卖的定价机制、执行质量核验、求解者集中化与合谋风险，以及求解者网络内的MEV再分配问题。',
   },
   en: {
-    h1: 'On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go',
-    tagLabel: 'On-Chain Forensics',
-    cardDesc: 'A methodology breakdown of on-chain forensics: how address clustering works and where it fails, why mixers and privacy protocols break traceability, the mechanics of cross-chain fund tracing, and how to identify cash-out nodes.',
+    h1: 'Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order',
+    tagLabel: 'Intent-Centric Trading',
+    cardDesc: 'A methodology breakdown of intent-centric trading: how it differs from traditional routing quotes, how solver competition and batch auctions set prices, how to verify execution quality, solver centralization and collusion risk, and where MEV actually goes inside a solver network.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'onchain-forensics',
     'agent-audit-log-integrity-verification',
     'agent-strategy-execution-verification',
     'agent-identity-credential-verification',

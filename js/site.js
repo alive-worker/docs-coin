@@ -119,11 +119,13 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/intent-centric-solver-verification.html': '2026-08-05 17:20:11',
     '/articles/onchain-forensics.html': '2026-08-05 11:08:20',
     '/articles/agent-audit-log-integrity-verification.html': '2026-08-04 10:24:07',
     '/articles/agent-strategy-execution-verification.html': '2026-08-03 11:18:42',
-'/en/articles/onchain-forensics.html': '2026-08-05 11:08:20',
-'/en/articles/agent-audit-log-integrity-verification.html': '2026-08-04 10:24:07',
+    '/en/articles/intent-centric-solver-verification.html': '2026-08-05 17:20:11',
+    '/en/articles/onchain-forensics.html': '2026-08-05 11:08:20',
+    '/en/articles/agent-audit-log-integrity-verification.html': '2026-08-04 10:24:07',
     '/en/articles/agent-strategy-execution-verification.html': '2026-08-03 11:18:42',
     '/articles/zkml-onchain-model-verification.html': '2026-07-28 10:35:54',
     '/en/articles/zkml-onchain-model-verification.html': '2026-07-28 10:35:54',
