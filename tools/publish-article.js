@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'agent-audit-log-integrity-verification',
-  publishedISO: '2026-08-04T10:24:07+08:00',
-  tagColor: 'azure',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'onchain-forensics',
+  publishedISO: '2026-08-05T11:08:20+08:00',
+  tagColor: 'steel',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过',
-    tagLabel: 'AI×链上',
-    cardDesc: 'AI×链上系列（八）：拆解AI代理审计日志的防篡改核验方法——日志完整性证明、静默删除检测、时间戳可信来源与独立存证机制。',
+    h1: '链上取证与资金追踪方法论：被盗资金流向哪里，怎么查',
+    tagLabel: '链上取证',
+    cardDesc: '拆解链上取证的核心研究方法：地址聚类算法的原理与局限、混币服务与隐私工具的识别难点、跨链跳转追踪的断裂点、交易所出金节点识别，以及一套可复用的资金流向复盘清单。',
   },
   en: {
-    h1: "Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered",
-    tagLabel: 'AI x On-Chain',
-    cardDesc: "AI x On-Chain series (8): verifying the tamper-resistance of an AI agent's audit logs - integrity proofs, silent-deletion detection, trustworthy timestamp sourcing and independent attestation.",
+    h1: 'On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go',
+    tagLabel: 'On-Chain Forensics',
+    cardDesc: 'A methodology breakdown of on-chain forensics: how address clustering works and where it fails, why mixers and privacy protocols break traceability, the mechanics of cross-chain fund tracing, and how to identify cash-out nodes.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'agent-audit-log-integrity-verification',
     'agent-strategy-execution-verification',
     'agent-identity-credential-verification',
     'agent-service-marketplace-verification',
