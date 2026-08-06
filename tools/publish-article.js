@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'account-abstraction-wallet-security',
-  publishedISO: '2026-08-06T10:51:44+08:00',
-  tagColor: 'amber',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'depin-compute-network-verification',
+  publishedISO: '2026-08-06T15:21:30+08:00',
+  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: '账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱',
-    tagLabel: '账户抽象钱包',
-    cardDesc: '拆解账户抽象钱包（ERC-4337）的安全核验方法：私钥托管、无限授权、会话密钥限权三种模型的风险边界，Bundler与Paymaster的信任假设，社交恢复机制的时间锁设计，以及一套可复用的授权范围核验清单。',
+    h1: 'DePIN 算力网络核验：GPU 分布式云的算力是真的、需求是真的吗',
+    tagLabel: 'DePIN 算力网络',
+    cardDesc: '拆解DePIN算力网络的核验方法：物理工作证明如何区分真算与伪算，真实需求识别怎么分开外部客户与项目方自购自用，节点故障惩罚机制的设计要点，以及代币经济与真实营收的对齐问题。',
   },
   en: {
-    h1: 'Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides',
-    tagLabel: 'Account Abstraction',
-    cardDesc: 'A methodology breakdown of account abstraction (ERC-4337) wallet security: the risk boundaries of full custody, unlimited approval, and scoped session keys, the trust assumptions behind bundlers and paymasters, the time-lock design of social recovery, and a reusable checklist for verifying permission scope.',
+    h1: 'DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real',
+    tagLabel: 'DePIN Compute Network',
+    cardDesc: 'A methodology breakdown of DePIN compute network verification: how proof of physical work separates real compute from fake compute, how to tell external demand apart from self-sponsored usage, the design of node fault penalty mechanisms, and whether tokenomics is aligning with real revenue.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'account-abstraction-wallet-security',
     'intent-centric-solver-verification',
     'onchain-forensics',
     'agent-audit-log-integrity-verification',
