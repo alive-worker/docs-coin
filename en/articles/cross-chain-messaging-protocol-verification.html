@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real - Crypto Research Notes</title>
+  <meta name="description" content="A methodology breakdown of cross-chain messaging protocol verification (LayerZero, Wormhole-style generic message layers): who actually verifies events, the real trust assumptions behind DVN multi-party verification, message replay and finality-conflict risk, and the trust-surface expansion integrators often overlook. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/cross-chain-messaging-protocol-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/cross-chain-messaging-protocol-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real - Crypto Research Notes">
+  <meta property="og:description" content="A methodology breakdown of cross-chain messaging protocol verification (LayerZero, Wormhole-style generic message layers): who actually verifies events, the real trust assumptions behind DVN multi-party verification, message replay and finality-conflict risk, and the trust-surface expansion integrators often overlook. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html">
+  <meta property="article:published_time" content="2026-08-07T14:30:00+08:00">
+  <meta property="article:modified_time" content="2026-08-07T14:30:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real - Crypto Research Notes">
+  <meta name="twitter:description" content="Generic message layers no longer just lock and mint assets - they pass along a message itself. But who actually verifies that message is true? Methodology discussion only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-cross-chain-messaging-protocol-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-cross-chain-messaging-protocol-verification-en.png">
+  <link rel="preload" as="image" href="/img/article-cross-chain-messaging-protocol-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese research notes site focused on crypto research methodology and on-chain data analysis. Content is for research purposes only and does not constitute investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-cross-chain-messaging-protocol-verification-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html", "name": "Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real", "item": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#article", "headline": "Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real", "description": "A methodology breakdown of cross-chain messaging protocol verification (LayerZero, Wormhole-style generic message layers): who actually verifies events, the real trust assumptions behind DVN multi-party verification, message replay and finality-conflict risk, and the trust-surface expansion integrators often overlook. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["cross-chain messaging verification","DVN multi-party verification","message replay risk","finality conflict","relayer trust assumptions","generic message layer"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-07T14:30:00+08:00", "dateModified": "2026-08-07T14:30:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/cross-chain-messaging-protocol-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/cross-chain-messaging-protocol-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</h1>
+        <p class="article-summary">The old bridge model was lock-and-mint: assets get locked in a contract on Chain A, and an equivalent wrapped token gets minted on Chain B. LayerZero, Wormhole and other generic message layers do something different - they don't move assets at all, they pass a message, letting an event on Chain A be understood and acted on by a contract on Chain B. It sounds lighter and more general-purpose, but the verification question changes shape too. That message claims "event X really happened on Chain A" - who is actually verifying that claim is true? What's the division of labor and trust assumption between validation nodes, oracles, and relayers? DVN multi-party verification sounds decentralized, but at what threshold does it become theater? What happens when a message crosses between two chains with very different finality guarantees - can Chain B execute while Chain A later reorgs? And how much does an integrator's trust surface actually expand by plugging into one of these generic message layers? This piece is a methodology discussion only. It does not constitute investment advice and does not make any qualitative claim about any specific cross-chain messaging protocol, team, or individual.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-07T14:30:00+08:00">2026-08-07 14:30:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-cross-chain-messaging-protocol-verification-en.svg" alt="Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real cover illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. Starting Point: Is a Generic Message Layer the Same Thing as a Lock-and-Mint Bridge</h2>
+            <p>Verifying cross-chain messaging risk starts with separating a generic message layer from a traditional asset bridge, a distinction marketing copy often blurs. A lock-and-mint bridge solves one narrow problem: how does an asset move from Chain A to Chain B. A user deposits an asset into a contract on Chain A where it stays locked, the bridge's validators confirm the lock event happened, and an equivalent wrapped asset gets minted on Chain B. LayerZero, Wormhole, and similar generic message layers solve a more fundamental problem instead: how does an arbitrary event that happened on Chain A get understood and trusted by a contract on Chain B. Moving assets is just one application running on top of this messaging capability - it can equally carry governance instructions, state synchronization, or arbitrary cross-chain calls.</p>
+            <p>This distinction isn't just a technical layering detail - for a researcher it changes what actually needs to be verified. The object of verification shifts from "is the asset safely locked in this contract" to "how many hops does this message pass through before the destination chain trusts it, and at which hop could someone misbehave, and how bad would that be." The broader a generic message layer's application surface gets, the more damage a single verification failure can do - not just to one class of bridged-asset users, but to every cross-chain application built on top of it, including cross-chain governance, cross-chain lending liquidations, and cross-chain NFT ownership synchronization. The right starting point is to map out the full delivery path of a message end to end, rather than assuming it's just another flavor of asset bridge.</p>
+            <ul class="recap">
+              <li>A generic message layer delivers the fact that "an event was verified" itself - moving assets is just one application built on top of that capability.</li>
+              <li>The object of verification shifts from "is the asset safely locked" to "at each hop in the message's path, who could misbehave and how badly."</li>
+              <li>A generic message layer's failure blast radius covers every application built on it, not just bridged-asset users - map the full delivery path before verifying anything else.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Who Actually Verifies the Message: Oracles, Relayers, and Executors</h2>
+            <p>Most generic messaging protocols split "message verification" into separate roles: an oracle observes and packages the event on the source chain, a relayer physically transports the packaged message to the destination chain, and an executor triggers the corresponding contract call once it arrives. The design intent behind this split is to keep the core protocol lightweight while letting third parties implement and compete on the actual verification logic. But a researcher verifying this setup needs to answer one key question first: are the oracle and the relayer controlled by the same entity, or by affiliated entities? If so, "division of labor" can collapse in practice into "one party decides whether this message is real," because both the verification result and the physical transport sit in the same hands, with no real cross-checking happening.</p>
+            <p>Concrete verification steps include checking the protocol's whitelisted oracle and relayer addresses for overlapping or clearly affiliated operators; confirming whether the destination-chain contract requires the oracle's verification result to match the relayer's delivered message content before executing, or whether it just executes on the relayer's say-so alone; and checking whether the protocol lets integrating projects choose or combine their own verification setup (LayerZero's "pluggable security module" concept is one example of this), and if so, what verification combination a specific project actually uses - the protocol's bare default, or something the project hardened itself. Division of labor sounds like a trust-minimization win on paper, but that credit is only earned once the split parties are confirmed to be genuinely independent and actually cross-check each other.</p>
+            <ul class="recap">
+              <li>The typical role split is oracle (observe and package), relayer (transport), and executor (trigger the call on the destination chain) - designed for modularity and lightness.</li>
+              <li>The key verification question is whether the oracle and relayer are genuinely independent, rather than the same or affiliated entity controlling both verification and transport.</li>
+              <li>Check whether the destination contract enforces cross-checking between the oracle's result and the relayer's delivered content before execution, rather than trusting the relayer alone.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. DVN Multi-Party Verification: A Low Enough Threshold Turns Decentralization Into Theater</h2>
+            <p>To address the trust concentration problem of a single verifier, many generic messaging protocols introduce a "Decentralized Verifier Network" (DVN) concept - multiple independent nodes each verify the same message, and only once a set threshold is met (say, 3 out of 5 nodes confirming) is the message considered valid. That design direction is correct, but verification cannot stop at "the protocol claims to support a DVN." A researcher needs to check specifics: how many nodes make up the default DVN configuration, how high the threshold ratio is actually set, and whether those node operators are genuinely independent - separated geographically and infrastructurally. If the default DVN only has two or three nodes and the threshold requires just one confirmation, there is no meaningful security difference from a single centralized verifier - it's simply repackaged under the label of "multi-party verification."</p>
+            <p>A deeper question worth digging into: is the DVN's node set a default list fixed by the protocol itself, or can an integrating application freely swap nodes in and out or add more? Many protocols' default configurations lean toward a small number of fast-confirming nodes for cost and latency reasons - only when an application actively hardens its setup, by adding nodes, raising the threshold ratio, or bringing in independent third-party security providers unaffiliated with each other, does it get anywhere close to the decentralization the marketing implies. A researcher evaluating a specific cross-chain application shouldn't just check whether the underlying protocol supports DVNs in the abstract - dig into whether the specific application in question is actually running the bare minimum default, or a hardened combination.</p>
+            <ul class="recap">
+              <li>DVN multi-party verification is directionally correct, but verification must reach specific node counts, threshold ratios, and node independence rather than stopping at "the protocol claims DVN support."</li>
+              <li>Setting the threshold too low (e.g. one confirmation suffices) lets multi-party verification degrade into single-point trust in practice.</li>
+              <li>Whether a specific application runs the default minimum configuration or a hardened combination is the key differentiator for its real security posture.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Message Replay and Finality Conflicts: Two Chains' "Final" Isn't the Same "Final"</h2>
+            <p>Different blockchains have very different finality mechanisms - some reach probabilistic finality within seconds, some require multiple block confirmations, and some remain exposed to chain reorganizations (reorgs) for a period. When a cross-chain messaging protocol observes an event on a source chain and packages it for delivery to a destination chain, if that observation happens too early - before the source-chain block has reached true final confirmation - there's a risk the source chain later reorgs and the event effectively never happened at all. Meanwhile the destination-chain contract has likely already executed based on that message, creating a finality conflict where "the destination chain has executed, but the source chain rolled back," leaving assets or state inconsistent.</p>
+            <p>Verifying this risk dimension requires checking: how many block confirmations the protocol waits on the source chain before considering an event "confirmed" and packaging it for delivery, and whether that confirmation count is set per source chain based on its actual finality characteristics, or whether every chain uses one uniform number; whether the protocol has any protection against message replay attacks (the same message can't be executed twice, typically requiring a unique nonce or sequence number); and, in the extreme case where a source-chain reorg does invalidate a message, whether the protocol has any remediation or rollback mechanism, or whether it fully relies on the destination chain's already-executed outcome as a fait accompli. Finality conflict isn't an abstract theoretical concern, especially once high-value asset transfers or critical governance instructions are built on top of cross-chain messages - the number of confirmation blocks a protocol waits directly determines the system's safety margin in low-probability tail scenarios.</p>
+            <ul class="recap">
+              <li>Finality mechanisms vary widely across chains; observing too early on the source chain risks message invalidation from a later reorg.</li>
+              <li>Verify whether confirmation counts are set per source chain based on actual finality characteristics, and whether replay protection (a unique nonce or sequence number) exists.</li>
+              <li>Whether the protocol has a remediation mechanism for the extreme case of a source-chain reorg invalidating a message determines the system's real safety margin in tail scenarios.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Trust-Surface Expansion for Integrators: Plugging In Means Inheriting Every Trust Assumption Below</h2>
+            <p>For a project building on top of a generic message layer, an easily overlooked fact is this: integrating with the messaging protocol means binding your own security boundary completely to the underlying protocol's trust assumptions. Even if the application's own smart contract code is flawless, if the underlying messaging protocol's verification layer is compromised, an attacker can forge a message that "looks legitimate" and get the application contract to execute an action it never should have - for instance, forging a deposit event that never occurred to trigger a withdrawal on the destination chain. That means researching a cross-chain application's security can't stop at auditing the application's own contracts - it has to trace down into the messaging protocol layer it depends on and understand where that layer's trust-assumption boundary actually sits.</p>
+            <p>Concrete verification approaches include checking whether the application applies its own business-layer secondary checks on incoming cross-chain messages (amount caps, rate limits, delayed settlement for anomalous withdrawals) rather than fully trusting whatever the messaging protocol delivers and executing immediately; confirming whether the application can pause independently of the underlying messaging protocol (if the messaging layer runs into trouble, can the application cut off risk immediately, rather than waiting passively for the underlying protocol to be fixed); and checking whether the application publicly discloses which specific messaging protocol, verification configuration, and DVN combination it relies on, so users and other researchers can verify it independently. Trust-surface expansion by itself isn't a reason to avoid generic message layers - the composability and efficiency gains are real - but when evaluating any cross-chain application, a researcher should treat "the trust assumptions of the messaging layer it depends on" as an equally important object of verification as "its own contract code."</p>
+            <ul class="recap">
+              <li>Integrating with a generic message layer means an application's security boundary is fully bound to the underlying protocol's verification trust assumptions - auditing its own contract code alone can't establish real security.</li>
+              <li>Verify whether the application applies business-layer secondary checks (amount caps, delayed settlement, etc.) rather than fully trusting and immediately executing on message content.</li>
+              <li>Whether the application has an independent emergency-pause capability, and whether it publicly discloses its specific verification configuration, are concrete measures of how far its trust surface has actually expanded.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. Cross-Chain Messaging Protocol Verification Checklist</h2>
+            <p>Consolidating the previous sections into a reusable checklist for systematically evaluating a cross-chain messaging protocol and the applications built on top of it.</p>
+            <ul class="recap">
+              <li>Map the full delivery path of the target message from origin to destination-chain acceptance, recognizing asset bridging as just one application on that path.</li>
+              <li>Confirm whether the oracle and relayer are genuinely independent, and whether the destination contract enforces cross-checking between their outputs before execution.</li>
+              <li>Confirm the specific DVN configuration an application actually uses (node count, threshold ratio, node independence), not merely whether the protocol supports DVNs.</li>
+              <li>Confirm whether source-chain confirmation counts are set per actual finality characteristics, and whether replay protection and reorg remediation mechanisms exist.</li>
+              <li>Confirm whether the integrating application has business-layer secondary checks and independent emergency-pause capability to gauge how far its trust surface has expanded.</li>
+              <li>For any "secure cross-chain" or "trustless" claim, press for specifics on verifier independence and threshold configuration disclosure.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>Generic message layers upgrade cross-chain interaction from "moving assets" to "passing information," and that jump in abstraction brings genuinely broader composability - governance instructions, state synchronization, and cross-chain calls can all be built on the same underlying infrastructure. But the price of that generality is that researchers need a finer-grained framework to understand the risk exposure: whether the division of labor between oracles and relayers is genuinely independent, whether a DVN's threshold configuration is the bare minimum default or a hardened setup, whether a finality conflict risk exists between two chains with different finality guarantees, and how far an integrator's trust surface has been bound into the underlying protocol's trust assumptions. When evaluating a specific cross-chain messaging protocol or an application built on it, researchers shouldn't stop at generalized phrases like "generic message layer" or "multi-party verification" - they should press on whether each verification layer has a corresponding, verifiable independence boundary. This article is a methodology discussion only. It does not make any qualitative claim about any specific cross-chain messaging protocol, team, or individual, and it does not constitute investment advice of any kind. Readers referencing cross-chain messaging analysis should always focus on the specific verification configuration and trust-assumption disclosures involved, and remain skeptical of any blanket claim of "secure cross-chain" or "trustless" transfer.</p>
+          </section>
+        </div>
+        <aside class="article-toc" aria-label="Table of contents">
+          <p class="toc-title">Contents</p>
+          <ol>
+            <li><a href="#sec-1">Starting Point: Message Layer vs. Lock-and-Mint Bridge</a></li>
+            <li><a href="#sec-2">Who Verifies the Message: Oracles, Relayers, Executors</a></li>
+            <li><a href="#sec-3">DVN Multi-Party Verification: Low Thresholds Become Theater</a></li>
+            <li><a href="#sec-4">Message Replay and Finality Conflicts</a></li>
+            <li><a href="#sec-5">Trust-Surface Expansion for Integrators</a></li>
+            <li><a href="#sec-6">Cross-Chain Messaging Verification Checklist</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+          <aside class="article-references">
+            <p class="toc-title">Reference Directions</p>
+            <ul>
+              <li><a href="https://ethereum.org/en/developers/docs/bridges/" target="_blank" rel="noopener noreferrer nofollow">Cross-chain bridge basics (Ethereum.org, third party)</a></li>
+              <li><a href="https://messari.io/research" target="_blank" rel="noopener noreferrer nofollow">Cross-chain interoperability industry research (Messari, third party, for reference only)</a></li>
+              <li><a href="https://www.investopedia.com/what-is-a-blockchain-bridge-6455186" target="_blank" rel="noopener noreferrer nofollow">Blockchain bridge concept overview (Investopedia, third party)</a></li>
+            </ul>
+            <p class="disclaimer">All links above point to third-party sites, provided for research methodology reference only. They do not represent this site's endorsement, guarantee, or verification of their content accuracy.</p>
+          </aside>
+          <aside class="article-related">
+            <p class="toc-title">Related Articles</p>
+            <ul>
+              <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridge Security Verification</a></li>
+              <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle Price Feed Verification</a></li>
+              <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification</a></li>
+            </ul>
+          </aside>
+        </aside>
+        </div>
+        <p class="back-row"><a href="/en/articles.html">&larr; Back to all articles</a></p>
+      </article>
+    </main>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 Crypto Research Notes · Content is for research purposes only and does not constitute investment advice.</p>
+      <p><a href="/en/about.html">About</a> · <a href="/">中文</a> · <a href="mailto:llf.worker@gmail.com">Contact</a></p>
+    </div>
+  </footer>
+  <script src="/site.js?v=f79aa11f" defer></script>
+</body>
+</html>
