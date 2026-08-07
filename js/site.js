@@ -119,12 +119,14 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/restaking-avs-slashing-risk.html': '2026-08-07 10:17:24',
     '/articles/depin-compute-network-verification.html': '2026-08-06 15:21:30',
     '/articles/account-abstraction-wallet-security.html': '2026-08-06 10:51:44',
     '/articles/intent-centric-solver-verification.html': '2026-08-05 17:20:11',
     '/articles/onchain-forensics.html': '2026-08-05 11:08:20',
     '/articles/agent-audit-log-integrity-verification.html': '2026-08-04 10:24:07',
     '/articles/agent-strategy-execution-verification.html': '2026-08-03 11:18:42',
+'/en/articles/restaking-avs-slashing-risk.html': '2026-08-07 10:17:24',
     '/en/articles/depin-compute-network-verification.html': '2026-08-06 15:21:30',
     '/en/articles/account-abstraction-wallet-security.html': '2026-08-06 10:51:44',
     '/en/articles/intent-centric-solver-verification.html': '2026-08-05 17:20:11',

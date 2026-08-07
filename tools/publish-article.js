@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'depin-compute-network-verification',
-  publishedISO: '2026-08-06T15:21:30+08:00',
-  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
+  slug: 'restaking-avs-slashing-risk',
+  publishedISO: '2026-08-07T10:17:24+08:00',
+  tagColor: 'sky',                        // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'DePIN 算力网络核验：GPU 分布式云的算力是真的、需求是真的吗',
-    tagLabel: 'DePIN 算力网络',
-    cardDesc: '拆解DePIN算力网络的核验方法：物理工作证明如何区分真算与伪算，真实需求识别怎么分开外部客户与项目方自购自用，节点故障惩罚机制的设计要点，以及代币经济与真实营收的对齐问题。',
+    h1: '再质押 AVS 惩罚风险核验：同一份 ETH，同时抵押给几个协议',
+    tagLabel: '再质押风险核验',
+    cardDesc: '拆解再质押（restaking）与AVS的惩罚风险核验方法：同一份抵押品叠加承诺给多个AVS的风险如何累加、operator集中化的隐忧、惩罚条款的模糊地带，以及提现排队机制在极端行情下的挤兑风险。',
   },
   en: {
-    h1: 'DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real',
-    tagLabel: 'DePIN Compute Network',
-    cardDesc: 'A methodology breakdown of DePIN compute network verification: how proof of physical work separates real compute from fake compute, how to tell external demand apart from self-sponsored usage, the design of node fault penalty mechanisms, and whether tokenomics is aligning with real revenue.',
+    h1: 'Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols',
+    tagLabel: 'Restaking Risk',
+    cardDesc: 'A methodology breakdown of restaking and AVS slashing risk: whether pledging the same collateral to multiple AVS stacks risk as well as yield, operator centralization concerns, ambiguous slashing clauses, and withdrawal-queue run risk in extreme markets.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'depin-compute-network-verification',
     'account-abstraction-wallet-security',
     'intent-centric-solver-verification',
     'onchain-forensics',

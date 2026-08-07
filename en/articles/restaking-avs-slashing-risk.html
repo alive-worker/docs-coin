@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once - Crypto Research Notes</title>
+  <meta name="description" content="A methodology breakdown of restaking and AVS (Actively Validated Services) slashing risk: how re-pledging the same collateral to multiple AVS stacks risk, operator centralization concerns, ambiguous slashing terms, and withdrawal-queue run risk in extreme markets. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/restaking-avs-slashing-risk.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/restaking-avs-slashing-risk.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once - Crypto Research Notes">
+  <meta property="og:description" content="A methodology breakdown of restaking and AVS (Actively Validated Services) slashing risk: how re-pledging the same collateral to multiple AVS stacks risk, operator centralization concerns, ambiguous slashing terms, and withdrawal-queue run risk in extreme markets. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html">
+  <meta property="article:published_time" content="2026-08-07T10:17:24+08:00">
+  <meta property="article:modified_time" content="2026-08-07T10:17:24+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once">
+  <meta name="twitter:description" content="Restaking lets a single ETH deposit earn rewards from several AVS at once — but does the risk stack the same way the yield does? A methodology-only breakdown. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-restaking-avs-slashing-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-restaking-avs-slashing-en.png">
+  <link rel="preload" as="image" href="/img/article-restaking-avs-slashing-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese bilingual site focused on cryptocurrency research methodology and on-chain data analysis. Content is for research purposes only and is not investment advice.", "knowsAbout": ["Cryptocurrency research","On-chain data analysis","Token economics","Stablecoins","Cross-chain interoperability","Smart contract security","DAO governance","Proof of reserves","AI oracle verification","zkML and on-chain model verification","AI agent identity and credential verification","AI agent strategy execution verification","AI agent audit-log integrity verification","On-chain forensics and fund tracing","Intent-centric trading and solver network verification","Account abstraction wallet security","DePIN compute network verification","Restaking AVS slashing risk verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#primaryimage", "url": "https://coin.ponr.org/img/article-restaking-avs-slashing-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#webpage", "url": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html", "name": "Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once", "item": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#article", "headline": "Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once", "description": "A methodology breakdown of restaking and AVS (Actively Validated Services) slashing risk: how re-pledging the same collateral to multiple AVS stacks risk, operator centralization concerns, ambiguous slashing terms, and withdrawal-queue run risk in extreme markets. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["restaking risk verification","AVS slashing mechanism","operator centralization","collateral re-pledging","withdrawal queue run risk","actively validated services"], "wordCount": 3700, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-07T10:17:24+08:00", "dateModified": "2026-08-07T10:17:24+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/restaking-avs-slashing-risk.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/restaking-avs-slashing-risk.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once</h1>
+        <p class="article-summary">"Restake one ETH, earn three yields" is the pitch that makes restaking so appealing — the same ETH already staked on the Ethereum mainnet can be "lent" a second time to multiple AVS (Actively Validated Services), providing economic security for sidechains, data-availability layers, or oracle networks, and stacking extra rewards on top of the base staking yield. But if the yield is stacking, what else is stacking alongside it? This article looks at exactly that question, one marketing language tends to skip past: when the same collateral's slashing commitment is pledged to several AVS at once, does the risk exposure compound in step with the reward, how much does operator concentration shape the restaking ecosystem's systemic risk, where are the gray zones in slashing terms, and can withdrawal-queue mechanics turn into a run amplifier during extreme markets. This entire piece is a methodology discussion only. It is not investment advice and does not draw conclusions about any specific restaking protocol, AVS project, team, or individual.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-07T10:17:24+08:00">2026-08-07 10:17:24</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-restaking-avs-slashing-en.svg" alt="Restaking AVS Slashing Risk Verification: The Same ETH, Pledged to Several Protocols at Once cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. The Starting Point: What Restaking Actually "Stakes," and Who It's Pledged To</h2>
+            <p>Verifying restaking risk starts with clearing up a fact marketing language tends to blur: a restaking protocol typically doesn't generate new economic security on its own. What it does is repackage the "slashing commitment" behind an existing piece of collateral — ETH already staked on Ethereum mainnet, or a liquid staking token (LST) — and authorize multiple downstream AVS to draw on it. In other words, the commitment an operator makes to a restaking protocol is: if I misbehave or fail to perform on some AVS, you may slash this collateral — not that a fresh pool of capital gets separately pledged to every AVS.</p>
+            <p>The design intent is capital efficiency: instead of every new chain or protocol bootstrapping its own validator set and economic security from scratch, it can "rent" trust that Ethereum mainnet has already built and the market has already tested. But the researcher's starting question should run the other way: how many times has this reused trust's slashing commitment actually been reused? If the same 100 ETH backs five different AVS at once, should the maximum slashing exposure that 100 ETH needs to cover be understood as five times over, rather than simply assuming the slashing ceiling is capped at 100 ETH because that's the nominal size of the deposit?</p>
+            <ul class="recap">
+              <li>Restaking protocols generally don't create new economic security — they re-authorize an existing collateral's slashing commitment to multiple downstream AVS.</li>
+              <li>The starting question is how many times a given collateral's slashing commitment has been reused, not assuming the slashing ceiling equals the collateral's face value.</li>
+              <li>Capital efficiency gains come with a cost: researchers need to re-derive what "maximum risk exposure this collateral can cover" actually means.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Collateral Re-Pledging: Does Risk Exposure Really Stack</h2>
+            <p>The single most important question in verifying restaking risk is this: if an operator validates for three AVS at once, and one of them rules the operator committed a fault and triggers a slash, is that slashed collateral deducted from the operator's total pooled stake, or from a portion ring-fenced separately for that specific AVS? If deductions come from a shared pool, a fault or bad act on one AVS can drag down the collateral backing the operator's activity on other AVS — even if the operator performed flawlessly everywhere else. This is what's often called "risk stacking" or "slashing spillover."</p>
+            <p>Researchers should dig into the specific restaking protocol's technical documentation and confirm several points: whether slashing is isolated per AVS with its own capped allocation, rather than drawn from a shared total pool; how the deduction order and caps work when multiple AVS trigger slashing judgments simultaneously, and whether "over-slashing" is possible (e.g., the rule says 10% should be deducted, but simultaneous rulings from multiple AVS end up deducting more than the operator's total stake); and whether the protocol has publicly disclosed real historical cases of simultaneous multi-AVS slashing and how those were resolved. The answers determine whether "restake once, earn from many" is symmetric on the risk side — if yield stacks linearly but exposure can compound non-linearly under stress, that's a risk characteristic that needs to be explicitly understood, not a detail marketing language glosses over.</p>
+            <ul class="recap">
+              <li>The key check is the slashing deduction mechanism: isolated per-AVS allocation versus a shared pool drawn down across all AVS.</li>
+              <li>A shared pool can produce "slashing spillover" — a fault on one AVS bleeding into collateral backing entirely unrelated, well-behaved AVS activity.</li>
+              <li>Whether yield stacks linearly while exposure can compound non-linearly under simultaneous multi-AVS slashing is the core asymmetry to verify.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Operator Centralization: A Few Operators Backing Most of the AVS Economic Security</h2>
+            <p>In restaking ecosystems, most end users don't run validator nodes themselves — they delegate to an operator, a professional node-running team, who allocates that stake across various AVS. This division of labor lowers the barrier for ordinary users to participate, but it opens a new verification dimension: researchers need to check how much of a restaking protocol's total staked value is concentrated among its top few operators, and whether those top operators simultaneously service a large number of AVS. If a handful of operators back the economic security of most AVS in the ecosystem, the actual risk correlation across those "independent" AVS is far higher than the surface impression of "many separate protocols" suggests — a technical failure, internal misconduct, or a targeted attack against one major operator could simultaneously weaken the economic security of every AVS under that operator's care, not just one.</p>
+            <p>Concrete ways to verify operator centralization include: checking whether the restaking protocol publicly discloses operator stake-share distribution data; looking for governance mechanisms that cap any single operator's maximum share (preventing an operator's share from growing unchecked to a "too big to slash" scale); and reviewing top operators' track record on other chains or validator networks — any past downtime, slashing events, or security incidents. Operator centralization isn't inherently a design flaw in restaking, but it is a systemic risk indicator that needs continuous tracking, and researchers should treat it as an independent item on the checklist rather than assuming "multiple AVS" automatically means "risk is already well diversified."</p>
+            <ul class="recap">
+              <li>The stake share controlled by top operators determines how correlated the risk really is across ostensibly "independent" AVS.</li>
+              <li>When one operator services many AVS, a single point of failure or misconduct there weakens all those AVS' economic security at once.</li>
+              <li>Governance caps on single-operator share, plus a review of operators' historical track record, are concrete tools for verifying centralization risk.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Ambiguous Slashing Terms: What Actually Triggers a Slash</h2>
+            <p>The slashing terms between a restaking protocol and its various AVS are often far more complex than a traditional PoS network's slashing rules, because each AVS can define "fault" completely differently. Some AVS slash for equivocation-type misbehavior — an act that can be objectively and automatically verified on-chain — while others slash for more subjective service-quality issues, such as response latency exceeding a threshold or availability dropping below a percentage. The latter often requires manual review or off-chain data, which is exactly where gray zones in enforcement creep in.</p>
+            <p>When verifying slashing terms, researchers should focus on: whether the determination is fully automated (on-chain verifiable) or leaves room for manual discretion; if manual discretion exists, who holds that decision-making power — the AVS team itself, or an arbitration mechanism independent of both parties; whether the slashing terms include a clear appeal window and process; and whether past disputes arising from ambiguous terms occurred, and how they were resolved. Ambiguity in slashing terms doesn't necessarily imply bad intent in the protocol design, but for an operator, clear, predictable rules go a lot further toward sustaining long-term, stable participation than terms that effectively say "the team reserves final interpretation." When assessing the health of a restaking ecosystem, the transparency and predictability of its slashing terms belongs on the checklist.</p>
+            <ul class="recap">
+              <li>Different AVS define "fault" very differently, ranging from on-chain, automatically verifiable misbehavior to subjective service-quality judgments requiring manual review.</li>
+              <li>The key check is whether determination is fully automated, and if manual discretion exists, whether the decision-maker and appeal process are clearly defined.</li>
+              <li>Transparency and predictability of slashing terms directly affects operators' willingness to participate long term, and should be its own verification dimension.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Withdrawal Queues: Could They Turn Into a Run Amplifier in Extreme Markets</h2>
+            <p>For safety reasons, restaking protocols typically enforce a withdrawal queue — a user who unstakes must wait through a fixed or dynamic window before actually receiving their funds. The intent is to give the protocol time to settle any pending slashing judgments, preventing users from withdrawing ahead of a slash ruling to dodge liability. Under normal market conditions this isn't a problem. But in an extreme scenario — a top operator exposed for a security issue, or a major AVS revealed to have a critical vulnerability, triggering a wave of simultaneous withdrawal requests — the queue mechanism can amplify panic instead, precisely because users know their funds are locked in an uncertain waiting period with no way to cut losses immediately.</p>
+            <p>Concrete ways to verify this risk dimension include: checking whether the withdrawal wait time is fixed or dynamically extends with queue length; whether the protocol has an emergency pause or tiered-processing mechanism to prevent the queue from being overwhelmed instantly during an extreme event; and whether collateral still under withdrawal is exposed to new slashing risk during the wait (that is, if a slashing judgment occurs after a withdrawal request but before it settles, does the user still bear that liability). A well-designed withdrawal mechanism balances protocol safety against user liquidity; a poorly designed one risks turning a localized AVS risk event into a liquidity run affecting the entire restaking protocol — something researchers assessing overall protocol robustness cannot afford to skip.</p>
+            <ul class="recap">
+              <li>Withdrawal queues exist to give slashing judgments time to settle, but in extreme markets they can amplify panic and liquidity-run pressure.</li>
+              <li>The key check is whether wait time dynamically extends with queue depth, and whether emergency mechanisms exist to prevent the queue from being overwhelmed instantly.</li>
+              <li>Whether collateral remains exposed to new slashing risk during the wait determines whether "requested withdrawal" actually equals "risk resolved."</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. A Restaking AVS Slashing Risk Verification Checklist</h2>
+            <p>Consolidating the sections above into a checklist reusable in real research helps systematically evaluate a restaking protocol's and its AVS ecosystem's true risk exposure, rather than stopping at "one asset, multiple yields" marketing language.</p>
+            <ul class="recap">
+              <li>Confirm how many AVS a given collateral's slashing commitment has been reused across, and whether the maximum exposure it needs to cover has been redefined accordingly.</li>
+              <li>Verify whether slashing deductions are isolated per AVS or drawn from a shared total pool, and check for slashing-spillover potential.</li>
+              <li>Confirm the stake share controlled by top operators and assess the real risk correlation across ostensibly independent AVS.</li>
+              <li>Confirm whether slashing determinations are automated, and whether the decision-maker and appeal process for any manual discretion are clearly defined.</li>
+              <li>Check how the withdrawal queue behaves in extreme markets, and whether collateral remains exposed to new slashing risk during the wait.</li>
+              <li>For any "one asset, multiple yields" claim, ask whether the corresponding risk exposure is disclosed with equal prominence, rather than only emphasizing the yield side.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>Restaking reuses Ethereum mainnet's existing economic security across multiple AVS, and at the capital-efficiency level this is a meaningful innovation. But the cost of that efficiency gain is that researchers need a more complex framework than traditional PoS staking to understand the risk exposure: whether collateral re-pledging stacks risk and not just yield, how operator concentration shapes the real risk correlation across ostensibly independent AVS, how gray zones in slashing terms can only reveal the true distribution of decision-making power once a dispute actually happens, and how withdrawal-queue mechanics become the key stress test of the whole ecosystem's robustness during extreme markets. When assessing a specific restaking protocol or AVS project, researchers shouldn't stop at the "stacked yield" marketing angle, but should ask whether every layer of risk exposure has a corresponding, verifiable boundary. This article discusses methodology only, does not draw conclusions about any specific restaking protocol, AVS project, team, or individual, and is not investment advice of any kind. When reading restaking-related analysis elsewhere, readers should focus on the specific slashing terms and risk disclosures, and stay skeptical of any generic "secure reuse" or "capital efficiency revolution" claims.</p>
+          </section>
+        </div>
+        <aside class="article-toc" aria-label="Table of contents">
+          <p class="toc-title">Table of Contents</p>
+          <ol>
+            <li><a href="#sec-1">What Restaking Actually Stakes</a></li>
+            <li><a href="#sec-2">Collateral Re-Pledging</a></li>
+            <li><a href="#sec-3">Operator Centralization</a></li>
+            <li><a href="#sec-4">Ambiguous Slashing Terms</a></li>
+            <li><a href="#sec-5">Withdrawal Queues</a></li>
+            <li><a href="#sec-6">Verification Checklist</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+          <aside class="article-references">
+            <p class="toc-title">Further Reading</p>
+            <ul>
+              <li><a href="https://ethereum.org/en/staking/" target="_blank" rel="noopener noreferrer nofollow">Ethereum staking basics (Ethereum.org, third party)</a></li>
+              <li><a href="https://messari.io/research" target="_blank" rel="noopener noreferrer nofollow">Restaking sector research (Messari, third party, reference only)</a></li>
+              <li><a href="https://www.investopedia.com/what-is-restaking-in-crypto-8623731" target="_blank" rel="noopener noreferrer nofollow">What is restaking in crypto (Investopedia, third party)</a></li>
+            </ul>
+            <p class="disclaimer">All links above point to third-party sites, included for methodology reference only. They do not represent an endorsement, guarantee, or verification of accuracy by this site.</p>
+          </aside>
+          <aside class="article-related">
+            <p class="toc-title">Related Articles</p>
+            <ul>
+              <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification</a></li>
+              <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security</a></li>
+              <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification</a></li>
+            </ul>
+          </aside>
+        </aside>
+        </div>
+        <p class="back-row"><a href="/en/articles.html">&larr; Back to all articles</a></p>
+      </article>
+    </main>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 Crypto Research Notes · Content is for research purposes only and is not investment advice.</p>
+      <p><a href="/en/about.html">About</a> · <a href="/">中文</a> · <a href="mailto:llf.worker@gmail.com">Contact</a></p>
+    </div>
+  </footer>
+  <script src="/site.js?v=f79aa11f" defer></script>
+</body>
+</html>
