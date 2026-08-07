@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'cross-chain-messaging-protocol-verification',
-  publishedISO: '2026-08-07T14:30:00+08:00',
-  tagColor: 'blue',                        // must already exist as .archive-tag--<color> in styles.css
+  slug: 'data-availability-layer-verification',
+  publishedISO: '2026-08-07T16:40:00+08:00',
+  tagColor: 'gold',                        // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: '跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的',
-    tagLabel: '跨链消息协议核验',
-    cardDesc: '拆解跨链消息传递协议（LayerZero、Wormhole一类通用消息层）的核验方法：验证节点、预言机与中继器谁说了算，DVN多方验证的真实信任假设，消息重放与终局性冲突风险，以及集成方容易忽略的信任面扩大问题。',
+    h1: '数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回',
+    tagLabel: '数据可用性层核验',
+    cardDesc: '拆解数据可用性（DA）层的核验方法：DAS采样到底证明了什么，纠删码编码错误如何让采样通过却仍取不回数据，欺诈证明与有效性证明对DA层依赖程度的差异，以及模块化拆分后新增的信任面。',
   },
   en: {
-    h1: 'Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real',
-    tagLabel: 'Cross-Chain Messaging',
-    cardDesc: 'A methodology breakdown of cross-chain messaging protocol verification: who actually verifies events, the real trust assumptions behind DVN multi-party verification, message replay and finality-conflict risk, and the trust-surface expansion integrators often overlook.',
+    h1: 'Data Availability Layer Verification: Sampling Passed Doesn\'t Mean Data Is Retrievable',
+    tagLabel: 'Data Availability Layer',
+    cardDesc: 'A methodology breakdown of DA layer verification: what data availability sampling actually proves, how erasure-coding errors let sampling pass while data stays unrecoverable, and the new trust surface modular decoupling creates.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'cross-chain-messaging-protocol-verification',
     'restaking-avs-slashing-risk',
     'depin-compute-network-verification',
     'account-abstraction-wallet-security',

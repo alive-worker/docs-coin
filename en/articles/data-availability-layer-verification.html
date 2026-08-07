@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable - Crypto Research Notes</title>
+  <meta name="description" content="A method-focused breakdown of data availability (DA) layer verification: what data availability sampling (DAS) actually proves, how erasure-coding errors let sampling pass while data stays unrecoverable, why fraud proofs and validity proofs depend on DA differently, and the new trust surface created when DA is decoupled from execution. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable - Crypto Research Notes">
+  <meta property="og:description" content="A method-focused breakdown of data availability (DA) layer verification: what data availability sampling (DAS) actually proves, how erasure-coding errors let sampling pass while data stays unrecoverable, why fraud proofs and validity proofs depend on DA differently, and the new trust surface created when DA is decoupled from execution. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/data-availability-layer-verification.html">
+  <meta property="article:published_time" content="2026-08-07T16:40:00+08:00">
+  <meta property="article:modified_time" content="2026-08-07T16:40:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable - Crypto Research Notes">
+  <meta name="twitter:description" content="The 'modular blockchain' narrative splits data availability out of execution, but does a passed sample actually mean data can be retrieved? Methodology discussion only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-data-availability-layer-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-data-availability-layer-verification-en.png">
+  <link rel="preload" as="image" href="/img/article-data-availability-layer-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese research site on crypto verification methods and on-chain data. Content is for research purposes only and is not investment advice.", "knowsAbout": ["Cryptocurrency research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain bridges","Smart contract security","DAO governance","Proof of reserves","AI oracle verification","zkML and verifiable on-chain inference","AI agent identity and credential verification","AI agent policy execution verification","AI agent audit log tamper-evidence","On-chain forensics and fund tracing","Intent-based trading and solver network verification","Account abstraction wallet security","DePIN compute network verification","Restaking AVS slashing risk","Cross-chain messaging protocol verification","Data availability layer verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-data-availability-layer-verification-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html", "name": "Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable", "item": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#article", "headline": "Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable", "description": "A method-focused breakdown of data availability (DA) layer verification: what data availability sampling (DAS) actually proves, how erasure-coding errors let sampling pass while data stays unrecoverable, why fraud proofs and validity proofs depend on DA differently, and the new trust surface created when DA is decoupled from execution. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["data availability verification","DAS sampling","erasure coding error","modular blockchain","fraud proof dependency","DA layer trust surface"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-07T16:40:00+08:00", "dateModified": "2026-08-07T16:40:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/data-availability-layer-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/data-availability-layer-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</h1>
+        <p class="article-summary">The "modular blockchain" narrative splits a chain into execution, settlement, consensus, and data availability (DA) layers, each optimized separately. The DA layer has one job: publish transaction data so anyone who needs it can retrieve and reconstruct state. That split sounds like a pure engineering optimization, but for researchers it creates a new, independent trust surface — no matter how correct the execution layer is, if the underlying data isn't available, fraud proofs can't be generated and user asset safety has no backstop. This article works through the core, easily overlooked verification questions around DA layers: what data availability sampling (DAS) actually proves and what it doesn't; how a single erasure-coding error can let most nodes' samples pass while the data still can't be reconstructed; how fraud-proof and validity-proof rollups depend on DA in fundamentally different ways; and whether the efficiency gains from "modularity" are quietly expanding the system's overall trust surface. This is a methodology discussion only, not investment advice, and it does not make qualitative claims about any specific DA project, rollup team, or individual.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-07T16:40:00+08:00">2026-08-07 16:40:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-data-availability-layer-verification-en.svg" alt="Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable cover" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. The Starting Point: Why the DA Layer Deserves Its Own Verification</h2>
+            <p>Before you can verify a DA layer, you need to understand why it exists. A rollup executes transactions off-chain in batches, then submits the results to a main chain. If it only submitted the "result after execution" without the "raw transaction data before execution," nobody could verify whether that result was actually computed correctly — you'd simply have to trust the batcher didn't cheat. That's why a rollup must also publish the transaction data itself: only when data is available can anyone re-execute it, check the result, or generate a fraud proof to challenge it if something's wrong.</p>
+            <p>The problem is that publishing all transaction data to a main chain (say, Ethereum mainnet) is expensive — which is the direct driver behind the "modular" narrative: pull data availability out of the main chain's execution environment and hand it to a dedicated DA layer (Celestia, EigenDA, Avail-style projects, or Ethereum's own blob space) that provides it more cheaply. A researcher's starting point when verifying a DA layer should be: has this rollup chosen to publish data to a main chain whose security has been battle-tested over years, or to a newer, cheaper, independent DA layer whose security assumptions haven't been stress-tested at scale? Lower cost usually comes paired with a change in trust assumptions — and that change is the real starting point for verification.</p>
+            <ul class="recap">
+              <li>The DA layer exists because only available raw transaction data lets anyone re-execute or generate a fraud proof against a bad result.</li>
+              <li>"Modularity" pulls data availability out of the main chain's execution environment to cut cost, but lower cost usually shifts the trust assumptions.</li>
+              <li>The verification starting point is identifying how long and at what scale the chosen DA option's security assumptions have actually been tested.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Data Availability Sampling: What Light Nodes Verify, and What They Don't</h2>
+            <p>DA layers generally don't require every node to download all the data to confirm "data is available." Instead they use data availability sampling (DAS): a light node randomly downloads a small subset of data shards, and if repeated random samples succeed, it infers with very high probability that the full dataset is held somewhere on the network and can be reconstructed. The elegance of this mechanism is that it turns "verify all the data" — an expensive task — into "verify a small sample and infer the whole via probability" — a cheap one. This is the core technique that lets DA layers scale.</p>
+            <p>But researchers need to be precise about what DAS actually verifies: it verifies that "the sampled shards can be retrieved," not that "the original data was correctly encoded into those shards." If the encoding process itself is broken — say the erasure-coded shards that were supposed to be generated don't match what was actually generated — the light node is sampling against a flawed target from the start; passing the sample tells you nothing about whether the original data is complete and correct. When verifying a specific DA scheme, researchers should look at: what failure-rate threshold the sampling is set to, how many independent samples are required to hit the protocol's claimed security bound, and whether the protocol has published a formal mathematical proof and third-party audit of the sampling mechanism — not just accept the claim "we use DAS, so it's secure" at face value.</p>
+            <ul class="recap">
+              <li>DAS lets light nodes infer full data availability from randomly sampling a small subset of shards — the core scaling technique for DA layers.</li>
+              <li>DAS verifies that "sampled shards are retrievable," not that "the original data was correctly encoded into shards" — these are different questions.</li>
+              <li>Verification should focus on the sampling failure-rate threshold, the number of independent samples versus the claimed security bound, and whether third-party audits exist.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Erasure-Coding Errors: Sampling Can Pass While Data Stays Unrecoverable</h2>
+            <p>Erasure coding is the mathematical backbone behind DAS: original data is redundantly encoded into a set of shards, and reconstructing the full original data only requires retrieving a sufficient fraction of those shards — which is exactly why DAS only needs to sample a small fraction to reach high confidence. But this mechanism only holds if the encoding process itself is correct. If the node publishing the data (say, a rollup's sequencer) — deliberately or through a software bug — generates an incorrect encoding and publishes a shard set that "looks structurally fine but can't actually reconstruct the original data," light nodes running DAS can still have every sample "succeed," because the specific shards they happened to sample do exist and are downloadable — they just don't add up, or don't reconstruct correctly once assembled.</p>
+            <p>This is one of the most overlooked, most technical risk points in DA layer verification, sometimes called an "encoding-error attack," with a corresponding defense often described as an "availability version of a fraud proof" — letting a node that discovers an encoding inconsistency generate a dedicated encoding-error proof to challenge the entire data publication. Researchers should verify: whether the DA scheme has a built-in mechanism to check encoding correctness (such as KZG polynomial commitments, a cryptographic tool that lets a node verify mathematical consistency of the encoding without downloading all the data); if it instead relies on a fraud-proof-style encoding challenge, how long the challenge window is and who is responsible and able to raise a challenge within it; and whether this DA scheme or comparable ones have had real encoding-error incidents, and how they were handled. A passed sample is not the same as trustworthy, complete data — the encoding-correctness step in between is exactly what researchers need to scrutinize.</p>
+            <ul class="recap">
+              <li>Erasure coding lets DAS infer the whole from a small sample, but only if the encoding process itself is correct.</li>
+              <li>An encoding-error attack means the sampled shards genuinely exist and download fine, yet don't add up or reconstruct the correct original data.</li>
+              <li>Key checks: cryptographic commitment tools (like KZG) for encoding correctness, or the length and accountability design of a fraud-proof-style challenge window.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Fraud Proofs vs. Validity Proofs: Two Different Dependencies on DA</h2>
+            <p>The importance of the DA layer plays out differently for optimistic rollups (fraud proofs) and ZK rollups (validity proofs). An optimistic rollup trusts the sequencer's submitted result by default, and only needs to download the full data and re-execute to generate a fraud proof if someone raises a challenge within the challenge window. This means an optimistic rollup's dependency on DA is "reactive" — day to day, data availability seems irrelevant to normal operation, but the moment a challenge is actually needed, unavailable data means the challenge right is effectively neutralized, letting a bad actor quietly make data "unavailable" during the challenge window to dodge accountability.</p>
+            <p>ZK rollups rely on validity proofs to guarantee the correctness of every state transition, in theory without needing "re-execute after the fact" to verify results — so why does a ZK rollup still need a DA layer? Because a validity proof can only prove "the state transition was computed correctly according to the rules," not "the user can know their current account balance or withdraw their assets at will" — if the raw transaction data isn't available, users can't reconstruct their own account state, and their assets are effectively frozen even though the proof itself is valid. When evaluating a rollup, researchers should distinguish these two dependency modes and verify them separately: for optimistic rollups, whether the data-availability guarantee during the challenge window is robust; for ZK rollups, whether users have a data-retrieval path independent of the sequencer, in case the sequencer censors transactions or goes offline.</p>
+            <ul class="recap">
+              <li>Optimistic rollups depend on DA "reactively" — the challenge right is only as good as data availability during the actual challenge window.</li>
+              <li>ZK rollups still need available raw data so users can reconstruct balances and withdraw assets, even though validity proofs guarantee correct state transitions.</li>
+              <li>Verify each mode separately: challenge-window data guarantees for optimistic rollups, independent data-retrieval paths for ZK rollups.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Expanding the Trust Surface: New Failure Points After Modular Decoupling</h2>
+            <p>Pulling the DA layer out of the execution layer essentially splits a chain's single trust surface into multiple independent ones — users now need to simultaneously trust that the execution layer's sequencer isn't cheating, that the settlement layer's contract logic has no bugs, and that the DA layer's validators/committee actually published the data as promised. Every newly introduced independent component is, in principle, a new potential single point of failure. When researchers assess the systemic risk of a "modular" design, they can't just evaluate each layer's security in isolation — they also need to evaluate the combined risk across layers, such as whether the DA layer's validator set overlaps heavily or has financial ties with the execution layer's sequencer. If it does, an "independent DA layer" may not actually be independent in governance or economic terms, no matter how the architecture diagram looks.</p>
+            <p>Concrete methods for verifying this dimension include: checking whether the DA layer's validator set and stake distribution have clear financial or governance ties to the specific rollup projects that use it; examining the DA layer's own degree of decentralization — validator count, geographic distribution, client diversity — and whether it's large enough to independently back the "security" it promises; and checking whether a rollup that depends on the DA layer has a fallback plan (switching to another DA layer, or falling back to publishing data on the main chain) if the DA layer suffers a temporary outage or malicious censorship. The efficiency gains from "modularity" are real, but researchers should weigh those gains against the combined trust-surface expansion they introduce, rather than only seeing the cost-reduction side.</p>
+            <ul class="recap">
+              <li>Modular decoupling splits a single trust surface into multiple independent ones, and each new component is a potential single point of failure.</li>
+              <li>Key check: whether the DA layer's validator set has financial or governance ties to the rollups that depend on it, to avoid "architecturally independent, but not economically independent."</li>
+              <li>DA layer decentralization scale and whether a rollup has a fallback DA option determine the architecture's real resilience under failure scenarios.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. Data Availability Layer Verification Checklist</h2>
+            <p>A practical checklist distilled from the sections above, meant to help systematically evaluate the real trust assumptions behind a rollup or DA project, rather than stopping at "modular" and "scalable" as headline claims.</p>
+            <ul class="recap">
+              <li>Confirm how long and at what scale the chosen DA option's security assumptions have actually been market- and audit-tested.</li>
+              <li>Confirm DAS's sampling failure-rate threshold and independent-sample count against a published mathematical proof of the claimed security bound.</li>
+              <li>Confirm whether cryptographic commitment tools (like KZG) verify encoding correctness, or check the length and accountability design of an encoding-error challenge window.</li>
+              <li>Confirm whether it's an optimistic or ZK rollup, and verify challenge-window data guarantees or independent data-retrieval paths accordingly.</li>
+              <li>Confirm whether the DA layer's validator set has financial or governance ties to the rollups depending on it, to assess real architectural independence.</li>
+              <li>For any claim that "modular is safer and cheaper," ask whether the resulting trust-surface expansion has been disclosed alongside it.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>Pulling data availability out into its own layer is a real, meaningful advance in the modular blockchain narrative's cost and scaling story — but that advance comes with a cost: researchers need a more complex framework than a monolithic chain to understand the trust assumptions involved. Data availability sampling verifies shard retrievability, not encoding correctness; fraud-proof and validity-proof rollups depend on DA in fundamentally different ways; and modular decoupling reduces per-layer cost while quietly expanding the system's combined trust surface. When evaluating a specific DA project or a rollup that depends on it, researchers shouldn't stop at headline terms like "modular" or "scalable" — they should ask whether each newly introduced trust assumption has a verifiable boundary. This article is a methodology discussion only. It does not make qualitative claims about any specific DA project, rollup team, or individual, and it is not investment advice of any kind. Readers evaluating DA-layer-related analysis should always look at the specific sampling mechanism, the encoding-verification method, and the degree of validator decentralization, and stay skeptical of any sweeping "modular revolution" claims.</p>
+          </section>
+        </div>
+        <aside class="article-toc" aria-label="Table of contents">
+          <p class="toc-title">Contents</p>
+          <ol>
+            <li><a href="#sec-1">The Starting Point: Why the DA Layer Deserves Its Own Verification</a></li>
+            <li><a href="#sec-2">Data Availability Sampling: What Light Nodes Verify, and What They Don't</a></li>
+            <li><a href="#sec-3">Erasure-Coding Errors: Sampling Can Pass While Data Stays Unrecoverable</a></li>
+            <li><a href="#sec-4">Fraud Proofs vs. Validity Proofs: Two Different Dependencies on DA</a></li>
+            <li><a href="#sec-5">Expanding the Trust Surface: New Failure Points After Modular Decoupling</a></li>
+            <li><a href="#sec-6">Data Availability Layer Verification Checklist</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+          <aside class="article-references">
+            <p class="toc-title">Further Reading</p>
+            <ul>
+              <li><a href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer nofollow">Ethereum Danksharding and data availability basics (Ethereum.org, third party)</a></li>
+              <li><a href="https://messari.io/research" target="_blank" rel="noopener noreferrer nofollow">Modular blockchain and DA layer industry research (Messari, third party, for reference only)</a></li>
+              <li><a href="https://www.investopedia.com/what-is-a-blockchain-fraud-proof-7973823" target="_blank" rel="noopener noreferrer nofollow">Introduction to fraud proofs and validity proofs (Investopedia, third party)</a></li>
+            </ul>
+            <p class="disclaimer">All links above point to third-party sites for methodology reference only, and do not constitute endorsement, guarantee, or verification of their content by this site.</p>
+          </aside>
+          <aside class="article-related">
+            <p class="toc-title">Related Articles</p>
+            <ul>
+              <li><a href="/en/articles/layer2-rollup-research-guide.html">Layer2 Sequencer Verification</a></li>
+              <li><a href="/en/articles/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification</a></li>
+              <li><a href="/en/articles/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk</a></li>
+            </ul>
+          </aside>
+        </aside>
+        </div>
+        <p class="back-row"><a href="/en/articles.html">&larr; Back to all articles</a></p>
+      </article>
+    </main>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 Crypto Research Notes · For research purposes only. Not investment advice.</p>
+      <p><a href="/en/about.html">About</a> · <a href="/">中文</a> · <a href="mailto:llf.worker@gmail.com">Contact</a></p>
+    </div>
+  </footer>
+  <script src="/site.js?v=01b81180" defer></script>
+</body>
+</html>
