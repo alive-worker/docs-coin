@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'data-availability-layer-verification',
-  publishedISO: '2026-08-07T16:40:00+08:00',
-  tagColor: 'gold',                        // must already exist as .archive-tag--<color> in styles.css
+  slug: 'usdt-beginner-onramp-defi-security-guide',
+  publishedISO: '2026-08-10T11:00:00+08:00',
+  tagColor: 'teal',                        // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: '数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回',
-    tagLabel: '数据可用性层核验',
-    cardDesc: '拆解数据可用性（DA）层的核验方法：DAS采样到底证明了什么，纠删码编码错误如何让采样通过却仍取不回数据，欺诈证明与有效性证明对DA层依赖程度的差异，以及模块化拆分后新增的信任面。',
+    h1: 'USDT新手完全指南：交易所出入金教程与DeFi链上安全核验',
+    tagLabel: 'USDT新手指南',
+    cardDesc: '从USDT的基础原理讲起，系统梳理交易所买入、提现出入金的完整教程，再深入DeFi钱包与链上安全的核验方法，帮新手一次搞懂稳定币全流程。',
   },
   en: {
-    h1: 'Data Availability Layer Verification: Sampling Passed Doesn\'t Mean Data Is Retrievable',
-    tagLabel: 'Data Availability Layer',
-    cardDesc: 'A methodology breakdown of DA layer verification: what data availability sampling actually proves, how erasure-coding errors let sampling pass while data stays unrecoverable, and the new trust surface modular decoupling creates.',
+    h1: 'USDT Beginner\'s Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks',
+    tagLabel: 'USDT Beginner Guide',
+    cardDesc: 'Start with the fundamentals of USDT, walk through the full exchange buy/withdraw on-ramp and off-ramp tutorial, then move into DeFi wallet and on-chain security verification for beginners.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'data-availability-layer-verification',
     'cross-chain-messaging-protocol-verification',
     'restaking-avs-slashing-risk',
     'depin-compute-network-verification',
