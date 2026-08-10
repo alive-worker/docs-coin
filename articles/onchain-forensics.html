@@ -90,7 +90,7 @@
           <section id="sec-1">
             <h2>1. 起点：一次资金流复盘从哪里开始</h2>
             <p>任何一次链上取证工作，起点都是一个或几个「事发地址」——资金被转出的那个地址。研究者能拿到的原始材料只有区块链上的公开交易记录：转账金额、时间戳、发送方与接收方地址、经过的合约。取证工作的第一步不是急着往下追，而是先把事发地址在过去一段时间内的行为模式整理出来：它是长期活跃的老地址，还是刚刚创建就收到大额资金的新地址；它此前是否与已知的交易所充值地址、跨链桥合约、DeFi 协议有过交互；资金是一次性转出还是分批多次转出。这些基础信息决定了后续追踪策略——分批转出往往意味着操作者在测试下游通道是否畅通，一次性大额转出则更可能是提前规划好路径的行动。</p>
-            <ul class="recap">
+            <ul>
               <li>取证工作始于对事发地址历史行为的整理，而非直接追踪下一跳。</li>
               <li>转出方式（一次性 / 分批）本身就是可分析的信号，反映操作者的规划程度。</li>
               <li>所有材料均为公开链上数据，研究结论的可信度取决于交叉验证的充分程度。</li>
@@ -100,7 +100,7 @@
             <h2>2. 地址聚类：把散落的地址拼回同一个人</h2>
             <p>地址聚类（address clustering）是链上取证最核心的技术，目的是判断多个看似独立的地址是否由同一个实际控制人操作。常见的聚类信号包括：多个地址在同一笔交易中作为输入方共同出现（在 UTXO 模型链上尤为明显，因为一笔交易的多个输入通常需要同一方掌握全部私钥）、地址之间存在频繁的小额「找零」式转账、多个地址几乎同时创建并接收来自同一上游地址的资金、地址在 Gas 费支付模式或交互合约选择上呈现出高度一致的行为指纹。这些信号单独看都不是决定性证据，但组合起来可以显著提高聚类判断的置信度。</p>
             <p>聚类方法也有明确的局限。首先，聚类算法给出的是概率性判断而不是确定性证明，任何自动化聚类结果都需要人工复核关键节点，不能直接当作定论。其次，如果操作者具备较强的操作安全意识，刻意避免地址间的直接资金往来、使用一次性中转地址、错开创建和使用的时间窗口，聚类的准确率会明显下降。研究者在引用聚类结果时，应当同时说明所使用的聚类方法与置信度区间，而不是给出一个不带任何限定条件的「这些地址都是同一人」的结论。</p>
-            <ul class="recap">
+            <ul>
               <li>共同输入、找零模式、创建时间、行为指纹是四类常见聚类信号。</li>
               <li>聚类结果是概率判断，需要人工复核，不能直接当作确定性证据。</li>
               <li>具备操作安全意识的操作者可以显著削弱聚类算法的有效性。</li>
@@ -110,7 +110,7 @@
             <h2>3. 混币服务与隐私工具：追踪链条在哪里断裂</h2>
             <p>当资金经过混币服务（mixer）或具备隐私特性的协议时，追踪链条通常会出现一个明确的断点。混币服务的基本原理是把大量不同用户的资金汇集到一个共享资金池中，再按照与原始存入记录脱钩的方式重新分配给各个提取地址，使得单纯依靠链上交易图很难把某一笔存入和某一笔提取直接对应起来。对于采用零知识证明技术的隐私协议，情况更进一步：协议本身在设计上就不对外暴露存款与取款之间的关联关系，这不是数据缺失，而是协议刻意实现的性质。</p>
             <p>研究者在这种情况下能做的事情是有限的，但并非完全无能为力。时间关联分析——观察存入和提取的时间窗口是否吻合、金额是否能通过合理的手续费扣减对应上——在某些场景下仍能提供有参考价值的线索，但这类分析给出的始终是可能性推测，而不是可验证的因果关系。诚实地说明这一点，比强行给出一个看似确定的追踪结论更符合研究应有的严谨程度。行业内也存在专门分析混币资金流动模式的研究工具和数据服务，但即便使用这些工具，也应当把结果视为概率参考而非确定性结论。</p>
-            <ul class="recap">
+            <ul>
               <li>混币服务和隐私协议在设计上就是为了斩断存款与取款之间的可追踪关联。</li>
               <li>时间与金额关联分析仍有参考价值，但只能得出概率性推测。</li>
               <li>研究者应明确标注追踪链条在混币环节之后的不确定性，而非给出虚假的确定性。</li>
@@ -120,7 +120,7 @@
             <h2>4. 跨链跳转：资金离开原链之后如何重新定位</h2>
             <p>资金一旦经跨链桥转移到另一条链，原链上的追踪工具和聚类经验往往无法直接迁移过去。跨链桥的运作模式大致分两类：锁定—铸造模式下，资金在源链被锁进桥合约，目标链上铸造出等值的映射资产，这种模式下源链和目标链之间存在一个可查的桥合约记录，只要知道映射规则，理论上可以把两端的资金对应起来；流动性池互换模式下，资金实际上是在源链池子存入、从目标链池子的既有流动性中支取，没有一一对应的锁定—铸造记录，这类桥的资金重新定位难度明显更高，因为提取出来的资金原本可能来自完全不同的存款人。</p>
             <p>此外，一些操作者会故意选择多次连续跨链，在多条链之间反复跳转，每跳转一次都相当于给追踪链条增加一层需要重新建立索引的成本。研究者在处理这种情况时，通常需要分别掌握目标链的区块浏览器、桥合约事件日志解析方法，逐链重建资金路径，工作量会随跳转次数近似线性甚至更快地增长。这也是为什么多链跳转是操作者规避追踪的常见手段之一。</p>
-            <ul class="recap">
+            <ul>
               <li>锁定—铸造类跨链桥留有可查映射记录，流动性池互换类桥的资金重新定位难度更高。</li>
               <li>连续多链跳转会显著增加追踪成本，且每条链都需要单独重建资金路径。</li>
               <li>跨链环节是资金流复盘中最容易出现方法论疏漏的环节之一，需要逐链验证而非想当然。</li>
@@ -130,7 +130,7 @@
             <h2>5. 出金节点识别：资金最终去了哪里</h2>
             <p>资金流复盘的下游终点通常是一个「出金节点」——资金最终转换为其他资产类别或流出加密货币体系的位置，最常见的是中心化交易所的充值地址。识别出金节点的常规方法，是将追踪到的地址与已知的交易所地址标注库进行比对；许多区块浏览器和链上分析平台会维护公开或半公开的地址标注信息，将部分已识别的交易所充值地址、知名机构地址标记出来，供研究者参考。需要说明的是，这类标注数据的准确度和更新及时性因平台而异，标注错误、标注过期的情况并不罕见，直接引用任何单一来源的标注结果都存在风险。</p>
             <p>即便资金确实流入了某个可识别的交易所充值地址，这也只代表资金进入了该机构的托管范围，并不等同于操作者身份已经确定——后续是否能进一步追踪到具体账户持有人，取决于该机构的合规流程与执法协作，这已经超出了链上数据分析本身能够回答的范围。研究者在文章或报告中描述「资金流入某交易所」时，应当明确这一表述的边界，避免给读者造成「已经查到人」的错误印象。</p>
-            <ul class="recap">
+            <ul>
               <li>出金节点识别依赖地址标注库比对，标注数据的准确性和时效性需要交叉验证。</li>
               <li>资金进入交易所充值地址不等于身份已确定，后续需要机构合规与执法协作才能完成。</li>
               <li>清楚区分「链上可验证的事实」与「链下才能完成的身份确认」，是保持研究严谨性的关键界限。</li>
@@ -139,7 +139,7 @@
           <section id="sec-6">
             <h2>6. 一份可复用的资金流复盘检查清单</h2>
             <p>把前面几个环节整理成一份可以在实际研究中反复使用的检查清单，有助于避免遗漏关键步骤，也便于团队协作时统一方法标准。</p>
-            <ul class="recap">
+            <ul>
               <li>整理事发地址的历史行为模式，判断转出方式是一次性还是分批。</li>
               <li>对下游地址进行聚类分析，明确记录所使用的聚类信号与置信度，避免给出无限定条件的结论。</li>
               <li>标注资金是否经过混币服务或隐私协议，如经过，明确说明追踪链条在此处存在不确定性。</li>
@@ -153,8 +153,8 @@
             <p>链上取证是一套建立在公开数据之上、但充满不确定性的研究方法：地址聚类给出概率而非证明，混币和隐私协议会制造无法单纯靠数据分析跨越的断点，跨链跳转需要逐链重建路径，出金节点识别依赖外部标注数据的质量。这套方法能够帮助研究者、审计团队和社区在事件发生后梳理出一条尽量完整的资金流向脉络，但它的产出始终是「基于当前可得数据的合理推断」，而不是不容置疑的定论。本文仅从研究方法论的角度进行讨论，不针对任何具体地址、项目、事件或个人做定性结论，也不构成任何形式的投资建议。读者在参考链上取证类分析内容时，应始终关注其方法透明度与不确定性说明，对任何过于确定化的表述保持审慎态度。</p>
           </section>
         </div>
-        <aside class="article-toc" aria-label="文章目录">
-          <p class="toc-title">目录</p>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
           <ol>
             <li><a href="#sec-1">起点：资金流复盘从哪里开始</a></li>
             <li><a href="#sec-2">地址聚类：拼回同一个人</a></li>
@@ -164,38 +164,76 @@
             <li><a href="#sec-6">资金流复盘检查清单</a></li>
             <li><a href="#sec-7">小结与免责声明</a></li>
           </ol>
-          <aside class="article-references">
-            <p class="toc-title">参考方向</p>
-            <ul>
+        </nav>
+        </div>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
               <li><a href="https://chainabuse.com/" target="_blank" rel="noopener noreferrer nofollow">公开地址标注与滥用举报数据库（第三方，仅供参考）</a></li>
               <li><a href="https://docs.chainalysis.com/" target="_blank" rel="noopener noreferrer nofollow">链上分析方法论公开文档（第三方，仅供参考）</a></li>
               <li><a href="https://ethereum.org/en/developers/docs/data-and-analytics/block-explorers/" target="_blank" rel="noopener noreferrer nofollow">区块浏览器与数据分析工具介绍（Ethereum.org，第三方）</a></li>
-            </ul>
-            <p class="disclaimer">以上链接均指向第三方网站，仅供研究方法参考，不代表本站推荐、担保或验证其内容准确性。</p>
-          </aside>
-          <aside class="article-related">
-            <p class="toc-title">相关文章</p>
-            <ul>
+          </ul>
+          <p class="ref-note">本文所涉数据口径、工具与项目状态可能随时间变化，请以各官方来源的最新信息为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
               <li><a href="/articles/airdrop-sybil-detection-research-guide.html">空投与Sybil识别研究方法</a></li>
               <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全研究方法</a></li>
               <li><a href="/articles/agent-audit-log-integrity-verification.html">AI代理审计日志防篡改核验</a></li>
               <li><a href="/articles/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径</a></li>
               <li><a href="/articles/account-abstraction-wallet-security.html">账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱</a></li>
               <li><a href="/articles/depin-compute-network-verification.html">DePIN 算力网络核验</a></li>
-            </ul>
-          </aside>
+          </ul>
         </aside>
-        </div>
-        <p class="back-row"><a href="/articles.html">&larr; 返回全部文章</a></p>
+        <div class="back-row"><a href="/">返回首页</a></div>
       </article>
     </main>
   </div>
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 加密货币研究 · 内容仅供学习研究，不构成投资建议。</p>
-      <p><a href="/about.html">关于本站</a> · <a href="/en/">English</a> · <a href="mailto:llf.worker@gmail.com">联系我们</a></p>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/site.js?v=01b81180" defer></script>
+  <script src="/js/site.js?v=01b81180"></script>
 </body>
 </html>

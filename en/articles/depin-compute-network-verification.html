@@ -91,7 +91,7 @@
             <h2>1. The Starting Point: DePIN Compute Networks Need a Different Verification Model Than Traditional Cloud GPUs</h2>
             <p>Traditional cloud providers have a fairly mature way of verifying GPU compute: customers pay directly, the invoice matches actual usage one-to-one, and the provider carries clear legal liability and SLA commitments. What DePIN compute networks try to do is decentralize that model — anyone can connect idle GPU capacity to the network, earn token rewards, and customers rent compute from that distributed supply pool to run AI training, inference, or rendering workloads, in theory cutting out the middleman markup and pushing prices lower. There is nothing wrong with that narrative on its own, but the hard part of verifying a DePIN compute network is that it turns the question of whether this compute actually exists and is actually being used from a centralized provider's invoice into a set of on-chain and off-chain evidence the researcher has to cross-check themselves.</p>
             <p>The first mental model a researcher needs to build is this: the node count, total compute, and historical tasks completed shown on a DePIN network's official dashboard are, fundamentally, numbers disclosed unilaterally by the project team. The starting point for verification is not to take those numbers at face value, nor to dismiss them outright, but to ask what each number's counting methodology actually is — does node count mean registered wallet addresses, or nodes that have stayed online and continuously submitted proof of work recently? That gap, across many DePIN projects, can run several times over or more than an order of magnitude.</p>
-            <ul class="recap">
+            <ul>
               <li>DePIN compute network verification turns a single centralized invoice into a set of on-chain and off-chain evidence the researcher must cross-check independently.</li>
               <li>Dashboard figures like node count and total compute are unilateral disclosures from the project; verification starts with the counting methodology, not blind acceptance or rejection.</li>
               <li>The gap between registered nodes and continuously active nodes submitting proof of work is the first dividing line for spotting an inflated network.</li>
@@ -101,7 +101,7 @@
             <h2>2. Proof of Physical Work: Telling "Actually Computing" Apart From "Pretending to Compute"</h2>
             <p>To prove a node is genuinely contributing real compute, DePIN networks typically rely on some form of proof of physical work — nodes periodically submit computation results, undergo randomly sampled verification runs, or have their outputs cross-checked by other nodes for consistency. The key thing to verify here is granularity: is every task verified, or only a small sampled fraction? A sampling rate that is too low leaves plenty of room to pretend to compute — for instance, running only the minimum workload needed to pass verification on low-end hardware, while idling the rest of the time to farm uptime rewards, without ever bearing the real cost of high-load compute tasks.</p>
             <p>A second, easily overlooked verification point is hardware authenticity itself. Many DePIN verification mechanisms can only confirm that a node executed some computation task, but struggle to verify on-chain whether the hardware used to execute that task actually matches what the network claims (for example, claiming a high-end GPU cluster while actually cobbling together low-end hardware that just barely passes verification). Researchers should check whether the project has introduced third-party hardware attestation and random performance benchmarks, and whether the results of those tests are publicly available, rather than accepting the blanket conclusion that a node passed proof of work. Proof of work solves whether compute happened at all; hardware authenticity verification solves whether the compute that happened actually matches the claimed specification. Neither one alone is sufficient.</p>
-            <ul class="recap">
+            <ul>
               <li>The key verification point for proof of physical work is granularity: full verification versus sampled verification, where too low a sampling rate leaves room to pretend to compute.</li>
               <li>Proof of work confirms a task was executed, but rarely confirms the hardware used matches the claimed spec; the two need to be verified separately.</li>
               <li>Third-party hardware attestation and public random performance benchmarks are the concrete tools for verifying hardware authenticity.</li>
@@ -111,7 +111,7 @@
             <h2>3. Real Demand Identification: Separating External Customers From Self-Sponsored Usage</h2>
             <p>A high task-completion count on a DePIN compute network means little for judging its real value if most of those tasks are being submitted by the project's own affiliated parties — for example, using the project's own treasury funds to rent compute from its own network's nodes, manufacturing an appearance of robust demand. The first concrete method for verifying real demand is checking whether task-initiator addresses are sufficiently dispersed — if the overwhelming majority of compute rental requests come from a handful of addresses, and those addresses have traceable fund flows to the project's foundation, market makers, or early investors, that is a direct signal of suspected self-sponsored usage.</p>
             <p>A second method is looking at customer persistence and diversity: real external AI training and inference demand typically shows industry-typical distribution patterns (varying task sizes, varying call intervals, varying model types), whereas self-sponsored volume-padding tends to show highly regular submission patterns (fixed intervals, fixed task sizes, fixed durations). A third method is cross-checking revenue data: if a project has publicly disclosed monthly compute rental revenue, does that number correspond to a traceable real fund inflow on-chain, rather than existing only as a figure in a press release? The core of real demand identification is not finding one smoking-gun piece of evidence, but cross-verifying across multiple independent dimensions whether the robust-demand narrative actually matches the fund flows and task distribution that show up on-chain.</p>
-            <ul class="recap">
+            <ul>
               <li>Task-initiator addresses that are highly concentrated, and traceable to the project's affiliated parties, are a direct signal of self-sponsored volume-padding.</li>
               <li>Real demand usually shows diverse task sizes and call intervals; highly regular fixed patterns suggest artificial volume.</li>
               <li>Publicly disclosed compute rental revenue should be traceable to real on-chain fund inflows, not just a number in a press release.</li>
@@ -121,7 +121,7 @@
             <h2>4. Node Fault Penalty Mechanisms: Trigger Conditions, Dispute Handling, and Penalty Severity</h2>
             <p>For a DePIN compute network to maintain service quality, it needs a penalty mechanism for nodes that fail to deliver (going offline, timing out, returning incorrect results), typically by slashing a portion of the node's staked tokens. The first step in verifying this mechanism is checking whether the trigger conditions are reasonable — if the penalty threshold is set too low (for example, a brief network hiccup gets classified as a fault), it discourages genuine node operators from participating; if the threshold is set too high or the penalty too light, it fails to constrain actual non-delivery, and customers get no real service-quality guarantee. Researchers should check whether the project's documentation or governance proposals specify clear, quantified trigger conditions, rather than vague language like handled case by case.</p>
             <p>A second verification point is the dispute process: when a node believes it was wrongly flagged as faulty (for example, it submitted a correct result but network latency caused a timeout judgment), is there a clear appeal path, and who adjudicates it — an automated on-chain rule, a decentralized arbitration committee, or does the project team just decide unilaterally? If dispute authority is heavily concentrated in the project team's hands, node operators are effectively in a weak position, which over time affects whether genuine compute providers stay on the network. A third verification point is the ratio between penalty severity and stake size — a stake requirement that is too low means the cost of misbehaving is low, since a node can simply rejoin under a new address; a well-calibrated stake-to-penalty ratio is what actually makes slashing function as a real constraint, rather than just a line in a whitepaper.</p>
-            <ul class="recap">
+            <ul>
               <li>Penalty trigger conditions need to be quantified and explicit; too low a threshold discourages genuine operators, too high or too light fails to constrain non-delivery.</li>
               <li>Who holds dispute-adjudication authority (automated rules, an arbitration committee, or the project team itself) determines the actual leverage node operators have.</li>
               <li>The ratio between stake size and penalty severity determines the cost of misbehaving; a stake requirement set too low renders slashing largely symbolic.</li>
@@ -131,7 +131,7 @@
             <h2>5. Tokenomics Versus Real Revenue: How Long Can Subsidy-Driven Compute Supply Last</h2>
             <p>Nearly every early-stage DePIN compute network relies on token rewards to attract nodes — a reasonable cold-start strategy on its own, trading token subsidies for network effects and early-stage supply. But the key question a researcher needs to verify is whether, over time, the split between token subsidy and real customer payment in node revenue is shifting toward the latter, or staying stuck almost entirely on subsidies for the long haul. If a network has been running for a year or two and node revenue still comes mostly from protocol token emissions rather than fees actually paid by external customers, that indicates the network still hasn't found real paying demand — and once token price comes under pressure and subsidy levels drop, the supply side is likely to exit en masse.</p>
             <p>The concrete method for verifying this is trying to decompose the protocol revenue a project discloses — how much comes from external customers paying in stablecoins or major tokens for compute rental, and how much is just internal token circulation within the ecosystem (for example, a customer pays in the project's own token, and that token is itself the reward the protocol issues to nodes, meaning it is essentially the same tokens cycling within the system with no real external value actually flowing in). Another signal worth watching is the relationship between token unlock schedules and subsidy intensity: if a project maintains high subsidies to attract nodes ahead of a major unlock and then cuts subsidies sharply afterward, that is not inherently a problem, but if the high-subsidy period happens to line up exactly with a rapid node growth narrative being promoted, it is worth scrutinizing how much of that growth was a temporary, subsidy-driven phenomenon rather than a real, sustainable network effect.</p>
-            <ul class="recap">
+            <ul>
               <li>The core metric is how the split between token subsidy and real customer payment in node revenue trends over time; staying subsidy-dependent long term is a risk signal.</li>
               <li>Protocol revenue should be decomposed into real external inflows versus internal token circulation within the ecosystem, which carry very different implications for network health.</li>
               <li>The relationship between token unlock schedules and subsidy intensity is worth watching; subsidy-driven short-term node growth is not the same as a real, sustainable network effect.</li>
@@ -140,7 +140,7 @@
           <section id="sec-6">
             <h2>6. A DePIN Compute Network Verification Checklist</h2>
             <p>Consolidating the previous sections into a reusable checklist for systematically assessing the real supply and demand of a DePIN compute network project, rather than taking phrases like distributed global compute or decentralized cloud at face value.</p>
-            <ul class="recap">
+            <ul>
               <li>Verify the counting methodology behind official figures like node count and total compute; distinguish registered nodes from continuously active nodes submitting proof of work.</li>
               <li>Verify the granularity of proof of physical work (full versus sampled) and whether independent hardware attestation and performance benchmarks exist.</li>
               <li>Check the dispersion of task-initiator addresses and rule out self-sponsored usage concentrated among the project's affiliated parties.</li>
@@ -154,8 +154,8 @@
             <p>The narrative DePIN compute networks put forward — aggregating decentralized idle compute at lower prices than centralized cloud providers — is theoretically reasonable, but whether that narrative actually holds up ultimately depends on the real state of four specific dimensions: whether the compute genuinely exists and matches its claimed specification, whether demand comes from genuine external customers rather than self-sponsored usage, whether the node fault penalty mechanism actually constrains non-delivery, and whether tokenomics can transition from subsidy-driven to real-revenue-driven over time. When evaluating a specific DePIN compute network project, researchers should not stop at surface-level dashboard figures like node count and total compute, but should keep probing the counting methodology, verification mechanism, and fund flows behind every layer. This article discusses methodology only, does not draw conclusions about any specific DePIN project, team, or individual, and does not constitute investment advice in any form. Readers referencing DePIN compute network analysis should always look for concrete verification evidence and stay skeptical of any blanket claim of ubiquitous compute or disrupting traditional cloud.</p>
           </section>
         </div>
-        <aside class="article-toc" aria-label="Table of contents">
-          <p class="toc-title">Contents</p>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
           <ol>
             <li><a href="#sec-1">The Starting Point: DePIN Compute Networks Need a Different Verification Model Than Traditional Cloud GPUs</a></li>
             <li><a href="#sec-2">Proof of Physical Work: Telling "Actually Computing" Apart From "Pretending to Compute"</a></li>
@@ -165,36 +165,74 @@
             <li><a href="#sec-6">A DePIN Compute Network Verification Checklist</a></li>
             <li><a href="#sec-7">Summary and Disclaimer</a></li>
           </ol>
-          <aside class="article-references">
-            <p class="toc-title">Further Reading</p>
-            <ul>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources &amp; further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
               <li><a href="https://messari.io/research" target="_blank" rel="noopener noreferrer nofollow">Messari DePIN industry research (third party, for reference only)</a></li>
               <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/security/" target="_blank" rel="noopener noreferrer nofollow">Smart contract security fundamentals (Ethereum.org, third party)</a></li>
               <li><a href="https://www.investopedia.com/depin-decentralized-physical-infrastructure-network-7495352" target="_blank" rel="noopener noreferrer nofollow">DePIN concept overview (Investopedia, third party)</a></li>
-            </ul>
-            <p class="disclaimer">All links above point to third-party sites, provided for research methodology reference only, and do not represent an endorsement, guarantee, or verification of their content's accuracy.</p>
-          </aside>
-          <aside class="article-related">
-            <p class="toc-title">Related Articles</p>
-            <ul>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
               <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security</a></li>
               <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification</a></li>
               <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics and Fund Tracing Methodology</a></li>
               <li><a href="/en/articles/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk Verification</a></li>
-            </ul>
-          </aside>
+          </ul>
         </aside>
-        </div>
-        <p class="back-row"><a href="/en/articles.html">&larr; Back to all articles</a></p>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
       </article>
     </main>
   </div>
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 Crypto Research Notes · Content is for research purposes only and is not investment advice.</p>
-      <p><a href="/en/about.html">About</a> · <a href="/">中文</a> · <a href="mailto:llf.worker@gmail.com">Contact</a></p>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
     </div>
   </footer>
-  <script src="/site.js?v=01b81180" defer></script>
+  <script src="/js/site.js?v=01b81180"></script>
 </body>
 </html>

@@ -91,7 +91,7 @@
             <h2>1. 起点：账户抽象钱包的风险模型和普通钱包不一样</h2>
             <p>普通的外部账户（EOA）钱包只有一种失败模式：私钥泄露，账户里的一切归零。风险很单一，但也很粗暴——没有任何折中空间，签名权限是全有或全无。账户抽象钱包（通常指遵循ERC-4337标准的智能合约账户）想解决的正是这个问题：把「谁能动用这个账户」从一把静态私钥，变成一套可编程的权限规则。你可以给一个自动化交易机器人发一把只能调用特定合约、额度有限、到期自动失效的「会话密钥」，即使这把密钥被盗或者机器人程序出问题，损失也被锁在预设边界内，而不是主账户全部清零。</p>
             <p>但「账户抽象钱包安全」这句话本身是一个容易被误读的表述——账户抽象只是提供了实现更精细权限控制的能力，它本身不自动带来安全性。一个配置成「无限期、无限额度、可调用任意合约」的会话密钥，安全性和直接把私钥交出去几乎没有区别；反过来，一把额度极小、范围极窄、几小时后自动失效的会话密钥，哪怕被盗，损失也可能微乎其微。研究账户抽象钱包安全，第一步不是问「这是不是账户抽象钱包」，而是问「这个具体的权限配置，把最坏情况约束在了什么范围」。这也是为什么本文把研究重点放在授权范围的核验方法上，而不是账户抽象这个技术标准本身的介绍。</p>
-            <ul class="recap">
+            <ul>
               <li>普通EOA钱包的风险是全有或全无，账户抽象钱包把权限拆分成可编程的规则集合。</li>
               <li>账户抽象本身不等于更安全，安全性取决于具体的权限配置，尤其是额度、范围与有效期。</li>
               <li>核验的第一步是问「最坏情况被约束在什么范围」，而不是「是否采用了账户抽象」。</li>
@@ -101,7 +101,7 @@
             <h2>2. 三种主流授权模型对比：托管、无限授权、会话密钥限权</h2>
             <p>目前市面上账户抽象钱包及相关自动化场景（比如交易机器人、AI代理钱包）大致落在三种授权模型上。第一种是完整私钥托管，代理或应用直接持有能够签署任意交易的密钥，本质上和传统EOA钱包的风险一样，只是换了个「智能合约账户」的外壳，最坏情况是账户被完全清空。第二种是无限额度授权（unlimited approval），常见于用户为了省事对某个合约设置了不限额度的代币授权，一旦该合约存在漏洞或权限被滥用，能被转走的上限是用户持有的全部该代币余额。第三种是设计上更审慎的会话密钥/权限模块模型，密钥只能调用白名单内的特定合约、执行特定动作，且带有到期时间与额度上限，超出范围的交易在账户合约层面直接被拒绝执行，不依赖调用方的自我约束。</p>
             <p>这三种模型对应的最坏情况完全不同，但很多用户在授权时根本不会去区分自己签的是哪一种。核验者应当养成的第一个习惯，是打开任何一次授权弹窗时先问：这次签名授予的是完整控制权、无限额度，还是一个有明确边界的会话密钥？很多所谓「非托管」「用户完全掌控资产」的宣传语，实际拆开来看，只是把风险从「私钥托管」转移到了「无限额度授权」，最坏情况并没有真正改善，只是换了个位置。</p>
-            <ul class="recap">
+            <ul>
               <li>完整私钥托管：最坏情况是账户全部资产归零，本质和传统EOA风险一致。</li>
               <li>无限额度授权：最坏情况是该代币持仓被清空，风险集中在单一资产上。</li>
               <li>会话密钥限权：损失被约束在预设的额度、范围与有效期内，是三者中风险边界最明确的模型。</li>
@@ -111,7 +111,7 @@
             <h2>3. 会话密钥授权范围核验：额度、有效期、目标合约白名单</h2>
             <p>确认一个钱包用的是会话密钥模型之后，核验工作才刚刚开始，因为「会话密钥」这个词本身可以对应从几乎无限制到极度收紧的一整个范围。研究者需要具体核实三个维度。第一是额度：这把密钥单次能转移的最大金额是多少，是否有累计上限（比如每日总额度而不只是单笔上限），额度重置的周期是多长。第二是有效期：密钥是否有明确的到期时间，到期后是自动失效还是需要用户手动撤销，如果需要手动撤销，那实际的风险窗口就取决于用户多久检查一次，而不是文档里写的「理论到期时间」。第三是目标合约白名单：这把密钥能调用的合约范围是精确限定到具体地址，还是笼统地写成「DeFi协议」「DEX交互」这类模糊范围——范围越模糊，实际可利用的攻击面就越大。</p>
             <p>一个容易被忽略的细节是，很多钱包的会话密钥权限设置界面只展示「已授权」，不主动展示这三个维度的具体数值，用户如果不点进详情页手动核对，很容易在不知情的情况下签署了一把范围远超预期的会话密钥。研究者在评估一个账户抽象钱包产品时，应当把「授权详情是否默认可见、是否需要额外点击才能看到额度与有效期」也作为一项核验指标，而不只是关注权限模型本身设计得多精细——设计精细但界面不透明，实际效果和设计粗糙相差不大。</p>
-            <ul class="recap">
+            <ul>
               <li>核验会话密钥必须逐一确认额度、有效期、目标合约白名单这三个具体维度，不能只看「是否限权」这个笼统结论。</li>
               <li>目标合约范围写得越模糊（如「DeFi协议」而非具体地址），实际攻击面就越大。</li>
               <li>授权详情是否默认可见，本身也是核验重点——界面不透明会抵消权限设计上的精细化努力。</li>
@@ -121,7 +121,7 @@
             <h2>4. Bundler与Paymaster：交易打包与Gas代付背后的信任假设</h2>
             <p>ERC-4337架构下，账户抽象钱包的交易不是直接发给区块链网络，而是先打包成一个「UserOperation」，交给Bundler节点，由Bundler负责把它提交上链并支付实际的Gas。这个额外的中间层带来了新的问题：Bundler是否可能选择性地不打包某些用户的交易（审查风险），Bundler网络目前是否高度集中在少数几个运营方手中。如果一个生态里绝大多数UserOperation都经过同一家Bundler，那么理论上这家Bundler具备延迟、甚至拒绝打包特定地址交易的能力，这类似于此前研究Rollup测序器中心化时提到的审查风险，只是发生在账户抽象这一层。</p>
             <p>Paymaster则是另一个信任点——它是账户抽象架构里代替用户支付Gas费用的角色，让用户可以用非原生代币（甚至由第三方完全代付）来完成交易，这也是「Gas代付」体验的核心组件。但Paymaster本身通常是一个中心化运营的服务，用户需要信任它会持续正常运作、不会在关键时刻停止代付、也不会对代付资格设置不透明的隐性限制。研究者评估一个账户抽象钱包时，不能只看「支持Gas代付」这个功能点本身，还应当追问：Paymaster的资金储备是否公开可查、是否有单点故障风险、如果Paymaster服务中断，用户是否有备用路径用原生代币完成交易。</p>
-            <ul class="recap">
+            <ul>
               <li>Bundler负责打包UserOperation并提交上链，其集中化程度决定了潜在的交易审查风险。</li>
               <li>Paymaster承担代付Gas的角色，通常由中心化服务运营，构成新的单点故障风险。</li>
               <li>核验时应关注Bundler分布、Paymaster资金储备透明度，以及Paymaster中断时是否有备用执行路径。</li>
@@ -131,7 +131,7 @@
             <h2>5. 社交恢复机制：监护人是否可信，恢复流程有没有时间锁</h2>
             <p>账户抽象钱包常见的另一个卖点是「社交恢复」——用户不再需要独自保管一份种子短语，而是指定若干个「监护人」（可以是其他钱包地址、可信联系人，或者专门的恢复服务商），当账户面临丢失访问权的风险时，由达到一定数量的监护人共同签名批准，重新指定新的控制密钥。这个设计确实解决了「私钥丢了就永久丢失资产」的痛点，但它把信任模型从「你自己保管一份密钥」转移到了「一组监护人是否可信、是否会被串通、是否会长期保持响应能力」。</p>
             <p>核验社交恢复机制的关键在于恢复流程本身的设计细节，而不是「有没有社交恢复」这个是非判断。研究者应当核实：达成恢复所需的监护人数量门槛是多少，门槛过低（比如只需要极少数监护人同意）会让恶意串通的门槛也同样降低；恢复请求发出后是否存在一段强制等待期（时间锁），如果账户所有者本人仍持有访问权，是否能在这段等待期内看到恢复请求并主动否决；监护人名单本身能否被用户随时查看和更换，还是一旦设定就难以调整。一个没有时间锁、监护人门槛又设得很低的社交恢复设计，实际上把攻击者需要突破的门槛从「一把私钥」换成了「串通少数几个监护人」，未必比原来更安全。</p>
-            <ul class="recap">
+            <ul>
               <li>社交恢复把信任模型从「独自保管密钥」转移到「一组监护人是否可信」，需要单独核验，不能默认更安全。</li>
               <li>监护人数量门槛、是否存在强制等待期（时间锁）、账户所有者能否在等待期内否决，是三个具体核验点。</li>
               <li>门槛过低且缺乏时间锁的社交恢复设计，可能只是把攻击面从私钥转移到了监护人串通上。</li>
@@ -140,7 +140,7 @@
           <section id="sec-6">
             <h2>6. 账户抽象钱包安全核验清单</h2>
             <p>把前面几节整理成一份可以在实际研究中反复使用的检查清单，帮助系统性评估一个账户抽象钱包产品的真实安全边界，而不是停留在「支持账户抽象」「非托管」这类营销表述上。</p>
-            <ul class="recap">
+            <ul>
               <li>先确认当前使用的是完整私钥托管、无限额度授权，还是会话密钥限权，明确三者对应的最坏情况差异。</li>
               <li>核实会话密钥的具体额度、有效期与目标合约白名单，且确认这些信息在界面上是否默认可见。</li>
               <li>调查Bundler网络的集中化程度，评估潜在的交易审查风险。</li>
@@ -154,8 +154,8 @@
             <p>账户抽象钱包把「谁能动用账户」从一把静态私钥变成了一套可编程的权限规则，这个转变本身既是它区别于传统EOA钱包的核心优势（损失可以被约束在预设边界内、密钥丢失不再意味着资产永久锁死），也是它引入新核验难点的来源（会话密钥的具体授权范围、Bundler与Paymaster的信任假设、社交恢复的监护人可信度）。研究者评估一个具体的账户抽象钱包产品时，不应止步于「是否采用了ERC-4337」这类技术标签，而要追问每一层具体的权限配置与信任假设，账户抽象本身只是提供了实现更精细安全边界的能力，能不能真正做到，取决于产品方在每一个环节上的具体设计。本文仅从研究方法论角度进行讨论，不针对任何具体钱包产品、项目、团队或个人做定性结论，也不构成任何形式的投资建议。读者在参考账户抽象钱包相关的分析内容时，应始终关注具体的权限配置细节，对任何笼统化的「更安全」「非托管」表述保持审慎态度。</p>
           </section>
         </div>
-        <aside class="article-toc" aria-label="文章目录">
-          <p class="toc-title">目录</p>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
           <ol>
             <li><a href="#sec-1">起点：账户抽象钱包的风险模型和普通钱包不一样</a></li>
             <li><a href="#sec-2">三种主流授权模型对比：托管、无限授权、会话密钥限权</a></li>
@@ -165,36 +165,74 @@
             <li><a href="#sec-6">账户抽象钱包安全核验清单</a></li>
             <li><a href="#sec-7">小结与免责声明</a></li>
           </ol>
-          <aside class="article-references">
-            <p class="toc-title">参考方向</p>
-            <ul>
+        </nav>
+        </div>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
               <li><a href="https://ethereum.org/zh/roadmap/account-abstraction/" target="_blank" rel="noopener noreferrer nofollow">Ethereum.org 账户抽象介绍（第三方，仅供参考）</a></li>
               <li><a href="https://eips.ethereum.org/EIPS/eip-4337" target="_blank" rel="noopener noreferrer nofollow">ERC-4337标准文档（第三方，仅供参考）</a></li>
               <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/security/" target="_blank" rel="noopener noreferrer nofollow">智能合约安全基础概念（Ethereum.org，第三方）</a></li>
-            </ul>
-            <p class="disclaimer">以上链接均指向第三方网站，仅供研究方法参考，不代表本站推荐、担保或验证其内容准确性。</p>
-          </aside>
-          <aside class="article-related">
-            <p class="toc-title">相关文章</p>
-            <ul>
+          </ul>
+          <p class="ref-note">本文所涉数据口径、工具与项目状态可能随时间变化，请以各官方来源的最新信息为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
               <li><a href="/articles/ai-agent-onchain-verification.html">链上 AI 代理核验方法</a></li>
               <li><a href="/articles/contract-security-audit-guide.html">智能合约审计报告核验方法</a></li>
               <li><a href="/articles/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验</a></li>
               <li><a href="/articles/depin-compute-network-verification.html">DePIN 算力网络核验</a></li>
-            </ul>
-          </aside>
+          </ul>
         </aside>
-        </div>
-        <p class="back-row"><a href="/articles.html">&larr; 返回全部文章</a></p>
+        <div class="back-row"><a href="/">返回首页</a></div>
       </article>
     </main>
   </div>
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 加密货币研究 · 内容仅供学习研究，不构成投资建议。</p>
-      <p><a href="/about.html">关于本站</a> · <a href="/en/">English</a> · <a href="mailto:llf.worker@gmail.com">联系我们</a></p>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/site.js?v=01b81180" defer></script>
+  <script src="/js/site.js?v=01b81180"></script>
 </body>
 </html>

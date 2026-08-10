@@ -91,7 +91,7 @@
             <h2>1. The Starting Point: Account Abstraction Wallets Have a Different Risk Model</h2>
             <p>An ordinary externally-owned account (EOA) wallet has exactly one failure mode: if the private key leaks, everything in the account goes to zero. The risk is simple but blunt — there is no middle ground, signing authority is all-or-nothing. Account abstraction wallets (typically smart contract accounts following the ERC-4337 standard) are designed to solve exactly this problem: turning who can act on this account from a single static private key into a programmable set of permission rules. You can hand a trading bot a session key that can only call specific contracts, within a limited allowance, that automatically expires — so even if that key is stolen or the bot misbehaves, the loss is bounded to a preset range rather than zeroing out the main account.</p>
             <p>But the phrase account abstraction wallet security is itself easy to misread — account abstraction only provides the capability for finer-grained permission control; it does not automatically confer security. A session key configured with no expiry, no limit, and the ability to call any contract is barely different, security-wise, from just handing over the private key. Conversely, a session key with a tiny limit, a narrow scope, and an expiry of a few hours may leak very little value even if it is stolen. Researching account abstraction wallet security starts not with is this an account abstraction wallet, but with what worst case does this specific permission configuration actually bound. That is why this article focuses on methods for verifying permission scope, rather than introducing the account abstraction standard itself.</p>
-            <ul class="recap">
+            <ul>
               <li>An ordinary EOA wallet's risk is all-or-nothing; an account abstraction wallet splits authority into a programmable set of rules.</li>
               <li>Account abstraction does not automatically mean safer — security depends on the specific permission configuration, especially limits, scope, and expiry.</li>
               <li>The first verification step is asking what worst case is this bounded to, not whether account abstraction was adopted.</li>
@@ -101,7 +101,7 @@
             <h2>2. Three Common Authorization Models: Full Custody, Unlimited Approval, Scoped Session Keys</h2>
             <p>Account abstraction wallets and related automation scenarios (trading bots, AI agent wallets) today mostly fall into three authorization models. The first is full private-key custody, where an agent or app directly holds a key capable of signing any transaction — functionally identical to a traditional EOA's risk, just wrapped in a smart-contract-account shell, with the worst case being the account fully drained. The second is unlimited approval, commonly seen when a user sets an uncapped token allowance on a contract for convenience; if that contract has a vulnerability or its permission is abused, the ceiling on what can be moved is the user's entire balance of that token. The third, and the more deliberate design, is the session key / permission module model, where the key can only call whitelisted contracts, perform specific actions, and carries an expiry and a spending cap — transactions outside that scope are rejected at the account-contract level itself, rather than relying on the caller's self-restraint.</p>
             <p>These three models correspond to entirely different worst cases, yet many users never distinguish which one they are actually signing. The first habit a researcher should build is, on any authorization prompt, to ask: does this signature grant full control, an unlimited allowance, or a session key with a clearly bounded scope? A lot of non-custodial, user retains full control marketing, once unpacked, turns out to simply relocate the risk from private-key custody to unlimited approval — the worst case has not genuinely improved, it has just moved.</p>
-            <ul class="recap">
+            <ul>
               <li>Full private-key custody: the worst case is the entire account drained, functionally the same risk as a traditional EOA.</li>
               <li>Unlimited approval: the worst case is that specific token holding drained, concentrating risk on a single asset.</li>
               <li>Scoped session key: loss is bounded to a preset limit, scope, and expiry — the model with the clearest risk boundary of the three.</li>
@@ -111,7 +111,7 @@
             <h2>3. Verifying Session Key Scope: Limit, Expiry, Target-Contract Allowlist</h2>
             <p>Confirming that a wallet uses the session key model is only the start of the verification work, because session key itself can describe anything from nearly unrestricted to extremely tight. A researcher needs to check three concrete dimensions. First, the limit: what is the maximum single transfer this key can make, is there a cumulative cap (a daily total, not just a per-transaction cap), and how often does that cap reset. Second, the expiry: does the key have an explicit expiration time, does it lapse automatically or does it require manual revocation — if manual revocation is required, the actual risk window depends on how often the user checks in, not on the theoretical expiry written in the documentation. Third, the target-contract allowlist: is the set of contracts this key can call precisely scoped to specific addresses, or loosely defined as something like DeFi protocols or DEX interactions — the vaguer the scope, the larger the actual attack surface.</p>
             <p>An easily overlooked detail is that many wallets' session-key permission screens show only granted, without surfacing these three concrete dimensions by default; a user who does not click into the details page can easily sign a session key with far broader scope than intended without realizing it. When evaluating an account abstraction wallet product, a researcher should treat whether authorization details are visible by default, or require extra clicks to see the limit and expiry as its own verification metric — not just how finely the permission model is designed. A finely designed model behind an opaque interface produces roughly the same real-world outcome as a crudely designed one.</p>
-            <ul class="recap">
+            <ul>
               <li>Verifying a session key requires checking the limit, expiry, and target-contract allowlist individually — a blanket is it scoped conclusion is not enough.</li>
               <li>The vaguer the target-contract scope (e.g. DeFi protocols instead of specific addresses), the larger the actual attack surface.</li>
               <li>Whether authorization details are visible by default is itself a verification point — an opaque interface can cancel out careful permission design.</li>
@@ -121,7 +121,7 @@
             <h2>4. Bundlers and Paymasters: The Trust Assumptions Behind Bundling and Gas Sponsorship</h2>
             <p>Under ERC-4337, an account abstraction wallet's transaction is not sent directly to the blockchain network. It is first packaged into a UserOperation and handed to a bundler node, which is responsible for submitting it on-chain and paying the actual gas. This extra middle layer introduces new questions: can a bundler selectively decline to include certain users' transactions (censorship risk), and is the bundler network in a given ecosystem highly concentrated among a handful of operators. If the overwhelming majority of UserOperations in an ecosystem pass through the same bundler, that bundler in theory has the ability to delay or even refuse to include transactions from specific addresses — a risk analogous to the sequencer-centralization risk discussed in earlier research on rollups, just occurring at the account abstraction layer instead.</p>
             <p>The paymaster is another trust point — the role in the account abstraction architecture that pays gas on a user's behalf, letting a user pay in a non-native token, or have a third party cover the cost entirely, which is the core component behind the gas sponsorship experience. But a paymaster is typically a centrally operated service, and a user needs to trust that it will keep functioning, will not stop sponsoring at a critical moment, and will not impose opaque hidden restrictions on eligibility. When evaluating an account abstraction wallet, a researcher should not stop at supports gas sponsorship as a feature checkbox, but should also ask: is the paymaster's reserve transparently disclosed, is there a single point of failure, and if the paymaster service goes down, does the user have a fallback path to complete a transaction using the native token.</p>
-            <ul class="recap">
+            <ul>
               <li>A bundler packages UserOperations and submits them on-chain; its degree of centralization determines the potential censorship risk.</li>
               <li>A paymaster covers gas on the user's behalf and is typically a centrally operated service, forming a new single point of failure.</li>
               <li>Verification should cover bundler distribution, paymaster reserve transparency, and whether a fallback execution path exists if the paymaster is interrupted.</li>
@@ -131,7 +131,7 @@
             <h2>5. Social Recovery: Are the Guardians Trustworthy, and Is There a Time-Lock</h2>
             <p>Another common selling point of account abstraction wallets is social recovery — a user no longer needs to hold a single seed phrase alone, but instead designates a number of guardians (other wallet addresses, trusted contacts, or dedicated recovery services). If access to the account is at risk of being lost, a sufficient number of guardians can jointly approve reassigning a new controlling key. This design genuinely solves the lose the key, lose the assets forever problem, but it relocates the trust model from you alone hold a key to whether a group of guardians can be trusted, whether they might collude, and whether they remain responsive over the long term.</p>
             <p>The key to verifying a social recovery mechanism lies in the concrete design details of the recovery flow itself, not the yes/no question of whether social recovery exists. A researcher should check: what is the guardian threshold required to complete a recovery — a threshold set too low also lowers the bar for malicious collusion; is there a mandatory waiting period (a time-lock) after a recovery request is submitted, and if the original account owner still has access, can they see and actively veto the request during that window; and can the guardian list itself be viewed and changed by the user at any time, or is it difficult to adjust once set. A social recovery design with no time-lock and a low guardian threshold effectively swaps the barrier an attacker must clear from a single private key to colluding with a small number of guardians — which is not necessarily an improvement.</p>
-            <ul class="recap">
+            <ul>
               <li>Social recovery relocates the trust model from holding a key alone to whether a group of guardians can be trusted — it needs independent verification, not a default assumption of safety.</li>
               <li>The guardian threshold, whether a mandatory waiting period (time-lock) exists, and whether the owner can veto during that window are three concrete verification points.</li>
               <li>A social recovery design with a low threshold and no time-lock may simply relocate the attack surface from the private key to guardian collusion.</li>
@@ -140,7 +140,7 @@
           <section id="sec-6">
             <h2>6. Account Abstraction Wallet Security Checklist</h2>
             <p>Consolidating the sections above into a checklist that can be reused across actual investigations helps systematically evaluate an account abstraction wallet product's real security boundary, rather than stopping at marketing phrases like supports account abstraction or non-custodial.</p>
-            <ul class="recap">
+            <ul>
               <li>First confirm whether the current setup is full private-key custody, unlimited approval, or a scoped session key, and be clear on the worst-case difference between the three.</li>
               <li>Verify the session key's specific limit, expiry, and target-contract allowlist, and confirm whether this information is visible in the interface by default.</li>
               <li>Investigate the bundler network's degree of centralization to assess potential transaction censorship risk.</li>
@@ -154,8 +154,8 @@
             <p>Account abstraction wallets turn who can act on an account from a single static private key into a programmable set of permission rules. That shift is both the core advantage that sets it apart from a traditional EOA wallet (loss can be bounded to a preset range, and losing a key no longer means assets are locked forever) and the source of the new verification challenges it introduces (the concrete scope of a session key, the trust assumptions behind bundlers and paymasters, and the trustworthiness of guardians in social recovery). When evaluating a specific account abstraction wallet product, a researcher should not stop at a technical label like adopts ERC-4337, but should ask about the concrete permission configuration and trust assumptions at every layer — account abstraction itself only provides the capability for a finer-grained security boundary; whether that capability is actually realized depends on the specific design choices the product maker makes at every step. This article discusses methodology only, draws no conclusions about any specific wallet product, project, team, or individual, and is not investment advice of any kind. When reading account abstraction wallet analysis elsewhere, readers should watch for concrete permission configuration details, and stay skeptical of any blanket safer or non-custodial claim.</p>
           </section>
         </div>
-        <aside class="article-toc" aria-label="Table of contents">
-          <p class="toc-title">Table of Contents</p>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
           <ol>
             <li><a href="#sec-1">The Starting Point: Account Abstraction Wallets Have a Different Risk Model</a></li>
             <li><a href="#sec-2">Three Common Authorization Models: Full Custody, Unlimited Approval, Scoped Session Keys</a></li>
@@ -165,36 +165,74 @@
             <li><a href="#sec-6">Account Abstraction Wallet Security Checklist</a></li>
             <li><a href="#sec-7">Summary and Disclaimer</a></li>
           </ol>
-          <aside class="article-references">
-            <p class="toc-title">Further Reading</p>
-            <ul>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources &amp; further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
               <li><a href="https://ethereum.org/en/roadmap/account-abstraction/" target="_blank" rel="noopener noreferrer nofollow">Ethereum.org account abstraction overview (third party, reference only)</a></li>
               <li><a href="https://eips.ethereum.org/EIPS/eip-4337" target="_blank" rel="noopener noreferrer nofollow">ERC-4337 standard document (third party, reference only)</a></li>
               <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/security/" target="_blank" rel="noopener noreferrer nofollow">Smart contract security basics (Ethereum.org, third party)</a></li>
-            </ul>
-            <p class="disclaimer">All links above point to third-party sites for research reference only, and do not represent an endorsement, guarantee, or verification of their content by this site.</p>
-          </aside>
-          <aside class="article-related">
-            <p class="toc-title">Related Articles</p>
-            <ul>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
               <li><a href="/en/articles/ai-agent-onchain-verification.html">On-Chain AI Agent Verification</a></li>
               <li><a href="/en/articles/contract-security-audit-guide.html">Smart Contract Audit Report Verification</a></li>
               <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification</a></li>
               <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification</a></li>
-            </ul>
-          </aside>
+          </ul>
         </aside>
-        </div>
-        <p class="back-row"><a href="/en/articles.html">&larr; Back to all articles</a></p>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
       </article>
     </main>
   </div>
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 Crypto Research Notes · Content is for research purposes only, not investment advice.</p>
-      <p><a href="/en/about.html">About</a> · <a href="/">中文</a> · <a href="mailto:llf.worker@gmail.com">Contact</a></p>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
     </div>
   </footer>
-  <script src="/site.js?v=01b81180" defer></script>
+  <script src="/js/site.js?v=01b81180"></script>
 </body>
 </html>
