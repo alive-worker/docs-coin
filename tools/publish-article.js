@@ -39,7 +39,7 @@ const root = path.resolve(__dirname, '..');
 // ---------------------------------------------------------------------------
 const CONFIG = {
   slug: 'usdt-reserve-transparency-onramp-defi-security-guide',
-  publishedISO: '2026-08-11T18:30:00+08:00',
+  publishedISO: '2026-08-11T14:40:00+08:00',
   tagColor: 'cobalt',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
