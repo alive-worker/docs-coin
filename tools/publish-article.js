@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'usdt-beginner-onramp-defi-security-guide',
-  publishedISO: '2026-08-10T11:00:00+08:00',
+  slug: 'usdt-crosschain-transfer-security-recovery-guide',
+  publishedISO: '2026-08-11T12:00:00+08:00',
   tagColor: 'teal',                        // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'USDT新手完全指南：交易所出入金教程与DeFi链上安全核验',
-    tagLabel: 'USDT新手指南',
-    cardDesc: '从USDT的基础原理讲起，系统梳理交易所买入、提现出入金的完整教程，再深入DeFi钱包与链上安全的核验方法，帮新手一次搞懂稳定币全流程。',
+    h1: 'USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范',
+    tagLabel: 'USDT跨链安全',
+    cardDesc: 'USDT跨链时最危险的不是手续费，而是把同名代币当同一种资产、把搜索结果当官方桥、在交易卡住后把助记词交给所谓客服。本文系统梳理跨链桥核验、DeFi/链上安全与延迟处置方法。',
   },
   en: {
-    h1: 'USDT Beginner\'s Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks',
-    tagLabel: 'USDT Beginner Guide',
-    cardDesc: 'Start with the fundamentals of USDT, walk through the full exchange buy/withdraw on-ramp and off-ramp tutorial, then move into DeFi wallet and on-chain security verification for beginners.',
+    h1: 'USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls',
+    tagLabel: 'USDT Cross-Chain Security',
+    cardDesc: 'Cross-chain USDT transfers can fail before a transaction is even sent: same-name tokens differ by contract, bridge pages get cloned, and fake recovery agents appear when funds are delayed. A practical guide to bridge verification and on-chain safety.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'usdt-beginner-onramp-defi-security-guide',
     'data-availability-layer-verification',
     'cross-chain-messaging-protocol-verification',
     'restaking-avs-slashing-risk',
@@ -122,7 +123,7 @@ function extractArticleMeta(slug, lang) {
   const tagColor = (html.match(/<span class="side-tag archive-tag archive-tag--([a-z]+)">/) || [])[1] || '';
   const cover = (html.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
   const cardDesc = (html.match(/<p class="article-summary">([\s\S]*?)<\/p>/) || [])[1] || '';
-  return { h1, desc, pub, tagLabel, tagColor, cover };
+  return { h1, desc, pub, tagLabel, tagColor, cover, cardDesc };
 }
 
 function replacer(str, regex, fn) {
@@ -319,7 +320,7 @@ function updateHomepage(lang) {
         <div class="post-card-body">
           <div class="post-card-tags"><span class="archive-tag archive-tag--${prevFeatured.tagColor}">${prevFeatured.tagLabel}</span></div>
           <h2 class="post-card-title"><a href="${artPrefix}${prevFeaturedSlug}.html">${prevFeatured.h1}</a></h2>
-          <p class="post-card-desc">TODO-cardDesc-not-auto-extracted</p>
+          <p class="post-card-desc">${prevFeatured.cardDesc || ''}</p>
           <div class="post-card-meta">
             <time datetime="${prevPub}">${prevPubDisplay}</time>
             <a class="read-link" href="${artPrefix}${prevFeaturedSlug}.html">${readLabel}</a>
