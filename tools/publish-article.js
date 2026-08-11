@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'usdt-crosschain-transfer-security-recovery-guide',
-  publishedISO: '2026-08-11T12:00:00+08:00',
-  tagColor: 'teal',                        // must already exist as .archive-tag--<color> in styles.css
+  slug: 'usdt-reserve-transparency-onramp-defi-security-guide',
+  publishedISO: '2026-08-11T18:30:00+08:00',
+  tagColor: 'cobalt',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范',
-    tagLabel: 'USDT跨链安全',
-    cardDesc: 'USDT跨链时最危险的不是手续费，而是把同名代币当同一种资产、把搜索结果当官方桥、在交易卡住后把助记词交给所谓客服。本文系统梳理跨链桥核验、DeFi/链上安全与延迟处置方法。',
+    h1: 'USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解',
+    tagLabel: 'USDT基础与安全',
+    cardDesc: 'USDT真的值1美元吗？钱怎么进出交易所才安全？DeFi里怎么不被清空钱包？本文从USDT基础与储备透明度讲起，拆解交易所出入金教程与DeFi/链上安全实战清单，帮你把稳定币用明白。',
   },
   en: {
-    h1: 'USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls',
-    tagLabel: 'USDT Cross-Chain Security',
-    cardDesc: 'Cross-chain USDT transfers can fail before a transaction is even sent: same-name tokens differ by contract, bridge pages get cloned, and fake recovery agents appear when funds are delayed. A practical guide to bridge verification and on-chain safety.',
+    h1: 'Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security',
+    tagLabel: 'USDT Basics & Security',
+    cardDesc: 'Is USDT really worth a dollar? How do you move money in and out of an exchange safely, and avoid getting drained in DeFi? From USDT fundamentals and reserve transparency to an on/off-ramp tutorial and a DeFi on-chain security checklist.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'usdt-crosschain-transfer-security-recovery-guide',
     'usdt-beginner-onramp-defi-security-guide',
     'data-availability-layer-verification',
     'cross-chain-messaging-protocol-verification',

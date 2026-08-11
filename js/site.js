@@ -119,6 +119,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/usdt-reserve-transparency-onramp-defi-security-guide.html': '2026-08-11 18:30:00',
     '/articles/usdt-crosschain-transfer-security-recovery-guide.html': '2026-08-11 12:00:00',
   '/articles/usdt-beginner-onramp-defi-security-guide.html': '2026-08-10 11:00:00',
     '/articles/data-availability-layer-verification.html': '2026-08-07 16:40:00',
@@ -130,7 +131,8 @@
     '/articles/onchain-forensics.html': '2026-08-05 11:08:20',
     '/articles/agent-audit-log-integrity-verification.html': '2026-08-04 10:24:07',
     '/articles/agent-strategy-execution-verification.html': '2026-08-03 11:18:42',
-'/en/articles/usdt-crosschain-transfer-security-recovery-guide.html': '2026-08-11 12:00:00',
+'/en/articles/usdt-reserve-transparency-onramp-defi-security-guide.html': '2026-08-11 18:30:00',
+    '/en/articles/usdt-crosschain-transfer-security-recovery-guide.html': '2026-08-11 12:00:00',
     '/en/articles/usdt-beginner-onramp-defi-security-guide.html': '2026-08-10 11:00:00',
 '/en/articles/data-availability-layer-verification.html': '2026-08-07 16:40:00',
 '/en/articles/cross-chain-messaging-protocol-verification.html': '2026-08-07 14:30:00',
