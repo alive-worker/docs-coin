@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become a Hacker's ATM - Docs Coin Crypto Research</title>
+  <meta name="description" content="A practical DeFi smart contract security audit checklist: from reentrancy attacks and integer overflows to access control flaws, dissecting the mistakes made by mainstream DeFi protocols, teaching you to use Slither, Mythril and other tools to quickly locate critical vulnerabilities and avoid becoming the next hacked project.">
+  <meta name="keywords" content="DeFi security,smart contract audit,on-chain security,reentrancy attack,Solidity vulnerabilities,contract audit tools,DeFi exploits,blockchain security,smart contract security">
+  <link rel="canonical" href="https://docs-coin.com/en/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="alternate" hreflang="en" href="https://docs-coin.com/en/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://docs-coin.com/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become a Hacker's ATM",
+    "description": "A practical DeFi smart contract security audit checklist: from reentrancy attacks and integer overflows to access control flaws, dissecting the mistakes made by mainstream DeFi protocols, teaching you to use Slither, Mythril and other tools to quickly locate critical vulnerabilities and avoid becoming the next hacked project.",
+    "image": "https://docs-coin.com/img/article-defi-smart-contract-audit-checklist-en.png",
+    "author": {
+      "@type": "Organization",
+      "name": "Docs Coin"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Docs Coin",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://docs-coin.com/img/logo.png"
+      }
+    },
+    "datePublished": "2026-08-12T14:30:00+08:00",
+    "dateModified": "2026-08-12T14:30:00+08:00"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/en/" class="logo">Docs Coin</a>
+      <nav class="main-nav">
+        <a href="/en/">Home</a>
+        <a href="/en/archive.html">Archive</a>
+        <a href="/">中文</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="article-layout">
+    <article class="article-content">
+      <header class="article-header">
+        <span class="article-tag article-tag--red">DeFi Security</span>
+        <h1>DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become a Hacker's ATM</h1>
+        <time datetime="2026-08-12T14:30:00+08:00">August 12, 2026</time>
+      </header>
+
+      <img src="/img/article-defi-smart-contract-audit-checklist-en.png" alt="DeFi Smart Contract Audit Checklist" class="article-cover">
+
+      <section class="article-section">
+        <p>Last year, a DeFi project got hacked for $8 million on day three after launch. The contract code had been on GitHub for two months, the audit report was done, but hackers still found a classic reentrancy vulnerability. The team later reviewed and said "we thought the audit company would check every detail," the audit company said "the report marked it as medium risk but the team didn't fix it." This kind of blame game is common in the space, and the root cause is that everyone has no unified understanding of what <strong>smart contract audits</strong> should check, how to check, and who's responsible.</p>
+        <p>This article organizes those real pitfalls into an executable audit checklist, without empty security theories, only talking about the most vulnerable spots in DeFi contracts and what tools you can use to find them before deployment. If you're a developer or planning to invest in a new DeFi project, this checklist can help you quickly judge whether the contract's <strong>on-chain security</strong> level is passing or naked.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Why DeFi Contracts Are More Dangerous Than Regular Contracts</h2>
+        <p>Regular smart contracts might just be NFT minting or simple transfer logic, but DeFi contracts are different—they manage real money asset pools. An AMM liquidity pool might lock tens of millions of dollars, a lending protocol's vault might have hundreds of millions in assets, and hackers' motivation and attack intensity are on a completely different scale.</p>
+        <p>What's even worse is that DeFi contracts often require cross-contract calls: swapping on Uniswap needs to call ERC20 transfers, borrowing on Aave needs to trigger price oracles, staking on Curve needs to update reward distributions. Each additional external call adds an attack surface. The DAO hack in 2016, bZx flash loan attacks in 2020, and Cream Finance reentrancy in 2021 were almost all due to cross-contract call issues.</p>
+        <p>So DeFi contract audits can't just check if your own code logic is correct, but also whether the external contracts you call are trustworthy, whether the timing of calls can be exploited, and whether call results have secondary verification. These are the three dimensions to focus on in the checklist below.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Critical Vulnerability Checklist: These Five Issues Must Be Fixed Before Launch</h2>
+
+        <h3>1. Reentrancy Attacks</h3>
+        <p>This is the number one killer of DeFi contracts. The classic scenario is your contract transfers ETH or calls an external contract, but hasn't updated internal state (like user balance) yet, and the external contract reverse-calls your withdrawal function through a fallback function. At this point your state is still old, and hackers can repeatedly withdraw.</p>
+        <p><strong>Check points:</strong> All functions involving ETH transfers or external calls must follow the "Checks-Effects-Interactions" pattern—first check conditions, then update state, and finally make external calls. Or directly use ready-made locks like ReentrancyGuard.</p>
+        <p><strong>Tool recommendation:</strong> Slither's <code>reentrancy-eth</code> detector can automatically mark critical points. Run <code>slither . --detect reentrancy-eth</code> to see the report.</p>
+
+        <h3>2. Integer Overflow/Underflow</h3>
+        <p>Solidity versions before 0.8.0 don't check integer overflow by default. A <code>uint256</code> at max value plus 1 becomes 0. Although new versions now automatically check, if your contract uses <code>unchecked</code> blocks to save gas or relies on old library versions, this problem still exists.</p>
+        <p><strong>Check points:</strong> All mathematical operations, especially user-controllable inputs (deposit amounts, slippage parameters), must have boundary checks. If unchecked is used, comments should explain why overflow won't happen here.</p>
+        <p><strong>Tool recommendation:</strong> Mythril's <code>mythril analyze</code> runs symbolic execution and can find paths that may overflow.</p>
+
+        <h3>3. Access Control Flaws</h3>
+        <p>Some contracts' admin functions (like modifying fees, pausing contracts, withdrawing funds) forget to add <code>onlyOwner</code> modifiers, or wrongly use <code>tx.origin</code> for authentication (tx.origin can be forged by phishing contracts). There are also multi-sig wallets with unreasonable thresholds—2 of 5 signatures where 2 are team alts, still essentially centralized control.</p>
+        <p><strong>Check points:</strong> Review all <code>public</code> and <code>external</code> functions, confirm which should have permissions, whether using <code>msg.sender</code> or <code>tx.origin</code>, and whether multi-sig addresses are truly independent.</p>
+        <p><strong>Tool recommendation:</strong> Slither's <code>suicidal</code> detector warns about selfdestruct functions without permission protection, and the <code>tx-origin</code> detector marks misused authentication.</p>
+
+        <h3>4. Oracle Manipulation</h3>
+        <p>If DeFi protocol price feeds directly read on-chain DEX spot prices (like prices calculated from Uniswap reserves), hackers can pump and dump within one block via flash loans, making your contract liquidate or mint at extreme prices. The 2020 Harvest Finance hack for $33M was exactly this approach.</p>
+        <p><strong>Check points:</strong> Is the price source a time-weighted average price (TWAP) or decentralized oracle like Chainlink? If using DEX prices, is there multi-pool verification or slippage limits?</p>
+        <p><strong>Tool recommendation:</strong> This mainly requires manual review, but you can use aggregators like <a href="https://allswap.io/zh-hans" target="_blank" rel="noopener">AllSwap</a> to simulate contract behavior under extreme market conditions.</p>
+
+        <h3>5. Flash Loan Attack Surface</h3>
+        <p>Flash loans themselves aren't vulnerabilities, but they allow attackers to borrow massive funds at zero cost to complete complex operations in one transaction. If your contract logic relies on the assumption that "users can't possibly operate such large amounts at once" (like no single minting limit, no price volatility threshold check), flash loans will directly breach your defenses.</p>
+        <p><strong>Check points:</strong> For all functions that can change contract state, are you assuming users have limited funds? Are there single operation limits, cooldown periods, or price volatility circuit breakers?</p>
+        <p><strong>Tool recommendation:</strong> Manually simulate attack scenarios, write a test case with Foundry or Hardhat, borrow 100 million USDT from Aave and see if you can break your protocol.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Medium Risks: Won't Explode Immediately But Plant Landmines Long-Term</h2>
+        <p>Besides the five critical points above, there are issues that aren't immediately fatal but accumulate risk over time:</p>
+        <ul>
+          <li><strong>Over-optimization for gas:</strong> Using <code>assembly</code> inline assembly or <code>delegatecall</code> to save gas reduces readability and security, making future upgrades error-prone.</li>
+          <li><strong>Unlocked external library versions:</strong> If OpenZeppelin, Chainlink libraries use floating versions like <code>^0.8.0</code>, future library updates may introduce breaking changes.</li>
+          <li><strong>Missing event logs:</strong> Critical state changes (deposits, withdrawals, parameter modifications) without emit events make on-chain monitoring and post-incident forensics difficult.</li>
+          <li><strong>Unvalidated frontend interactions:</strong> Contract logic is fine but frontend parameter passing lacks boundary checks, users may lose funds due to input errors (like setting slippage to 100%).</li>
+        </ul>
+        <p>These issues can be marked as "recommended optimizations" in audit reports, but if you want to benchmark top industry projects (Uniswap, Aave, Curve), these details need to be polished properly.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Audit Toolchain: From Automated Scanning to Manual Penetration Testing</h2>
+        <p>Relying solely on eyeballing code is too inefficient. The mainstream approach now is tool pre-screening + manual detailed review:</p>
+
+        <h3>Automated Static Analysis (Essential)</h3>
+        <ul>
+          <li><strong>Slither:</strong> Python tool developed by Trail of Bits, can detect 70+ vulnerability patterns, fast and suitable for CI integration. Install: <code>pip install slither-analyzer</code>, run: <code>slither .</code></li>
+          <li><strong>Mythril:</strong> Deep analysis tool based on symbolic execution, can find complex logic vulnerabilities but slower. Suitable for one complete scan before release.</li>
+          <li><strong>Echidna:</strong> Fuzzing tool that tests contract invariants through random inputs, can find abnormal behavior under boundary conditions.</li>
+        </ul>
+
+        <h3>Formal Verification (Required for High-Value Protocols)</h3>
+        <p>For DeFi protocols with billions in TVL, it's recommended to use Certora or Runtime Verification for formal verification—mathematically proving the contract satisfies security properties under all possible inputs. High cost (tens to hundreds of thousands of dollars) but covers blind spots in manual audits.</p>
+
+        <h3>Manual Penetration Testing (Last Line of Defense)</h3>
+        <p>No tool can replace experienced security researchers. Auditors from top audit firms (OpenZeppelin, Trail of Bits, Quantstamp) design attack scenarios from an attacker's perspective, trying to combine multiple small issues into major vulnerabilities. This creative attack thinking is what tools can't do.</p>
+        <p>If budget is limited, consider crowdsourced platforms (Code4rena, Sherlock, Immunefi). A prize pool of tens of thousands of dollars can attract white hat hackers globally to dig for vulnerabilities, offering better ROI than traditional audits.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Continuous Monitoring After Audit: Contract Deployment Isn't the Endpoint</h2>
+        <p>Many teams think that passing audit and deploying contracts means everything's done, but reality is DeFi protocols still face various changes after launch:</p>
+        <ul>
+          <li><strong>External dependency changes:</strong> The Chainlink feed you call suddenly stops updating, Uniswap upgrades to V4 with interface changes, USDC contract gets frozen—these can all make your contract logic fail.</li>
+          <li><strong>Economic model attacks:</strong> Some attacks aren't technical vulnerabilities but economic model design flaws, like Mango Markets getting manipulated for $116 million through oracle manipulation. The contract code itself was fine, it was the governance token's price discovery mechanism that had issues.</li>
+          <li><strong>Composability risks:</strong> Your contract alone is secure, but when used in combination with other protocols may produce unexpected interactions, like Protocol A's staking certificates being used as collateral by Protocol B—if A has problems it infects B.</li>
+        </ul>
+        <p>So after launch you must establish a monitoring system: use Tenderly or Forta to monitor abnormal transactions (large withdrawals, drastic price movements, contract pauses), set up emergency pause mechanisms in multi-sig wallets, and purchase <a href="https://chdh.me/" target="_blank" rel="noopener">on-chain insurance</a> to cover black swan risks. Treat security as ongoing investment, not one-time cost.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Due Diligence Advice for Investors: How to Judge Project Audit Quality</h2>
+        <p>If you're not a developer but just want to invest in a DeFi project, how do you quickly judge its contract security level?</p>
+        <ol>
+          <li><strong>Check the audit report issuer:</strong> Reports from top audit firms (Trail of Bits, OpenZeppelin, ConsenSys Diligence) have the highest value. For small to medium audit firms, check historical cases. Completely unheard-of firms basically equal no audit.</li>
+          <li><strong>Check findings and fixes in the report:</strong> Good audit reports list all discovered issues (critical, high, medium, low, informational) and mark whether the team fixed them and how. If the report marked 5 critical issues but the team says "known risks are acceptable," avoid such projects.</li>
+          <li><strong>Check if code is open source:</strong> Is the contract code verified on Etherscan? Is the GitHub repository public? If code isn't open source or the open source version's hash doesn't match the on-chain deployment, there's likely a problem.</li>
+          <li><strong>Check for bug bounty programs:</strong> Is there a bounty on Immunefi? What's the reward amount? Projects willing to put up real money to invite white hat hackers to attack show the team is serious about security.</li>
+          <li><strong>Check team's emergency response:</strong> Browse the project's Discord or Telegram, have there been past security incidents? How were the team's response speed and handling? Some projects run away after being hacked, others rollback, compensate, upgrade contracts—emergency capability is an important indicator of long-term value.</li>
+        </ol>
+        <p>Remember one thing: even the most perfect audit report can't guarantee 100% security. DeFi investment is always high risk, high reward. Don't put all your assets in a single protocol, diversify assets and prepare stop-loss plans.</p>
+      </section>
+
+      <section class="article-section">
+        <h2>Summary: Security Audits Are Costs, But Also Moats</h2>
+        <p>Many DeFi teams treat audits as "compliance processes that must be completed before launch"—spent money, got the report, made the announcement, and that's it. But projects that truly achieve security excellence treat audits as part of their core product competitiveness: Uniswap V3's code went through multiple rounds of audits and formal verification, Aave has real-time monitoring and insurance reserves, Curve re-audits and crowd-tests every upgrade.</p>
+        <p>These investments look like costs in the short term but are moats in the long term—users are willing to put assets in rigorously audited protocols, LPs are willing to provide liquidity to safer pools, and other protocols are willing to integrate and compose with you. Projects that do security well eventually form positive cycles, while projects with security debt will eventually be taught a lesson by hackers some late night.</p>
+        <p>This checklist isn't meant to eliminate all risks (that's impossible), but to help you reduce risks to industry-acceptable levels and clearly know where remaining risks are. Doing DeFi is walking a tightrope between innovation and security, but at least you should know whether there's a safety net below the tightrope.</p>
+      </section>
+
+      <aside class="article-related">
+        <h3>Related Reading</h3>
+        <ul>
+          <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics Methodology: The Complete Toolchain from Address Clustering to Fund Flow Tracking</a></li>
+          <li><a href="/en/articles/mev-protection-user-guide.html">MEV Protection User Guide: Why Your Transactions Always Get Sandwiched</a></li>
+        </ul>
+      </aside>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024-2026 Docs Coin. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/js/site.js"></script>
+</body>
+</html>
