@@ -1,8 +1,9 @@
 name: Deploy to production
 
+# Manual fallback only — routine deploys are handled by a cron job on the server
+# (check-and-deploy-docs-coin.sh) that polls origin/main every minute, avoiding
+# Actions minutes usage on every push.
 on:
-  push:
-    branches: [main]
   workflow_dispatch: {}
 
 jobs:
@@ -15,4 +16,4 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: /root/deploy.sh
+          script: /root/deploy-docs-coin.sh
