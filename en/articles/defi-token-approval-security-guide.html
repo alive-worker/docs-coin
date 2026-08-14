@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke - Crypto Research Notes</title>
+  <meta name="description" content="The first lesson in DeFi on-chain security is understanding token approvals. This guide explains why unlimited approvals are dangerous, how phishing contracts drain wallets through approvals, and how to audit and revoke your allowances regularly. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/defi-token-approval-security-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/defi-token-approval-security-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke - Crypto Research Notes">
+  <meta property="og:description" content="The first lesson in DeFi on-chain security is understanding token approvals. This guide explains why unlimited approvals are dangerous, how phishing contracts drain wallets, and how to audit and revoke your allowances. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html">
+  <meta property="article:published_time" content="2026-08-14T11:00:00+08:00">
+  <meta property="article:modified_time" content="2026-08-14T11:00:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke">
+  <meta name="twitter:description" content="Most DeFi thefts are not private-key leaks; they are forgotten approvals. Learn how token approvals work, why unlimited allowances are risky, and how to revoke them. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-token-approval-security-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-token-approval-security-guide-en.png">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-defi-token-approval-security-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese bilingual site focused on cryptocurrency research methodology and on-chain data analysis. Content is for research purposes only and is not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-token-approval-security-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html", "name": "DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke", "item": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#article", "headline": "DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke", "description": "The first lesson in DeFi on-chain security is understanding token approvals. This guide explains why unlimited approvals are dangerous, how phishing contracts drain wallets through approvals, and how to audit and revoke your allowances regularly. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DeFi on-chain security","token approval","ERC-20 allowance","unlimited approval risk","revoke approval","wallet security","virtual credit card"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-14T11:00:00+08:00", "dateModified": "2026-08-14T11:00:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/defi-token-approval-security-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/defi-token-approval-security-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke</h1>
+        <p class="article-summary">A lot of money lost in DeFi is not stolen through a leaked private key. It is drained through an approval you signed months ago and completely forgot about. Almost every protocol you have ever connected to has asked for permission to move tokens out of your wallet, and most people never look back to check how much they approved or to whom. This guide focuses on the most overlooked corner of DeFi on-chain security: the token approval (Approve) mechanism. It explains why unlimited approvals are dangerous, how phishing contracts use approvals to empty wallets, and how to audit and revoke your allowances on a regular basis. Methodology only, not investment advice.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-14T11:00:00+08:00">2026-08-14 11:00:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-token-approval-security-guide-en.svg" alt="DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. What a DeFi Approval Actually Grants</h2>
+        <p>Nearly everyone new to DeFi hits the same moment: you want to swap USDT for another token on a decentralized exchange, you click "Swap," and instead of swapping, your wallet first pops up a confirmation called "Approve." You pay some gas, and only then does the actual swap happen. Most people click through without a second thought. Yet that single step is one of the most underrated risks in DeFi on-chain security.</p>
+        <p>The reason lies in how ERC-20 tokens work. Your USDT, USDC, and similar tokens are essentially balance entries stored inside a token contract. When you want a DeFi protocol (say, a swap contract) to use your tokens, that protocol cannot simply reach into your wallet. It must first receive your approval: through an Approve transaction, you tell the token contract, "Allow this specific protocol address to move up to X of this token from my account." Only after that can the protocol pull the corresponding amount when you swap, deposit, or stake.</p>
+        <p>In other words, approval is the foundational mechanism that lets DeFi function; it is not a bug in itself. The real problem lies in the amount and the recipient of the approval: how much you approved (just enough, or unlimited), and who you approved it to (a legitimate protocol, or something disguised as one). Mismanaging these two variables is the true root cause of many stolen-asset cases.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Unlimited Approval: The Blade Hidden Behind Convenience</h2>
+        <h3 id="sec-2-1">2.1 Why Protocols Default to "Unlimited"</h3>
+        <p>You may have noticed that many DeFi protocols pre-fill the approval amount with an absurdly large number, which effectively means "unlimited approval." There is a rationale: if you had to re-approve an exact amount before every trade, you would pay extra gas and sign extra transactions each time, which is a poor experience. A one-time unlimited approval means you never have to approve again, no matter how many times you trade, which is simpler for both users and protocols.</p>
+        <p>The catch is that this convenience is bought with risk. Once you grant an unlimited approval to a contract, that contract technically has the right to move all of that token out of your wallet at any time, whenever it wants. If the contract is safe, its code has no flaws, and the team does not turn malicious, you are fine. But the moment it is found to have a vulnerability, gets compromised, or was a carefully disguised malicious contract all along, that earlier unlimited approval becomes a trigger the attacker can pull at will.</p>
+        <h3 id="sec-2-2">2.2 A Typical Drain Path</h3>
+        <p>Spelling out the path makes it clear why approvals matter so much. A user grants an unlimited USDT approval on a protocol months ago and keeps using it without any trouble. One day, the protocol's contract is found to have a flaw, or its front end is hijacked into prompting users to sign a malicious approval. The attacker then uses the standing allowance to call the token contract's transfer function directly and moves all of that user's USDT out at once. Throughout the whole process, the private key was never leaked and the seed phrase was never stolen; the only thing exploited was that convenient unlimited approval. This is exactly why, in the language of DeFi on-chain security, "managing approvals" is as important as "managing private keys."</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Approval Phishing: The Real Danger Is the Signature You Give</h2>
+        <p>More common and harder to guard against than protocol bugs is approval phishing. Attackers do not need to break any legitimate protocol; they only need to trick you into signing an approval yourself.</p>
+        <p>The playbook usually looks like this: you get a DM or an email, or you click a "look-alike" DeFi site from a search-engine ad. The page prompts you to connect your wallet to "claim an airdrop," "verify assets," or "unlock a reward." Once connected, an approval request pops up with harmless-sounding wording, but if you inspect the transaction details, you find it is actually requesting an unlimited approval on one of your high-value tokens, or a setApprovalForAll operation (a blanket approval for NFTs). The instant you confirm, the attacker has the key to move your assets.</p>
+        <ul>
+        <li>Red flag one: an action that claims to "just check your balance" or "claim a reward" but requests a token transfer approval. Legitimate queries need no approval at all.</li>
+        <li>Red flag two: the allowance is unlimited, or the target contract address is one you do not recognize and cannot verify against official documentation.</li>
+        <li>Red flag three: pressure to act "now," "in a limited time," or "before it's gone." Manufactured urgency is a shared trait of every phishing attempt.</li>
+        </ul>
+        <p>Keep a simple rule in mind: in DeFi, signatures and approvals equal permission to move assets. Any request that makes you feel "this is odd, but let me just sign it" should make you stop and verify, not click confirm.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Revocation Checks: Reclaiming the Approvals You Forgot</h2>
+        <h3 id="sec-4-1">4.1 Run a Checkup With a Block Explorer's Approval Tool</h3>
+        <p>The good news is that approvals are fully public, queryable, and revocable. Every approval is recorded on-chain, and you can check at any time which approvals your wallet currently has open, how large the allowance is, and which contract address it went to. On Ethereum, for example, a block explorer's "Token Approval Checker" lets you enter your wallet address and list every approval still in effect.</p>
+        <p>Treat this as a regular checkup: every so often, or after using any new protocol, review your approval list. Focus on two categories: approvals set to "unlimited," and old approvals for protocols you no longer use. For anything you no longer need, click Revoke, submit a revocation transaction (which costs a little gas), and the allowance drops to zero. After that, even if the contract runs into trouble later, it can no longer touch your funds.</p>
+        <h3 id="sec-4-2">4.2 Build the Habits of "Revoke When Done" and "Exact Amounts"</h3>
+        <p>Two habits take DeFi on-chain security further. First, choose an exact amount over unlimited whenever you can: some wallets and protocols let you edit the allowance at approval time, so set it to what this transaction actually needs and let it drop to zero once spent; that is far safer than unlimited. Second, revoke when done: if you are only trying out a new protocol, revoke the approval right after, rather than leaving it hanging on your wallet indefinitely. These habits sacrifice a little convenience but keep your exposure firmly within "what I am using right now."</p>
+        <h3 id="sec-4-3">4.3 Isolate Large Holdings in a Separate Wallet</h3>
+        <p>Another repeatedly validated practice is to layer your assets. Use one "interaction wallet" specifically to connect to DeFi protocols and join various activities, holding only the small amount you are willing to put at risk. Keep large, long-term holdings in a separate "vault wallet" that almost never connects to any DApp. That way, even if the interaction wallet is hit through a bad approval, the loss is capped at the small balance, while your main holdings sit at an address that has never granted any external approval at all, which is a completely different level of safety.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. An Easily Overlooked Angle: On-Ramp Safety Matters Too</h2>
+        <p>Having covered on-chain approval safety, one more reminder: DeFi security is a full chain, not just the on-chain segment. For many people the very first step of getting money into crypto, the on-ramp and off-ramp, carries its own risks, especially when you need a card to pay for overseas services or to fund a trading account.</p>
+        <p>There is a real pain point here: you hold stablecoins, yet plenty of overseas subscriptions, cloud services, and software tools still only accept card payments. In that situation, a virtual credit card is a common bridge, the kind of product often called a virtual card or a Visa virtual card. It needs no physical card; after online verification you get a usable card number, and some platforms offer a US virtual credit card type specifically for overseas subscription payments. Take <a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC (Rongda virtual credit card)</a> as one example: the platform describes itself as a virtual card issuing platform, emphasizes licensed upstream issuance, supports major card networks, and lets you top up cards directly with stablecoins such as USDT. As a virtual credit card platform, it targets users who need to reliably pay for overseas subscriptions and tools. Note that the above is the platform's own description; specific features, fees, and settlement experience should be judged by its official disclosures and your actual usage, and this article makes no endorsement or guarantee. Any pairing of a virtual card with stablecoins must serve genuine, compliant spending, follow the relevant platform terms and the laws and regulations of your jurisdiction, and must never be used for cashing out, money laundering, or evading regional restrictions.</p>
+        <p>Placed in the context of "approval safety," the logic is consistent: whether it is an on-chain allowance or an off-chain payment tool, the core of safety is "least authority, trusted source, controllable limits." Grant only the permissions that are necessary, use only tools from verifiable sources, and keep every point of exposure within what you can afford.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. A Ready-to-Use Approval Safety Checklist</h2>
+        <p>Here is everything above condensed into an actionable checklist you can run through while using DeFi:</p>
+        <ul>
+        <li>Before signing any Approve, verify three things: the target address, the allowance amount, and whether the site initiating the approval is an officially verified source.</li>
+        <li>Prefer exact-amount approvals over the default unlimited; if your wallet supports editing the amount, edit it.</li>
+        <li>After finishing with a temporary protocol, revoke its approval right away and leave no long-term exposure.</li>
+        <li>Regularly (say, monthly) run a full-wallet checkup with a block explorer's approval tool and revoke stale approvals.</li>
+        <li>Stay highly alert to any "claim airdrop / verify assets / unlock reward" request that demands a token approval. Normal queries need no approval.</li>
+        <li>Keep large holdings in a separate vault wallet that rarely connects to DApps, and interact only with a small wallet.</li>
+        <li>Apply "least authority, trusted source" to off-chain steps like on-ramping and payments too, judging tools by official disclosures.</li>
+        </ul>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and Long-Tail Questions</h2>
+        <p>The core of this piece in one sentence: in DeFi on-chain security, the token approval (Approve) is as important as your private key, yet the most frequently overlooked. Approval itself is the foundational mechanism that makes DeFi work; the risk is not "whether to approve" but "how much you approved, who you approved, and whether you revoked it afterward." Manage those three things and you block a large share of losses that stem not from leaked keys but from approvals gone out of control.</p>
+        <p>A few long-tail questions beginners often search are worth a quick note: Does revoking an approval cost gas? Yes; revocation is itself an on-chain transaction and incurs a small fee, but relative to the exposure it removes, that cost is usually well worth it. Which is better, unlimited or exact-amount approval? From a security standpoint, exact-amount wins; from a convenience standpoint, unlimited is simpler, so for large, high-value tokens, stick with exact amounts or revoke when done. Are approval-checker tools safe? The approval queries offered by mainstream block explorers are read-only and require no signing to view, but executing an actual revoke still needs confirmation in your own wallet, so be careful not to do it on a spoofed site. Does using a hardware wallet mean you no longer need to manage approvals? No; a hardware wallet protects your private key, but an approval you sign with it is just as valid, so approval risk still exists and still needs regular checks. None of these has a single definitive answer; verify against official documentation and authoritative sources for your own situation. This entire article is a study and methodology discussion only, is not investment advice, and crypto assets are highly volatile and risky, so make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. What a DeFi Approval Actually Grants</a></li>
+          <li><a href="#sec-2">2. Unlimited Approval: The Blade Hidden Behind Convenience</a></li>
+          <li><a href="#sec-3">3. Approval Phishing: The Real Danger Is the Signature You Give</a></li>
+          <li><a href="#sec-4">4. Revocation Checks: Reclaiming the Approvals You Forgot</a></li>
+          <li><a href="#sec-5">5. An Easily Overlooked Angle: On-Ramp Safety Matters Too</a></li>
+          <li><a href="#sec-6">6. A Ready-to-Use Approval Safety Checklist</a></li>
+          <li><a href="#sec-7">7. Summary and Long-Tail Questions</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://etherscan.io/tokenapprovalchecker" target="_blank" rel="noopener">Etherscan Token Approval Checker</a> — view and revoke wallet token approvals</li>
+            <li><a href="https://ethereum.org/en/developers/docs/standards/tokens/erc-20/" target="_blank" rel="noopener">Ethereum.org ERC-20 Standard</a> — official docs on the approve/allowance mechanism</li>
+            <li><a href="https://revoke.cash/" target="_blank" rel="noopener">Revoke.cash</a> — multi-chain token approval viewer and revocation tool</li>
+          </ul>
+          <p class="ref-note">Tools, platform policies, and fees mentioned here may change over time; always rely on the latest information from official sources. This article is for study and research only and is not investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">Smart Contract Security Audit Research Guide</a></li>
+          <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics: Methods and Limits of Tracing Stolen Funds</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A bilingual site focused on cryptocurrency research methodology and on-chain data, documenting research frameworks, on-chain metric interpretation, and fund-flow observation.</p>
+        </div>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap Cross-chain</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going-Global Nav</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About and Disclaimer</a></p>
+      <p>All content is for study and research only and is not investment advice; crypto assets are highly volatile and risky, so make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>
