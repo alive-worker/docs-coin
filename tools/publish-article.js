@@ -38,25 +38,62 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'REPLACE-ME-slug-here',           // e.g. 'dex-liquidity-research-guide'
-  publishedISO: '2026-01-01T00:00:00+08:00',
-  tagColor: 'violet',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'usdt-reserve-transparency-onramp-defi-security-guide',
+  publishedISO: '2026-08-11T14:40:00+08:00',
+  tagColor: 'cobalt',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'REPLACE ME',
-    tagLabel: 'REPLACE ME',                // short sidebar/tag label, e.g. "DEX流动性"
-    cardDesc: 'REPLACE ME',                // short one-liner used in sidebar + featured-desc
+    h1: 'USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解',
+    tagLabel: 'USDT基础与安全',
+    cardDesc: 'USDT真的值1美元吗？钱怎么进出交易所才安全？DeFi里怎么不被清空钱包？本文从USDT基础与储备透明度讲起，拆解交易所出入金教程与DeFi/链上安全实战清单，帮你把稳定币用明白。',
   },
   en: {
-    h1: 'REPLACE ME',
-    tagLabel: 'REPLACE ME',
-    cardDesc: 'REPLACE ME',
+    h1: 'Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security',
+    tagLabel: 'USDT Basics & Security',
+    cardDesc: 'Is USDT really worth a dollar? How do you move money in and out of an exchange safely, and avoid getting drained in DeFi? From USDT fundamentals and reserve transparency to an on/off-ramp tutorial and a DeFi on-chain security checklist.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'usdt-crosschain-transfer-security-recovery-guide',
+    'usdt-beginner-onramp-defi-security-guide',
+    'data-availability-layer-verification',
+    'cross-chain-messaging-protocol-verification',
+    'restaking-avs-slashing-risk',
+    'depin-compute-network-verification',
+    'account-abstraction-wallet-security',
+    'intent-centric-solver-verification',
+    'onchain-forensics',
+    'agent-audit-log-integrity-verification',
+    'agent-strategy-execution-verification',
+    'agent-identity-credential-verification',
+    'agent-service-marketplace-verification',
+    'agent-to-agent-payment-verification',
+    'zkml-onchain-model-verification',
+    'ai-oracle-data-verification',
+    'ai-agent-onchain-verification',
+    'prediction-market-resolution-risk',
+    'credit-pool-tranche-risk',
+    'options-vault-tail-risk',
+    'perpetual-dex-vault-counterparty',
+    'vote-escrow-lock-verification',
+    'auto-deleveraging-insurance-fund',
+    'liquid-staking-token-price-deviation',
+    'rwa-tokenization-trust-structure',
+    'mev-private-order-flow',
+    'funding-rate-divergence',
+    'stablecoin-peg-mechanism-research-guide',
+    'onchain-insurance-research-guide',
+    'restaking-research-guide',
+    'swap-routing-research-guide',
+    'vote-market-research-guide',
+    'liquidity-mining-research-guide',
+    'layer2-rollup-research-guide',
+    'nft-collection-research-guide',
+    'lending-liquidation-research-guide',
+    'dex-liquidity-research-guide',
     'airdrop-sybil-detection-research-guide',
     'bridge-security-research-guide',
     'oracle-price-feed-research-guide',
@@ -87,7 +124,7 @@ function extractArticleMeta(slug, lang) {
   const tagColor = (html.match(/<span class="side-tag archive-tag archive-tag--([a-z]+)">/) || [])[1] || '';
   const cover = (html.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
   const cardDesc = (html.match(/<p class="article-summary">([\s\S]*?)<\/p>/) || [])[1] || '';
-  return { h1, desc, pub, tagLabel, tagColor, cover };
+  return { h1, desc, pub, tagLabel, tagColor, cover, cardDesc };
 }
 
 function replacer(str, regex, fn) {
@@ -175,7 +212,7 @@ function updateItemLists() {
     let block = content.slice(start, blockEnd);
     const numMatch = block.match(/"numberOfItems": (\d+)/);
     if (numMatch) block = block.replace(numMatch[0], `"numberOfItems": ${parseInt(numMatch[1], 10) + 1}`);
-    const anchor = /(itemListElement": \[\n)/;
+    const anchor = /(itemListElement": \[\r?\n)/;
     if (!anchor.test(block)) { console.log('  [itemlist] SKIP (anchor not found):', t.file); continue; }
     const newItem = `        { "@type": "ListItem", "position": 1, "name": "${t.name}", "item": "${t.prefix}/articles/${CONFIG.slug}.html" },\n`;
     block = block.replace(anchor, (m, g1) => g1 + newItem);
@@ -215,7 +252,8 @@ function updateHomepage(lang) {
   const file = lang === 'en' ? 'en/index.html' : 'index.html';
   const p = path.join(root, file);
   let t = fs.readFileSync(p, 'utf-8');
-  if (t.includes(`${CONFIG.slug}.html`)) { console.log(`  [homepage-${lang}] already updated, skip`); return; }
+  const featuredCheckRe = new RegExp(`<section class="featured-article"[\\s\\S]{0,400}${CONFIG.slug}\\.html`);
+  if (featuredCheckRe.test(t)) { console.log(`  [homepage-${lang}] already updated, skip`); return; }
 
   const prevFeaturedSlug = CONFIG.existingSlugsNewestFirst[0];
   const prevFeatured = extractArticleMeta(prevFeaturedSlug, lang);
@@ -283,7 +321,7 @@ function updateHomepage(lang) {
         <div class="post-card-body">
           <div class="post-card-tags"><span class="archive-tag archive-tag--${prevFeatured.tagColor}">${prevFeatured.tagLabel}</span></div>
           <h2 class="post-card-title"><a href="${artPrefix}${prevFeaturedSlug}.html">${prevFeatured.h1}</a></h2>
-          <p class="post-card-desc">TODO-cardDesc-not-auto-extracted</p>
+          <p class="post-card-desc">${prevFeatured.cardDesc || ''}</p>
           <div class="post-card-meta">
             <time datetime="${prevPub}">${prevPubDisplay}</time>
             <a class="read-link" href="${artPrefix}${prevFeaturedSlug}.html">${readLabel}</a>
@@ -292,12 +330,12 @@ function updateHomepage(lang) {
       </article>
 
 `;
-  const gridOpenRe = new RegExp(`(<div class="card-grid" aria-label="[^"]*">\\n)`);
+  const gridOpenRe = new RegExp(`(<div class="card-grid" aria-label="[^"]*">\\r?\\n)`);
   if (!gridOpenRe.test(t)) throw new Error(`[homepage-${lang}] card-grid opening not found`);
   t = t.replace(gridOpenRe, (m, g1) => g1 + newGridCard);
 
   // drop the oldest grid card (last one) to keep the grid at a fixed size
-  const dropCardRe = new RegExp(`\\n?      <article class="post-card" id="${dropSlug}">[\\s\\S]*?<\\/article>\\n`);
+  const dropCardRe = new RegExp(`\\r?\\n?      <article class="post-card" id="${dropSlug}">[\\s\\S]*?<\\/article>\\r?\\n`);
   if (dropCardRe.test(t)) {
     t = t.replace(dropCardRe, '');
   } else {
@@ -313,9 +351,9 @@ function insertArchiveItem(lang) {
   const file = lang === 'en' ? 'en/articles.html' : 'articles.html';
   const p = path.join(root, file);
   let t = fs.readFileSync(p, 'utf-8');
-  if (t.includes(`${CONFIG.slug}.html`)) return;
   const cfgLang = lang === 'en' ? CONFIG.en : CONFIG.zh;
   const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
+  if (t.includes(`<a href="${artPrefix}${CONFIG.slug}.html">\n            <span class="archive-tag`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
   const item = `        <li class="archive-item">
           <a href="${artPrefix}${CONFIG.slug}.html">
@@ -325,7 +363,7 @@ function insertArchiveItem(lang) {
           </a>
         </li>
 `;
-  const re = /(<ul class="archive-list"[^>]*>\n)(\s*<li class="archive-item">)/;
+  const re = /(<ul class="archive-list"[^>]*>\r?\n)(\s*<li class="archive-item")/;
   if (!re.test(t)) { console.log(`  [archive-${lang}] SKIP (anchor not found)`); return; }
   t = t.replace(re, (m, g1, g2) => g1 + item + g2);
   fs.writeFileSync(p, t, 'utf-8');
@@ -414,7 +452,7 @@ function updateSiteJsDates() {
 
 // --- Step 9: hash propagation (only if content changed) -------------------------
 function sha1(filePath) {
-  return execSync(`sha1sum "${filePath}"`).toString().trim().split(/\s+/)[0].slice(0, 8);
+  return execSync(`sha1sum "${filePath}"`).toString().trim().split(/\s+/)[0].replace(/^\\/, '').slice(0, 8);
 }
 function propagateHashesIfChanged() {
   const cssPath = path.join(root, 'styles.css');

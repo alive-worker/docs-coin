@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 - 加密货币研究</title>
+  <meta name="description" content="AI×链上系列（三）：拆解零知识机器学习（zkML）的信任转移、电路化模型的量化代价，以及「证明计算对」不等于「判断对」的核验方法。不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 - 加密货币研究">
+  <meta property="og:description" content="AI×链上系列（三）：拆解零知识机器学习（zkML）的信任转移、电路化模型的量化代价，以及「证明计算对」不等于「判断对」的核验方法。不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <meta property="article:published_time" content="2026-07-28T10:35:54+08:00">
+  <meta property="article:modified_time" content="2026-07-28T10:35:54+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 - 加密货币研究">
+  <meta name="twitter:description" content="零知识机器学习声称能在链上低成本证明「模型跑对了」，但这个证明到底证明了什么、又证明不了什么？本文拆解zkML的信任转移与核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-zkml-verification.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-zkml-verification.png">
+  <link rel="preload" as="image" href="/img/article-zkml-verification.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","AI预言机核验","zkML与链上模型可信执行"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-zkml-verification.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#webpage", "url": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html", "name": "zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」", "item": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#article", "headline": "zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」", "description": "AI×链上系列（三）：拆解零知识机器学习（zkML）的信任转移、电路化模型的量化代价，以及「证明计算对」不等于「判断对」的核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["zkML核验","零知识机器学习","链上模型可信执行","电路化模型量化误差","可信设置风险","TEE与zkML对比"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-28T10:35:54+08:00", "dateModified": "2026-07-28T10:35:54+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/zkml-onchain-model-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/zkml-onchain-model-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」</h1>
+        <p class="article-summary">这是「AI×链上」系列的第三篇。前两篇分别讨论了 AI 代理作为「资金执行者」的权限核验，以及 AI 预言机作为「事实来源」的信任转移；这一篇聚焦一个更技术化的问题：当我们不满足于「相信运行方说模型跑了」，想要在链上低成本地拿到一份数学证明来说「模型确实这样跑了」时，零知识机器学习（zkML）这类方向能做到什么程度。zkML 把模型推理过程编译成一个零知识电路，生成一份可在链上被合约低成本验证的密码学证明，声称能把信任从「相信某个运行方」转移到「相信一段可验证的数学」。但这层转移同样有边界：电路化过程本身要付出什么代价、证明「计算被正确执行」是否等于证明「模型判断是对的」、以及电路和可信设置本身又依赖谁的信任。全文围绕六个维度展开：信任转移的性质变化、电路化的量化代价、证明边界的误读、电路与可信设置的信任根、与TEE及多源仲裁的组合定位，以及一套可复用的核验清单。全文仅讨论抽象机制原理，不点名任何真实产品，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-28T10:35:54+08:00">2026-07-28 10:35:54</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-zkml-verification.svg" alt="zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 信任转移的第三站：从「信任运行方」到「信任一段数学」</h2>
+<p>本系列第二篇讨论 AI 预言机时提到，模型推理的不可复现性最终会把核验退化成「信任运行方的自证」——它说模型是这么判断的，你只能信。zkML 试图打破这个死结：它把模型的推理过程（矩阵乘法、激活函数、层与层之间的数据流）表达成一个算术电路，再用零知识证明系统（如基于 SNARK 或 STARK 的方案）生成一份证明，声称「这个特定输入，经过这个特定模型（用其权重的哈希或承诺来标识），确实产生了这个特定输出」。任何持有验证密钥的一方，都可以在链上用远小于重新执行整个模型的算力，快速验证这份证明是否成立。这是一次信任落点的再次转移——从「相信某个中心化的运行方没有作弊」，转移到「相信零知识证明系统背后的密码学假设与实现代码没有漏洞」。</p>
+<p>这次转移的价值在哪里？它把「核验」这件事，从一个需要重新执行昂贵计算、还要信任执行环境的过程，变成了一个任何人都可以低成本、确定性完成的验证过程——理论上，只要证明通过，你就不需要再信任提交证明的那一方是否诚实。但研究者必须清楚：这只是把信任从一个地方挪到了另一个地方，而不是消除了信任本身。零知识证明系统的密码学假设、电路实现的正确性、生成证明所用的可信设置（trusted setup）——这些新出现的信任对象，同样需要被核验，而它们比「运行方是否诚实」这个问题更加隐蔽、更加需要专业知识才能审查。</p>
+<ul>
+<li>zkML 把模型推理编译成零知识电路，生成可在链上低成本验证的密码学证明，声称能证明「特定输入下模型确实产生了特定输出」。</li>
+<li>信任落点从「运行方是否诚实」转移到「证明系统的密码学假设与电路实现是否正确」，而不是被消除。</li>
+<li>核验的起点是意识到这层转移本身，而不是把「用了零知识证明」直接等同于「不再需要信任任何人」。</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 电路化的量化代价：能被证明的模型，未必是原来的模型</h2>
+<p>把一个神经网络塞进零知识电路，远不是把代码换一种语言重写这么简单。零知识证明系统天然适合处理有限域上的整数运算，而主流神经网络的推理默认使用浮点数，且大模型的参数量对电路规模极不友好——电路的「门」数量直接决定了证明生成的时间和成本，往往随模型规模呈超线性增长。为了让证明生成在可接受的时间和成本内完成，实践中普遍需要对模型做「量化」：把浮点权重和激活值压缩成低位宽的整数近似，有时还需要裁剪层数、替换某些非线性激活函数为电路更友好的近似版本。</p>
+<p>这里就出现了一个容易被忽视的核验缺口：被生成证明的，往往不是研究者以为的那个原始模型，而是它的一个量化、近似、结构改造之后的「电路版」。这个电路版在大多数输入上可能和原始模型表现一致，但在某些边界输入或者对精度敏感的判断上，量化误差可能导致结论出现偏差——而这个偏差不会体现在证明的有效性上，因为证明验证的是「电路被正确执行」，电路本身「和原始模型有多接近」是电路设计者的一个工程选择，不是密码学证明能覆盖的范畴。核验者应当追问：证明所对应的电路版模型，和对外宣传使用的原始模型之间的量化误差有没有被独立评估和公开披露？是否存在关键决策场景下，电路版和原始模型的输出会出现分歧？</p>
+<ul>
+<li>神经网络推理默认使用浮点数，零知识电路更适合整数运算，模型规模越大电路规模增长越不友好。</li>
+<li>实践中普遍需要对模型量化、裁剪、近似非线性函数，才能让证明生成成本可控。</li>
+<li>核验缺口：被证明的是电路化后的近似模型，其与原始模型的量化误差是否被独立评估、是否在边界输入上产生分歧。</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 证明的边界：「计算被正确执行」不等于「判断是对的」</h2>
+<p>这是 zkML 最容易被误读的一点，也和本系列第二篇讨论 TEE 时得出的结论高度同构。零知识证明能确定性地告诉你：给定这份输入和这份被承诺的模型权重，电路确实忠实地执行了这个计算，输出确实是这样得到的，中间没有人偷偷替换过任何一步。它证明的是「计算完整性」（computational integrity）。但它完全无法回答另外两个同样关键的问题：输入本身是不是真实、未经篡改的原始素材；以及这个模型的判断，在事实层面是否正确。如果喂给电路的输入本身是伪造的卫星图像或被篡改的文本，零知识证明会忠实地证明「电路确实基于这个伪造输入算出了这个结论」——证明本身完全合法，结论却依然是错的。</p>
+<p>更进一步，即便输入是真实的，模型本身也可能存在系统性偏差或被对抗性样本欺骗，得出一个在证明意义上「正确执行」、但在事实意义上「判断错误」的结论。零知识证明只能保证「这个可能有缺陷的模型，确实一丝不苟地跑了一遍」，它不为模型本身的判断质量背书。研究者在评估任何声称使用 zkML 的产品时，都应当明确区分市场话术里的「链上可验证」到底验证的是哪一层——如果宣传语暗示「证明通过=结论可信」，这就是在偷换概念，混淆了「计算完整性」与「事实正确性」这两个完全不同的属性。</p>
+<ul>
+<li>零知识证明确定性地证明「计算完整性」：电路被正确执行，输出确实来自声称的输入与模型。</li>
+<li>它无法证明「输入本身是真的」，也无法证明「模型判断在事实上是对的」——垃圾输入或有偏模型依然会被忠实证明。</li>
+<li>核验者应警惕把「证明通过」等同于「结论可信」的话术，两者分属计算完整性与事实正确性两个不同层面。</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 电路与可信设置：新的信任根藏在哪里</h2>
+<p>零知识证明系统本身也不是凭空可信的抽象数学，它的安全性依赖一系列具体的工程与密码学前提，这些前提同样需要被核验。首先是电路实现的正确性——把模型推理逻辑翻译成电路约束的这段代码，本身是否经过独立审计？一个存在漏洞的电路，可能允许攻击者构造出一份「看起来通过验证，但实际计算并不对应声称输入输出」的虚假证明，这类漏洞往往极其隐蔽，不经过专门的形式化验证或深度审计很难发现。其次，部分零知识证明方案（尤其是较早期的 SNARK 构造）依赖一次性的「可信设置」仪式来生成公共参数，如果参与设置的各方串通、或者设置过程留下了后门，那么基于这套参数生成的所有证明的安全性都会被削弱——这就是为什么「多方参与、可公开验证的设置仪式」被视为比「单一主体生成参数」更值得信赖的实践。</p>
+<p>核验者应当把这两点当作 zkML 系统的「新信任根」来追问：电路代码是否经过公开的、可复核的审计，审计报告是否可查阅？如果方案依赖可信设置，这个设置仪式是如何进行的，参与方是否足够多元、过程是否可公开验证？这些问题和第2、3节讨论的量化误差、证明边界叠加起来，共同构成了对一个 zkML 系统的完整核验画像——零知识证明解决的是「运行方是否诚实」这一层信任问题，但它自身又引入了「电路和设置是否可信」这一层新的、同样需要专业核验的信任问题，并没有把信任彻底清零。</p>
+<ul>
+<li>电路实现是否经过独立审计，是核验zkML系统的第一个新信任根——有漏洞的电路可能允许伪造「通过验证」的虚假证明。</li>
+<li>部分证明方案依赖一次性可信设置仪式，参与方是否多元、过程是否可公开验证，直接影响所有后续证明的安全性。</li>
+<li>零知识证明把信任从「运行方诚实」转移到「电路与设置可信」，是信任的转移而非清零，需要同等严格地核验。</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 与TEE、多源仲裁的组合定位：zkML补的是哪一块拼图</h2>
+<p>把 zkML 和本系列第二篇讨论的可信执行环境（TEE）放在一起比较，会更清楚地看出它们的能力边界互补而非重叠。TEE 靠硬件级的隔离和远程证明，让你相信「代码在一个未被篡改的环境里跑了这份输入」；zkML 靠密码学，让你相信「这份证明背后的计算确实按声称的电路逻辑被执行了」——两者都只回答「执行有没有被动手脚」这一层问题，都不回答「输入是不是真的」「模型判断是不是对的」。它们各自的短板也不同：TEE 依赖硬件厂商的信任根，历史上出现过侧信道攻击；zkML 依赖电路实现和可信设置的正确性，且当前阶段对大模型的证明成本仍然显著，往往需要在模型规模和可证明性之间做权衡。</p>
+<p>因此，一个稳健的链上模型可信执行方案，很少会指望 zkML 单独包打天下，而是把它当作「执行完整性」这一层拼图里的一块候选实现，再叠加本系列第二篇讨论的多源交叉与可挑战裁决机制，来覆盖「输入是否真实」「判断是否正确」这两块 zkML 和 TEE 都无法覆盖的拼图。核验者面对任何声称使用 zkML 的链上模型服务时，应当追问：这套系统里 zkML 具体覆盖的是哪一段流程（是全模型推理，还是某个简化的子模块）？系统是否还叠加了独立的多源交叉或人工挑战机制来应对输入造假和模型误判？如果一个系统只靠「我们用了零知识证明」这一句话，就宣称整条链路完全可信，这本身就是一个需要被追问、而非直接接受的信号。</p>
+<ul>
+<li>zkML与TEE的能力边界高度相似：都只证明「执行没被动手脚」，都不证明「输入是真的」或「判断是对的」。</li>
+<li>两者的信任根不同：TEE依赖硬件厂商与隔离机制，zkML依赖电路实现与可信设置，各有各的攻击面。</li>
+<li>稳健方案通常把zkML/TEE当作执行完整性拼图的一块，再叠加多源交叉与可挑战裁决来覆盖输入与判断层面的风险。</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 核验清单与系列小结</h2>
+<p>把前面五节收敛成一套可复用的核验清单，面对任何一个声称「用 zkML 让链上模型可信执行」的产品或服务，都可以逐项过一遍：其一，证明覆盖范围——这份零知识证明具体覆盖的是完整模型推理，还是某个被简化的子模块？其二，量化代价——被证明的电路版模型与对外宣传使用的原始模型之间，量化和近似带来的误差是否被独立评估和公开披露？其三，证明边界是否被诚实标注——宣传材料有没有把「计算完整性」偷换成「结论可信」，是否明确说明证明不覆盖输入真实性和模型判断正确性？其四，新信任根是否可核验——电路实现是否经过独立审计，若依赖可信设置，参与方是否多元、过程是否公开可验证？其五，组合防御——系统是否在zkML/TEE之外，还叠加了多源交叉或可挑战裁决机制，来兜底证明技术本身无法覆盖的风险。</p>
+<p>回望「AI×链上」系列目前的这三篇文章，贯穿始终的其实是同一条方法论主线，只是应用在了三个不同的技术层面：第一篇讨论的是 AI 代理这个「资金执行者」的权限边界该由谁设定、如何被强制约束；第二篇讨论的是 AI 预言机这个「事实来源」的信任被转移到了哪里、又该如何用多源与可信执行来兜底；这一篇作为系列第三篇，讨论的是 zkML 这类「证明技术」到底证明了什么、又在证明的边界之外留下了哪些必须由其他机制填补的缺口。三者共同指向的结论是：无论技术形式是代理、预言机还是零知识证明，任何一层新技术带来的「更可信」的表述，都不应被直接接受，而应被拆解为具体的、可核验的技术前提——这也是本站方法论系列一直坚持的立场。全文通篇讨论的是抽象的机制类别与核验方法，不点名、不评价任何真实存在的产品或协议，全文不构成任何形式的投资建议。系列后续还会继续拓展到新的机制层面。</p>
+<ul>
+<li>核验清单五问：证明覆盖范围、量化代价、证明边界是否被诚实标注、新信任根是否可核验、是否有组合防御。</li>
+<li>三篇系列文章的共同主线：任何「更可信」的技术表述，都应被拆解为具体、可核验的技术前提，而非直接接受。</li>
+<li>全文为机制类别与方法论讨论，不点名任何真实产品，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 信任转移的第三站：从「信任运行方」到「信任一段数学」</a></li>
+          <li><a href="#sec-2">2. 电路化的量化代价：能被证明的模型，未必是原来的模型</a></li>
+          <li><a href="#sec-3">3. 证明的边界：「计算被正确执行」不等于「判断是对的」</a></li>
+          <li><a href="#sec-4">4. 电路与可信设置：新的信任根藏在哪里</a></li>
+          <li><a href="#sec-5">5. 与TEE、多源仲裁的组合定位：zkML补的是哪一块拼图</a></li>
+          <li><a href="#sec-6">6. 核验清单与系列小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/zero-knowledge-proofs/" target="_blank" rel="noopener">Ethereum.org 零知识证明</a>：介绍零知识证明的基本原理、SNARK/STARK构造与常见应用场景</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核查链上验证合约的部署记录与调用历史</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/agent-identity-credential-verification.html">AI代理身份与凭证核验：这枚身份，还有效吗（系列第六篇）</a></li>
+          <li><a href="/articles/agent-service-marketplace-verification.html">AI代理服务市场核验：谁的报价，值得被信任（系列第五篇）</a></li>
+          <li><a href="/articles/agent-to-agent-payment-verification.html">AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环（系列下一篇）</a></li>
+          <li><a href="/articles/ai-oracle-data-verification.html">AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它（系列上一篇）</a></li>
+          <li><a href="/articles/ai-agent-onchain-verification.html">链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定</a></li>
+          <li><a href="/articles/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">审计报告说「已审计」，到底审计了什么：从结论到链上复核</a></li>
+          <li><a href="/articles/prediction-market-resolution-risk.html">预测市场结果裁定核验：裁决权到底落在谁手里</a></li>
+          <li><a href="/articles/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          <li><a href="/articles/agent-strategy-execution-verification.html">AI代理策略执行核验：一句「按策略执行」，到底是谁在把关</a></li>
+          <li><a href="/articles/agent-audit-log-integrity-verification.html">AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过</a></li>
+          <li><a href="/articles/onchain-forensics.html">链上取证与资金追踪方法论：被盗资金流向哪里，怎么查</a></li>
+          <li><a href="/articles/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径</a></li>
+          <li><a href="/articles/account-abstraction-wallet-security.html">账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱</a></li>
+          <li><a href="/articles/depin-compute-network-verification.html">DePIN 算力网络核验：GPU 分布式云的算力是真的、需求是真的吗</a></li>
+          <li><a href="/articles/restaking-avs-slashing-risk.html">再质押 AVS 惩罚风险核验：同一份 ETH，同时抵押给几个协议</a></li>
+          <li><a href="/articles/cross-chain-messaging-protocol-verification.html">跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的</a></li>
+          <li><a href="/articles/data-availability-layer-verification.html">数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</a></li>
+          <li><a href="/articles/usdt-beginner-onramp-defi-security-guide.html">USDT新手完全指南：交易所出入金教程与DeFi链上安全核验</a></li>          <li><a href="/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>          <li><a href="/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

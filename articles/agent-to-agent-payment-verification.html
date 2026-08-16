@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环 - 加密货币研究</title>
+  <meta name="description" content="AI×链上系列（四）：深度拆解AI代理间自动结算——多代理服务采购与付款的信用链条、委托授权的连带传递、循环调用与失控支出、结算层的最终裁决权，以及一套可复用的核验清单。不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/agent-to-agent-payment-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环 - 加密货币研究">
+  <meta property="og:description" content="AI×链上系列（四）：深度拆解AI代理间自动结算——多代理服务采购与付款的信用链条、委托授权的连带传递、循环调用与失控支出、结算层的最终裁决权，以及一套可复用的核验清单。不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/agent-to-agent-payment-verification.html">
+  <meta property="article:published_time" content="2026-07-29T11:24:08+08:00">
+  <meta property="article:modified_time" content="2026-07-29T11:24:08+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环 - 加密货币研究">
+  <meta name="twitter:description" content="当一个AI代理为了完成任务，自动向另一个AI代理下单并付款时，谁在为这条链上的每一次转账背书？本文拆解代理间结算的信用链条、连带授权与失控循环核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-agent-payment.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-agent-payment.png">
+  <link rel="preload" as="image" href="/img/article-agent-payment.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","链上AI代理核验","AI预言机核验","zkML与链上模型可信执行","AI代理间自动结算"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } , "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-agent-payment.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#webpage", "url": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html", "name": "AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环", "item": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#article", "headline": "AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环", "description": "AI×链上系列（四）：深度拆解AI代理间自动结算——多代理服务采购与付款的信用链条、委托授权的连带传递、循环调用与失控支出、结算层的最终裁决权，以及一套可复用的核验清单。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["AI代理间结算核验","代理经济","委托授权连带传递","循环调用失控支出","结算层裁决权","代理身份与声誉核验"], "wordCount": 3800, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-29T11:24:08+08:00", "dateModified": "2026-07-29T11:24:08+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/agent-to-agent-payment-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/agent-to-agent-payment-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环</h1>
+        <p class="article-summary">这是「AI×链上」系列的第四篇。前三篇分别讨论了 AI 代理作为「资金执行者」的权限核验、AI 预言机作为「事实来源」的信任转移，以及 zkML 这类证明技术的能力边界；这一篇把视角从「单个代理如何被核验」转向「多个代理彼此交易时，风险如何在它们之间传导」。当一个 AI 代理为了完成任务，需要调用另一个代理提供的算力、数据或子任务服务，并自动向对方结算费用时，一整条新的信用链条就出现了：谁在为这条链上的每一次转账背书，一个代理的错误判断会不会连带传染给它所委托的下一个代理，循环调用会不会在无人察觉的情况下把授权额度榨干。全文围绕六个维度展开：代理经济的基本结构、委托授权的连带传递、循环调用与失控支出、代理身份与声誉的可信度、结算层的最终裁决权，以及一套可复用的核验清单。全文仅讨论抽象机制原理，不点名任何真实产品，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-07-29T11:24:08+08:00">2026-07-29 11:24:08</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-agent-payment.svg" alt="AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 代理经济的基本结构：从「单代理执行」到「多代理交易」</h2>
+<p>本系列第一篇讨论的 AI 代理，模型是相对简单的一对一关系：一个用户，授权一个代理，代理在额度内替用户执行链上操作。但当代理开始变得更专业化、更擅长处理特定子任务时，一个更复杂的结构自然浮现——一个「总代理」在完成用户的整体任务时，可能需要临时雇用其他代理来完成它不擅长的部分：调用一个专精数据抓取的代理去核实一条信息，调用一个专精定价的代理去获取报价，调用一个专精执行的代理去完成一笔交换。这些调用往往伴随着即时的、自动化的小额结算——总代理为了换取服务，直接向被调用代理的地址转账，整个过程无需人工介入。</p>
+<p>这种「代理经济」的价值主张很直接：把复杂任务拆解给各自更专业的代理去完成，效率理应更高。但它也引入了一个此前的单代理模型里不存在的新维度——资金现在不再只从「用户」流向「代理」，而开始在「代理与代理之间」流动，而且这种流动往往发生在用户完全看不到的时间尺度和粒度上，可能是一次任务里几十次微小的代理间结算。核验这类系统的第一步，是先弄清楚这条资金链条的拓扑：一次任务里，用户的额度授权给了多少层代理？每一层代理是否都有独立的、可审计的支出记录？还是所有的代理间结算都被打包成一个黑盒，用户事后只能看到一个总数？</p>
+<ul>
+<li>代理经济把复杂任务拆解给专业化的子代理完成，子代理之间通过自动化小额结算完成协作。</li>
+<li>资金流动从「用户到代理」的单层结构，变成「代理到代理」的多层结构，且往往发生在用户看不到的粒度上。</li>
+<li>核验起点是弄清资金链条拓扑：额度授权穿透了多少层代理，每一层是否有独立可审计的支出记录。</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 委托授权的连带传递：额度是被复制，还是被派生</h2>
+<p>本系列第一篇强调过，单代理场景下核验的核心是「链上额度硬约束」——用户给代理设定的支出上限，应该由智能合约或钱包层面的规则强制执行，而不是依赖代理自己的道德自律。这个原则在多代理场景下必须被进一步细化，因为额度现在需要「传递」：总代理拿到用户给的额度后，如果要委托子代理完成任务并为此付费，这笔支出是从总代理的额度里扣减，还是又给子代理开出了一份独立的、可能与原始额度脱钩的新授权？</p>
+<p>这里的关键风险是「额度复制」而非「额度派生」。一个健康的委托模型应当保证：无论任务链条委托了多少层子代理，所有子代理产生的支出，最终都应该可回溯地扣减自同一笔用户原始额度，任何一层的支出都不能超出这个总池子。但如果系统实现的方式是，总代理每次委托子代理时都单独给子代理开一份新的支出许可，而这份新许可的额度没有和原始额度强绑定、只是被总代理「顺手」设定成一个看起来合理的数字，那么理论上，只要委托的层数足够多、每一层都开出新的额度，实际总支出就可能远超用户最初设定的上限——这不是任何单一环节的作弊，而是额度传递机制本身存在的结构性漏洞。核验者应当明确追问：这个系统的多层委托支出，是共享同一个硬约束的资金池，还是每层都能重新起草一份新的授权？</p>
+<ul>
+<li>多代理场景下，额度不再是简单的「一次性上限」，而需要在委托链条中被传递，这里区分「额度复制」与「额度派生」至关重要。</li>
+<li>健康模型：所有子代理的支出都应可回溯扣减自同一笔用户原始额度，形成共享的硬约束资金池。</li>
+<li>风险模型：每层委托都能开出独立新授权，若与原始额度脱钩，委托层数越多，实际总支出可能远超用户设定的上限。</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 循环调用与失控支出：一个没有人设计过的死循环</h2>
+<p>比额度传递漏洞更隐蔽的一类风险，是代理间调用关系本身出现循环或异常放大。设想一种场景：代理 A 为了完成任务委托代理 B，代理 B 判断需要更多数据支持又委托了代理 C，代理 C 恰好又调用回了代理 A 提供的某个子服务——如果系统里没有一套显式的调用深度限制或循环检测机制，这条链条理论上可以持续下去，每一环都在自动化地产生真实的链上转账，直到某一层的额度被耗尽为止。这不需要恶意攻击者，仅凭代理各自局部理性的决策（每个代理都认为「委托一次是值得的」），就足以在整体层面制造出失控的支出循环。</p>
+<p>更现实的一类风险来自定价激励的错位：如果子代理的收费与任务复杂度或调用次数正相关，那么被委托的代理在经济上就有动机让任务「看起来」需要更多次调用——比如反复声称数据不完整、反复请求更多验证——每一次都产生新的结算。这类行为很难被定性为「攻击」，因为它可能只是代理策略在特定激励结构下的自然演化，但对最终支付账单的用户来说,后果和被攻击没有区别。核验者应当追问：系统是否设置了调用深度上限、总调用次数上限，或者单位时间内总支出速率的硬性限制？是否有监控能够识别「支出速率异常上升」这类信号并触发暂停，而不是任由代理们在正常协议规则内把额度耗尽？</p>
+<ul>
+<li>代理间调用若无深度限制或循环检测，仅凭各代理局部理性的委托决策，就可能在整体层面形成失控的支出循环。</li>
+<li>定价与调用次数或任务复杂度正相关时，被委托代理有经济动机让任务「看起来」需要更多次调用，产生类攻击效果的正常行为。</li>
+<li>核验方向：是否有调用深度上限、总支出速率硬性限制，以及能识别支出异常并触发暂停的监控机制。</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 代理身份与声誉：你委托的到底是谁</h2>
+<p>在单代理模型里，用户至少知道自己信任的是哪一个代理。但在代理经济里，总代理选择委托哪个子代理，往往是它自己基于某种发现机制（服务注册表、报价竞价、声誉评分）自动做出的决定，用户对这一层选择几乎没有可见性，更谈不上事先审查。这就带来一个新的核验维度：这个子代理的「身份」是否稳定、可验证——它是否有一个持续存在的链上地址和历史记录，还是可以随意换一个新地址重新登场、把过去的不良记录一笔抹掉？如果声誉机制本身可以被低成本地伪造（比如通过自我交易刷出虚假的成交记录），那么总代理依赖声誉做出的委托决策，本质上和一个盲选没有区别。</p>
+<p>另一个容易被忽视的问题是子代理的「服务质量」在结算发生时是否已经被验证，还是先付款后交付、全凭信任。如果结算发生在服务交付之前，且没有托管或分期支付机制作为缓冲，那么一个恶意或者只是运行不稳定的子代理，完全可以收款后不提供承诺的服务，而总代理（以及最终买单的用户）没有任何追索手段。核验者应当追问：这个代理经济系统是否有一套可信的身份注册和声誉追踪机制，声誉数据是否可被独立核实而非自我报告？付款与交付之间是否存在时间和逻辑上的解耦，是否有托管、分期支付或事后仲裁机制来降低「收款不履约」的风险？</p>
+<ul>
+<li>用户对总代理如何选择、委托哪个子代理往往没有可见性，子代理身份的稳定性和声誉的可信度成为新的核验对象。</li>
+<li>若声誉可被低成本伪造（如自我交易刷单），总代理依据声誉做出的委托决策本质上等同于盲选。</li>
+<li>付款与交付若无时间解耦缓冲（托管、分期支付），子代理「收款不履约」的风险将由总代理和用户共同承担。</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 结算层的最终裁决权：出了问题，钱能不能追回来</h2>
+<p>把前面几节的风险叠加起来会发现一个共同的落点：无论是额度传递漏洞、失控循环，还是虚假声誉导致的收款不履约，最终都会体现为一笔或一系列「已经发生、但事后被认为不应该发生」的链上转账。这时候真正决定这个系统是否稳健的,是结算层有没有一套应对争议的机制,而不是事前预防是否做到了万无一失——因为多代理系统的复杂度决定了，纯粹依靠事前设计堵住所有漏洞几乎不现实。核验者应当把目光放在:这类自动化的代理间转账,是即时终局、不可撤销的,还是存在一个可行的争议窗口,让用户或总代理可以在发现异常后申请回滚或仲裁?</p>
+<p>如果结算完全基于链上原生转账且没有任何托管层,那么答案往往是"钱一旦转出就追不回来",这意味着整个系统的安全性,完全压在前四节讨论的预防机制上,一旦有漏洞被触发，损失就是既成事实。一个更稳健的设计,通常会在关键的代理间结算路径上引入某种形式的延迟结算、托管账户或链上可仲裁的争议解决协议——即便这会牺牲一部分自动化的即时性,也能在系统出现设计者没有预见到的异常模式时,提供一个止损和纠错的窗口。研究者评估任何一个代理经济产品时，都应当把"结算是否可逆、争议由谁裁定、裁定成本是否现实"当作和额度约束、循环检测同等重要的核验维度，而不是把全部信任都压在"我们的架构设计得很严谨"这句自我声明上。</p>
+<ul>
+<li>各类风险最终都体现为已发生的链上转账，系统稳健性取决于事后有无应对争议的机制，而非仅靠事前预防的完备性。</li>
+<li>纯链上原生转账、无托管层的结算一旦发生即不可逆，全部安全性压在预防机制上，一旦失效损失即成既定事实。</li>
+<li>更稳健的设计会引入延迟结算、托管账户或可仲裁协议，牺牲部分即时性换取异常发生时的止损与纠错窗口。</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 核验清单与小结</h2>
+<p>把前面五节收敛成一套可复用的核验清单，面对任何一个声称支持「AI代理自动向其他代理付款」的系统或协议，都可以逐项过一遍：其一，资金链条拓扑——一次任务的额度授权穿透了多少层代理，每一层是否有独立可审计的支出记录，还是被打包成用户看不到的黑盒？其二，额度传递方式——多层委托的支出是共享同一笔用户原始额度的硬约束资金池，还是每层都能重新开出与原始额度脱钩的新授权？其三，循环与放大风险——是否存在调用深度上限、总支出速率硬性限制，是否有监控能识别异常支出模式并触发暂停？其四，身份与声誉可信度——子代理的身份是否稳定可验证，声誉数据是否可被独立核实而非自我报告？其五，结算可逆性——代理间转账是即时终局，还是存在托管、延迟结算或可仲裁的争议窗口？</p>
+<p>回望「AI×链上」系列的这四篇文章，方法论主线始终一致：每当一层新的自动化技术被引入链上——无论是代理的自主执行、模型的事实生成、零知识证明的计算验证，还是这一篇讨论的代理间自动结算——它带来的效率提升，几乎总是以可核验性的某种让渡为代价。这一篇的独特之处在于，风险不再局限于单个代理和它的用户之间，而是会沿着一条委托链条传导、放大，涉及多个互不相识、彼此没有直接信任基础的代理主体。研究者的职责始终是把这条传导路径拆解清楚，追问额度约束是否真的是硬约束、循环是否真的被限制、结算是否真的可追索，而不是被「多代理协作」「自动化经济」这类描述性的效率叙事带过。全文通篇讨论的是抽象的机制类别与核验方法，不点名、不评价任何真实存在的产品或协议，全文不构成任何形式的投资建议。作为「AI×链上」系列的第四篇，我们会持续跟进这一领域的机制演化，欢迎读者通过 RSS 订阅关注后续更新。</p>
+<ul>
+<li>核验清单五问：资金链条拓扑、额度传递方式、循环与放大风险、身份与声誉可信度、结算可逆性。</li>
+<li>本篇独特之处：风险不再局限于单代理与用户之间，而是沿委托链条在多个互不相识的代理主体间传导、放大。</li>
+<li>全文为机制类别与方法论讨论，不点名任何真实产品，不构成投资建议；系列将持续跟进代理经济的机制演化。</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 代理经济的基本结构：从「单代理执行」到「多代理交易」</a></li>
+          <li><a href="#sec-2">2. 委托授权的连带传递：额度是被复制，还是被派生</a></li>
+          <li><a href="#sec-3">3. 循环调用与失控支出：一个没有人设计过的死循环</a></li>
+          <li><a href="#sec-4">4. 代理身份与声誉：你委托的到底是谁</a></li>
+          <li><a href="#sec-5">5. 结算层的最终裁决权：出了问题，钱能不能追回来</a></li>
+          <li><a href="#sec-6">6. 核验清单与小结</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/developers/docs/smart-contracts/" target="_blank" rel="noopener">Ethereum.org 智能合约</a>：可用于理解链上额度约束、多签与授权机制的基础实现方式</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核查代理地址的历史交易记录与授权变更</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/agent-identity-credential-verification.html">AI代理身份与凭证核验：这枚身份，还有效吗（系列第六篇）</a></li>
+          <li><a href="/articles/agent-service-marketplace-verification.html">AI代理服务市场核验：谁的报价，值得被信任（系列下一篇）</a></li>
+          <li><a href="/articles/zkml-onchain-model-verification.html">zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」</a></li>
+          <li><a href="/articles/ai-oracle-data-verification.html">AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它</a></li>
+          <li><a href="/articles/ai-agent-onchain-verification.html">链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定（系列第一篇）</a></li>
+          <li><a href="/articles/dao-governance-research-guide.html">DAO治理研究：投票权集中在少数地址，「去中心化」还成立吗</a></li>
+          <li><a href="/articles/contract-security-audit-guide.html">审计报告说「已审计」，到底审计了什么：从结论到链上复核</a></li>
+          <li><a href="/articles/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          <li><a href="/articles/agent-strategy-execution-verification.html">AI代理策略执行核验：一句「按策略执行」，到底是谁在把关</a></li>
+          <li><a href="/articles/agent-audit-log-integrity-verification.html">AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过</a></li>
+          <li><a href="/articles/onchain-forensics.html">链上取证与资金追踪方法论：被盗资金流向哪里，怎么查</a></li>
+          <li><a href="/articles/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径</a></li>
+          <li><a href="/articles/account-abstraction-wallet-security.html">账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱</a></li>
+          <li><a href="/articles/depin-compute-network-verification.html">DePIN 算力网络核验：GPU 分布式云的算力是真的、需求是真的吗</a></li>
+          <li><a href="/articles/restaking-avs-slashing-risk.html">再质押 AVS 惩罚风险核验：同一份 ETH，同时抵押给几个协议</a></li>
+          <li><a href="/articles/cross-chain-messaging-protocol-verification.html">跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的</a></li>
+          <li><a href="/articles/data-availability-layer-verification.html">数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</a></li>
+          <li><a href="/articles/usdt-beginner-onramp-defi-security-guide.html">USDT新手完全指南：交易所出入金教程与DeFi链上安全核验</a></li>          <li><a href="/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>          <li><a href="/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

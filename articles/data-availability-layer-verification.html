@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 - 加密货币研究</title>
+  <meta name="description" content="拆解数据可用性（DA）层的核验方法：数据可用性采样（DAS）到底证明了什么，纠删码编码错误如何让采样通过却仍然取不回数据，欺诈证明与有效性证明对DA层依赖程度的差异，以及DA层与执行层解耦后新增的信任面。不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/data-availability-layer-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 - 加密货币研究">
+  <meta property="og:description" content="拆解数据可用性（DA）层的核验方法：数据可用性采样（DAS）到底证明了什么，纠删码编码错误如何让采样通过却仍然取不回数据，欺诈证明与有效性证明对DA层依赖程度的差异，以及DA层与执行层解耦后新增的信任面。不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/data-availability-layer-verification.html">
+  <meta property="article:published_time" content="2026-08-07T16:40:00+08:00">
+  <meta property="article:modified_time" content="2026-08-07T16:40:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 - 加密货币研究">
+  <meta name="twitter:description" content="「模块化」叙事把数据可用性从执行层拆出来单独做，但采样通过就等于数据真的能被取回吗？仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-data-availability-layer-verification.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-data-availability-layer-verification.png">
+  <link rel="preload" as="image" href="/img/article-data-availability-layer-verification.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","AI预言机核验","zkML与链上模型可信执行","AI代理身份与凭证核验","AI代理策略执行核验","AI代理审计日志防篡改核验","链上取证与资金追踪","意图驱动交易与求解者网络核验","账户抽象钱包安全核验","DePIN算力网络核验","再质押AVS惩罚风险核验","跨链消息协议核验","数据可用性层核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-data-availability-layer-verification.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#webpage", "url": "https://coin.ponr.org/articles/data-availability-layer-verification.html", "name": "数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回", "item": "https://coin.ponr.org/articles/data-availability-layer-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#article", "headline": "数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回", "description": "拆解数据可用性（DA）层的核验方法：数据可用性采样（DAS）到底证明了什么，纠删码编码错误如何让采样通过却仍然取不回数据，欺诈证明与有效性证明对DA层依赖程度的差异，以及DA层与执行层解耦后新增的信任面。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["数据可用性核验","DAS采样","纠删码编码错误","模块化区块链","欺诈证明依赖","DA层信任面"], "wordCount": 3700, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-07T16:40:00+08:00", "dateModified": "2026-08-07T16:40:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/data-availability-layer-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/data-availability-layer-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</h1>
+        <p class="article-summary">「模块化区块链」叙事把一条链拆成执行层、结算层、共识层和数据可用性（DA）层分别优化，DA层专门负责一件事：把交易数据发布出去，让任何人在需要时都能取回并重建状态。这个拆分听起来只是工程分工的优化，但对研究者而言，它意味着一个新的、独立的信任面被创造出来——执行层做得再对，如果底层数据不可用，欺诈证明就没法生成，用户资产的安全性就无从谈起。这篇文章要讨论的正是DA层最核心也最容易被忽略的核验问题：数据可用性采样（DAS）到底证明了什么，又没能证明什么；纠删码编码环节的一个错误，如何让大多数节点的采样全部通过、却仍然拿不回完整数据；Rollup对DA层的依赖程度，在欺诈证明和有效性证明两种模式下有什么本质区别；以及「模块化」带来的效率提升，是否也在悄悄扩大了系统的整体信任面。全文仅为方法论层面的讨论，不构成任何形式的投资建议，也不针对任何具体DA层项目、Rollup团队或个人做定性结论。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <time datetime="2026-08-07T16:40:00+08:00">2026-08-07 16:40:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-data-availability-layer-verification.svg" alt="数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. 起点：DA层解决的问题，为什么值得单独拆出来核验</h2>
+            <p>在理解DA层核验方法之前，先要搞清楚它存在的理由。一个Rollup把交易在链下批量执行，再把结果打包提交给主链，如果只提交「执行后的结果」而不提交「执行前的原始交易数据」，任何人都无法验证这个结果是否真的按规则算出来的——你只能选择相信打包方没有作恶。这就是为什么Rollup必须把交易数据本身也发布出去：只有数据可用，才有人能够重新执行一遍、核对结果，或者在结果有问题时生成一份欺诈证明去挑战它。</p>
+            <p>问题在于，把所有交易数据都发布到主链上（比如以太坊主网）成本很高，这也是「模块化」叙事兴起的直接原因——把数据可用性这件事从主链的执行环境里拆出来，交给专门的DA层（比如Celestia、EigenDA、Avail这类项目，或者以太坊自己的blob空间）用更便宜的方式提供。研究者核验DA层时的起点应该是：这条Rollup选择的DA方案，是把数据发布到一个安全性经过长期验证的主链上，还是发布到一个更新、更便宜、但安全假设尚未被充分检验的独立DA层？成本降低的另一面，通常是信任假设的变化，这个变化本身才是核验的真正起点。</p>
+            <ul>
+              <li>DA层存在的理由是：只有原始交易数据可用，才能重新执行验证或生成欺诈证明去挑战错误结果。</li>
+              <li>「模块化」把数据可用性从主链执行环境拆出来降低成本，但成本降低往往伴随信任假设的变化。</li>
+              <li>核验起点是分辨一条Rollup选择的DA方案，安全假设经过了多长时间、多大规模的市场检验。</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. 数据可用性采样：轻节点验证了什么，又没验证什么</h2>
+            <p>DA层通常不要求每个节点下载全部数据才能确认「数据可用」，而是采用数据可用性采样（Data Availability Sampling，DAS）：轻节点只随机下载一小部分数据分片，如果多次随机采样都成功拿到了对应分片，就以极高的概率相信全部数据都已经被网络中的某些节点持有、可以被重建。这个机制的巧妙之处在于，它把「验证全部数据」这件昂贵的事，转化成了「验证一个小样本、并用概率论推断整体」这件便宜的事，是DA层能够大规模扩容的核心技术。</p>
+            <p>但研究者必须清楚DAS的验证边界在哪里：它验证的是「这些被抽样到的分片确实可以被取回」，而不是「原始数据被正确编码进了这些分片里」。如果编码过程本身出了错——比如说好要生成的纠删码分片和实际生成的不一致——轻节点抽样验证的对象本身就是错的，采样再怎么通过，也无法反推出原始数据是完整、正确的。研究者核验一个DA方案时应关注：采样失败率被设定在什么阈值、需要多少次独立采样才能达到协议宣称的安全边界、以及协议方是否公开了采样机制的具体数学证明和第三方审计记录，而不是只停留在「我们用了DAS所以很安全」这句话本身。</p>
+            <ul>
+              <li>DAS让轻节点通过随机抽样小部分分片、用概率推断全部数据可用，是DA层扩容的核心机制。</li>
+              <li>DAS验证的是「被抽样分片可以取回」，不是「原始数据被正确编码进分片」，两者是不同的问题。</li>
+              <li>核验重点是采样失败率阈值、独立采样次数与协议宣称安全边界的数学关系，以及是否有第三方审计支撑。</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. 纠删码编码错误：采样全部通过，数据依然可能取不回</h2>
+            <p>纠删码（erasure coding）是DAS背后的数学基础：原始数据被扩展编码成一组冗余分片，只要拿到其中足够比例的分片就能重建出全部原始数据，这也是为什么DAS只需要抽样一小部分就能给出高置信度结论。但这套机制成立的前提是编码过程本身正确——如果发布数据的节点（比如Rollup的排序器）故意或者因为软件缺陷生成了错误的编码，把一份「看起来结构正确、但实际无法重建出原始数据」的分片集合发布出去，轻节点做DAS采样时依然可能全部「采样成功」，因为它们抽到的那几个分片本身确实存在、确实可以下载，只是这些分片凑不齐、或者凑齐后重建不出正确的原始交易数据。</p>
+            <p>这是DA层核验里最容易被忽视、也最技术性的一个风险点，业内通常称之为「编码错误攻击」或者对应的防御机制「欺诈证明的可用性版本」（也就是允许节点在发现编码不一致时生成一份专门的编码错误证明去挑战整个数据发布）。研究者应当查证：这个DA方案是否内置了编码正确性的验证机制（比如KZG多项式承诺这类密码学工具，可以让节点在不下载全部数据的情况下验证编码的数学一致性）；如果依赖欺诈证明式的编码错误挑战，挑战窗口期设置了多长，窗口期内谁有责任、有能力去发起挑战；以及历史上这个DA方案或者同类方案是否发生过真实的编码错误事件，处理过程和结果如何。「采样通过」不等于「数据完整可信」，这中间的编码正确性环节，才是研究者需要重点核验的技术细节。</p>
+            <ul>
+              <li>纠删码让DAS只需抽样小部分即可推断整体，但前提是编码过程本身正确无误。</li>
+              <li>编码错误攻击的隐患是：抽样的分片确实存在、确实能下载，却凑不齐或重建不出正确的原始数据。</li>
+              <li>核验重点是是否有密码学承诺工具验证编码一致性，或欺诈证明式挑战窗口的时长与责任归属设计。</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. 欺诈证明与有效性证明：两种Rollup对DA层的依赖程度不同</h2>
+            <p>DA层的重要性，在采用欺诈证明（Optimistic Rollup）和有效性证明（ZK Rollup）的两类Rollup里，表现形式并不完全一样。乐观Rollup默认信任排序器提交的结果是对的，只有在挑战窗口期内有人发起质疑时，才需要下载完整数据、重新执行、生成欺诈证明去证伪——这意味着乐观Rollup对DA层的依赖是「事后应急型」：平时数据可用与否似乎不影响运行，但一旦真的需要挑战，数据不可用就等于挑战权被架空，作恶方案可以在挑战窗口内悄悄让数据「不可用」来规避追责。</p>
+            <p>ZK Rollup则依赖有效性证明来保证每一次状态转换的正确性，理论上不需要靠「事后重新执行」去验证结果，那为什么ZK Rollup依然需要DA层？答案是：有效性证明只能证明「状态转换按规则算对了」，但不能证明「用户可以知道自己账户里现在的余额、可以随时提取自己的资产」——如果原始交易数据不可用，用户就无法重建自己的账户状态，资产实质上被锁死，即便证明本身是有效的。研究者评估一个Rollup方案时，应当区分这两种依赖模式，分别核验：乐观Rollup的挑战窗口期内数据可用性保障机制是否足够健壮；ZK Rollup是否为用户提供了独立于排序器的数据获取渠道，以应对排序器审查或者停止服务的情况。</p>
+            <ul>
+              <li>乐观Rollup对DA层的依赖是「事后应急型」——挑战权是否有效，取决于挑战窗口期内数据是否真的可用。</li>
+              <li>ZK Rollup即便有有效性证明保障状态转换正确性，用户仍需要原始数据才能重建余额、提取资产。</li>
+              <li>核验时应区分依赖模式：乐观Rollup看挑战窗口保障机制，ZK Rollup看是否有独立于排序器的数据获取渠道。</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. 信任面扩大：模块化拆分之后，多了哪些新的失败点</h2>
+            <p>把DA层从执行层拆出来，本质上是把一条链原本单一的信任面拆成了多个独立的信任面——现在用户需要同时相信执行层的排序器没有作恶、结算层的合约逻辑没有漏洞，以及DA层的验证者/委员会真的按承诺把数据发布出去了。每一层新增的独立组件，理论上都是一个新的单点故障来源，研究者核验「模块化」方案的系统性风险时，不能只孤立地评估每一层各自的安全性，还要评估这些层之间的组合风险——比如DA层的验证者集合是否与执行层的排序器高度重叠或者存在利益关联，一旦重叠，「独立的DA层」在实际治理和经济利益上可能并不像架构图上那样真正独立。</p>
+            <p>核验这个维度的具体方法包括：查证DA层的验证者集合和质押分布，是否与选择使用该DA层的具体Rollup项目方存在明显的资金或治理关联；关注DA层本身的去中心化程度——验证者数量、地理分布、客户端多样性，是否达到了能够独立支撑「安全性」这个承诺的规模；以及查证如果DA层出现临时性故障或者被恶意审查，依赖它的Rollup有没有备用方案（比如切换到另一个DA层或者退回到主链发布数据）。「模块化」带来的效率提升是真实的，但研究者应当把这份效率提升，和它同时引入的组合信任面扩大问题放在一起权衡，而不是只看到成本降低的一面。</p>
+            <ul>
+              <li>模块化拆分把单一信任面拆成多个独立信任面，每一层新增组件都是潜在的单点故障来源。</li>
+              <li>核验重点是DA层验证者集合与依赖它的Rollup项目方是否存在资金或治理关联，避免「架构独立、利益不独立」。</li>
+              <li>DA层的去中心化规模、以及Rollup是否有备用DA方案，决定了模块化架构在故障场景下的真实韧性。</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. 数据可用性层核验清单</h2>
+            <p>把前面几节整理成一份可以在实际研究中反复使用的检查清单，帮助系统性评估一条Rollup或一个DA层项目的真实信任假设，而不是停留在「模块化」「可扩展」这类宏观叙事表述上。</p>
+            <ul>
+              <li>核实这条Rollup选择的DA方案，安全假设经过了多长时间、多大规模的市场与审计检验。</li>
+              <li>核实DAS的采样失败率阈值与独立采样次数，是否有公开的数学证明支撑协议宣称的安全边界。</li>
+              <li>核实是否有密码学承诺工具（如KZG）验证编码正确性，或编码错误挑战窗口的时长与责任设计。</li>
+              <li>核实这是乐观Rollup还是ZK Rollup，分别核验挑战窗口数据保障或独立数据获取渠道的设计。</li>
+              <li>核实DA层验证者集合与依赖它的Rollup项目方是否存在资金或治理关联，评估架构独立性的真实性。</li>
+              <li>对任何「模块化更安全更便宜」的表述，追问信任面扩大后的组合风险是否被同步披露。</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. 小结与免责声明</h2>
+            <p>数据可用性层把「数据发布」从执行层里拆出来独立优化，在成本和扩容效率上是模块化区块链叙事里一个真实且重要的进步，但这份进步的代价，是研究者需要用比单链架构更复杂的框架去理解信任假设：数据可用性采样验证的是分片可取回、不是编码本身正确，欺诈证明与有效性证明两类Rollup对DA层的依赖方式截然不同，而模块化拆分本身在降低单点成本的同时，也在悄悄增加系统整体的组合信任面。研究者评估一个具体的DA层项目或依赖它的Rollup方案时，不应止步于「模块化」「可扩展」这些宏观叙事，而要追问每一层新增的信任假设是否有对应的、可验证的边界。本文仅从研究方法论角度进行讨论，不针对任何具体DA层项目、Rollup团队或个人做定性结论，也不构成任何形式的投资建议。读者在参考DA层相关的分析内容时，应始终关注具体的采样机制、编码验证方式与验证者去中心化程度，对任何笼统化的「模块化革命」表述保持审慎态度。</p>
+          </section>
+        </div>
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+            <li><a href="#sec-1">起点：DA层解决的问题，为什么值得单独拆出来核验</a></li>
+            <li><a href="#sec-2">数据可用性采样：轻节点验证了什么，又没验证什么</a></li>
+            <li><a href="#sec-3">纠删码编码错误：采样全部通过，数据依然可能取不回</a></li>
+            <li><a href="#sec-4">欺诈证明与有效性证明：两种Rollup对DA层的依赖程度不同</a></li>
+            <li><a href="#sec-5">信任面扩大：模块化拆分之后，多了哪些新的失败点</a></li>
+            <li><a href="#sec-6">数据可用性层核验清单</a></li>
+            <li><a href="#sec-7">小结与免责声明</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
+              <li><a href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer nofollow">以太坊Danksharding与数据可用性基础概念（Ethereum.org，第三方）</a></li>
+              <li><a href="https://messari.io/research" target="_blank" rel="noopener noreferrer nofollow">模块化区块链与DA层行业研究（Messari，第三方，仅供参考）</a></li>
+              <li><a href="https://www.investopedia.com/what-is-a-blockchain-fraud-proof-7973823" target="_blank" rel="noopener noreferrer nofollow">欺诈证明与有效性证明概念介绍（Investopedia，第三方）</a></li>
+          </ul>
+          <p class="ref-note">本文所涉数据口径、工具与项目状态可能随时间变化，请以各官方来源的最新信息为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+              <li><a href="/articles/layer2-rollup-research-guide.html">Layer2测序器核验</a></li>
+              <li><a href="/articles/cross-chain-messaging-protocol-verification.html">跨链消息协议核验</a></li>
+              <li><a href="/articles/restaking-avs-slashing-risk.html">再质押 AVS 惩罚风险核验</a></li>          <li><a href="/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>          <li><a href="/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap 跨链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC 虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">链读 CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">链上指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">加密货币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

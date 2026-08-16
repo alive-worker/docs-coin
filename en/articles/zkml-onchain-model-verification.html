@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zkML and Trusted On-Chain Model Execution</title>
+  <meta name="description" content="AI x On-Chain series (3): zkML trust shift, circuit quantization cost, and why a correct proof is not a correct judgment. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/zkml-onchain-model-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="zkML and Trusted On-Chain Model Execution - Crypto Research">
+  <meta property="og:description" content="AI x On-Chain series (3): zkML trust shift, circuit quantization cost, and why a correct proof is not a correct judgment. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html">
+  <meta property="article:published_time" content="2026-07-28T10:35:54+08:00">
+  <meta property="article:modified_time" content="2026-07-28T10:35:54+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="zkML and Trusted On-Chain Model Execution - Crypto Research">
+  <meta name="twitter:description" content="Zero-knowledge machine learning claims to prove cheaply on-chain that a model ran correctly. But what does that proof actually cover, and what does it leave out? A methodology-only deep dive. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-zkml-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="zkML and trusted on-chain model execution cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-zkml-verification-en.png">
+  <link rel="preload" as="image" href="/img/article-zkml-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","AI oracle verification","zkML and trusted on-chain model execution"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-zkml-verification-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html", "name": "zkML and Trusted On-Chain Model Execution - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "zkML and Trusted On-Chain Model Execution", "item": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#article", "headline": "zkML and Trusted On-Chain Model Execution", "description": "AI x On-Chain series (3): zkML trust shift, circuit quantization cost, and why a correct proof is not a correct judgment. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["zkml verification","zero-knowledge machine learning","trusted on-chain model execution","circuit quantization error","trusted setup risk","tee vs zkml"], "wordCount": 3400, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-28T10:35:54+08:00", "dateModified": "2026-07-28T10:35:54+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/zkml-onchain-model-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/zkml-onchain-model-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>zkML and Trusted On-Chain Model Execution: Proving It Ran Isn't Proving It Ran Correctly</h1>
+        <p class="article-summary">This is the third piece in the "AI x On-Chain" series. The first two covered AI agents as fund executors and AI oracles as sources of "truth"; this one turns to a more technical question: once you stop settling for "trust the operator's word that the model ran" and want a cheap on-chain mathematical proof that it "ran correctly," how far can zero-knowledge machine learning (zkML) actually take you. zkML compiles a model's inference into a zero-knowledge circuit and produces a cryptographic proof a contract can verify cheaply on-chain, shifting trust from "trust an operator" to "trust a piece of verifiable math." But that shift has its own boundaries: what does the circuit-compilation process cost, does proving "the computation executed correctly" equal proving "the model's judgment was correct," and who do the circuit and its trusted setup ultimately ask you to trust. The piece covers six angles: the nature of this trust shift, the quantization cost of compiling to a circuit, the boundary of what the proof covers, the new trust roots in the circuit and trusted setup, how it fits alongside TEEs and multi-source arbitration, and a reusable verification checklist. The entire piece discusses abstract mechanism categories only, names no real product, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-07-28T10:35:54+08:00">2026-07-28 10:35:54</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-zkml-verification-en.svg" alt="zkML and trusted on-chain model execution theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. The Third Stop for Trust: From "Trust the Operator" to "Trust a Piece of Math"</h2>
+<p>The second piece in this series noted that model inference's non-reproducibility ultimately degrades verification into "trusting the operator's self-attestation" — it says the model judged this way, and you just have to believe it. zkML tries to break that deadlock: it expresses a model's inference process — matrix multiplications, activation functions, the data flow between layers — as an arithmetic circuit, then uses a zero-knowledge proof system (SNARK- or STARK-based, for example) to produce a proof claiming "this specific input, run through this specific model (identified by a hash or commitment to its weights), did in fact produce this specific output." Anyone holding the verification key can then check that proof on-chain, at a small fraction of the compute cost of re-running the whole model, and confirm it holds. This is another shift in where trust lands — from "trust that a centralized operator isn't cheating" to "trust that the cryptographic assumptions and implementation behind the zero-knowledge proof system have no flaws."</p>
+<p>Where's the value in this shift? It turns verification from a process that requires re-running expensive computation and trusting an execution environment, into something anyone can complete cheaply and deterministically — in theory, once a proof passes, you no longer need to trust that whoever submitted it was honest. But researchers need to be clear-eyed: this only moves trust from one place to another, it doesn't eliminate trust itself. The cryptographic assumptions of the proof system, the correctness of the circuit's implementation, the trusted setup used to generate the proof — these are new trust objects that equally need scrutiny, and they're often more opaque and require more specialized expertise to audit than the simpler question of "is the operator honest."</p>
+<ul>
+<li>zkML compiles model inference into a zero-knowledge circuit, producing a cryptographic proof verifiable cheaply on-chain that a specific input did produce a specific output through a specific model.</li>
+<li>Trust shifts from "is the operator honest" to "are the proof system's cryptographic assumptions and circuit implementation correct" — it is relocated, not eliminated.</li>
+<li>The starting point for verification is recognizing this shift itself, not treating "uses zero-knowledge proofs" as equivalent to "no longer needs to trust anyone."</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. The Quantization Cost of Circuit Compilation: The Provable Model May Not Be the Original</h2>
+<p>Fitting a neural network into a zero-knowledge circuit is far from just rewriting the code in a different language. Zero-knowledge proof systems are naturally suited to integer arithmetic over finite fields, while mainstream neural network inference defaults to floating point, and large models' parameter counts are unfriendly to circuit size — the number of "gates" in a circuit directly drives proof generation time and cost, often growing super-linearly with model size. To keep proof generation within acceptable time and cost, practice generally requires "quantizing" the model: compressing floating-point weights and activations into low-bit-width integer approximations, sometimes also trimming layers or swapping certain nonlinear activation functions for circuit-friendlier approximations.</p>
+<p>This creates an easily overlooked verification gap: what gets a proof generated for it is often not the original model researchers assume, but a quantized, approximated, structurally altered "circuit version" of it. This circuit version may match the original model's behavior on most inputs, but on edge cases or precision-sensitive judgments, quantization error can push the conclusion in a different direction — and that divergence never shows up in the proof's validity, because the proof verifies that "the circuit executed correctly," while how closely the circuit resembles the original model is an engineering choice made by whoever built it, not something cryptographic proof covers. Verifiers should ask: has the quantization error between the circuit version being proved and the original model advertised to the public been independently assessed and disclosed? Are there decision scenarios where the circuit version and the original model would diverge?</p>
+<ul>
+<li>Neural network inference defaults to floating point; zero-knowledge circuits favor integer arithmetic, and larger models scale circuit size unfavorably.</li>
+<li>Practice generally requires quantizing, trimming, and approximating nonlinear functions to keep proof-generation cost manageable.</li>
+<li>Verification gap: what's proved is a quantized approximation of the model — whether its divergence from the original has been independently assessed and disclosed, and whether it diverges on edge-case inputs.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. The Boundary of the Proof: "Correctly Executed" Isn't "Correctly Judged"</h2>
+<p>This is the point most often misread about zkML, and it echoes closely what this series concluded about TEEs in the second piece. A zero-knowledge proof can deterministically tell you: given this input and this committed set of model weights, the circuit did faithfully execute the computation, and the output was in fact derived this way, with no step swapped out along the way. It proves "computational integrity." But it cannot answer two other equally critical questions: whether the input itself is genuine and unaltered raw material, and whether the model's judgment is factually correct. If the input fed into the circuit is a forged satellite image or tampered text, the zero-knowledge proof will faithfully prove "the circuit did compute this conclusion based on this forged input" — the proof itself is entirely valid, and the conclusion is still wrong.</p>
+<p>Further, even with genuine input, the model itself may carry systematic bias or be fooled by an adversarial sample, arriving at a conclusion that is "correctly executed" in the proof's sense but "incorrectly judged" in the factual sense. The zero-knowledge proof can only guarantee that "this possibly flawed model did run through faithfully" — it makes no claim about the quality of the model's judgment. When evaluating any product claiming to use zkML, researchers should clearly separate which layer the marketing phrase "verifiable on-chain" actually verifies — if the messaging implies "proof passed = conclusion trustworthy," that conflates computational integrity with factual correctness, two entirely different properties.</p>
+<ul>
+<li>Zero-knowledge proofs deterministically prove "computational integrity": the circuit executed correctly, the output genuinely derived from the claimed input and model.</li>
+<li>They cannot prove the input itself is genuine, nor that the model's judgment is factually correct — bad input or a biased model still gets faithfully proven.</li>
+<li>Verifiers should be wary of messaging that equates "proof passed" with "conclusion trustworthy" — these belong to computational integrity and factual correctness respectively.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Circuits and Trusted Setup: Where the New Trust Roots Hide</h2>
+<p>Zero-knowledge proof systems aren't abstract math that's trustworthy by default either — their security rests on a series of concrete engineering and cryptographic prerequisites that also need scrutiny. First is the correctness of the circuit implementation itself — has the code that translates model inference logic into circuit constraints been independently audited? A flawed circuit could let an attacker craft a fake proof that "appears to verify but doesn't actually correspond to the claimed input and output" — this class of bug tends to be extremely subtle and hard to spot without formal verification or deep auditing. Second, some zero-knowledge proof schemes (particularly earlier SNARK constructions) rely on a one-time "trusted setup" ceremony to generate public parameters; if the participating parties collude, or the setup process leaves a backdoor, the security of every proof generated from those parameters is weakened — which is why a multi-party, publicly verifiable setup ceremony is considered more trustworthy than one generated by a single party.</p>
+<p>Verifiers should treat both of these as the "new trust roots" of a zkML system and ask: has the circuit code been publicly and independently audited, and is the audit report available for review? If the scheme relies on trusted setup, how was that ceremony conducted, were participants sufficiently diverse, and was the process publicly verifiable? These questions, stacked alongside the quantization cost and proof boundary discussed in sections 2 and 3, together form a complete verification picture of a zkML system — zero-knowledge proofs solve the trust problem of "is the operator honest," but in doing so they introduce a new layer of trust — "are the circuit and setup trustworthy" — that requires the same rigor of scrutiny, rather than eliminating trust altogether.</p>
+<ul>
+<li>Independent auditing of the circuit implementation is the first new trust root to check — a flawed circuit can allow forged proofs that "pass verification" without corresponding to reality.</li>
+<li>Some proof schemes depend on a one-time trusted setup ceremony; participant diversity and public verifiability directly affect the security of every proof generated afterward.</li>
+<li>Zero-knowledge proofs relocate trust from "is the operator honest" to "is the circuit and setup trustworthy" — a shift, not an elimination, and it demands equally rigorous scrutiny.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Positioning Alongside TEEs and Multi-Source Arbitration: What Gap Does zkML Fill</h2>
+<p>Comparing zkML with the trusted execution environments (TEEs) covered in the second piece of this series makes their complementary — rather than overlapping — boundaries clearer. TEEs rely on hardware-level isolation and remote attestation to let you trust that "the code ran on this input inside an untampered environment"; zkML relies on cryptography to let you trust that "the computation behind this proof was in fact executed according to the claimed circuit logic" — both only answer the layer of "was execution tampered with," and neither answers "is the input real" or "is the model's judgment correct." Their respective weaknesses also differ: TEEs depend on a hardware vendor's root of trust and have a history of side-channel attacks; zkML depends on the correctness of circuit implementation and trusted setup, and at the current stage, proof generation cost for large models remains significant, often requiring a tradeoff between model size and provability.</p>
+<p>As a result, a robust on-chain trusted model execution design rarely expects zkML to carry the whole weight alone — instead it treats zkML as one candidate implementation for the "execution integrity" layer, then stacks the multi-source cross-checking and challengeable adjudication mechanisms discussed in the second piece of this series to cover the two gaps neither zkML nor TEEs can close: whether the input is genuine, and whether the judgment is correct. When evaluating any on-chain model service claiming to use zkML, verifiers should ask: exactly which stretch of the process does zkML cover in this system — full model inference, or some simplified sub-module? Does the system also stack independent multi-source cross-checking or a human-challenge mechanism to handle input forgery and model misjudgment? If a system claims the entire pipeline is fully trustworthy purely on the strength of "we use zero-knowledge proofs," that claim itself is a signal that warrants further questioning, not one to accept at face value.</p>
+<ul>
+<li>zkML and TEEs share a strikingly similar capability boundary: both only prove "execution wasn't tampered with," neither proves "the input is real" or "the judgment is correct."</li>
+<li>Their trust roots differ: TEEs depend on hardware vendors and isolation mechanisms, zkML depends on circuit implementation and trusted setup — each with its own attack surface.</li>
+<li>Robust designs typically treat zkML/TEEs as one piece of the execution-integrity puzzle, stacking multi-source cross-checking and challengeable adjudication to cover input and judgment risks.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Series Wrap-Up</h2>
+<p>Distilling the five sections above into a reusable checklist, run through these for any product or service claiming to make on-chain models "trustworthy" via zkML: first, proof coverage — does this zero-knowledge proof cover full model inference, or just a simplified sub-module? Second, quantization cost — has the divergence between the circuit version being proved and the original model advertised to the public been independently assessed and disclosed? Third, is the proof's boundary honestly labeled — does the marketing conflate "computational integrity" with "trustworthy conclusion," and does it clearly state the proof doesn't cover input authenticity or judgment correctness? Fourth, are the new trust roots verifiable — has the circuit implementation been independently audited, and if it relies on trusted setup, were participants diverse and the process publicly verifiable? Fifth, combined defenses — does the system stack multi-source cross-checking or challengeable adjudication on top of zkML/TEE, to backstop the risks the proof technology itself cannot cover.</p>
+<p>Looking back across these three pieces published so far in the "AI x On-Chain" series, the same methodological thread runs through them, applied to three different technical layers: the first covered where an AI agent's authority as a "fund executor" should be set and how it should be enforced; the second covered where an AI oracle's trust as a "source of truth" gets relocated, and how multi-source checks and trusted execution should backstop it; this one, as the third piece in the series, covers what a proof technology like zkML actually proves, and what gaps remain beyond that proof's boundary that other mechanisms must fill. The shared conclusion is: regardless of whether the new technical form is an agent, an oracle, or a zero-knowledge proof, any claim of "more trustworthy" that comes with a new layer of technology should never be accepted at face value — it should be broken down into concrete, verifiable technical prerequisites. That's the position this site's methodology series has held throughout. The entire piece discusses abstract mechanism categories and verification methods only, names or evaluates no real product or protocol, and is not investment advice in any form. The series will keep extending into new mechanism layers ahead.</p>
+<ul>
+<li>Five-question checklist: proof coverage, quantization cost, whether the proof boundary is honestly labeled, whether new trust roots are verifiable, whether combined defenses exist.</li>
+<li>The shared thread across the three-part series: any "more trustworthy" technical claim should be broken into concrete, verifiable prerequisites rather than accepted at face value.</li>
+<li>The entire piece is a discussion of mechanism categories and methodology, names no real product, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Third Stop for Trust: From "Trust the Operator" to "Trust a Piece of Math"</a></li>
+          <li><a href="#sec-2">2. The Quantization Cost of Circuit Compilation</a></li>
+          <li><a href="#sec-3">3. The Boundary of the Proof: Correctly Executed Isn't Correctly Judged</a></li>
+          <li><a href="#sec-4">4. Circuits and Trusted Setup: Where the New Trust Roots Hide</a></li>
+          <li><a href="#sec-5">5. Positioning Alongside TEEs and Multi-Source Arbitration</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Series Wrap-Up</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/zero-knowledge-proofs/" target="_blank" rel="noopener">Ethereum.org Zero-Knowledge Proofs</a>: an introduction to the basic principles of zero-knowledge proofs, SNARK/STARK constructions and common applications</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for checking a verifier contract's deployment record and call history</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/agent-identity-credential-verification.html">Agent Identity and Credential Verification: Is This Identity Still Valid (series part 6)</a></li>
+          <li><a href="/en/articles/agent-service-marketplace-verification.html">Agent Service Marketplace Verification: Whose Quote Can You Trust (series part 5)</a></li>
+          <li><a href="/en/articles/agent-to-agent-payment-verification.html">Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks (next in series)</a></li>
+          <li><a href="/en/articles/ai-oracle-data-verification.html">AI Oracles and Trusted On-Chain Data Verification (previous in series)</a></li>
+          <li><a href="/en/articles/ai-agent-onchain-verification.html">On-Chain AI Agent Verification: Who Sets the Limits</a></li>
+          <li><a href="/en/articles/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/articles/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/articles/prediction-market-resolution-risk.html">Prediction Market Resolution Risk: Who Actually Holds Final Authority</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/articles/agent-strategy-execution-verification.html">Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'</a></li>
+          <li><a href="/en/articles/agent-audit-log-integrity-verification.html">Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered</a></li>
+          <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</a></li>
+          <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real</a></li>
+          <li><a href="/en/articles/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols</a></li>
+          <li><a href="/en/articles/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>
+          <li><a href="/en/articles/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li>
+          <li><a href="/en/articles/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner's Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>          <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

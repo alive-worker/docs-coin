@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order - Crypto Research Notes</title>
+  <meta name="description" content="A methodology breakdown of intent-centric trading: how it differs from traditional routing quotes, how solver competition and batch auctions set prices, how to verify execution quality, solver centralization and collusion risk, and where MEV actually goes inside a solver network. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/intent-centric-solver-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/intent-centric-solver-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/intent-centric-solver-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/intent-centric-solver-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order - Crypto Research Notes">
+  <meta property="og:description" content="A methodology breakdown of intent-centric trading: how it differs from traditional routing quotes, how solver competition and batch auctions set prices, how to verify execution quality, solver centralization and collusion risk, and where MEV actually goes inside a solver network. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/intent-centric-solver-verification.html">
+  <meta property="article:published_time" content="2026-08-05T17:20:11+08:00">
+  <meta property="article:modified_time" content="2026-08-05T17:20:11+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order">
+  <meta name="twitter:description" content="A user signs an intent, not a route — path-finding, splitting, and execution are all handed off to a competing solver network. Is that actually safer, or does it just relocate the risk? Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-intent-centric-solver-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-intent-centric-solver-en.png">
+  <link rel="preload" as="image" href="/img/article-intent-centric-solver-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese bilingual site focused on cryptocurrency research methodology and on-chain data analysis. Content is for research purposes only and is not investment advice.", "knowsAbout": ["Cryptocurrency research","On-chain data analysis","Token economics","Stablecoins","Cross-chain interoperability","Smart contract security","DAO governance","Proof of reserves","AI oracle verification","zkML and on-chain model verification","AI agent identity and credential verification","AI agent strategy execution verification","AI agent audit-log integrity verification","On-chain forensics and fund tracing","Intent-centric trading and solver network verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-intent-centric-solver-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html", "name": "Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order", "item": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#article", "headline": "Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order", "description": "A methodology breakdown of intent-centric trading: how it differs from traditional routing quotes, how solver competition and batch auctions set prices, how to verify execution quality, solver centralization and collusion risk, and where MEV actually goes inside a solver network. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["intent-centric trading","solver network","batch auction mechanism","solver competition","solver centralization risk","MEV redistribution"], "wordCount": 3650, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-05T17:20:11+08:00", "dateModified": "2026-08-05T17:20:11+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/intent-centric-solver-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/intent-centric-solver-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</h1>
+        <p class="article-summary">"Swap A for B at the lowest cost possible" — that's the entire idea behind intent-centric trading. The user expresses only the goal, not the path: which pools, how many hops, who executes it. The user signs a single "intent," and everything else — path-finding, order splitting, cross-protocol execution — is handed off to a competing network of "solvers." This is often pitched as a next-generation trading paradigm that's more convenient and more resistant to sandwich attacks than a traditional routing aggregator, but it also hands over execution transparency to a brand-new intermediary layer. This article does not evaluate any specific intent protocol or solver brand. It treats intent-centric trading as a standalone research methodology topic: how solvers compete on price, how batch auctions set prices, where centralization and collusion risk come from, where MEV actually ends up inside this architecture, and how a researcher should verify whether a given intent execution was fair. The entire piece is a methodology discussion only, is not investment advice, and does not draw conclusions about any specific protocol, project, or team.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-05T17:20:11+08:00">2026-08-05 17:20:11</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-intent-centric-solver-en.svg" alt="Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. The Starting Point: Intents vs. Routing Quotes</h2>
+            <p>In a traditional DEX aggregator, a user gets a quote before signing anything — the aggregator compares candidate paths, shows an estimated output amount, and the user then signs a specific transaction with a fixed path, a slippage bound, and a specific execution contract already baked in. The user retains visibility into "how" the swap happens: which pools, how many hops, roughly how much gas — all of it is checkable before signing. Intent-centric trading changes exactly this. What the user signs is no longer a specific transaction, but an "intent" — a declaration of a target state rather than an execution path, something like "I hold 100 units of token A, and will accept no less than some amount of token B, in exchange for paying a fee for execution." The path, the splitting strategy, and which protocols get touched are all left blank, to be filled in by a solver network after the intent is signed.</p>
+            <p>The core shift here is that execution unpredictability moves from being the user's problem to being the solver's responsibility. The user no longer has to enumerate every possible path before signing, and in theory is no longer stuck with a stale quote if pool depth shifts within a few blocks. The tradeoff is that at the moment of signing, the user has no idea who will end up executing the trade, which path it will take, or what the real fill price will be — that information only surfaces after solvers finish competing and the intent settles. Studying intent-centric trading starts with recognizing that this is not "aggregator routing, upgraded." It is a structural transfer of execution decision-making from the user, before signing, to a new participant, after signing — and that transfer is itself the thing that needs independent verification, not something that can be evaluated with the same framework used for aggregator routing.</p>
+            <ul>
+              <li>Traditional routing has the user sign a specific path; intent-centric trading has the user sign only a target-state declaration.</li>
+              <li>Control over the execution path shifts from "the user before signing" to "the solver network after signing" — this is the core entry point for verification.</li>
+              <li>Intent-centric trading is not an upgrade to routing aggregation; it is a structural transfer of who owns the execution decision.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Solver Competition and Batch Auctions</h2>
+            <p>Once an intent is broadcast, it typically enters a pool that solvers can compete to fill. Solvers are third-party participants who run path-finding algorithms, monitor liquidity across many chains and protocols, and hold the capital or borrowing capacity to execute trades — a role that resembles a hybrid of a market maker and an execution broker in traditional finance. The common matching mechanism is a batch auction: the system collects intents received within a time window into a single batch, solvers submit execution plans and quotes against the whole batch, and the system picks a winner using some rule — usually whichever quote is best for the user, or a composite score of quote plus execution plan quality. Batching itself brings a bonus: if the same batch contains intents pointing in opposite directions (one user wants A for B, another wants B for A), a solver can match them directly off-chain without touching an on-chain pool at all, skipping slippage and fees entirely — this is called a "coincidence of wants" match.</p>
+            <p>But the competitive mechanism itself introduces new verification challenges. Batch auction winner-selection rules are not always fully transparent — a user can see the execution result they personally received, but it's much harder to verify whether, within the same batch, a better quote existed from a solver who simply wasn't selected, because losing bids are usually not recorded on-chain at all. On top of that, exactly how "best for the user" gets calculated — whether gas cost, execution failure probability, and a solver's historical fill-rate all factor into the score — varies widely across protocols, with no shared, comparable standard. When evaluating an intent protocol's competitive mechanism, a researcher should explicitly ask: is the winner-selection rule independently reproducible, are losing bids visible, and are the scoring dimensions disclosed. Missing any one of these three means the claim that "competition produces the best price" is currently a design goal, not a verifiable fact.</p>
+            <ul>
+              <li>Batch auctions let solvers quote against an entire batch at once; coincidence-of-wants matching can skip on-chain slippage and fees entirely.</li>
+              <li>Whether winner-selection rules, losing bids, and scoring dimensions are disclosed determines whether the auction result can be independently verified.</li>
+              <li>"Competition produces the best price" is currently more of a design goal than a verified fact, and that depends entirely on a protocol's transparency practices.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Verifying Execution Quality: What Counts as "Best Execution"</h2>
+            <p>The most common — and most commonly misused — metric for judging whether an intent execution was fair is "did the actual output meet or exceed the minimum amount specified in the intent." That metric isn't wrong, but it's only a pass/fail floor; it does not mean the user got the best result available under market conditions at the time. A more complete verification needs a counterfactual benchmark: within the same block, or the same very short time window, what could this trade have gotten if routed directly through a traditional aggregator instead. Comparing the solver's actual execution result against that counterfactual is what tells you whether the solver barely cleared the floor or genuinely found a better path.</p>
+            <p>Building that counterfactual isn't simple, because on-chain state is dynamic — the same intent executed one block later would face different comparable routing quotes, so any counterfactual comparison carries some inherent timing error and can't be made perfectly precise. There's also a structural issue: some intent protocols let solvers keep an "execution premium" as their compensation — the gap between the actual fill price and the user's stated minimum, with the solver keeping everything above that floor rather than passing it back to the user. Under this model, the user did technically meet their own minimum, but the solver may have captured a spread far larger than any reasonable service fee would justify. Beyond comparing against a counterfactual benchmark, researchers verifying execution quality should also ask whether a protocol discloses how solver compensation is extracted, and whether the rule for who keeps the spread is visible to users.</p>
+            <ul>
+              <li>"Met the stated minimum" is only a pass/fail floor, not equivalent to "the best result available at the time."</li>
+              <li>A same-window counterfactual routing benchmark is necessary to judge whether a solver's execution quality was genuinely good or just barely adequate.</li>
+              <li>Some protocols let solvers keep the execution spread as compensation; transparency around spread-ownership rules is a key verification point.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Solver Centralization and Collusion Risk</h2>
+            <p>Being a solver demands substantial capital, cross-chain infrastructure, and path-finding sophistication, which naturally creates a high barrier to entry. In practice, most intent protocols end up with far fewer active solvers than the "open competitive bidding" framing suggests. When a small handful of solvers consistently capture most of the filled volume, the premise behind "competition produces the best price" — that enough independent, mutually competing bidders exist — starts to erode. The first concrete metric a researcher should look at is solver win-share concentration: if the top few solvers consistently account for the vast majority of filled volume, the actual competitive intensity of the batch auction is likely well below what the protocol's documentation implies.</p>
+            <p>More concerning than concentration itself is the possibility of collusion. When the number of solvers is limited and they repeatedly interact with one another over time, there is, in theory, room for coordinated bidding, rotating who wins, or a tacit understanding to sit out certain intent types to keep the overall quote level lower than genuine competition would produce — this kind of behavior isn't unheard of in traditional finance's market-maker collusion cases. The on-chain environment does produce a public, auditable record of trades, but a solver's actual bidding strategy runs off-chain; only the final winning result is visible on-chain, making it very hard to directly observe the signal of "a better quote should have been offered but wasn't." For researchers, collusion risk is currently more of a long-horizon tracking problem — inferred indirectly through statistical anomalies like unusually regular winning patterns or quote improvements that consistently hug the pass/fail floor — rather than something that can be verified in a single pass.</p>
+            <ul>
+              <li>The high capital and technical bar for being a solver naturally limits the number of participants, making concentration the first entry point for verification.</li>
+              <li>When win-share concentrates in a few solvers, the actual competitive intensity of the batch auction may be overstated relative to what's advertised.</li>
+              <li>Collusion risk is hard to observe directly and can only be inferred through long-term tracking of statistical anomalies, not verified in one pass.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Where MEV Goes Inside a Solver Network</h2>
+            <p>Intent-centric trading is frequently marketed as "MEV-resistant," on the logic that a user no longer broadcasts specific transaction details to a public mempool, so a sandwich attacker loses the ability to observe exact transaction parameters ahead of time and front-run. That logic does hold at the layer of "user exposure to a public mempool." But MEV doesn't disappear — it relocates, from "front-running in a public mempool" to "the solver's discretion over path selection." When executing an intent, a solver often has latitude to choose whether the path includes some additional operation that benefits the solver itself (for example, bundling a favorable spread-capture move into the same transaction that fills the user's order), as long as the final result still clears the user's stated minimum — and that kind of maneuver is invisible to the user.</p>
+            <p>In other words, MEV inside an intent-centric architecture shifts from "an external attacker versus the user" to "an information asymmetry between the solver and the user" — and the party holding the informational advantage is precisely the solver that's supposed to be trusted to execute the intent fairly. Some protocols attempt to mitigate this by requiring solvers to disclose the full execution path, bringing in third-party auditing of execution results, or returning a share of solver revenue to users proportionally, but how rigorously these mechanisms are actually enforced varies protocol by protocol, and there's no shared industry standard yet. When assessing whether an intent protocol is genuinely "MEV-resistant," it isn't enough to check that public mempool exposure was removed — a researcher also needs to ask about execution path visibility, solver revenue disclosure, and whether an independent auditing channel exists that isn't controlled by the solvers themselves.</p>
+            <ul>
+              <li>Intent-centric trading reduces user exposure in the public mempool, but that is not the same as eliminating MEV.</li>
+              <li>MEV relocates to the solver's discretion over execution path selection, creating an information asymmetry between solver and user.</li>
+              <li>Evaluating "MEV-resistant" claims requires checking path visibility, revenue disclosure, and independent audit channels — not just whether mempool exposure was removed.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. Intent Execution Verification Checklist</h2>
+            <p>Consolidating the sections above into a checklist that can be reused across actual investigations helps evaluate an intent-centric protocol's execution fairness systematically, rather than relying on a subjective impression of "the experience felt smooth."</p>
+            <ul>
+              <li>Confirm where path-decision authority sits between intent-signing and final execution — this is a transfer of execution control, not a routing upgrade.</li>
+              <li>Verify whether batch auction winner-selection rules are independently reproducible, and whether losing bids and scoring dimensions are disclosed.</li>
+              <li>Build a same-window counterfactual routing benchmark and compare it against the solver's actual result to judge whether it merely cleared the floor.</li>
+              <li>Check whether the protocol discloses how solver compensation is extracted, especially the rule for who owns the execution spread.</li>
+              <li>Measure win-share concentration among solvers to assess whether actual competitive intensity matches what the protocol advertises.</li>
+              <li>Ask about execution path visibility, solver revenue disclosure, and independent audit channels — don't judge "MEV-resistant" solely by whether mempool exposure was removed.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>Intent-centric trading transfers the "how to execute" decision from the user to a solver network. That transfer is both the source of its advertised benefits (users don't need to think about path details, and in theory are no longer directly exposed to front-runners in a public mempool) and the source of new verification challenges it introduces (execution path transparency, solver concentration, and whether MEV simply relocated to a less visible spot). This methodology can help researchers move past surface-level impressions of "did it feel smooth" and ask what actually happened behind a given intent execution, but its output is always "a reasonable inference based on currently available information" — several areas, collusion risk especially, remain genuinely difficult to verify in a single pass with today's tooling. This article discusses methodology only, draws no conclusions about any specific protocol, project, team, or individual, and is not investment advice of any kind. When reading intent-centric trading analysis elsewhere, readers should watch for execution transparency and explicit uncertainty statements, and stay skeptical of any overly confident "MEV-resistant" or "best execution" claims.</p>
+          </section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#sec-1">Intents vs. Routing Quotes</a></li>
+            <li><a href="#sec-2">Solver Competition and Batch Auctions</a></li>
+            <li><a href="#sec-3">Verifying Execution Quality</a></li>
+            <li><a href="#sec-4">Solver Centralization and Collusion Risk</a></li>
+            <li><a href="#sec-5">Where MEV Goes Inside a Solver Network</a></li>
+            <li><a href="#sec-6">Intent Execution Verification Checklist</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources &amp; further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+              <li><a href="https://docs.cow.fi/" target="_blank" rel="noopener noreferrer nofollow">Batch auction and solver competition documentation (third party, reference only)</a></li>
+              <li><a href="https://www.paradigm.xyz/2023/06/intents" target="_blank" rel="noopener noreferrer nofollow">Research article on intent-centric architecture (Paradigm, third party)</a></li>
+              <li><a href="https://ethereum.org/en/developers/docs/mev/" target="_blank" rel="noopener noreferrer nofollow">MEV fundamentals overview (Ethereum.org, third party)</a></li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+              <li><a href="/en/articles/swap-routing-research-guide.html">Verifying Swap Routing Aggregators</a></li>
+              <li><a href="/en/articles/mev-private-order-flow.html">MEV and Private Order Flow Verification</a></li>
+              <li><a href="/en/articles/dex-liquidity-research-guide.html">DEX Liquidity Verification Methods</a></li>
+              <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+              <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification</a></li>          <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

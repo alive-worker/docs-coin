@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs - Crypto Research Notes</title>
+  <meta name="description" content="A systematic breakdown of DeFi smart contract security auditing: identification and defense patterns for five critical vulnerabilities (reentrancy, integer overflow, access control, oracle manipulation, flash loan attacks), toolchain walkthrough from Slither static analysis to Echidna fuzzing, and verification checklist for project teams and investors. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/defi-smart-contract-audit-checklist.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs - Crypto Research Notes">
+  <meta property="og:description" content="A systematic breakdown of DeFi smart contract security auditing: identification and defense patterns for five critical vulnerabilities (reentrancy, integer overflow, access control, oracle manipulation, flash loan attacks), toolchain walkthrough from Slither static analysis to Echidna fuzzing, and verification checklist for project teams and investors. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html">
+  <meta property="article:published_time" content="2026-08-12T14:30:00+08:00">
+  <meta property="article:modified_time" content="2026-08-12T14:30:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs">
+  <meta name="twitter:description" content="Code is law sounds cool, but in DeFi one unvalidated transfer function, one unchecked oracle call, or one unlocked reentrancy point can turn your protocol into a hacker's ATM. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-smart-contract-audit-checklist-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-smart-contract-audit-checklist-en.png">
+  <link rel="preload" as="image" href="/img/article-defi-smart-contract-audit-checklist-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese bilingual site focused on cryptocurrency research methodology and on-chain data analysis. Content is for research purposes only and is not investment advice.", "knowsAbout": ["Cryptocurrency research","On-chain data analysis","Token economics","Stablecoins","Cross-chain interoperability","Smart contract security","DAO governance","Proof of reserves","AI oracle verification","zkML and on-chain model verification","AI agent identity and credential verification","AI agent strategy execution verification","AI agent audit-log integrity verification","On-chain forensics and fund tracing","Intent-centric trading and solver network verification","Account abstraction wallet security"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-smart-contract-audit-checklist-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#webpage", "url": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html", "name": "DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs", "item": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#article", "headline": "DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs", "description": "A systematic breakdown of DeFi smart contract security auditing: identification and defense patterns for five critical vulnerabilities (reentrancy, integer overflow, access control, oracle manipulation, flash loan attacks), toolchain walkthrough from Slither static analysis to Echidna fuzzing, and verification checklist for project teams and investors. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DeFi smart contract audit","reentrancy attack defense","oracle manipulation risk","flash loan attack","Slither static analysis","smart contract security toolchain"], "wordCount": 3800, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-12T14:30:00+08:00", "dateModified": "2026-08-12T14:30:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/defi-smart-contract-audit-checklist.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/defi-smart-contract-audit-checklist.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs</h1>
+        <p class="article-summary">Code is law sounds cool, but in the DeFi world, one unvalidated transfer function, one unchecked oracle call, or one unlocked reentrancy point can turn your protocol into a hacker's ATM. The 2021 Poly Network cross-chain bridge hack ($610M), the 2022 Ronin bridge hack ($625M), and the 2023 Mixin Network hack ($200M) — these are not theoretical risks but real cases that already happened. This article does not preach that smart contracts are dangerous in vague terms. Instead, it breaks down DeFi contract auditing into an actionable checklist: identification patterns and defense modes for five critical vulnerabilities (reentrancy, integer overflow, access control failure, oracle manipulation, flash loan attacks), a toolchain walkthrough from Slither static analysis to Echidna fuzzing, and verification points for project teams, auditors, and investors. The entire piece is a methodology discussion only, is not investment advice, and does not draw conclusions about any specific protocol, project, or team.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-12T14:30:00+08:00">2026-08-12 14:30:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-smart-contract-audit-checklist-en.svg" alt="DeFi Smart Contract Audit Checklist: Don't Let Vulnerabilities Become Hackers' ATMs cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. Why DeFi Contracts Are More Dangerous Than Ordinary Smart Contracts</h2>
+            <p>Smart contract security is not a new topic, but DeFi contracts carry a far higher risk density than ordinary on-chain applications. Three reasons stand out. First, DeFi contracts directly manage large amounts of funds — a vulnerability means assets are stolen, not just broken functionality or corrupted data. Second, DeFi protocols are highly composable — a bug in one contract can be amplified into systemic risk through flash loans or cross-protocol calls. Third, DeFi contracts are usually immutable or have tightly restricted upgrade paths once deployed, leaving attackers plenty of time to study the code and find weaknesses while defenders have almost no room to patch. The 2021 Poly Network cross-chain bridge hack ($610M), the 2022 Ronin bridge hack ($625M), and the 2023 Mixin Network hack ($200M) are not theoretical scenarios — they are real incidents that already happened.</p>
+            <p>Even worse, the attack surface of DeFi contracts is not limited to bugs in the code itself — it also comes from interaction boundaries with external systems: oracle price feeds can be manipulated, external contract calls can trigger reentrancy, and governance permissions can be concentrated. An effective DeFi audit checklist cannot just fixate on common Solidity syntax errors; it must also cover trust assumptions at the protocol design layer, extreme scenarios in the economic model, and boundary validation when interacting with external systems. This article breaks DeFi contract auditing into identification and defense patterns for five critical vulnerabilities, toolchain walkthrough, and verification points for project teams and investors. The goal is to provide an actionable checklist you can execute directly, not vague warnings that smart contracts are dangerous.</p>
+            <ul>
+              <li>DeFi contracts directly manage large funds and are highly composable — a single-point vulnerability can amplify into systemic risk.</li>
+              <li>Contracts are usually immutable after deployment, giving attackers ample time to study code while defenders have narrow windows.</li>
+              <li>The attack surface comes not just from code bugs, but also from oracle manipulation, external call reentrancy, governance concentration, and other protocol-design issues.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Five Critical Vulnerabilities: Reentrancy, Overflow, Access Control, Oracle, Flash Loan</h2>
+            <h3>2.1 Reentrancy Attacks</h3>
+            <p>Reentrancy is one of the most classic and lethal vulnerabilities in DeFi contracts. In simple terms, when contract A transfers funds to an external address, if that address is a contract B, then B's fallback function gets triggered — at which point B can call back into A's functions recursively. If A has not updated its internal state (such as user balances) before the transfer, an attacker can repeatedly extract funds within the same transaction until the contract's balance is drained. The 2016 DAO hack ($60M) and certain 2019 Uniswap token pool reentrancy attacks are real-world examples of this class of vulnerability. The standard defense pattern is Checks-Effects-Interactions: perform permission checks first, update state variables second, and only interact with external contracts last. Alternatively, use a ready-made protection library like ReentrancyGuard that locks at the function entry and reverts on recursive calls.</p>
+            <h3>2.2 Integer Overflow/Underflow</h3>
+            <p>Before Solidity 0.8.0, integer arithmetic overflow or underflow would not automatically throw an exception — instead, it would wrap around silently. An attacker could craft extreme inputs to subtract a larger value from a small uint256, causing it to wrap to a number close to 2^256, thereby bypassing balance checks or minting astronomical token amounts. Solidity 0.8.0+ has built-in overflow checks, but if a project uses unchecked blocks to save gas or depends on an older compiler version, the risk still exists. During an audit, check all arithmetic involving amounts (addition, subtraction, multiplication, division) to confirm whether SafeMath is used or the compiler is 0.8.0+, and whether the logic inside unchecked blocks has been rigorously verified.</p>
+            <h3>2.3 Access Control Failures</h3>
+            <p>Many DeFi contracts include admin-privileged functions such as pausing the contract, modifying parameters, or withdrawing fees. If the permission check on these functions has a flaw — for instance, forgetting the onlyOwner modifier, or allowing the owner address to be changed arbitrarily — an attacker can directly take over the contract. A more subtle case is a multisig wallet with a signature threshold set too low (e.g., 2 out of 5 when only 2 signatures are required), or a key role's private key actually controlled by a single team member. Audits should not just check function modifiers, but trace how the owner/admin address is set, whether it can be transferred, whether transfers have a time-lock, and whether the multisig wallet's actual threshold and signer identities are publicly transparent.</p>
+            <h3>2.4 Oracle Manipulation</h3>
+            <p>DeFi protocols rely on oracles for asset prices, and oracles themselves can become an attack vector. If a protocol reads a DEX's real-time price directly (e.g., calculating via getReserves), an attacker can manipulate that DEX's price with a flash loan within the same transaction, then trigger a liquidation or arbitrage in the target protocol, and finally repay the flash loan — all within a single block without needing to hold capital. Defense methods include: using time-weighted average price (TWAP) rather than spot price, aggregating feeds from multiple independent sources and taking the median, and requiring price updates to span multiple blocks (blocking single-transaction manipulation). Audits should check the type of oracle the protocol calls, the update frequency, whether there is an outlier-filter mechanism, and the protocol's degradation strategy if price feeds fail during extreme market conditions (such as liquidity drought).</p>
+            <h3>2.5 Flash Loan Attacks</h3>
+            <p>Flash loans themselves are not a vulnerability but an amplifier — they let an attacker borrow huge amounts of capital with no upfront cost, reducing an attack that would have required millions of dollars in capital to just a few dollars in gas fees. Flash loan attacks typically combine other vulnerabilities mentioned above: using flash loans to manipulate oracle prices, trigger reentrancy, or exploit logic flaws in the protocol under large-scale transactions (such as missing slippage protection or no per-transaction cap). The defense focus is not on banning flash loans (which is technically infeasible) but on ensuring the protocol's core logic maintains consistency under arbitrary scales of capital operation — price reads do not depend on a single spot data source, state updates follow strict atomicity, and critical operations have reasonable quantity caps or cooldown periods.</p>
+            <ul>
+              <li>Reentrancy: defense core is Checks-Effects-Interactions order, or use ReentrancyGuard locks.</li>
+              <li>Integer overflow: Solidity 0.8.0+ has built-in checks, but unchecked blocks and older versions still pose risk.</li>
+              <li>Access control: not just check modifiers, but trace owner address setup, multisig threshold, and actual signer identities.</li>
+              <li>Oracle manipulation: use TWAP, multi-source aggregation, cross-block updates to avoid single-transaction manipulation.</li>
+              <li>Flash loan attacks: essentially vulnerability amplifiers; defense is ensuring protocol logic maintains consistency under arbitrary capital scale.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Medium Risks That Cannot Be Ignored: Frontend, Dependency Libraries, Upgrade Permissions</h2>
+            <h3>3.1 Frontend Hijacking and DNS Attacks</h3>
+            <p>Many DeFi protocols have secure contracts but users sign malicious transactions through a hijacked frontend page. Attackers can use DNS hijacking, CDN poisoning, or phishing domains to make users land on a lookalike fake frontend that calls a malicious contract. Defenses include: prominently displaying contract addresses on the official page and encouraging users to verify them on a block explorer, using ENS domain names to reduce DNS hijacking risk, open-sourcing frontend code and providing IPFS hashes so users can self-host, and clearly displaying the target contract address and function name in the wallet signature interface before critical transactions. Before using a DeFi protocol, investors should develop the habit of cross-verifying contract addresses from multiple channels, rather than just clicking the first search engine result.</p>
+            <h3>3.2 Dependency Library Vulnerabilities</h3>
+            <p>DeFi projects typically depend on mature libraries like OpenZeppelin and Chainlink, but dependency libraries themselves may contain undiscovered vulnerabilities, or projects may use outdated versions. Audits should check the versions of libraries the project depends on, whether there are known CVE numbers, the library's update frequency, and community activity. Pay special attention to custom-modified library code — some teams fork a standard library and make local modifications; if those modifications are not rigorously audited, they may introduce new vulnerabilities and will not be covered by the library's official security announcements.</p>
+            <h3>3.3 Contract Upgrade Permissions and Time-Locks</h3>
+            <p>Upgradeable contracts (implemented via proxy pattern) are convenient for fixing bugs, but they also introduce new trust assumptions: who has the authority to upgrade the contract, whether upgrades require a time-lock (giving users a chance to exit before the upgrade takes effect), and whether upgrade proposals require community governance votes. An upgrade permission controlled by a single multisig wallet with no time-lock effectively degrades the protocol's security to trust that the multisig members will not act maliciously. Audits should check: who holds the upgrade permission, whether there is a time-lock (recommend at least 24-48 hours), whether users can exit without loss during the time-lock period, and whether upgrade proposals require on-chain governance votes with reasonable thresholds. If <a href="https://rdvcc.com" target="_blank" rel="noopener">certain DeFi projects</a> claim to be decentralized but upgrade permissions are actually concentrated in the team's hands, that is an important risk signal.</p>
+            <ul>
+              <li>Frontend hijacking: via DNS, CDN, phishing domains to make users sign malicious transactions; defenses include publicizing contract addresses, using ENS, open-sourcing frontend.</li>
+              <li>Dependency library vulnerabilities: check library versions, known CVEs, and whether custom modifications have been audited.</li>
+              <li>Upgrade permissions: verify who can upgrade, whether there is a time-lock, whether users can exit during the lock, and whether governance votes are required.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Audit Toolchain: From Static Analysis to Fuzzing</h2>
+            <h3>4.1 Slither: Entry-Level Static Analysis</h3>
+            <p>Slither is a Solidity static analysis tool developed by Trail of Bits that can automatically detect common vulnerability patterns such as reentrancy risks, unchecked return values, and missing permission modifiers. Its advantages are fast execution, relatively low false-positive rate, and clearly tiered output (high/medium/low/informational). Usage is simple: after installation, run <code>slither .</code> in the project root directory. Slither cannot replace manual auditing, but it can quickly screen out obvious low-level errors and save auditor time. If an audit report does not mention Slither or similar tool scan results, that itself is a warning sign — it suggests the audit process may not be rigorous.</p>
+            <h3>4.2 Mythril: Symbolic Execution and Path Exploration</h3>
+            <p>Mythril uses symbolic execution techniques to attempt to traverse all possible execution paths of a contract, searching for input combinations that can trigger anomalous states. It goes deeper than Slither and can find vulnerabilities that only surface under specific input conditions, but runtime is longer and may produce more false positives. Suitable for deep analysis of high-risk functions after an initial Slither scan. When using it, recommend limiting the function scope and execution depth to avoid path explosion on complex contracts.</p>
+            <h3>4.3 Echidna: Property-Based Fuzzing</h3>
+            <p>Echidna is a smart contract fuzzing tool where developers first write a set of invariant properties in Solidity (e.g., total supply always equals the sum of all account balances), and then Echidna automatically generates large volumes of random transaction sequences to try to find input combinations that break those properties. It is especially suitable for testing complex state-machine logic and cross-function interaction behaviors. The downside is that it requires developers to have the ability to clearly define invariant properties — if the properties themselves are incomplete or flawed, Echidna will not detect problems. For researchers wanting to deeply understand <a href="https://allswap.io/zh-hans" target="_blank" rel="noopener">DeFi protocol internals</a>, learning how to write invariant tests for protocols is a high-value skill.</p>
+            <h3>4.4 Toolchain Combination Strategy</h3>
+            <p>In actual audits, a single tool cannot cover all risks. The recommended workflow is: step one, use Slither to quickly scan the entire codebase and flag high and medium-level issues; step two, for core functions involving fund transfers or permission control, use Mythril for deep symbolic execution; step three, write Echidna test cases for the protocol's key invariants and run them continuously; step four, manually review parts not covered by tools — business logic flaws, economic model design defects, and trust assumptions in external protocol interactions. Tools can handle technically formalizable verification problems, but many risks in DeFi protocols come from the protocol design layer, which still requires experienced auditors to manually assess.</p>
+            <ul>
+              <li>Slither: fast static scan, suitable for initial screening of obvious vulnerabilities, clearly tiered output.</li>
+              <li>Mythril: deep symbolic execution analysis, can find hidden vulnerabilities under specific conditions, but time-consuming.</li>
+              <li>Echidna: property-based fuzzing, requires developers to define invariants, suitable for testing complex state machines.</li>
+              <li>Toolchain combination: Slither initial screening → Mythril deep analysis → Echidna continuous fuzzing → manual review of design-layer issues.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Continuous Monitoring: Post-Deployment Security Is Not Set-and-Forget</h2>
+            <p>Passing an audit and deploying a contract does not mean security work is over. After a DeFi protocol goes live, it faces risks including: newly discovered vulnerability patterns (e.g., new CVEs for a Solidity version), problems with externally depended protocols (e.g., a relied-upon oracle is attacked), and economic model performance under extreme market conditions exceeding expectations. The core of continuous monitoring is establishing anomaly detection mechanisms: monitor key contract state variables (such as total value locked, minting/burning rates, oracle feed deviations), set threshold alerts (e.g., trigger manual review when a single withdrawal exceeds 10x the daily maximum), and record all admin operations in on-chain logs with full transparency.</p>
+            <p>Some mature DeFi projects run bug bounty programs that reward white-hat hackers for submitting vulnerability reports — this is both a continuous audit mechanism and a risk signal. If a protocol managing hundreds of millions of dollars does not even have a basic bug bounty program, it suggests the team's attention to security may be insufficient. When investors choose <a href="https://chdh.me" target="_blank" rel="noopener">DeFi protocols</a>, whether there is an active bug bounty program and whether the bounty amount matches the TVL can serve as an auxiliary judgment indicator.</p>
+            <ul>
+              <li>After contract deployment, continuous monitoring is still needed: key state variables, abnormal transaction patterns, health status of externally depended protocols.</li>
+              <li>Establish threshold alert mechanisms that trigger manual review for large operations or parameter changes exceeding normal ranges.</li>
+              <li>Bug bounty programs are an important component of continuous auditing; their presence and bounty amounts reflect the team's emphasis on security.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. Investor Perspective: Due Diligence You Can Do Without Coding Skills</h2>
+            <p>Not all DeFi participants have the ability to read Solidity code or run audit tools, but that does not mean ordinary investors cannot perform any security verification. Here are several checkpoints that can be executed without technical background. First, review audit reports: has the protocol been audited by reputable firms (such as Trail of Bits, OpenZeppelin, ConsenSys Diligence), are the audit reports public, have the issues found in the reports been fixed, and was there a follow-up review after fixes. Second, verify contract addresses: cross-verify that the contract address is consistent across multiple official channels (official website, official Twitter, GitHub) to avoid phishing impersonation. Third, check on-chain data: does the protocol's TVL, user count, and transaction frequency match the marketing, are there anomalous large inflows or outflows.</p>
+            <p>Fourth, verify team identity and history: are team members named, do they have prior successful project experience, are social media accounts active with long-term records (rather than recently created). Fifth, observe community feedback: search for the protocol name on Reddit, Discord, Twitter to see if users report inability to withdraw funds, transaction anomalies, etc., paying special attention to negative feedback that has been deleted or ignored by officials. Sixth, beware of excessive yield promises: if a protocol claims to offer stable returns far above market average (e.g., risk-free 50%+ APY), that itself is a major risk signal — high yields inevitably come with high risk or unsustainable subsidies, and projects that avoid risk warnings in their marketing are especially dangerous.</p>
+            <ul>
+              <li>Review audit reports: whether audited by reputable firms, whether reports are public, whether issues were fixed and re-audited.</li>
+              <li>Cross-verify contract addresses: check address consistency across official website, Twitter, GitHub, and other channels.</li>
+              <li>Check on-chain data: whether TVL, user count, transaction frequency match marketing, whether there are anomalous large records.</li>
+              <li>Verify team identity: whether named, whether they have successful project experience, whether social accounts have long-term records.</li>
+              <li>Observe community feedback: search for negative reviews, especially user complaints that have been deleted or ignored by officials.</li>
+              <li>Beware of excessive yields: risk-free high-yield promises are themselves risk signals, and projects that avoid risk warnings are more dangerous.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>DeFi smart contract security auditing is not a static checklist you can tick off and be done with, but a dynamic process requiring continuous iteration — from code-layer vulnerability scanning (reentrancy, overflow, access control), to protocol-design-layer trust assumption analysis (oracles, upgrade permissions, dependency libraries), to post-deployment continuous monitoring (anomaly detection, bug bounties). The checklist compiled in this article covers identification patterns and defense modes for five critical vulnerabilities, verification points for three medium risks, and toolchain walkthrough methods from Slither to Echidna. The goal is to let project teams, audit firms, and investors each find actionable verification steps suitable for their role. But no checklist can exhaust all risks — the composability of DeFi protocols means new attack vectors will keep emerging, and past audit experience cannot guarantee future security.</p>
+            <p>This article discusses methodology only, draws no conclusions about any specific protocol, project, team, or individual, and is not investment advice of any kind. When reading DeFi protocol audit reports or security analyses, readers should watch for concrete evidence of vulnerability fixes, the coverage scope of tool scans, and the independence and professional reputation of the audit firm, and stay skeptical of any blanket audited or safe and reliable claim. The DeFi space iterates extremely fast technically; the tool versions, vulnerability patterns, and best practices mentioned in this article may change over time — please refer to the latest official documentation for each tool and standard.</p>
+          </section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#sec-1">Why DeFi Contracts Are More Dangerous Than Ordinary Smart Contracts</a></li>
+            <li><a href="#sec-2">Five Critical Vulnerabilities: Reentrancy, Overflow, Access Control, Oracle, Flash Loan</a></li>
+            <li><a href="#sec-3">Medium Risks That Cannot Be Ignored: Frontend, Dependency Libraries, Upgrade Permissions</a></li>
+            <li><a href="#sec-4">Audit Toolchain: From Static Analysis to Fuzzing</a></li>
+            <li><a href="#sec-5">Continuous Monitoring: Post-Deployment Security Is Not Set-and-Forget</a></li>
+            <li><a href="#sec-6">Investor Perspective: Due Diligence You Can Do Without Coding Skills</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="Sources &amp; further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+              <li><a href="https://github.com/crytic/slither" target="_blank" rel="noopener noreferrer nofollow">Slither - Solidity static analysis tool (GitHub, third party)</a></li>
+              <li><a href="https://github.com/ConsenSys/mythril" target="_blank" rel="noopener noreferrer nofollow">Mythril - Symbolic execution security analysis tool (GitHub, third party)</a></li>
+              <li><a href="https://github.com/crytic/echidna" target="_blank" rel="noopener noreferrer nofollow">Echidna - Smart contract fuzzing tool (GitHub, third party)</a></li>
+              <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/security/" target="_blank" rel="noopener noreferrer nofollow">Smart contract security basics (Ethereum.org, third party)</a></li>
+              <li><a href="https://consensys.github.io/smart-contract-best-practices/" target="_blank" rel="noopener noreferrer nofollow">Smart contract security best practices (ConsenSys, third party)</a></li>
+              <li><a href="https://rdvcc.com" target="_blank" rel="noopener">Virtual credit card platform (third party service)</a></li>
+              <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener">Cryptocurrency exchange (third party service)</a></li>
+              <li><a href="https://chdh.me" target="_blank" rel="noopener">Going global navigation (third party directory)</a></li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+              <li><a href="/en/articles/contract-security-audit-guide.html">Smart Contract Audit Report Verification</a></li>
+              <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridge Security Research</a></li>
+              <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics and Fund Tracing</a></li>
+              <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification</a></li>
+              <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>
+              <li><a href="/en/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>

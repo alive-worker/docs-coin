@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy' - Crypto Research Notes</title>
+  <meta name="description" content="AI x On-Chain series (7): verifying an AI trading/asset-management agent's claim to &quot;strictly follow its strategy&quot; - whether the strategy description is precise enough to audit, consistency between disclosed rules and actual orders, detection lag for out-of-bounds trades, whether stop-losses actually fire in a real drawdown, and a reusable checklist. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/agent-strategy-execution-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/agent-strategy-execution-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy' - Crypto Research Notes">
+  <meta property="og:description" content="AI x On-Chain series (7): verifying an AI trading/asset-management agent's claim to &quot;strictly follow its strategy&quot; - whether the strategy description is precise enough to audit, consistency between disclosed rules and actual orders, detection lag for out-of-bounds trades, whether stop-losses actually fire in a real drawdown, and a reusable checklist. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html">
+  <meta property="article:published_time" content="2026-08-03T11:18:42+08:00">
+  <meta property="article:modified_time" content="2026-08-03T11:18:42+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy' - Crypto Research Notes">
+  <meta name="twitter:description" content="A trading or asset-management agent claims it &quot;strictly follows its strategy&quot; - but who actually checks the gap between the strategy description and the real order history, and how often? Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-agent-strategy-execution-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-agent-strategy-execution-en.png">
+  <link rel="preload" as="image" href="/img/article-agent-strategy-execution-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=09999f47">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "A research-focused site on crypto project analysis and on-chain data, for educational purposes only, not investment advice.", "knowsAbout": ["crypto research methodology","on-chain data analysis","tokenomics","stablecoins","cross-chain bridges","smart contract security","DAO governance","proof of reserves","AI oracle verification","zkML on-chain model verification","agent identity and credential verification","agent strategy execution verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-agent-strategy-execution-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#webpage", "url": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html", "name": "Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy' - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'", "item": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#article", "headline": "Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'", "description": "AI x On-Chain series (7): verifying an AI trading/asset-management agent's claim to strictly follow its strategy - whether the strategy description is precise enough to audit, consistency between disclosed rules and actual orders, detection lag for out-of-bounds trades, whether stop-losses actually fire in a real drawdown, and a reusable checklist. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["agent strategy execution verification","strategy drift detection","out-of-bounds trade detection lag","stop-loss trigger verification","asset-management agent audit trail","strategy-to-order consistency"], "wordCount": 3400, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-03T11:18:42+08:00", "dateModified": "2026-08-03T11:18:42+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/agent-strategy-execution-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/agent-strategy-execution-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'</h1>
+        <p class="article-summary">This is the seventh piece in the "AI x On-Chain" series. The first six covered permission verification for a single agent, the source of truth behind AI oracles, the capability limits of zkML proofs, the credit chain in agent-to-agent settlement, the mechanism design of open service marketplaces, and the trust foundation of identity and credentials. This piece turns to a promise nearly every AI trading or asset-management agent puts in its marketing: "strictly follows its strategy." When an agent manages funds and claims to follow some defined strategy - a fixed position cap, an explicit stop-loss line, a specific rebalancing cadence - who actually verifies that claim, at what granularity, and is the strategy description itself precise enough to be checked at all? These questions decide whether the promise is a real constraint or just marketing language. The piece covers five dimensions: whether the strategy description can be precisely audited, consistency between the strategy and actual order history, the detection lag for out-of-bounds trades, whether the promised stop-loss actually fires when a real drawdown hits, and a reusable verification checklist. This is a discussion of abstract mechanism categories and verification methods only, naming no real products, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <time datetime="2026-08-03T11:18:42+08:00">2026-08-03 11:18:42</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-agent-strategy-execution-en.svg" alt="Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy' cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. The First Trap in "Follows the Strategy": Is the Strategy Description Even Precise Enough</h2>
+<p>Before verifying whether a trading or asset-management agent "follows its strategy," a more basic question must be answered first: is the publicly disclosed "strategy" a set of rules that can be checked line by line, or a vague marketing narrative. A genuinely verifiable strategy description quantifies its key parameters to a level that can be traced and reconciled - a maximum position share for a single asset, the price-deviation threshold that triggers rebalancing, a specific stop-loss percentage, a whitelist of tradeable asset pools - rather than resting on unfalsifiable adjectives like "robust," "dynamically optimized," or "AI-driven risk management." If a strategy statement contains only directional principles with no quantified boundary that can be checked trade by trade, then no matter how thorough the downstream audit is, the most a verifier can confirm is that "the agent made certain trades" - not that "those trades fell within the promised boundary," because the promise never had one.</p>
+<p>This decides whether the entire downstream verification approach can even work: verifying whether a claim was executed presupposes that the claim itself has an operational definition. When evaluating any agent that claims to "follow its strategy," a researcher's first step should be to obtain or locate the quantified version of that strategy - if the counterparty can only provide a narrative description, or refuses to disclose specific parameters citing "the strategy is proprietary," that itself is a signal: even if every subsequent trade is verifiable on-chain, there is no objective standard against which to judge whether those trades "comply with the strategy," and verification has already failed at the source.</p>
+<ul>
+<li>A verifiable strategy description must quantify key parameters to a level checkable trade by trade, not rest on unfalsifiable marketing language.</li>
+<li>If the strategy itself lacks an operational quantified boundary, no downstream audit, however thorough, can determine whether trades "comply."</li>
+<li>Starting point: request the quantified version of the strategy; refusing to disclose parameters citing "proprietary" is itself a signal worth questioning.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Consistency Audit Between Strategy and Order History: Are the Disclosed Rules and What Actually Happened On-Chain the Same Thing</h2>
+<p>Even when the strategy itself is quantified precisely, the second verification gap appears in the mapping between the "strategy text" and the "actual orders placed." On-chain transaction records are objective and immutable, but reconciling those records against the strategy's parameters, trade by trade, to determine whether each falls within the promised boundary, is specialized audit work that does not happen automatically just because the "data lives on-chain." Common gaps include: whether the position-cap calculation accounts for leverage and cross-pool hedge positions, or only counts notional principal; whether rebalancing is actually triggered by the disclosed price-deviation threshold, or in practice depends more on the operator's discretionary judgment; and whether the whitelisted asset pool has undisclosed, temporary exceptions.</p>
+<p>The more fundamental question is who performs this consistency audit, how often, and whether the audit method is disclosed. If the consistency check is only ever done internally by the operator and never disclosed with concrete methodology and results, then the claim "we follow our strategy" is not much more credible than having no audit at all - outside researchers still only see the raw transaction records, and reconciling every trade against the strategy's parameters independently is often prohibitively laborious; in practice, few independent third parties actually perform a full trade-by-trade review. Verifiers should ask: does an independent third party regularly reconcile strategy against execution; is the granularity trade-by-trade or only periodic sampling; and are the methodology and results of that reconciliation publicly available.</p>
+<ul>
+<li>On-chain data being immutable does not mean "strategy-to-order consistency has been verified" - these are two different layers of the problem.</li>
+<li>Common gaps: whether position caps count leverage and hedges, whether rebalancing truly follows the disclosed threshold, and undisclosed whitelist exceptions.</li>
+<li>Verification focus: who performs the consistency audit, whether it is trade-by-trade or sampled, and whether methodology and results are publicly available.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Detection Lag for Out-of-Bounds Trades: How Long Before a Deviation Is Even Noticed</h2>
+<p>A robust strategy-execution verification framework should not just ask "can a deviation be found after the fact" but also "how long after it happens does it actually get detected." That time window is itself part of the risk exposure: if a trade that clearly breaches the promised position cap only surfaces once a quarterly audit report is published, then during those months of lag, funds have already been carrying an undisclosed risk exposure beyond the promised boundary - even if it is later flagged as a "violation" and corrected, the losses or excess risk actually incurred during that window are a done fact that cannot be retroactively undone. The length of the detection window directly determines how much real constraining power the promise of "following the strategy" actually has in practice.</p>
+<p>Common ways to shorten this window include: setting up automated on-chain or off-chain monitoring that fires a real-time alert the moment a trade crosses a preset deviation threshold, rather than waiting for a periodic audit; bringing in a monitoring party independent of the operator rather than relying entirely on operator self-reporting; and encoding key strategy boundaries - such as position caps - directly as enforceable contract logic rather than leaving them as document-level promises, so that even if the operator wants to overstep, the on-chain logic itself refuses to execute. When assessing the credibility of any agent's strategy execution, verifiers should ask: how quickly can an out-of-bounds trade be detected if one occurs; is detection automated and real-time, or dependent on periodic manual review; and are any key boundaries hard-enforced by contract logic rather than resting on self-discipline alone.</p>
+<ul>
+<li>"How long until a deviation is caught" is itself part of the risk exposure - the risk incurred within the detection window is not erased by a later correction.</li>
+<li>Ways to shorten the window: real-time automated alerts, monitoring independent of the operator, and hard-enforcing key boundaries via contract logic rather than document promises.</li>
+<li>Verification angles: the actual latency of out-of-bounds detection, whether detection is automated or manual, and which boundaries are contract-enforced versus self-disciplined.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Stop-Loss and Risk Triggers: When a Real Drawdown Hits, Does the Promised Stop-Loss Actually Fire</h2>
+<p>"Has a stop-loss in place" is a line that appears in nearly every asset-management agent's marketing material, but the value of a stop-loss can only be tested when a real drawdown actually occurs - and this is precisely the hardest part to verify in advance, because in most strategy descriptions, the stop-loss clause has never been triggered under normal market conditions, and what a verifier gets is only a promise that has never been stress-tested. The only verification method here is retrospective: check whether historical price action ever approached or hit the stop-loss line, and if so, whether the actual order records show the stop-loss was really executed, with slippage and delay within a reasonable range; if the agent has never encountered market conditions that truly triggered the stop-loss since it started running, verifiers should explicitly flag this - "a stop-loss line exists" and "the stop-loss line has been verified effective" are two completely different factual states and should not be conflated.</p>
+<p>Another often-overlooked risk is the modifiability of the stop-loss itself: if the operator can unilaterally adjust or suspend the stop-loss logic with no disclosure or delayed announcement - for example citing "extreme volatility, executing the stop-loss would cause greater losses" - then this stop-loss line is most likely to be bypassed precisely in the extreme market conditions where it is most needed. This is also the core reason behind multiple historical disputes where an asset-management product's actual behavior in an extreme market did not match what its prospectus promised regarding stop-losses. Verifiers should ask: who holds the authority to adjust the stop-loss logic; does an adjustment require advance disclosure or trigger some governance process; and is there any historical record showing the stop-loss logic was ever temporarily modified or suspended.</p>
+<ul>
+<li>A stop-loss's value can only be verified when a real drawdown occurs - "exists" and "verified effective" are two different factual states.</li>
+<li>The only verification method is retrospective review of historical price action; if never truly triggered, that gap should be flagged rather than assumed away.</li>
+<li>Verification focus: whether stop-loss logic can be unilaterally adjusted or suspended by the operator - the authority and disclosure mechanism most likely to be bypassed in extreme markets.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Verification Checklist and Series Summary</h2>
+<p>Condensing the previous four sections into a reusable checklist, any AI trading or asset-management agent claiming to "strictly follow its strategy" can be evaluated against: first, is the strategy quantified - does the description have boundaries that can be checked trade by trade, or only unfalsifiable marketing language? Second, consistency audit - does an independent third party regularly reconcile strategy against actual orders, and is the methodology disclosed? Third, out-of-bounds detection lag - how quickly can a deviation be detected, and is detection automated or dependent on after-the-fact audit? Fourth, stop-loss effectiveness - has the stop-loss line been tested by a real drawdown, and who holds the authority to adjust it and under what disclosure requirements?</p>
+<p>Looking back across the seven pieces in the "AI x On-Chain" series so far - from a single agent's permission boundaries, to an oracle's source of truth, to a proof system's capability limits, to the credit chain between agents, to the mechanism design of an open marketplace, to the trust foundation of identity and credentials, and now to this piece's discussion of strategy execution verification - the throughline has been the same stance from the start: any reassuring claim, whether it's "authorized," "verified," "certified," or as discussed here, "follows the strategy," should be decomposed into concrete, verifiable technical and governance preconditions rather than accepted at face value. This piece discusses only abstract mechanism categories and verification methods, names no real products or protocols, and is not investment advice in any form. The series will continue tracking newly emerging trust-transfer scenarios in the agent economy - subscribe via RSS for future updates.</p>
+<ul>
+<li>Four-question checklist: is the strategy quantified, is the consistency audit independent, how long is the out-of-bounds detection lag, has the stop-loss been tested by a real drawdown.</li>
+<li>What's distinct about this piece: it extends the verification lens from "is the agent authorized" to the finer-grained question of "does the agent actually execute the strategy it claims to follow."</li>
+<li>This is a discussion of mechanism categories and methodology only, naming no real products, not investment advice; the series will keep tracking mechanism evolution in the agent economy.</li>
+</ul>
+</section>
+        </div>
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The First Trap in "Follows the Strategy": Is the Strategy Description Even Precise Enough</a></li>
+          <li><a href="#sec-2">2. Consistency Audit Between Strategy and Order History</a></li>
+          <li><a href="#sec-3">3. Detection Lag for Out-of-Bounds Trades</a></li>
+          <li><a href="#sec-4">4. Stop-Loss and Risk Triggers</a></li>
+          <li><a href="#sec-5">5. Verification Checklist and Series Summary</a></li>
+          </ol>
+        </nav>
+        </div>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/" target="_blank" rel="noopener">Ethereum.org Smart Contracts</a>: for understanding how on-chain position constraints and stop-loss trigger logic can be enforced via contract code</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for checking an asset-management agent's historical order records and contract call parameters</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; refer to official sources for the latest information. This article is for educational and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/agent-identity-credential-verification.html">Agent Identity and Credential Verification (series part 6)</a></li>
+          <li><a href="/en/articles/agent-service-marketplace-verification.html">Agent Service Marketplace Verification (series part 5)</a></li>
+          <li><a href="/en/articles/agent-to-agent-payment-verification.html">Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks</a></li>
+          <li><a href="/en/articles/zkml-onchain-model-verification.html">zkML and Trusted On-Chain Model Execution</a></li>
+          <li><a href="/en/articles/ai-oracle-data-verification.html">AI Oracles and Trusted On-Chain Data</a></li>
+          <li><a href="/en/articles/ai-agent-onchain-verification.html">On-Chain AI Agent Verification (series part 1)</a></li>
+          <li><a href="/en/articles/options-vault-tail-risk.html">Options Vault (DOV) Verification: "Stable Weekly Yield" Is a Tail-Risk Premium</a></li>
+          <li><a href="/en/articles/perpetual-dex-vault-counterparty.html">Perpetual DEX Vault Model: LPs Are the Counterparty to Every Trade</a></li>
+          <li><a href="/en/articles/crypto-research-fundamentals.html">Crypto Research Methodology: Why One Source Is Never Enough</a></li>
+          <li><a href="/en/articles/agent-audit-log-integrity-verification.html">Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered</a></li>
+          <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/articles/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</a></li>
+          <li><a href="/en/articles/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/articles/depin-compute-network-verification.html">DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real</a></li>
+          <li><a href="/en/articles/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols</a></li>
+          <li><a href="/en/articles/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>
+          <li><a href="/en/articles/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li>
+          <li><a href="/en/articles/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner's Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>          <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A research-focused site covering crypto research methods, on-chain data, and fund flows, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Partner Links</h3>
+        <ul>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener">AllSwap Cross-Chain Exchange</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">RDVCC Virtual Cards</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for educational and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and risky, please make your own judgment and be responsible for your decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4c3286cc"></script>
+</body>
+</html>
