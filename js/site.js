@@ -69,18 +69,22 @@
       return n.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
     };
     var renderTicker = function(data) {
-      var items = COINS.map(function(c) {
+      var itemsHtml = COINS.map(function(c) {
         var d = data[c.id];
         if (!d) return '';
         var price = d.usd;
         var chg = d.usd_24h_change || 0;
         var up = chg >= 0;
         var chgText = (up ? '+' : '') + chg.toFixed(2) + '%';
-        return '<span class="ticker-item"><span class="ticker-sym">' + c.sym + '</span>' +
+        return '<a class="ticker-item" href="https://www.coingecko.com/en/coins/' + c.id + '" target="_blank" rel="noopener noreferrer"><span class="ticker-sym">' + c.sym + '</span>' +
           '<span class="ticker-price">$' + fmtPrice(price) + '</span>' +
-          '<span class="ticker-chg ' + (up ? 'ticker-up' : 'ticker-down') + '">' + chgText + '</span></span>';
+          '<span class="ticker-chg ' + (up ? 'ticker-up' : 'ticker-down') + '">' + chgText + '</span></a>';
       }).join('');
-      tickerTrack.innerHTML = items + items;
+      tickerTrack.innerHTML = itemsHtml;
+      var setWidth = tickerTrack.getBoundingClientRect().width || 1;
+      var repeatCount = Math.max(2, Math.ceil((window.innerWidth * 1.5) / setWidth));
+      var block = new Array(repeatCount).fill(itemsHtml).join('');
+      tickerTrack.innerHTML = block + block;
     };
     var loadTicker = function() {
       var ids = COINS.map(function(c) { return c.id; }).join(',');
