@@ -86,15 +86,34 @@
       var block = new Array(repeatCount).fill(itemsHtml).join('');
       tickerTrack.innerHTML = block + block;
     };
+    var CACHE_KEY = 'ticker-price-cache';
+    var CACHE_TTL = 90000;
+    var readCache = function() {
+      try {
+        var raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) { return null; }
+    };
+    var writeCache = function(data) {
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) {}
+    };
     var loadTicker = function() {
+      var cached = readCache();
+      if (cached && (Date.now() - cached.ts) < CACHE_TTL) {
+        renderTicker(cached.data);
+        return;
+      }
       var ids = COINS.map(function(c) { return c.id; }).join(',');
       fetch('https://api.coingecko.com/api/v3/simple/price?ids=' + ids + '&vs_currencies=usd&include_24hr_change=true')
-        .then(function(r) { return r.json(); })
-        .then(renderTicker)
-        .catch(function() {});
+        .then(function(r) { if (!r.ok) throw new Error('bad status'); return r.json(); })
+        .then(function(data) { writeCache(data); renderTicker(data); })
+        .catch(function() {
+          if (cached) renderTicker(cached.data);
+        });
     };
     loadTicker();
-    setInterval(loadTicker, 60000);
+    setInterval(loadTicker, CACHE_TTL);
   }
 
   // Reusable client-side paginator: shows `pageSize` items per page and builds controls in
