@@ -535,4 +535,56 @@
     }, { rootMargin: '-96px 0px -70% 0px', threshold: 0 });
     tocSections.forEach(function (s) { tocObserver.observe(s); });
   }
+
+  // --- Homepage: featured-article carousel ---
+  var carousel = document.getElementById('featured-carousel');
+  if (carousel) {
+    var track = carousel.querySelector('.carousel-track');
+    var slides = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-slide'));
+    var dots = Array.prototype.slice.call(carousel.querySelectorAll('.carousel-dot'));
+    var index = 0;
+    var timer = null;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function render() {
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      dots.forEach(function (d, i) {
+        d.classList.toggle('is-active', i === index);
+        d.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+    }
+    function goTo(i) {
+      index = (i + slides.length) % slides.length;
+      render();
+    }
+    function next() { goTo(index + 1); }
+    function prev() { goTo(index - 1); }
+    function startAuto() {
+      if (reduceMotion || slides.length < 2) return;
+      stopAuto();
+      timer = setInterval(next, 6000);
+    }
+    function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach(function (d, i) {
+      d.addEventListener('click', function () { goTo(i); startAuto(); });
+    });
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
+    carousel.addEventListener('focusin', stopAuto);
+    carousel.addEventListener('focusout', startAuto);
+
+    // basic touch swipe support
+    var touchStartX = null;
+    track.addEventListener('touchstart', function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', function (e) {
+      if (touchStartX === null) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); startAuto(); }
+      touchStartX = null;
+    }, { passive: true });
+
+    render();
+    startAuto();
+  }
 })();

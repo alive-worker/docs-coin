@@ -266,7 +266,22 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 .btn-secondary { background: var(--panel); color: var(--ink); border: 1px solid var(--line-strong); }
 .btn-secondary:hover { background: var(--soft); }
 
-.featured-article { max-width: 860px; margin: 0 auto 48px; }
+.featured-article { max-width: 860px; margin: 0 auto 48px; position: relative; }
+
+/* --- featured carousel: track slides side by side, JS translates it by 100%/slide --- */
+.carousel-viewport { overflow: hidden; border-radius: 16px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+.carousel-track { display: flex; transition: transform .45s cubic-bezier(.4,0,.2,1); }
+.carousel-slide { flex: 0 0 100%; min-width: 0; }
+.featured-card.carousel-slide { border-radius: 0; border: none; box-shadow: none; }
+.featured-card.carousel-slide:hover { transform: none; box-shadow: none; }
+.carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+.carousel-dot {
+  width: 8px; height: 8px; padding: 0; border-radius: 999px; border: none;
+  background: var(--line-strong); cursor: pointer;
+  transition: background-color .15s ease, width .15s ease;
+}
+.carousel-dot:hover { background: var(--accent-soft); }
+.carousel-dot.is-active { background: var(--accent); width: 22px; }
 /* While a homepage search is active, collapse the hero/featured sections so the
    filtered results grid sits right under the search box. */
 body.is-searching .hero-centered,
