@@ -53,6 +53,46 @@
     document.fonts.ready.then(syncStickyOffset);
   }
 
+  var tickerTrack = document.getElementById('ticker-track');
+  if (tickerTrack) {
+    var COINS = [
+      { id: 'bitcoin', sym: 'BTC' },
+      { id: 'ethereum', sym: 'ETH' },
+      { id: 'binancecoin', sym: 'BNB' },
+      { id: 'solana', sym: 'SOL' },
+      { id: 'ripple', sym: 'XRP' },
+      { id: 'dogecoin', sym: 'DOGE' },
+      { id: 'cardano', sym: 'ADA' }
+    ];
+    var fmtPrice = function(n) {
+      if (n >= 1) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return n.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    };
+    var renderTicker = function(data) {
+      var items = COINS.map(function(c) {
+        var d = data[c.id];
+        if (!d) return '';
+        var price = d.usd;
+        var chg = d.usd_24h_change || 0;
+        var up = chg >= 0;
+        var chgText = (up ? '+' : '') + chg.toFixed(2) + '%';
+        return '<span class="ticker-item"><span class="ticker-sym">' + c.sym + '</span>' +
+          '<span class="ticker-price">$' + fmtPrice(price) + '</span>' +
+          '<span class="ticker-chg ' + (up ? 'ticker-up' : 'ticker-down') + '">' + chgText + '</span></span>';
+      }).join('');
+      tickerTrack.innerHTML = items + items;
+    };
+    var loadTicker = function() {
+      var ids = COINS.map(function(c) { return c.id; }).join(',');
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids=' + ids + '&vs_currencies=usd&include_24hr_change=true')
+        .then(function(r) { return r.json(); })
+        .then(renderTicker)
+        .catch(function() {});
+    };
+    loadTicker();
+    setInterval(loadTicker, 60000);
+  }
+
   // Reusable client-side paginator: shows `pageSize` items per page and builds controls in
   // `pager`. setItems() lets a filter (search/topic) hand in a different subset later —
   // pagination re-applies to whatever set is current, always at the same page size, instead
