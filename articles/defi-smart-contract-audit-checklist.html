@@ -125,7 +125,7 @@
             <h3>3.2 依赖库漏洞</h3>
             <p>DeFi项目通常依赖OpenZeppelin、Chainlink等成熟库，但依赖库本身也可能存在未被发现的漏洞，或者项目使用了某个库的过时版本。审计时应检查项目依赖的库版本、是否有已知的CVE编号、库的更新频率与社区活跃度。特别要注意自定义修改过的库代码——有些团队会fork一个标准库然后做局部修改，这类修改如果没有经过严格审计，可能引入新的漏洞，且不会被库的官方安全公告覆盖。</p>
             <h3>3.3 合约升级权限与时间锁</h3>
-            <p>可升级合约（通过代理模式实现）在修复漏洞时很方便，但也引入了新的信任假设：谁有权限升级合约，升级是否需要时间锁（让用户有机会在升级生效前退出），升级提案是否需要社区治理投票。一个没有时间锁、由单个多签钱包控制的升级权限，实际上让协议的安全性退化到「信任该多签成员不作恶」。审计时应检查：升级权限由谁持有、是否有时间锁（建议至少24-48小时）、时间锁期间用户能否无损退出、升级提案是否需要链上治理投票且投票门槛合理。如果发现<a href="https://rdvcc.com" target="_blank" rel="noopener">某些DeFi项目</a>声称去中心化但升级权限实际集中在团队手中，这是一个重要的风险信号。</p>
+            <p>可升级合约（通过代理模式实现）在修复漏洞时很方便，但也引入了新的信任假设：谁有权限升级合约，升级是否需要时间锁（让用户有机会在升级生效前退出），升级提案是否需要社区治理投票。一个没有时间锁、由单个多签钱包控制的升级权限，实际上让协议的安全性退化到「信任该多签成员不作恶」。审计时应检查：升级权限由谁持有、是否有时间锁（建议至少24-48小时）、时间锁期间用户能否无损退出、升级提案是否需要链上治理投票且投票门槛合理。如果发现<a href="https://rdvcc.com" target="_blank" rel="noopener nofollow sponsored">某些DeFi项目</a>声称去中心化但升级权限实际集中在团队手中，这是一个重要的风险信号。</p>
             <ul>
               <li>前端劫持：通过DNS、CDN、钓鱼域名让用户签署恶意交易，防御包括公开合约地址、使用ENS、前端开源。</li>
               <li>依赖库漏洞：检查库版本、已知CVE、自定义修改是否经过审计。</li>
@@ -139,7 +139,7 @@
             <h3>4.2 Mythril：符号执行与路径探索</h3>
             <p>Mythril使用符号执行技术，尝试遍历合约的所有可能执行路径，寻找能够触发异常状态的输入组合。它比Slither更深入，能发现一些需要特定输入条件才会暴露的漏洞，但运行时间也更长，且可能产生较多误报。适合在Slither初步扫描之后，对高风险函数进行深度分析。使用时建议限定分析的函数范围和执行深度，避免在复杂合约上陷入路径爆炸。</p>
             <h3>4.3 Echidna：基于属性的模糊测试</h3>
-            <p>Echidna是一个智能合约模糊测试工具，开发者先用Solidity编写一组「不变性属性」（invariant properties），比如「合约总供应量永远等于所有账户余额之和」，然后Echidna会自动生成大量随机交易序列，尝试找到能打破这些属性的输入组合。它特别适合测试复杂的状态机逻辑和跨函数的交互行为。缺点是需要开发者有能力明确定义不变性属性——如果属性本身定义不全或有漏洞,Echidna也检测不出问题。对于想深入了解<a href="https://allswap.io/zh-hans" target="_blank" rel="noopener">DeFi协议内部逻辑</a>的研究者，学习如何为协议编写不变性测试是一项高价值技能。</p>
+            <p>Echidna是一个智能合约模糊测试工具，开发者先用Solidity编写一组「不变性属性」（invariant properties），比如「合约总供应量永远等于所有账户余额之和」，然后Echidna会自动生成大量随机交易序列，尝试找到能打破这些属性的输入组合。它特别适合测试复杂的状态机逻辑和跨函数的交互行为。缺点是需要开发者有能力明确定义不变性属性——如果属性本身定义不全或有漏洞,Echidna也检测不出问题。对于想深入了解<a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">DeFi协议内部逻辑</a>的研究者，学习如何为协议编写不变性测试是一项高价值技能。</p>
             <h3>4.4 工具链组合策略</h3>
             <p>实际审计中，单一工具无法覆盖所有风险。建议的工作流是：第一步用Slither快速扫描全代码库，标记出high和medium级别的问题；第二步对涉及资金转移、权限控制的核心函数用Mythril做深度符号执行；第三步为协议的关键不变性编写Echidna测试用例并持续运行；第四步人工审查工具未覆盖的部分——业务逻辑漏洞、经济模型设计缺陷、与外部协议交互的信任假设。工具能解决的是可形式化验证的技术层问题，但DeFi协议的很多风险来自协议设计层面，这部分依然需要有经验的审计人员人工研判。</p>
             <ul>
@@ -199,8 +199,8 @@
               <li><a href="https://github.com/crytic/echidna" target="_blank" rel="noopener noreferrer nofollow">Echidna - 智能合约模糊测试工具（GitHub，第三方）</a></li>
               <li><a href="https://ethereum.org/en/developers/docs/smart-contracts/security/" target="_blank" rel="noopener noreferrer nofollow">智能合约安全基础概念（Ethereum.org，第三方）</a></li>
               <li><a href="https://consensys.github.io/smart-contract-best-practices/" target="_blank" rel="noopener noreferrer nofollow">智能合约安全最佳实践（ConsenSys，第三方）</a></li>
-              <li><a href="https://rdvcc.com" target="_blank" rel="noopener">虚拟信用卡平台（第三方服务）</a></li>
-              <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener">加密货币交易所（第三方服务）</a></li>
+              <li><a href="https://rdvcc.com" target="_blank" rel="noopener nofollow sponsored">虚拟信用卡平台（第三方服务）</a></li>
+              <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">加密货币交易所（第三方服务）</a></li>
               <li><a href="https://chdh.me" target="_blank" rel="noopener">出海导航（第三方导航站）</a></li>
           </ul>
           <p class="ref-note">本文所涉数据口径、工具与项目状态可能随时间变化，请以各官方来源的最新信息为准；本文仅为学习研究之用，不构成任何投资建议。</p>
@@ -215,7 +215,9 @@
               <li><a href="/articles/onchain-forensics.html">链上取证与资金追踪</a></li>
               <li><a href="/articles/depin-compute-network-verification.html">DePIN 算力网络核验</a></li>
               <li><a href="/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>
-              <li><a href="/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>          <li><a href="/articles/agent-usage-billing-verification.html">AI Agent计费核验：用量是真的，账单就一定对吗</a></li>
+              <li><a href="/articles/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>          <li><a href="/articles/agent-usage-billing-verification.html">AI Agent计费核验：用量是真的，账单就一定对吗</a></li>          <li><a href="/articles/cross-chain-swap-slippage-fee-verification-guide.html">跨链兑换实操核验：报价滑点和到账金额，真的对得上吗</a></li>          <li><a href="/articles/crosschain-swap-dry-run-verification-guide.html">跨链兑换前先测一笔：大额转账前该验证什么</a></li>
+
+
 
           </ul>
         </aside>
@@ -254,9 +256,9 @@
       <div class="site-foot-col site-foot-col--friends">
         <h3>友情链接</h3>
         <ul>
-          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener">AI代付</a></li>
-          <li><a href="https://allswap.io/" target="_blank" rel="noopener">链兑换</a></li>
-          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener">虚拟卡</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
           <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
           <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
           <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
@@ -269,6 +271,6 @@
       <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
     </div>
   </footer>
-  <script src="/js/site.js?v=f3ad4bb6"></script>
+  <script src="/js/site.js?v=7a71ab8f"></script>
 </body>
 </html>
