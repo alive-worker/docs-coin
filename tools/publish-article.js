@@ -39,7 +39,7 @@ const root = path.resolve(__dirname, '..');
 // ---------------------------------------------------------------------------
 const CONFIG = {
   slug: 'cross-chain-swap-slippage-fee-verification-guide',
-  publishedISO: '2026-08-17T18:00:00+08:00',
+  publishedISO: '2026-08-18T10:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
