@@ -38,25 +38,35 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'usdt-reserve-transparency-onramp-defi-security-guide',
-  publishedISO: '2026-08-11T14:40:00+08:00',
-  tagColor: 'cobalt',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'agent-usage-billing-verification',
+  publishedISO: '2026-08-17T15:00:00+08:00',
+  tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解',
-    tagLabel: 'USDT基础与安全',
-    cardDesc: 'USDT真的值1美元吗？钱怎么进出交易所才安全？DeFi里怎么不被清空钱包？本文从USDT基础与储备透明度讲起，拆解交易所出入金教程与DeFi/链上安全实战清单，帮你把稳定币用明白。',
+    h1: 'AI Agent计费核验：用量是真的，账单就一定对吗',
+    tagLabel: 'AI×链上',
+    cardDesc: '按调用次数、Token或算力秒计费的AI代理服务，用量数字从哪来、账单怎么对账、有没有被悄悄多算，本文给出一套可复用的核验方法与清单。',
   },
   en: {
-    h1: 'Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security',
-    tagLabel: 'USDT Basics & Security',
-    cardDesc: 'Is USDT really worth a dollar? How do you move money in and out of an exchange safely, and avoid getting drained in DeFi? From USDT fundamentals and reserve transparency to an on/off-ramp tutorial and a DeFi on-chain security checklist.',
+    h1: 'AI Agent Billing Verification: Real Usage Doesn\'t Guarantee an Accurate Bill',
+    tagLabel: 'AI x On-Chain',
+    cardDesc: 'AI agent services billed by call count, tokens, or compute-seconds: where does the usage number come from, and how do you check the bill isn\'t inflated? A verification method and checklist.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'usdt-peg-mechanism-stablecoin-basics-guide',
+    'ai-onchain-security-research-guide',
+    'usdt-issuance-reserve-basics',
+    'cex-kyc-withdrawal-limits-onramp-tutorial',
+    'defi-token-approval-security-guide',
+    'flashloan-attack-defense-defi-security',
+    'exchange-fees-onramp-offramp-saving-guide',
+    'token-unlock-sell-pressure-onchain-research',
+    'defi-smart-contract-audit-checklist',
+    'usdt-reserve-transparency-onramp-defi-security-guide',
     'usdt-crosschain-transfer-security-recovery-guide',
     'usdt-beginner-onramp-defi-security-guide',
     'data-availability-layer-verification',

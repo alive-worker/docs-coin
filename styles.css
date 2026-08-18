@@ -100,6 +100,15 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   line-height: 1.75;
   overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 600px at 15% 0%, color-mix(in srgb, var(--logo-light) 9%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 900px 600px at 100% 30%, color-mix(in srgb, var(--logo-dark) 7%, transparent) 0%, transparent 60%);
 }
 a { color: inherit; }
 img { max-width: 100%; height: auto; }
@@ -551,16 +560,23 @@ body.home .sidebar-search svg { left: 15px; width: 19px; height: 19px; }
 body.home .sidebar-search-input { padding: 13px 34px 13px 44px; font-size: 15.5px; border-radius: 11px; }
 .sidebar-search svg {
   position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-  color: var(--muted); pointer-events: none;
+  color: var(--accent); pointer-events: none;
+  transition: filter .2s ease;
 }
 .sidebar-search-input {
   width: 100%; padding: 9px 30px 9px 34px;
   border: 1px solid var(--line); border-radius: 9px;
   background: var(--soft); font-size: 13.5px; font-family: inherit; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
+.sidebar-search-input:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
 .sidebar-search-input:focus {
-  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none; border-color: var(--accent);
+  background: var(--panel);
+  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
 }
+.sidebar-search:focus-within svg { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent) 70%, transparent)); }
 .sidebar-search-input::placeholder { color: var(--muted); }
 .sidebar-search-clear {
   position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
