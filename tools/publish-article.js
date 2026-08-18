@@ -38,25 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-dry-run-verification-guide',
-  publishedISO: '2026-08-18T14:00:00+08:00',
+  slug: 'stablecoin-virtual-card-topup-verification-guide',
+  publishedISO: '2026-08-18T18:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
+  topic: 'basics',                       // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链兑换前先测一笔：大额转账前该验证什么',
-    tagLabel: '跨链预演测试',
-    cardDesc: '跨链兑换金额大，直接梭哈风险高。用一笔小额测试交易先验证路由：链、合约地址和精度、到账时间、实付手续费，再决定要不要放大金额。',
+    h1: '稳定币充值虚拟卡：到账了，但对账了吗',
+    tagLabel: '虚拟卡充值核验',
+    cardDesc: '充值成功不等于账真的对了。核对报价汇率和实际扣款汇率、承诺到账时间和真实到账时间、单笔与日/月限额，一套充值后的对账核验清单。',
   },
   en: {
-    h1: 'Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer',
-    tagLabel: 'Dry-Run Test',
-    cardDesc: 'A large cross-chain swap deserves a small test run first: verify the chain, the token contract and decimals, real arrival time, and the actual fee before you scale up.',
+    h1: 'Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits',
+    tagLabel: 'Top-Up Check',
+    cardDesc: 'A successful top-up doesn\'t mean the numbers reconcile. Check the applied rate against the quote, real arrival time against the promise, and your spend limits before relying on the card.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-dry-run-verification-guide',
     'cross-chain-swap-slippage-fee-verification-guide',
     'agent-usage-billing-verification',
     'usdt-peg-mechanism-stablecoin-basics-guide',
@@ -388,9 +390,9 @@ function insertArchiveItem(lang) {
   let t = fs.readFileSync(p, 'utf-8');
   const cfgLang = lang === 'en' ? CONFIG.en : CONFIG.zh;
   const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
-  if (t.includes(`<a href="${artPrefix}${CONFIG.slug}.html">\n            <span class="archive-tag`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
+  if (t.includes(`<a href="${artPrefix}${CONFIG.slug}.html">`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
-  const item = `        <li class="archive-item">
+  const item = `        <li class="archive-item" data-topic="${CONFIG.topic}">
           <a href="${artPrefix}${CONFIG.slug}.html">
             <span class="archive-tag archive-tag--${CONFIG.tagColor}" aria-hidden="true">${cfgLang.tagLabel}</span>
             <span class="archive-title">${cfgLang.h1}</span>

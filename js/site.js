@@ -195,6 +195,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/stablecoin-virtual-card-topup-verification-guide.html': '2026-08-18 18:00:00',
+    '/en/articles/stablecoin-virtual-card-topup-verification-guide.html': '2026-08-18 18:00:00',
     '/articles/crosschain-swap-dry-run-verification-guide.html': '2026-08-18 14:00:00',
     '/en/articles/crosschain-swap-dry-run-verification-guide.html': '2026-08-18 14:00:00',
     '/articles/cross-chain-swap-slippage-fee-verification-guide.html': '2026-08-18 10:00:00',
