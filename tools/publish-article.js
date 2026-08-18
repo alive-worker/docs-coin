@@ -259,36 +259,104 @@ function countDistinctTopics(lang) {
   return categories.length;
 }
 
-// --- Step 4: homepage featured + grid ------------------------------------------
-function updateHomepage(lang) {
-  const file = lang === 'en' ? 'en/index.html' : 'index.html';
-  const p = path.join(root, file);
-  let t = fs.readFileSync(p, 'utf-8');
-  const featuredCheckRe = new RegExp(`<section class="featured-article"[\\s\\S]{0,400}${CONFIG.slug}\\.html`);
-  if (featuredCheckRe.test(t)) { console.log(`  [homepage-${lang}] already updated, skip`); return; }
-
-  const prevFeaturedSlug = CONFIG.existingSlugsNewestFirst[0];
-  const prevFeatured = extractArticleMeta(prevFeaturedSlug, lang);
-  const dropSlug = CONFIG.existingSlugsNewestFirst[CONFIG.existingSlugsNewestFirst.length - 1]; // oldest, currently last in grid
-  const cfgLang = lang === 'en' ? CONFIG.en : CONFIG.zh;
+// --- Step 4: homepage carousel (top 5, newest-first) + grid (next 9, NO overlap
+// with the carousel) ------------------------------------------------------------
+// Rebuilt entirely from articles.html/en/articles.html's <li class="archive-item">
+// list (the single source of truth for slug/tag/title/date order) rather than
+// hand-patching the previous featured card into the grid — that incremental
+// approach silently regressed the carousel back to a single static card and
+// caused the "auto-drop oldest card" step to fail repeatedly across several
+// publishes. Idempotent: always regenerates from the current archive-item list,
+// so it's safe to re-run.
+function rebuildHomepageCarouselAndGrid(lang) {
+  const listFile = lang === 'en' ? 'en/articles.html' : 'articles.html';
+  const homeFile = lang === 'en' ? 'en/index.html' : 'index.html';
+  const artDir = lang === 'en' ? 'en/articles' : 'articles';
   const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
-  const coverSuffix = lang === 'en' ? '-en.svg' : '.svg';
 
-  // "篇文章" is a plain count. "个主题" is NOT the same number by coincidence —
-  // it must NOT be blindly bumped alongside the article count (see git history:
-  // prior to this fix the two counters were bumped in lockstep every publish,
-  // which drifted from reality the moment a new article's tag wasn't a brand
-  // new category). It now reflects the curated reading-paths category count —
-  // see countDistinctTopics() — which this repo intentionally keeps fixed at 4.
-  // A brand-new article usually slots into an EXISTING category, so 个主题 stays
-  // unchanged on a routine publish; only bump it by hand if you add a new
-  // <section class="topic-path"> category.
-  const oldArticleCount = CONFIG.existingSlugsNewestFirst.length;
-  const newArticleCount = oldArticleCount + 1;
+  const listC = fs.readFileSync(path.join(root, listFile), 'utf-8');
+  const re = /<li class="archive-item" data-topic="([a-z]+)">\s*<a href="\/(?:en\/)?articles\/([a-z0-9-]+)\.html">\s*<span class="archive-tag archive-tag--([a-z]+)" aria-hidden="true">([^<]*)<\/span>\s*<span class="archive-title">([^<]*)<\/span>\s*<span class="archive-date"><svg[^>]*>.*?<\/svg><time datetime="([^"]*)">/gs;
+  const items = [...listC.matchAll(re)].map(m => ({
+    topic: m[1], slug: m[2], tagColor: m[3], tagLabel: m[4], h1: m[5], pub: m[6],
+  }));
+  if (items.length < 14) throw new Error(`[homepage-${lang}] only found ${items.length} archive items, expected >=14`);
+  if (items[0].slug !== CONFIG.slug) throw new Error(`[homepage-${lang}] newest archive item is "${items[0].slug}", expected "${CONFIG.slug}" — run insertArchiveItem first`);
+
+  for (const it of items.slice(0, 14)) {
+    const artC = fs.readFileSync(path.join(root, artDir, `${it.slug}.html`), 'utf-8');
+    it.cardDesc = (artC.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
+    it.cover = (artC.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
+  }
+
+  const carouselItems = items.slice(0, 5);
+  const gridVisible = items.slice(5, 14); // next 9, no overlap with the carousel
+  const label = lang === 'en' ? '— FEATURED' : '— 置顶阅读';
+  const readMore = lang === 'en' ? 'Read more →' : '阅读详情 →';
+  const readLabel = lang === 'en' ? 'Read more' : '阅读详情';
+  const coverAlt = lang === 'en' ? 'cover image' : '封面图';
+  const ariaLabel = lang === 'en' ? 'Featured article' : '精选文章';
+  const cal = '<svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>';
+
+  const slides = carouselItems.map((it, i) => {
+    const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
+    return `            <a class="featured-card carousel-slide" href="${artPrefix}${it.slug}.html" aria-roledescription="slide" aria-label="${i + 1}/5">
+              <span class="featured-cover-wrap">
+                <img class="featured-cover" src="${it.cover}" width="480" height="240" alt="${it.h1} ${coverAlt}"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
+              </span>
+              <span class="featured-body">
+                <span class="featured-label">${label}</span>
+                <span class="featured-title-row">
+                  <span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span>
+                  <span class="featured-title">${it.h1}</span>
+                </span>
+                <span class="featured-desc">${it.cardDesc}</span>
+                <span class="featured-meta">
+                  ${cal}<time datetime="${it.pub}">${pubDisplay}</time>
+                  <span class="featured-more">${readMore}</span>
+                </span>
+              </span>
+            </a>`;
+  }).join('\n');
+
+  const dots = carouselItems.map((it, i) =>
+    `          <button type="button" class="carousel-dot${i === 0 ? ' is-active' : ''}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" aria-label="${lang === 'en' ? 'Slide' : '第'} ${i + 1}${lang === 'en' ? '' : '项'}"></button>`
+  ).join('\n');
+
+  const newFeaturedSection = `<section class="featured-article" aria-label="${ariaLabel}" aria-roledescription="carousel" id="featured-carousel">
+        <div class="carousel-viewport">
+          <div class="carousel-track">
+${slides}
+          </div>
+        </div>
+        <div class="carousel-dots" role="tablist">
+${dots}
+        </div>
+      </section>`;
+
+  const gridCards = gridVisible.map(it => {
+    const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
+    return `      <article class="post-card" id="${it.slug}">
+        <a class="post-card-cover-link" href="${artPrefix}${it.slug}.html" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${it.cover}" width="600" height="300" alt="${it.h1} ${coverAlt}" fetchpriority="high"></a>
+        <div class="post-card-body">
+          <div class="post-card-tags"><span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span></div>
+          <h2 class="post-card-title"><a href="${artPrefix}${it.slug}.html">${it.h1}</a></h2>
+          <p class="post-card-desc">${it.cardDesc}</p>
+          <div class="post-card-meta">
+            ${cal}<time datetime="${it.pub}">${pubDisplay}</time>
+            <a class="read-link" href="${artPrefix}${it.slug}.html">${readLabel}</a>
+          </div>
+        </div>
+      </article>`;
+  }).join('\n\n');
+
+  let t = fs.readFileSync(path.join(root, homeFile), 'utf-8');
+
+  // "篇文章" bumps with the true archive-item count. "个主题" is the curated
+  // reading-paths category count (see countDistinctTopics) — NOT bumped here.
   const topicCount = countDistinctTopics(lang);
   t = t.replace(
     /(<span class="hero-stat-num">)\d+(<\/span><span class="hero-stat-label">(?:篇文章|Articles))/,
-    `$1${newArticleCount}$2`
+    `$1${items.length}$2`
   );
   if (topicCount !== null) {
     t = t.replace(
@@ -297,65 +365,20 @@ function updateHomepage(lang) {
     );
   }
 
-  // swap featured card
   const featuredRe = /<section class="featured-article"[\s\S]*?<\/section>/;
-  const label = lang === 'en' ? '— FEATURED' : '— 置顶阅读';
-  const readMore = lang === 'en' ? 'Read more →' : '阅读详情 →';
-  const ariaLabel = lang === 'en' ? 'Featured article' : '精选文章';
-  const newFeatured = `<section class="featured-article" aria-label="${ariaLabel}">
-        <a class="featured-card" href="${artPrefix}${CONFIG.slug}.html">
-          <span class="featured-cover-wrap">
-            <img class="featured-cover" src="/img/article-${CONFIG.slug.replace(/-research-guide$/, '')}${coverSuffix}" width="480" height="240" alt="${cfgLang.h1} ${lang === 'en' ? 'cover image' : '封面图'}" fetchpriority="high">
-          </span>
-          <span class="featured-body">
-            <span class="featured-label">${label}</span>
-            <span class="featured-title-row">
-              <span class="archive-tag archive-tag--${CONFIG.tagColor}">${cfgLang.tagLabel}</span>
-              <span class="featured-title">${cfgLang.h1}</span>
-            </span>
-            <span class="featured-desc">${cfgLang.cardDesc}</span>
-            <span class="featured-meta">
-              <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="${CONFIG.publishedISO}">${CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '')}</time>
-              <span class="featured-more">${readMore}</span>
-            </span>
-          </span>
-        </a>
-      </section>`;
   if (!featuredRe.test(t)) throw new Error(`[homepage-${lang}] featured-article section not found`);
-  t = t.replace(featuredRe, newFeatured);
+  t = t.replace(featuredRe, newFeaturedSection);
 
-  // demote previous featured article into the top of the grid
-  const readLabel = lang === 'en' ? 'Read more' : '阅读详情';
-  const prevPub = prevFeatured.pub;
-  const prevPubDisplay = prevPub.replace('T', ' ').replace(/\+.*/, '');
-  const newGridCard = `      <article class="post-card" id="${prevFeaturedSlug}">
-        <a class="post-card-cover-link" href="${artPrefix}${prevFeaturedSlug}.html" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${prevFeatured.cover}" width="600" height="300" alt="${prevFeatured.h1} ${lang === 'en' ? 'cover image' : '封面图'}" fetchpriority="high"></a>
-        <div class="post-card-body">
-          <div class="post-card-tags"><span class="archive-tag archive-tag--${prevFeatured.tagColor}">${prevFeatured.tagLabel}</span></div>
-          <h2 class="post-card-title"><a href="${artPrefix}${prevFeaturedSlug}.html">${prevFeatured.h1}</a></h2>
-          <p class="post-card-desc">${prevFeatured.cardDesc || ''}</p>
-          <div class="post-card-meta">
-            <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="${prevPub}">${prevPubDisplay}</time>
-            <a class="read-link" href="${artPrefix}${prevFeaturedSlug}.html">${readLabel}</a>
-          </div>
-        </div>
-      </article>
+  const gridOpenMatch = t.match(/<div class="card-grid" aria-label="[^"]*">\r?\n/);
+  if (!gridOpenMatch) throw new Error(`[homepage-${lang}] card-grid opening not found`);
+  const gridStart = gridOpenMatch.index + gridOpenMatch[0].length;
+  const firstOverflowIdx = t.indexOf('post-card--overflow', gridStart);
+  if (firstOverflowIdx === -1) throw new Error(`[homepage-${lang}] no post-card--overflow boundary found`);
+  const articleTagStart = t.lastIndexOf('<article', firstOverflowIdx);
+  t = t.slice(0, gridStart) + gridCards + '\n\n      ' + t.slice(articleTagStart);
 
-`;
-  const gridOpenRe = new RegExp(`(<div class="card-grid" aria-label="[^"]*">\\r?\\n)`);
-  if (!gridOpenRe.test(t)) throw new Error(`[homepage-${lang}] card-grid opening not found`);
-  t = t.replace(gridOpenRe, (m, g1) => g1 + newGridCard);
-
-  // drop the oldest grid card (last one) to keep the grid at a fixed size
-  const dropCardRe = new RegExp(`\\r?\\n?      <article class="post-card" id="${dropSlug}">[\\s\\S]*?<\\/article>\\r?\\n`);
-  if (dropCardRe.test(t)) {
-    t = t.replace(dropCardRe, '');
-  } else {
-    console.log(`  [homepage-${lang}] WARN: could not find grid card to drop for id="${dropSlug}" — check manually`);
-  }
-
-  fs.writeFileSync(p, t, 'utf-8');
-  console.log(`[4/9] homepage (${lang}) featured+grid updated (drop candidate: ${dropSlug}; NOTE: post-card-desc placeholder needs a manual fix — see WARN above or grep TODO-cardDesc)`);
+  fs.writeFileSync(path.join(root, homeFile), t, 'utf-8');
+  console.log(`[4/9] homepage (${lang}) carousel(${carouselItems.length}) + grid(${gridVisible.length}, no overlap) rebuilt`);
 }
 
 // --- Step 5: archive list (articles.html) --------------------------------------
@@ -504,8 +527,8 @@ function main() {
   updateItemLists();
   insertArchiveItem('zh');
   insertArchiveItem('en');
-  updateHomepage('zh');
-  updateHomepage('en');
+  rebuildHomepageCarouselAndGrid('zh');
+  rebuildHomepageCarouselAndGrid('en');
   updateSitemap();
   regenerateFeeds();
   updateSiteJsDates();
