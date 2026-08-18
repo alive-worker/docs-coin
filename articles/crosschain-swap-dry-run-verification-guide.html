@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>跨链兑换前先测一笔：大额转账前该验证什么 - 加密货币研究</title>
+  <meta name="description" content="跨链兑换金额大，直接梭哈风险高。用一笔小额测试交易先验证路由：链对不对、合约地址和精度对不对、实际到账时间和手续费与报价差多少，再决定要不要放大金额。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="跨链兑换前先测一笔：大额转账前该验证什么 - 加密货币研究">
+  <meta property="og:description" content="跨链兑换金额大，直接梭哈风险高。用一笔小额测试交易先验证路由：链对不对、合约地址和精度对不对、实际到账时间和手续费与报价差多少，再决定要不要放大金额。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-18T14:00:00+08:00">
+  <meta property="article:modified_time" content="2026-08-18T14:00:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="跨链兑换前先测一笔：大额转账前该验证什么 - 加密货币研究">
+  <meta name="twitter:description" content="大额跨链兑换前，先用小额测试交易验证路由是否可靠：链、合约、到账时间、真实手续费，一套预演式核验方法。仅供学习研究，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="跨链兑换前先测一笔：大额转账前该验证什么 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-dry-run-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=754550f6">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#webpage", "url": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html", "name": "跨链兑换前先测一笔：大额转账前该验证什么 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "跨链兑换路径预演", "item": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#article", "headline": "跨链兑换前先测一笔：大额转账前该验证什么", "description": "跨链兑换金额大，直接梭哈风险高。用一笔小额测试交易先验证路由：链对不对、合约地址和精度对不对、实际到账时间和手续费与报价差多少，再决定要不要放大金额。仅供学习研究，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["跨链兑换预演", "小额测试交易", "路由核验", "合约地址核对", "到账时间核验", "跨链兑换安全", "USDT跨链"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-18T14:00:00+08:00", "dateModified": "2026-08-18T14:00:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/articles/crosschain-swap-dry-run-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/articles/crosschain-swap-dry-run-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>跨链兑换前先测一笔：大额转账前该验证什么</h1>
+        <p class="article-summary">前面两篇分别讲了跨链兑换的报价核验和路由研究方法，这一篇往前挪一步：在你点下那笔大额兑换之前，先用一笔金额小得多的测试交易，把整条路径实地跑一遍。测试交易不是走个形式，它的目的很具体——确认资产真的到了目标链、到的是正确的代币合约而不是某个变形版本、精度和小数位没有被搞乱、实际到账时间和实付手续费是不是和报价页说的差不多。任何一项对不上，都是"先别加大金额"的信号。全文仅为方法层面的实操教程，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-18T14:00:00+08:00">2026-08-18 14:00:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-dry-run-verification-guide.svg" alt="跨链兑换前先测一笔：大额转账前该验证什么 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. 为什么要先测一笔，而不是直接按报价执行</h2>
+        <p>报价页给出的滑点、费用、到账估计，都是基于路由算法当下的判断——它假设合约按预期工作、桥没有被替换、目标链上的代币合约地址是你以为的那个。这些假设在绝大多数时候成立，但"绝大多数时候"对一笔占你总资产相当比例的大额转账来说，不是足够高的确定性。一笔小额测试交易的意义，就是把这些假设从"报价页告诉我的"变成"我自己在链上验证过的"，成本是几美元的Gas和手续费，换来的是在真正投入大额之前排掉一批本可以避免的隐患。</p>
+        <p>测试交易也不是"金额小就一定安全"的护身符——它验证的是路由和合约这一层，价格滑点仍然会因为金额大小不同而变化。测试的目的窄而具体：确认这条路径本身没有结构性问题，而不是替代大额执行时对滑点和市场深度的单独判断。</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. 测试金额怎么定：太小测不出问题，太大失去意义</h2>
+        <p>金额定得太小，可能低于某些桥或聚合器的最小兑换额，交易直接报错退出，什么都验证不了；金额定得太大，又违背了"先小额探路"的初衷，一旦踩坑损失也不小。一个可用的经验起点：测试金额覆盖目标链上一次操作所需的最低Gas量的数倍，同时不低于目标平台公示的最小兑换限额，通常落在计划转账总额的1%到5%之间，或一个你即使全部损失也不心疼的绝对数字，两者取较大者。如果平台没有公示最小限额，先用一个很小的数额试探性下单，报错后再按提示调整，比凭感觉猜金额更可靠。</p>
+        <p>金额较大的转账，尤其是拆分成多批次执行时，建议第一批测试和第二批正式转账之间留出观察窗口，而不是测试确认到账后立刻把剩余全部金额一次性打光——留出的时间用来看是否有后续到账延迟或异常通知出现。</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. 测试交易落地后，四件事逐项核对</h2>
+        <h3 id="sec-3-1">3.1 链对不对：到账地址真的在目标链上</h3>
+        <p>先确认到账记录出现在你预期的目标链区块浏览器上，而不是某条同名或相似的测试网、侧链、或者由于地址格式兼容被错误路由到的另一条链。多条EVM兼容链共享同一种地址格式，同一个地址在不同链上都"存在"，这正是跨链操作最容易出错也最难事后补救的一类问题——测试阶段发现远比大额之后发现划算。</p>
+        <h3 id="sec-3-2">3.2 合约地址和精度对不对：到账的是不是"正确版本"的代币</h3>
+        <p>把测试交易到账代币的合约地址，和目标链上该代币的官方合约地址逐字符核对——跨链路由有时会把你以为的原生资产，悄悄替换成一个跨链桥包装版本（比如某种"桥接USDT"而不是目标链原生USDT），两者可能在钱包里显示同样的符号，但合约地址完全不同，流动性和可兑换性也不同。同时核对小数位精度：如果显示的到账数量看起来数量级不对（多了或少了几个零），大概率是精度处理出了问题，而不是真的到账异常。</p>
+        <h3 id="sec-3-3">3.3 到账时间：和报价页给的预估差多少</h3>
+        <p>记录从提交交易到目标链上看到到账记录之间的实际耗时，和报价页给出的预估区间对比。个别测试属于正常波动，但如果实际耗时是预估的数倍以上，说明这条路径在当前网络状态下可能存在拥堵或桥接层排队，放大金额执行大额转账时同样的延迟会更让人焦虑，也更考验你是否提前做好了"到账慢不等于资产丢失"的心理准备。</p>
+        <h3 id="sec-3-4">3.4 实付手续费：和报价页的数字差多少</h3>
+        <p>把测试交易实际扣除的Gas、桥接费、服务费加总，和报价页给出的预计费用对比差异百分比。小额测试的绝对费用可能因为固定费用占比更高而显得"贵"，这是正常现象，不用直接按比例线性外推到大额；但如果实付费用相对预计费用的偏离幅度明显超出正常范围，说明报价展示和实际扣费逻辑之间存在问题，值得在放大金额前先弄清楚原因。</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. 红旗清单：出现这些情况，先别放大金额</h2>
+        <ul>
+        <li>测试交易到账时间远超报价页预估区间，且中转状态查询长时间停留在"处理中"。</li>
+        <li>到账代币的合约地址与目标链官方合约地址不一致，或钱包提示"未知代币"。</li>
+        <li>路由把你选择的原生资产，静默替换成一个桥接/包装版本，且界面没有提前明确提示。</li>
+        <li>实付手续费相对预计费用的偏离幅度远超小额固定费用能解释的范围。</li>
+        <li>目标地址或官方支持渠道的合约/客服地址与你此前核实过的版本不一致。</li>
+        <li>测试交易需要人工介入或申诉才能到账，而不是正常自动结算完成。</li>
+        </ul>
+        <p>出现以上任意一条，正确的做法不是"再测一次看看运气"，而是先联系平台客服或查阅其官方文档确认原因，必要时更换路由、更换工具，甚至直接放弃这条路径，等排查清楚了再考虑是否继续。</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. 一个衔接场景：用兑换工具做预演测试时，看它是否支持"先小额后大额"的操作习惯</h2>
+        <p>把上面的核验方法落到实操里，你需要一个支持跨链资产互换、并且不会在小额交易上设置过高门槛或不成比例收费的工具。有些工具对小额交易设有较高的最低限额或相对更高的固定费率，这会让"先测后放大"这种谨慎操作变得不划算，也会间接鼓励用户跳过测试步骤直接执行大额。</p>
+        <p>市面上这类跨链兑换聚合工具不少，<a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>是其中一个例子，其平台自述定位为跨链兑换聚合工具，支持多条主流公链间的资产互换，并在兑换前展示预计到账、滑点与费用明细，理论上也可以用来执行本文所说的小额预演测试。需要说明的是，以上仅为该平台自述信息，具体支持的链、最小兑换限额、实际到账体验请以官方最新披露和你自己的实测为准，本文不做任何背书或保证。任何跨链兑换工具的使用都必须服务于真实、合规的资产管理需求，遵守相关平台条款和你所在地区的法律法规，切勿用于洗钱、规避制裁或其他非法用途。</p>
+        <p>不管用哪个工具，预演测试这一步都不应该因为"嫌麻烦"或"金额不大懒得测"而省略——它花的时间和成本，远低于一笔大额转账走错路径后需要花费的排查和挽回成本。</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. 一份跨链兑换路径预演清单</h2>
+        <ul>
+        <li>先确认目标平台的最小兑换限额，测试金额不低于该限额且落在总转账额1%-5%区间或一个可承受的绝对数字。</li>
+        <li>测试交易提交后，记录源链交易哈希、报价滑点与费用预估、报价有效期。</li>
+        <li>到账后核对：目标链是否正确、代币合约地址是否与官方一致、小数位精度是否正常。</li>
+        <li>核对实际到账时间与报价预估区间的偏差，明显超出时先查中转状态而非假设丢失。</li>
+        <li>核对实付手续费与预计费用的偏差百分比，判断是否属于小额固定费用占比偏高的正常现象。</li>
+        <li>出现红旗清单中任意一项，暂停放大金额，先排查原因或更换路由/工具。</li>
+        <li>测试通过后，大额转账建议分批执行并留出观察窗口，而非一次性打光全部金额。</li>
+        </ul>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. 总结与长尾问题</h2>
+        <p>一句话总结：测试交易验证的是"这条路径本身是否可靠"，不是"这个价格是否划算"；金额定得合适，才能既触发平台的正常处理流程，又不放大风险；到账后要核对的四件事——链、合约地址与精度、到账时间、实付手续费——每一项都可能独立出问题，缺一不可。</p>
+        <p>顺便回答几个常见问题：测试交易一定要用同一个工具和同一条路由吗？是的，测试的目的是验证这条具体路径，换了工具或路由等于重新测试，之前的结果不能复用；测试交易通过了，大额转账就一定没问题吗？测试排除的是路由和合约层面的结构性问题，价格滑点、市场深度、大额下的实际执行价格仍然需要单独评估，不能完全等同；小额测试的手续费占比高，是不是说明这个工具不划算？不一定，需要看大额转账时的费率结构是否同样偏高，用小额测试的费率直接线性外推到大额并不准确，具体仍要看该工具对大额交易的费率说明。全文仅为学习与研究方法层面的分享，不构成任何投资建议，加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为什么要先测一笔</a></li>
+          <li><a href="#sec-2">2. 测试金额怎么定</a></li>
+          <li><a href="#sec-3">3. 落地后四件事核对</a></li>
+          <li><a href="#sec-4">4. 红旗清单</a></li>
+          <li><a href="#sec-5">5. 用兑换工具做预演测试</a></li>
+          <li><a href="#sec-6">6. 路径预演清单</a></li>
+          <li><a href="#sec-7">7. 总结与长尾问题</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a> —— 查询源链交易与到账记录</li>
+            <li><a href="https://layerzero.network/" target="_blank" rel="noopener">LayerZero 文档</a> —— 跨链消息与桥接结算原理参考</li>
+            <li><a href="https://docs.uniswap.org/concepts/protocol/swaps" target="_blank" rel="noopener">Uniswap 兑换机制文档</a> —— 滑点与价格影响的基础概念参考</li>
+          </ul>
+          <p class="ref-note">文中提及的跨链兑换工具与第三方平台功能可能随时间变化，请以各平台官方最新披露为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/articles/cross-chain-swap-slippage-fee-verification-guide.html">跨链兑换实操核验：报价滑点和到账金额，真的对得上吗</a></li>
+          <li><a href="/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>
+          <li><a href="/articles/swap-routing-research-guide.html">跨链聚合路由核验：「最优路径」报价之外，隐藏了哪些成本</a></li>
+          <li><a href="/articles/exchange-fees-onramp-offramp-saving-guide.html">交易所手续费与出入金省钱教程：把每一笔成本算明白</a></li>
+          <li><a href="/articles/cex-kyc-withdrawal-limits-onramp-tutorial.html">交易所KYC与大额出金实操教程：认证等级、提币限额与风控通关手册</a></li>
+          <li><a href="/articles/cross-chain-messaging-protocol-verification.html">跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回摘要首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=7a71ab8f"></script>
+</body>
+</html>

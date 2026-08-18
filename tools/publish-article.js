@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'cross-chain-swap-slippage-fee-verification-guide',
-  publishedISO: '2026-08-18T10:00:00+08:00',
+  slug: 'crosschain-swap-dry-run-verification-guide',
+  publishedISO: '2026-08-18T14:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: '跨链兑换实操核验：报价滑点和到账金额，真的对得上吗',
-    tagLabel: '跨链兑换教程',
-    cardDesc: '报价页写的滑点0.5%，为什么到账少了不止这个数？拆解隐藏费用层、区分报价滑点与实际滑点，一套逐笔核对到账的实操方法与清单。',
+    h1: '跨链兑换前先测一笔：大额转账前该验证什么',
+    tagLabel: '跨链预演测试',
+    cardDesc: '跨链兑换金额大，直接梭哈风险高。用一笔小额测试交易先验证路由：链、合约地址和精度、到账时间、实付手续费，再决定要不要放大金额。',
   },
   en: {
-    h1: 'Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?',
-    tagLabel: 'Swap Tutorial',
-    cardDesc: 'The quote said 0.5% slippage, so why did you receive less than that? Hidden fee layers, quoted vs. realized slippage, and a practical checklist for reconciling what arrived.',
+    h1: 'Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer',
+    tagLabel: 'Dry-Run Test',
+    cardDesc: 'A large cross-chain swap deserves a small test run first: verify the chain, the token contract and decimals, real arrival time, and the actual fee before you scale up.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'cross-chain-swap-slippage-fee-verification-guide',
     'agent-usage-billing-verification',
     'usdt-peg-mechanism-stablecoin-basics-guide',
     'ai-onchain-security-research-guide',
