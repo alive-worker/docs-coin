@@ -38,25 +38,26 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'agent-usage-billing-verification',
-  publishedISO: '2026-08-17T15:00:00+08:00',
+  slug: 'cross-chain-swap-slippage-fee-verification-guide',
+  publishedISO: '2026-08-17T18:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
 
   zh: {
-    h1: 'AI Agent计费核验：用量是真的，账单就一定对吗',
-    tagLabel: 'AI×链上',
-    cardDesc: '按调用次数、Token或算力秒计费的AI代理服务，用量数字从哪来、账单怎么对账、有没有被悄悄多算，本文给出一套可复用的核验方法与清单。',
+    h1: '跨链兑换实操核验：报价滑点和到账金额，真的对得上吗',
+    tagLabel: '跨链兑换教程',
+    cardDesc: '报价页写的滑点0.5%，为什么到账少了不止这个数？拆解隐藏费用层、区分报价滑点与实际滑点，一套逐笔核对到账的实操方法与清单。',
   },
   en: {
-    h1: 'AI Agent Billing Verification: Real Usage Doesn\'t Guarantee an Accurate Bill',
-    tagLabel: 'AI x On-Chain',
-    cardDesc: 'AI agent services billed by call count, tokens, or compute-seconds: where does the usage number come from, and how do you check the bill isn\'t inflated? A verification method and checklist.',
+    h1: 'Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?',
+    tagLabel: 'Swap Tutorial',
+    cardDesc: 'The quote said 0.5% slippage, so why did you receive less than that? Hidden fee layers, quoted vs. realized slippage, and a practical checklist for reconciling what arrived.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'agent-usage-billing-verification',
     'usdt-peg-mechanism-stablecoin-basics-guide',
     'ai-onchain-security-research-guide',
     'usdt-issuance-reserve-basics',
@@ -313,7 +314,7 @@ function updateHomepage(lang) {
             </span>
             <span class="featured-desc">${cfgLang.cardDesc}</span>
             <span class="featured-meta">
-              <time datetime="${CONFIG.publishedISO}">${CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '')}</time>
+              <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="${CONFIG.publishedISO}">${CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '')}</time>
               <span class="featured-more">${readMore}</span>
             </span>
           </span>
@@ -333,7 +334,7 @@ function updateHomepage(lang) {
           <h2 class="post-card-title"><a href="${artPrefix}${prevFeaturedSlug}.html">${prevFeatured.h1}</a></h2>
           <p class="post-card-desc">${prevFeatured.cardDesc || ''}</p>
           <div class="post-card-meta">
-            <time datetime="${prevPub}">${prevPubDisplay}</time>
+            <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="${prevPub}">${prevPubDisplay}</time>
             <a class="read-link" href="${artPrefix}${prevFeaturedSlug}.html">${readLabel}</a>
           </div>
         </div>
