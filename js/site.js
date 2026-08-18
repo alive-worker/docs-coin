@@ -203,6 +203,8 @@
     '/en/articles/cross-chain-swap-slippage-fee-verification-guide.html': '2026-08-18 10:00:00',
     '/articles/agent-usage-billing-verification.html': '2026-08-17 15:00:00',
     '/en/articles/agent-usage-billing-verification.html': '2026-08-17 15:00:00',
+    '/articles/crypto-onramp-offramp-beginner-tutorial.html': '2026-08-17 10:30:00',
+    '/en/articles/crypto-onramp-offramp-beginner-tutorial.html': '2026-08-17 10:30:00',
     '/articles/usdt-reserve-transparency-onramp-defi-security-guide.html': '2026-08-11 14:40:00',
     '/articles/usdt-crosschain-transfer-security-recovery-guide.html': '2026-08-11 12:00:00',
   '/articles/usdt-beginner-onramp-defi-security-guide.html': '2026-08-10 11:00:00',
