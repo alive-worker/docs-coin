@@ -39,7 +39,7 @@ const root = path.resolve(__dirname, '..');
 // ---------------------------------------------------------------------------
 const CONFIG = {
   slug: 'crosschain-swap-fee-optimization-guide',
-  publishedISO: '2026-08-19T18:00:00+08:00',
+  publishedISO: '2026-08-19T17:32:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
   topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
