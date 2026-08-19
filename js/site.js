@@ -195,6 +195,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/crosschain-swap-stuck-recovery-guide.html': '2026-08-19 14:00:00',
+    '/en/articles/crosschain-swap-stuck-recovery-guide.html': '2026-08-19 14:00:00',
     '/articles/virtual-card-subscription-renewal-verification-guide.html': '2026-08-19 09:00:00',
     '/en/articles/virtual-card-subscription-renewal-verification-guide.html': '2026-08-19 09:00:00',
     '/articles/stablecoin-virtual-card-topup-verification-guide.html': '2026-08-18 18:00:00',

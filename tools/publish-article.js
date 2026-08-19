@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'virtual-card-subscription-renewal-verification-guide',
-  publishedISO: '2026-08-19T09:00:00+08:00',
+  slug: 'crosschain-swap-stuck-recovery-guide',
+  publishedISO: '2026-08-19T14:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
-  topic: 'basics',                       // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '订阅说取消了，卡这边的扣款权限停了吗',
-    tagLabel: '订阅续费核验',
-    cardDesc: '取消了商户后台的订阅，不代表卡这边的循环扣款授权真的停了，两者是两套独立系统。本文讲清怎么在虚拟卡账单和授权记录里核实自动续费开关的真实状态，取消后如何验证卡侧扣款权限确实撤销，万一还是被扣款，虚拟卡申诉与拒付流程和银行卡有何不同，如何设单笔限额作最后防线。仅供学习研究，不构成投资建议。',
+    h1: '跨链兑换卡在中途：源链扣了，目标链没到',
+    tagLabel: '卡单找回核验',
+    cardDesc: '跨链兑换卡住时先别慌着找客服。用区块浏览器和聚合器追踪工具判断卡在源链确认、桥拾取还是目标链入账；分清何时等待正常、何时是真问题；如何带哈希和路由ID联系客服而非只说钱不见了；自行解决、退回源链、真正卡死三种结局意味什么；识别专门针对卡单用户的假客服诈骗套路。仅供学习研究，不构成投资建议。',
   },
   en: {
-    h1: 'Did Cancelling Really Stop Your Virtual Card Auto-Renewal?',
-    tagLabel: 'Renewal Check',
-    cardDesc: 'Cancelling a subscription does not mean the card charge stopped. Verify auto-renewal on the card, confirm revocation, and how to dispute a stray charge that still went through.',
+    h1: 'Cross-Chain Swap Stuck? A Recovery Playbook',
+    tagLabel: 'Recovery Check',
+    cardDesc: 'Cross-chain swap stuck, funds missing on destination chain. Learn to trace the stuck stage, know when to wait, escalate correctly, and spot fake-support scams.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'virtual-card-subscription-renewal-verification-guide',
     'stablecoin-virtual-card-topup-verification-guide',
     'crosschain-swap-dry-run-verification-guide',
     'cross-chain-swap-slippage-fee-verification-guide',
