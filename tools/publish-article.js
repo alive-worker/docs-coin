@@ -38,29 +38,31 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'stablecoin-virtual-card-topup-verification-guide',
-  publishedISO: '2026-08-18T18:00:00+08:00',
+  slug: 'virtual-card-subscription-renewal-verification-guide',
+  publishedISO: '2026-08-19T09:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
   topic: 'basics',                       // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '稳定币充值虚拟卡：到账了，但对账了吗',
-    tagLabel: '虚拟卡充值核验',
-    cardDesc: '充值成功不等于账真的对了。核对报价汇率和实际扣款汇率、承诺到账时间和真实到账时间、单笔与日/月限额，一套充值后的对账核验清单。',
+    h1: '订阅说取消了，卡这边的扣款权限停了吗',
+    tagLabel: '订阅续费核验',
+    cardDesc: '取消了商户后台的订阅，不代表卡这边的循环扣款授权真的停了，两者是两套独立系统。本文讲清怎么在虚拟卡账单和授权记录里核实自动续费开关的真实状态，取消后如何验证卡侧扣款权限确实撤销，万一还是被扣款，虚拟卡申诉与拒付流程和银行卡有何不同，如何设单笔限额作最后防线。仅供学习研究，不构成投资建议。',
   },
   en: {
-    h1: 'Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits',
-    tagLabel: 'Top-Up Check',
-    cardDesc: 'A successful top-up doesn\'t mean the numbers reconcile. Check the applied rate against the quote, real arrival time against the promise, and your spend limits before relying on the card.',
+    h1: 'Did Cancelling Really Stop Your Virtual Card Auto-Renewal?',
+    tagLabel: 'Renewal Check',
+    cardDesc: 'Cancelling a subscription does not mean the card charge stopped. Verify auto-renewal on the card, confirm revocation, and how to dispute a stray charge that still went through.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'stablecoin-virtual-card-topup-verification-guide',
     'crosschain-swap-dry-run-verification-guide',
     'cross-chain-swap-slippage-fee-verification-guide',
     'agent-usage-billing-verification',
+    'crypto-onramp-offramp-beginner-tutorial',
     'usdt-peg-mechanism-stablecoin-basics-guide',
     'ai-onchain-security-research-guide',
     'usdt-issuance-reserve-basics',
