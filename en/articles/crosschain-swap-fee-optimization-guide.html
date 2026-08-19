@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Chain Swap Fees: How to Actually Cut What You Pay</title>
+  <meta name="description" content="Splitting a swap does not save fees. Fixed gas favors fewer, bigger swaps; percentage fees stay neutral. Know which before you split a swap or pick a route.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/crosschain-swap-fee-optimization-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/crosschain-swap-fee-optimization-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Chain Swap Fees: How to Actually Cut What You Pay">
+  <meta property="og:description" content="Fixed gas costs favor fewer, larger swaps; percentage-based aggregator and bridge fees stay roughly neutral to splitting. A practical guide to cutting cross-chain swap fees before you execute.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html">
+  <meta property="article:published_time" content="2026-08-19T18:00:00+08:00">
+  <meta property="article:modified_time" content="2026-08-19T18:00:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Chain Swap Fees: How to Actually Cut What You Pay">
+  <meta name="twitter:description" content="Fixed fees favor fewer, larger swaps. Percentage fees don't care how you split. A practical guide to routes, timing, and spotting hidden costs in swap quotes.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-fee-optimization-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-Chain Swap Fees: How to Actually Cut What You Pay cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-fee-optimization-guide-en.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-fee-optimization-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=04deb51d">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-fee-optimization-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html", "name": "Cross-Chain Swap Fees: How to Actually Cut What You Pay", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Fee Optimization", "item": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#article", "headline": "Cross-Chain Swap Fees: How to Actually Cut What You Pay", "description": "Splitting a cross-chain swap into smaller pieces does not automatically save fees. Fixed gas costs favor fewer, larger swaps, while percentage-based aggregator and bridge fees stay roughly neutral to splitting. Learn to tell fee layers apart, pick cheaper network routes, time around congestion, and spot costs hidden inside a quoted rate. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["cross-chain swap fees", "gas fee optimization", "swap splitting", "aggregator fees", "network congestion", "swap route comparison", "hidden exchange rate cost"], "wordCount": 1800, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-19T18:00:00+08:00", "dateModified": "2026-08-19T18:00:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-fee-optimization-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/crosschain-swap-fee-optimization-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Chain Swap Fees: How to Actually Cut What You Pay</h1>
+        <p class="article-summary">The instinctive way most people try to save on fees is to split a swap into several smaller ones — but that instinct doesn't actually hold up for cross-chain swaps. The first three pieces in this series covered dry-run testing before a large transfer, verifying slippage after a swap completes, and handling a stuck swap; this one goes back to the very start: how to systematically cut what you pay before you ever hit execute. This guide breaks down the actual fee layers in a cross-chain swap, which ones stay roughly fixed regardless of amount and which scale with it — and why that means splitting sometimes saves money and sometimes costs more. It also covers picking a cheaper source/destination network combination when a token supports several, timing swaps around network congestion, and spotting "zero fee" or "best rate" marketing that hides its real cost inside the quoted exchange rate. For learning and methodology purposes only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-19T18:00:00+08:00">2026-08-19 18:00:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-fee-optimization-guide-en.svg" alt="Cross-Chain Swap Fees: How to Actually Cut What You Pay cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. The fee layers inside a single cross-chain swap</h2>
+        <p>To save money, first see where it actually goes. Layer one is the source-chain packaging fee — the gas you pay for the transaction that initiates the swap itself. This layer depends almost entirely on how congested the source chain is at that moment, not on how much you're swapping. Layer two is the aggregator or bridge's own service fee, which in nearly all cases is charged as a fixed percentage of the swap amount — the bigger the amount, the bigger this layer's absolute cost, though the percentage itself usually stays constant. Layer three is the destination-chain settlement cost: some routes bundle this into the service fee, others charge a small separate gas cost on the destination chain, usually fronted by the relayer and deducted from the swap. Layer four is easy to miss: the spread baked into the exchange rate itself — how far the rate the aggregator gives you sits from that asset's actual market mid-price at the time. It never shows up as its own line item, but it's just as real a cost. Seeing all four clearly is what makes the "should I split" and "should I switch networks" questions in the next sections actually answerable.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Fixed vs. percentage fees: does splitting actually save money</h2>
+        <p>The four layers from Section 1 split into two categories based on how sensitive they are to amount. The first is fixed or near-fixed costs — source-chain gas and destination-chain settlement gas are the classic examples. Whether you're swapping $100 or $10,000, these two gas costs stay roughly the same in absolute terms, because they correspond to the act of packaging a transaction on-chain, not the value being moved. That means if you split a $10,000 swap into ten $1,000 pieces, you pay the fixed-cost layer ten times instead of once — your absolute spend on that layer roughly multiplies by ten. Splitting here is pure waste. The second category is percentage-based fees — the aggregator/bridge service fee and the exchange-rate spread are the classic examples, and both scale directly with amount: split $10,000 into ten $1,000 pieces and each piece pays the same percentage, so the total is roughly the same as one $10,000 swap (unless a platform offers tiered discounts at larger sizes, in which case consolidating actually helps more). The conclusion is straightforward: the more a route's total cost is dominated by fixed fees, the more it pays to consolidate into fewer, larger swaps; the more it's dominated by percentage fees with fixed costs negligible, splitting barely moves total cost — at that point the only reason to split is to spread execution risk, not to save money.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Picking a cheaper source/destination network combination</h2>
+        <p>Many mainstream tokens (USDC, USDT, wrapped ETH, and similar) exist simultaneously on Ethereum mainnet and several L2s or sidechains, which means the same cross-chain swap often has more than one viable path. It's worth taking a minute to compare: if your asset currently sits on Ethereum mainnet and the destination asset also has a native or bridged version on a cheaper L2, moving your funds to that L2 first and initiating the cross-chain swap from there can often save meaningfully more than swapping directly from mainnet — because the fixed-fee layer discussed in Section 2 is typically a fraction of mainnet's cost on an L2. Conversely, if both ends of a route can stay on L2s, there's no reason to route through expensive mainnet gas at all. The deciding factor isn't which chain is "faster" or better known — it's comparing the actual quotes (including gas estimates and service fees) that a handful of candidate routes give you. Most aggregators show a fee breakdown before you commit, and spending two minutes comparing a few paths usually pays for itself many times over.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Timing around network congestion optimizes the fixed-fee layer</h2>
+        <p>Source- and destination-chain gas both move in real time with network congestion — this is where the "fixed fee" from Section 2 turns out not to be fully fixed after all: it's insensitive to the value being moved, but highly sensitive to how busy the network is right now. During peak activity on Ethereum mainnet — a major token launch, a sharp market move triggering mass liquidations or a buying rush — gas fees can swing several-fold within tens of minutes. Initiating a swap during a relatively quiet window often saves more than picking the "optimal" route ever could. Most block explorers and gas-tracking sites show historical gas curves, giving you a rough sense of whether now is a relative low point. If a swap isn't urgent, scheduling it for a clearly uncongested window is the cheapest and simplest way to save — it's just easy to skip when the instinct is "I want this done now."</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Comparing route costs side by side with a tool like AllSwap</h2>
+        <p>Putting the fee breakdown and route comparison from the sections above into practice requires a cross-chain swap tool that shows multiple candidate routes with gas estimates and service fees itemized, rather than one final lump-sum quote. <a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a> is one example of this kind of tool — the platform describes itself as a cross-chain swap aggregation tool supporting asset swaps across several mainstream public chains, and it lists candidate routes with estimated costs before you commit, which in principle could be used to compare the real cost of different source/destination combinations and splitting strategies side by side. To be clear, the description above is drawn solely from the platform's own self-reported information — please verify the actual network coverage, the real-time accuracy of its fee display, and the final settlement price against the provider's latest official disclosures and your own testing; this article offers no endorsement or guarantee whatsoever. Any use of a cross-chain swap tool must serve a genuine, compliant asset-management purpose and follow the relevant platform's terms and your local laws — never for money laundering, sanctions evasion, or other illegal purposes.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Spotting "zero fee" and "best rate" claims that hide cost in the rate</h2>
+        <p>Some platforms or routes advertise "zero fees" or "zero slippage," which reads well as marketing but is worth a follow-up question: where did the cost go. The most common move is folding what would otherwise be a separate service fee into the exchange rate you're quoted — you don't see a line-item "fee," but the amount of the destination asset you actually receive is already discounted relative to that asset's market mid-price at the time. That discount is a real cost, it just never appears on the bill labeled "fee." Spotting it isn't complicated: take the quote you're given, manually work out what you should receive using the market mid-price from a mainstream exchange or price-tracking site at that moment, and compare it against what the platform actually delivers — the gap is the swap's real total cost, whether it's packaged as a "fee" or as "the rate." The exchange-rate spread mentioned in Section 1 is exactly what you're checking here; looking only for a separate "fee" line item is an easy way to get misled by wording.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and a fee-optimization checklist</h2>
+        <ul>
+        <li>Identify the four fee layers first — source gas, aggregator/bridge service fee, destination settlement cost, and exchange-rate spread — before deciding how to save.</li>
+        <li>Consolidate into fewer, larger swaps when fixed fees dominate; splitting barely matters when percentage fees dominate.</li>
+        <li>When a token supports multiple networks, compare itemized quotes across candidate routes rather than picking the best-known chain.</li>
+        <li>Time swaps for relatively quiet network windows — often bigger savings than route selection alone.</li>
+        <li>When you see "zero fee" or "best rate" claims, manually check the amount received against market mid-price rather than trusting the label.</li>
+        <li>Use a tool that itemizes fees and compares multiple routes so decisions are based on actual quotes, not instinct.</li>
+        </ul>
+        <p>Frequently asked: does splitting a swap into smaller pieces actually save fees? It depends on the fee structure — if fixed gas dominates, splitting costs more; if percentage fees dominate, total cost barely changes either way. How do I know if I should switch networks? Compare itemized quotes (gas estimate plus service fee) across candidate routes rather than judging by chain popularity or speed alone. Are "zero fee" claims trustworthy? Not at face value — always check the actual amount received against market mid-price, since the cost may already be baked into the quoted rate. This article is for learning and research purposes only and does not constitute investment advice; cross-chain operations on crypto assets carry technical and compliance risks, so please make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The fee layers in a swap</a></li>
+          <li><a href="#sec-2">2. Fixed vs. percentage fees</a></li>
+          <li><a href="#sec-3">3. Picking a cheaper network route</a></li>
+          <li><a href="#sec-4">4. Timing around congestion</a></li>
+          <li><a href="#sec-5">5. Comparing routes with AllSwap</a></li>
+          <li><a href="#sec-6">6. Spotting hidden-rate costs</a></li>
+          <li><a href="#sec-7">7. Summary and checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://etherscan.io/gastracker" target="_blank" rel="noopener">Etherscan Gas Tracker</a> — general reference for real-time and historical gas congestion</li>
+            <li><a href="https://l2beat.com/" target="_blank" rel="noopener">L2BEAT</a> — reference for comparing L2 network cost and security models</li>
+            <li><a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko</a> — reference tool for checking market mid-price and spotting rate spreads</li>
+          </ul>
+          <p class="ref-note">The cross-chain swap tools and third-party platform features mentioned may change over time; please refer to each platform's latest official disclosures. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: Test Small Before You Go Big</a></li>
+          <li><a href="/en/articles/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Slippage Verification</a></li>
+          <li><a href="/en/articles/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>
+          <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security Guide</a></li>
+          <li><a href="/en/articles/exchange-fees-onramp-offramp-saving-guide.html">Exchange Fee-Saving Guide for On/Off-Ramp</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Guide</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English site on crypto research methodology and on-chain data, tracking research frameworks, on-chain metrics, and fund-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9afe984f"></script>
+</body>
+</html>

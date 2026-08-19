@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-stuck-recovery-guide',
-  publishedISO: '2026-08-19T14:00:00+08:00',
+  slug: 'crosschain-swap-fee-optimization-guide',
+  publishedISO: '2026-08-19T18:00:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
   topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链兑换卡在中途：源链扣了，目标链没到',
-    tagLabel: '卡单找回核验',
-    cardDesc: '跨链兑换卡住时先别慌着找客服。用区块浏览器和聚合器追踪工具判断卡在源链确认、桥拾取还是目标链入账；分清何时等待正常、何时是真问题；如何带哈希和路由ID联系客服而非只说钱不见了；自行解决、退回源链、真正卡死三种结局意味什么；识别专门针对卡单用户的假客服诈骗套路。仅供学习研究，不构成投资建议。',
+    h1: '跨链兑换手续费怎么省：拆单前先看清费用结构',
+    tagLabel: '费用优化核验',
+    cardDesc: '跨链兑换手续费不是拆得越细越省钱。链上打包这类固定成本天然偏向合并成一笔大额兑换来分摊，而聚合器和桥按比例收取的费用对拆分与否基本无感；本文教你先分清哪些是固定费用、哪些是比例费用，再决定要不要换一条更便宜的网络路径、要不要避开链上拥堵时段，以及怎样识别报价里悄悄藏着成本的所谓零手续费宣传话术。',
   },
   en: {
-    h1: 'Cross-Chain Swap Stuck? A Recovery Playbook',
-    tagLabel: 'Recovery Check',
-    cardDesc: 'Cross-chain swap stuck, funds missing on destination chain. Learn to trace the stuck stage, know when to wait, escalate correctly, and spot fake-support scams.',
+    h1: 'Cross-Chain Swap Fees: How to Actually Cut What You Pay',
+    tagLabel: 'Fee Optimization',
+    cardDesc: 'Splitting a swap does not save fees. Fixed gas favors fewer, bigger swaps; percentage fees stay neutral. Know which before you split a swap or pick a route.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-stuck-recovery-guide',
     'virtual-card-subscription-renewal-verification-guide',
     'stablecoin-virtual-card-topup-verification-guide',
     'crosschain-swap-dry-run-verification-guide',
