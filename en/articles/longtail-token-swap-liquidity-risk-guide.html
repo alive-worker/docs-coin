@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</title>
+  <meta name="description" content="Long-tail swaps carry risks mainstream guides skip: fake tokens sharing a real name on-chain, and thin liquidity that quietly breaks your slippage cap.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/longtail-token-swap-liquidity-risk-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/longtail-token-swap-liquidity-risk-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity">
+  <meta property="og:description" content="Long-tail token swaps carry two risks mainstream-asset guides never cover: fake tokens sharing a real name and symbol on the destination chain, and pools too thin to absorb your trade at the quoted slippage.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html">
+  <meta property="article:published_time" content="2026-08-20T10:08:00+08:00">
+  <meta property="article:modified_time" content="2026-08-20T10:08:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity">
+  <meta name="twitter:description" content="Verify the contract address first, then the pool depth — an aggregator&#39;s best-rate label means little for a thin, long-tail pair.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-longtail-token-swap-liquidity-risk-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-longtail-token-swap-liquidity-risk-guide-en.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-longtail-token-swap-liquidity-risk-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=c6b63d5a">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-longtail-token-swap-liquidity-risk-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html", "name": "Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Long-Tail Check", "item": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#article", "headline": "Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity", "description": "Long-tail token swaps carry two risks mainstream-asset guides never cover: fake tokens sharing a real project's name and symbol on the destination chain, and liquidity pools too thin to absorb your trade without price impact far beyond your quoted slippage. Learn to verify the contract address and check real pool depth before you commit. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["long-tail token swap", "cross-chain liquidity risk", "fake token verification", "contract address check", "liquidity pool depth", "price impact", "aggregator best rate"], "wordCount": 1800, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-20T10:08:00+08:00", "dateModified": "2026-08-20T10:08:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/longtail-token-swap-liquidity-risk-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/longtail-token-swap-liquidity-risk-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</h1>
+        <p class="article-summary">The earlier pieces in this cross-chain swap series — dry-run testing, slippage verification, stuck-transaction recovery, fee optimization — all implicitly assumed you were swapping a mainstream asset like ETH, USDT, or USDC: something with official bridged versions on nearly every major chain and liquidity deep enough that the quoted slippage roughly holds up. Swap a long-tail token instead — something with a smaller market cap, only a handful of chains it actually trades on, and a thinner community — and two new problems appear that mainstream swaps almost never raise: is the token you're about to receive on the destination chain actually the real one, or a contract that merely shares its name and ticker; and even if it's genuine, does this specific trading pair have enough depth to absorb your swap without price impact far beyond what the slippage setting implies. This guide covers exactly those two long-tail-specific risks: verifying the contract address, checking real pool depth, and why an aggregator's "best rate" label can't be trusted at face value for thin pairs. For learning and methodology purposes only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-20T10:08:00+08:00">2026-08-20 10:08:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-longtail-token-swap-liquidity-risk-guide-en.svg" alt="Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. Long-tail swaps sit on a different risk axis entirely</h2>
+        <p>The earlier pieces in this series covering dry-run testing, slippage verification, stuck-transaction recovery, and fee optimization all implicitly assumed the asset being swapped has deep enough liquidity on both ends and no realistic risk of impersonation — true for ETH, USDT, USDC, and similar. Swap a long-tail token — lower market cap, only a handful of chains, a smaller community — and every risk from those earlier guides still applies, but two more fundamental ones appear on top: first, is the token you're about to receive on the destination chain genuinely issued by the project you think it is, or a contract that merely shares its name and ticker; second, even if the token is genuine, does the specific trading pair on your chosen route have enough depth to absorb your swap without price impact far beyond what you'd expect. Mainstream-asset swaps rarely raise either question. For long-tail tokens, these two questions are exactly what separates a safe swap from a costly mistake.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Fake tokens: same name, same symbol — only the contract address doesn't lie</h2>
+        <p>A real and common attack: someone deploys a new contract on the destination chain, sets its name and ticker to exactly match a known or semi-known project — sometimes even copying the logo — and gets it listed in a DEX's pair search results or token list. For a user who has only ever used a token on the source chain and never verified its official contract address on the destination chain, this kind of fake is nearly impossible to tell apart by name or symbol alone, precisely because the attacker set those fields to match on purpose. The only thing that can't be faked is the contract address: any token has exactly one official contract on a given chain, and that address is usually published on the project's official site, pinned to its official social accounts, or listed on the token's detail page on a mainstream tracker like CoinGecko or CoinMarketCap. Before initiating a long-tail cross-chain swap, the first step isn't reading the token name the aggregator shows you — it's pulling the official contract address for that chain from the project's own channels and comparing it character by character against the address the route actually delivers to. A single mismatched character fails the check.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Whether an official bridged/minted version even exists needs separate verification</h2>
+        <p>Beyond outright impersonation, there's a subtler gap that's easy to overlook: a token may have no official, project-sanctioned bridged or minted version on a given destination chain at all. What circulates under that name might be an unofficial wrapped asset packaged independently by some third-party bridge or aggregator, whose value depends entirely on that wrapper's own solvency and redemption mechanism — if the wrapper's operator runs into trouble, that unofficial wrapped token can go to zero, which is a different kind of risk from outright fraud. Checking this means going back to the project's own documentation or announcements to confirm whether it officially supports the destination chain and, if so, which bridge and which contract address. If the project has never publicly stated support for that chain, any same-named asset showing up there — fake or not — shouldn't be held beyond what you need for short-term transit. This is a separate check from Section 2's contract-address verification: an address mismatch is a clear fraud signal, while a matching address on a chain the project never officially confirmed is a credit risk that needs its own judgment call.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. How thin pools push price impact far past your slippage setting</h2>
+        <p>Slippage caps how far the execution price can deviate from the price you were quoted the moment you got the quote — it says nothing about whether the pair itself can absorb your swap size without moving the pool's own price dramatically. Under an automated market maker's pricing curve, the smaller a pool's reserves, the more a given trade size pushes the price — that's a mathematical property of the model, not something slippage protection fixes. Slippage protection only reverts the trade if the execution price strays too far from the price at the moment you were quoted; it does nothing if the route is already executing through a pool so thin that the "quote-moment price" itself has already been dragged well away from the true market mid-price by the route's own trade. For a long-tail token, a swap size that looks modest can hit a pool with only tens of thousands of dollars in reserves and produce a price impact of several percent or more — an order of magnitude beyond the 1-2% slippage cap most people set out of habit.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Checking a specific pair's pool depth before you commit</h2>
+        <p>The check itself isn't complicated — it's just rarely done before a long-tail swap. Most DEX front ends, and aggregator trackers like DexScreener or DEXTools, show a pair's current liquidity reserves, usually valued in dollars on each side. Compare that number to your swap size: if your trade is a noticeably large share of total reserves (roughly above one to a few percent, depending on the pool's curve type), you can reasonably expect meaningful price impact regardless of how good the estimated slippage looks on the quote screen. If the route the aggregator gives you is a multi-hop path through several pools — common for long-tail tokens, since a direct pair often doesn't exist and the route has to go through one or two intermediate assets — every hop has its own depth to check. A single thin hop anywhere in the route can throw off the overall execution price, so check each hop individually rather than trusting the single final quote number.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Why "best rate" labels are often unreliable for thin pairs</h2>
+        <p>An aggregator's "best rate" label is a relative conclusion among the candidate routes it evaluated at the moment you asked for a quote — it tells you which route was better among the options, not whether that route itself is actually sound. For a liquid, mainstream asset, most candidate routes have adequate depth, so the "best rate" comparison is meaningful. For a long-tail token, every candidate route may run through shallow pools, so the "best" one the aggregator picks might just be the least-bad among several options that all produce meaningful price impact — not a genuinely good price in any absolute sense. Worse, if the route hops through multiple intermediate assets and multiple thin pools, the price impact at each hop compounds along the way, and aggregator interfaces typically show only one final estimated amount without breaking down how much impact each hop contributed. That compounding effect is more hidden than a single thin pool's impact, and it's easy to be misled by the "best rate" wording into assuming the result is already fine.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Using a tool like AllSwap that surfaces route detail to help verify</h2>
+        <p>Both the contract-address check and the pool-depth check from earlier sections can be done manually, but a swap tool that shows every hop in a route along with its contract address before you commit meaningfully lowers the chance of missing something. <a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a> is one example of this kind of tool — the platform describes itself as a cross-chain swap aggregation tool supporting asset swaps across several mainstream public chains, and it lists candidate routes with per-hop pair information before you commit, which in principle could help cross-check a target token's contract address and spot a route running through a noticeably shallow pool. To be clear, the description above is drawn solely from the platform's own self-reported information — please verify the actual token coverage, the completeness and real-time accuracy of contract-address display, and the final settlement price against the provider's latest official disclosures and your own testing; this article offers no endorsement or guarantee whatsoever. Any use of a cross-chain swap tool must serve a genuine, compliant asset-management purpose and follow the relevant platform's terms and your local laws — never for money laundering, sanctions evasion, or other illegal purposes.</p>
+        </section>
+
+        <section id="sec-8">
+        <h2>8. Summary and a long-tail verification checklist</h2>
+        <ul>
+        <li>Before you commit, pull the official contract address from the project's own channels and compare it character by character against what the route actually delivers.</li>
+        <li>Confirm the project officially supports the destination chain — an unconfirmed "bridged version" is a separate credit risk on top of fraud risk.</li>
+        <li>Thin-pool price impact isn't something slippage protection covers — check actual reserve depth on a DEX front end or tracker.</li>
+        <li>For multi-hop routes, check depth at every hop; price impact compounds along the route, so don't trust a single final quote number.</li>
+        <li>An aggregator's "best rate" is only a relative comparison among candidates — it says nothing about whether the winning route itself is actually liquid.</li>
+        <li>Use a tool that surfaces route detail and contract addresses so decisions rest on real data, not a name and a label.</li>
+        </ul>
+        <p>Frequently asked: how do I quickly tell if a long-tail token is fake? Pull the official contract address from the project's own site or social accounts and compare it character by character — any mismatch means it's fake. Does slippage protection cover thin-liquidity price impact? No — it only guards against the execution price drifting from the quote-moment price, and a thin pool's quote-moment price may already be skewed by the route's own trade. Does "best rate" mean the swap is a good deal? Not necessarily — it's only the best among the candidates evaluated, and every candidate may run through shallow pools. This article is for learning and research purposes only and does not constitute investment advice; cross-chain operations on crypto assets carry technical and compliance risks, so please make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. A different risk axis</a></li>
+          <li><a href="#sec-2">2. Fake tokens and address checks</a></li>
+          <li><a href="#sec-3">3. Verifying official bridged versions</a></li>
+          <li><a href="#sec-4">4. Thin pools and price impact</a></li>
+          <li><a href="#sec-5">5. Checking pool depth</a></li>
+          <li><a href="#sec-6">6. Why "best rate" can mislead</a></li>
+          <li><a href="#sec-7">7. Using AllSwap to help verify</a></li>
+          <li><a href="#sec-8">8. Summary and checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko</a> — reference for verifying official contract addresses and bridged-version coverage</li>
+            <li><a href="https://dexscreener.com/" target="_blank" rel="noopener">DexScreener</a> — tracker for checking a specific pair's liquidity pool depth</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan and comparable block explorers</a> — general reference for verifying contract addresses and holder distribution</li>
+          </ul>
+          <p class="ref-note">The cross-chain swap tools and third-party platform features mentioned may change over time; please refer to each platform's latest official disclosures. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: Test Small Before You Go Big</a></li>
+          <li><a href="/en/articles/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Slippage Verification</a></li>
+          <li><a href="/en/articles/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>
+          <li><a href="/en/articles/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>
+          <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Guide</a></li>
+          <li><a href="/en/articles/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security Guide</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English site on crypto research methodology and on-chain data, tracking research frameworks, on-chain metrics, and fund-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=16a11682"></script>
+</body>
+</html>

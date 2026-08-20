@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-fee-optimization-guide',
-  publishedISO: '2026-08-19T17:32:00+08:00',
+  slug: 'longtail-token-swap-liquidity-risk-guide',
+  publishedISO: '2026-08-20T10:08:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
   topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链兑换手续费怎么省：拆单前先看清费用结构',
-    tagLabel: '费用优化核验',
-    cardDesc: '跨链兑换手续费不是拆得越细越省钱。链上打包这类固定成本天然偏向合并成一笔大额兑换来分摊，而聚合器和桥按比例收取的费用对拆分与否基本无感；本文教你先分清哪些是固定费用、哪些是比例费用，再决定要不要换一条更便宜的网络路径、要不要避开链上拥堵时段，以及怎样识别报价里悄悄藏着成本的所谓零手续费宣传话术。',
+    h1: '小币种跨链兑换：流动性薄，仿冒币多',
+    tagLabel: '小币种核验',
+    cardDesc: '小币种跨链兑换比换主流资产多两重风险：目标链上的仿冒代币可能和真代币共用同一个名字与符号，只有合约地址能分辨真假；交易对本身流动性太薄，会让实际成交价格偏离滑点上限，聚合器给出的最优价格也可能是几个薄池叠加冲击后的结果。本文讲清下单前该核实哪个合约地址、该查哪些池子深度指标，才不被表面报价误导。',
   },
   en: {
-    h1: 'Cross-Chain Swap Fees: How to Actually Cut What You Pay',
-    tagLabel: 'Fee Optimization',
-    cardDesc: 'Splitting a swap does not save fees. Fixed gas favors fewer, bigger swaps; percentage fees stay neutral. Know which before you split a swap or pick a route.',
+    h1: 'Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity',
+    tagLabel: 'Long-Tail Check',
+    cardDesc: 'Long-tail swaps carry risks mainstream guides skip: fake tokens sharing a real name on the destination chain, and thin liquidity that quietly breaks your slippage cap.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-fee-optimization-guide',
     'crosschain-swap-stuck-recovery-guide',
     'virtual-card-subscription-renewal-verification-guide',
     'stablecoin-virtual-card-topup-verification-guide',
