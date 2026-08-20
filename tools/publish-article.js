@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'longtail-token-swap-liquidity-risk-guide',
-  publishedISO: '2026-08-20T10:08:00+08:00',
+  slug: 'agent-downtime-failure-liability-verification',
+  publishedISO: '2026-08-20T13:38:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
   topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '小币种跨链兑换：流动性薄，仿冒币多',
-    tagLabel: '小币种核验',
-    cardDesc: '小币种跨链兑换比换主流资产多两重风险：目标链上的仿冒代币可能和真代币共用同一个名字与符号，只有合约地址能分辨真假；交易对本身流动性太薄，会让实际成交价格偏离滑点上限，聚合器给出的最优价格也可能是几个薄池叠加冲击后的结果。本文讲清下单前该核实哪个合约地址、该查哪些池子深度指标，才不被表面报价误导。',
+    h1: 'AI代理宕机谁该赔：故障责任核验',
+    tagLabel: 'AI×链上',
+    cardDesc: 'AI代理管理仓位、执行策略或自动扣款时一旦宕机，损失往往在用户毫无察觉时已经发生：代理是真的无事可做，还是已经悄悄停摆？故障是代理自身的缺陷、RPC节点和预言机等外部依赖失灵，还是用户自己配置有误？服务条款里常见的尽力而为式赔付承诺又藏着哪些漏洞？本文给出心跳核验与责任判定的实操思路。',
   },
   en: {
-    h1: 'Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity',
-    tagLabel: 'Long-Tail Check',
-    cardDesc: 'Long-tail swaps carry risks mainstream guides skip: fake tokens sharing a real name on the destination chain, and thin liquidity that quietly breaks your slippage cap.',
+    h1: 'When an On-Chain Agent Goes Down, Who Is Liable?',
+    tagLabel: 'AI x On-Chain',
+    cardDesc: 'When an on-chain agent silently stalls, a missed rebalance can go unnoticed for hours. Detecting failure, assigning fault, and reading SLA loopholes, explained.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'longtail-token-swap-liquidity-risk-guide',
     'crosschain-swap-fee-optimization-guide',
     'crosschain-swap-stuck-recovery-guide',
     'virtual-card-subscription-renewal-verification-guide',
