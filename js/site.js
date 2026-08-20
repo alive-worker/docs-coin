@@ -195,9 +195,11 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',
     '/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/articles/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',
 '/en/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
 '/en/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/en/articles/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',

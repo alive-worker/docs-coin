@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'agent-downtime-failure-liability-verification',
-  publishedISO: '2026-08-20T13:38:00+08:00',
+  slug: 'rwa-redemption-legal-claim-verification',
+  publishedISO: '2026-08-20T16:38:00+08:00',
   tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
-  topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  topic: 'governance',                   // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: 'AI代理宕机谁该赔：故障责任核验',
-    tagLabel: 'AI×链上',
-    cardDesc: 'AI代理管理仓位、执行策略或自动扣款时一旦宕机，损失往往在用户毫无察觉时已经发生：代理是真的无事可做，还是已经悄悄停摆？故障是代理自身的缺陷、RPC节点和预言机等外部依赖失灵，还是用户自己配置有误？服务条款里常见的尽力而为式赔付承诺又藏着哪些漏洞？本文给出心跳核验与责任判定的实操思路。',
+    h1: '代币烧毁后，剩下的是权利还是承诺',
+    tagLabel: 'RWA赎回核验',
+    cardDesc: '当你烧毁RWA代币申请赎回，手里的到底是对底层资产的直接财产权、无担保债权人的普通请求权，还是仅对某个有限追索权SPV的一份合同请求权？本文教你去发行文件而非官网里找真实赎回条款、核验破产隔离是否为真、区分T+0宣传与多日结算现实，以及发行方赎回途中资不抵债时你的处境与文档中的红旗信号。',
   },
   en: {
-    h1: 'When an On-Chain Agent Goes Down, Who Is Liable?',
-    tagLabel: 'AI x On-Chain',
-    cardDesc: 'When an on-chain agent silently stalls, a missed rebalance can go unnoticed for hours. Detecting failure, assigning fault, and reading SLA loopholes, explained.',
+    h1: 'After You Burn the Token, What Legal Claim Is Left?',
+    tagLabel: 'RWA Redemption',
+    cardDesc: 'Burning a tokenized RWA to redeem it: property right, unsecured debt, or limited-recourse SPV claim? How to find the real clause and spot the red flags.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'agent-downtime-failure-liability-verification',
     'longtail-token-swap-liquidity-risk-guide',
     'crosschain-swap-fee-optimization-guide',
     'crosschain-swap-stuck-recovery-guide',
