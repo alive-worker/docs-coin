@@ -289,17 +289,18 @@ function rebuildHomepageCarouselAndGrid(lang) {
   const items = [...listC.matchAll(re)].map(m => ({
     topic: m[1], slug: m[2], tagColor: m[3], tagLabel: m[4], h1: m[5], pub: m[6],
   }));
-  if (items.length < 14) throw new Error(`[homepage-${lang}] only found ${items.length} archive items, expected >=14`);
+  if (items.length < 18) throw new Error(`[homepage-${lang}] only found ${items.length} archive items, expected >=18`);
   if (items[0].slug !== CONFIG.slug) throw new Error(`[homepage-${lang}] newest archive item is "${items[0].slug}", expected "${CONFIG.slug}" — run insertArchiveItem first`);
 
-  for (const it of items.slice(0, 14)) {
+  for (const it of items.slice(0, 18)) {
     const artC = fs.readFileSync(path.join(root, artDir, `${it.slug}.html`), 'utf-8');
     it.cardDesc = (artC.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
     it.cover = (artC.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
   }
 
   const carouselItems = items.slice(0, 5);
-  const gridVisible = items.slice(5, 14); // next 9, no overlap with the carousel
+  const hotpicksItems = items.slice(5, 9); // next 4, no overlap with the carousel
+  const gridVisible = items.slice(9, 18); // next 9, no overlap with carousel or hotpicks
   const label = lang === 'en' ? '— FEATURED' : '— 置顶阅读';
   const readMore = lang === 'en' ? 'Read more →' : '阅读详情 →';
   const readLabel = lang === 'en' ? 'Read more' : '阅读详情';
@@ -332,7 +333,24 @@ function rebuildHomepageCarouselAndGrid(lang) {
     `          <button type="button" class="carousel-dot${i === 0 ? ' is-active' : ''}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" aria-label="${lang === 'en' ? 'Slide' : '第'} ${i + 1}${lang === 'en' ? '' : '项'}"></button>`
   ).join('\n');
 
-  const newFeaturedSection = `<section class="featured-article" aria-label="${ariaLabel}" aria-roledescription="carousel" id="featured-carousel">
+  const hotpicksLabel = lang === 'en' ? '🔥 Hot Picks' : '🔥 热门精选';
+  const hotpicksAriaLabel = lang === 'en' ? 'Hot picks' : '热门精选';
+  const hotpicksHtml = hotpicksItems.map((it, i) => {
+    const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
+    return `          <li class="hotpicks-item">
+            <a href="${artPrefix}${it.slug}.html">
+              <span class="hotpicks-num">${i + 1}</span>
+              <span class="hotpicks-body">
+                <span class="hotpicks-item-title">${it.h1}</span>
+                <span class="hotpicks-item-desc">${it.cardDesc}</span>
+                <span class="hotpicks-item-date">${cal}<time datetime="${it.pub}">${pubDisplay}</time></span>
+              </span>
+            </a>
+          </li>`;
+  }).join('\n');
+
+  const newFeaturedSection = `<div class="hero-duo">
+      <section class="featured-article" aria-label="${ariaLabel}" aria-roledescription="carousel" id="featured-carousel">
         <div class="carousel-viewport">
           <div class="carousel-track">
 ${slides}
@@ -341,7 +359,14 @@ ${slides}
         <div class="carousel-dots" role="tablist">
 ${dots}
         </div>
-      </section>`;
+      </section>
+      <aside class="hotpicks" aria-label="${hotpicksAriaLabel}">
+        <p class="hotpicks-title">${hotpicksLabel}</p>
+        <ol class="hotpicks-list">
+${hotpicksHtml}
+        </ol>
+      </aside>
+      </div>`;
 
   const gridCards = gridVisible.map(it => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
@@ -375,9 +400,15 @@ ${dots}
     );
   }
 
+  const heroDuoRe = /<div class="hero-duo">[\s\S]*?<\/div>/;
   const featuredRe = /<section class="featured-article"[\s\S]*?<\/section>/;
-  if (!featuredRe.test(t)) throw new Error(`[homepage-${lang}] featured-article section not found`);
-  t = t.replace(featuredRe, newFeaturedSection);
+  if (heroDuoRe.test(t)) {
+    t = t.replace(heroDuoRe, newFeaturedSection);
+  } else if (featuredRe.test(t)) {
+    t = t.replace(featuredRe, newFeaturedSection);
+  } else {
+    throw new Error(`[homepage-${lang}] neither hero-duo nor featured-article section found`);
+  }
 
   const gridOpenMatch = t.match(/<div class="card-grid" aria-label="[^"]*">\r?\n/);
   if (!gridOpenMatch) throw new Error(`[homepage-${lang}] card-grid opening not found`);
