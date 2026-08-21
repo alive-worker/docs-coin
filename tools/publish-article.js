@@ -52,26 +52,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-quote-staleness-verification-guide',
-  publishedISO: '2026-08-21T13:37:00+08:00',
-  tagColor: 'sky',                       // must already exist as .archive-tag--<color> in styles.css
-  topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'dao-treasury-multisig-timelock-verification-guide',
+  publishedISO: '2026-08-21T15:47:00+08:00',
+  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
+  topic: 'governance',                    // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链兑换报价为什么会过期：排队时价格早变了',
-    tagLabel: '报价失效核验',
-    cardDesc: '跨链兑换的报价是点击那一刻的快照，但真正上链执行往往在几十秒到几分钟之后。这段间隔里源链拥堵、目标链价格波动都可能让报价失效，滑点容忍度沦为默默吃掉差价的缓冲垫。本文拆解报价与执行之间的三段延迟、链下签名报价与链上实时报价的机制差异，以及兑换后怎样核对到账数量是否偏离原始报价太多。',
+    h1: '国库多签核验：签名者换人、时间锁被绕开',
+    tagLabel: '国库多签核验',
+    cardDesc: 'DAO国库多签常被当作最后一道安全防线，但门槛数字和签名者名单会随时间悄悄漂移：换人、降低阈值、开通能绕开时间锁的紧急模块，这些变化未必被公开披露、也未必经过完整社区投票。本文给出对照官方文档与链上owners、threshold、模块列表三处，核验签名者与时间锁是否仍然可信的具体方法与排查顺序。',
   },
   en: {
-    h1: 'Cross-Chain Swap Quotes: Why They Go Stale Before Execution',
-    tagLabel: 'Quote Staleness Check',
-    cardDesc: 'A swap quote is a snapshot, but execution lags behind confirmation and settlement. See the delay stages, how slippage hides the loss, and how to verify your actual fill against the market.',
+    h1: 'DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass',
+    tagLabel: 'Treasury Multisig Check',
+    cardDesc: "A treasury multisig is only as safe as its signer set and timelock, both drift quietly. Here's how to verify on-chain owners, threshold, and bypass modules.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-quote-staleness-verification-guide',
     'crosschain-swap-mev-frontrun-verification-guide',
     'perpetual-funding-manipulation-verification',
     'rwa-redemption-legal-claim-verification',
