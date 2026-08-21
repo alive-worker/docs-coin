@@ -400,7 +400,11 @@ ${hotpicksHtml}
     );
   }
 
-  const heroDuoRe = /<div class="hero-duo">[\s\S]*?<\/div>/;
+  // Non-greedy up to the FIRST </div> would wrongly stop at a nested div
+  // (carousel-viewport/carousel-track/carousel-dots are all <div>s) — anchor
+  // on the next known sibling section instead, which is unique and always
+  // immediately follows hero-duo in this template.
+  const heroDuoRe = /<div class="hero-duo">[\s\S]*?(?=\s*<section class="post-list")/;
   const featuredRe = /<section class="featured-article"[\s\S]*?<\/section>/;
   if (heroDuoRe.test(t)) {
     t = t.replace(heroDuoRe, newFeaturedSection);
