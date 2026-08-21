@@ -15,6 +15,8 @@
 //   8. Adds DATES entries to js/site.js.
 //   9. Recomputes and propagates the styles.css / site.js cache-bust hash IF (and
 //      only if) either file's content actually changed (e.g. a new tag color).
+//   10. Pings IndexNow (Bing/Yandex/Seznam) with the new/changed URLs so they get
+//       actively crawled instead of waiting on a new domain's limited crawl budget.
 //
 // What it does NOT do (do these yourself first):
 //   - Write the article's own two HTML pages (zh + en) — build those the way this
@@ -593,8 +595,40 @@ function propagateHashesIfChanged() {
   console.log(`[9/9] hash propagation: css ${oldCssHash}->${newCssHash} (${cssCount} files), js ${oldJsHash}->${newJsHash} (${jsCount} files)`);
 }
 
+// --- Step 10: IndexNow ping (Bing/Yandex/Seznam) ---------------------------------
+// Actively pushes new/changed URLs instead of waiting for crawl-budget-limited
+// discovery — see the 2026-08-21 Bing Webmaster Tools recommendation. Requires
+// the key file <INDEXNOW_KEY>.txt to already exist at the site root (created once,
+// not regenerated per publish).
+const INDEXNOW_KEY = '59f101195a0bdbe12056d57ae58db180';
+async function pingIndexNow() {
+  const urlList = [
+    'https://coin.ponr.org/',
+    'https://coin.ponr.org/articles.html',
+    'https://coin.ponr.org/en/',
+    'https://coin.ponr.org/en/articles.html',
+    `https://coin.ponr.org/articles/${CONFIG.slug}.html`,
+    `https://coin.ponr.org/en/articles/${CONFIG.slug}.html`,
+  ];
+  try {
+    const res = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host: 'coin.ponr.org',
+        key: INDEXNOW_KEY,
+        keyLocation: `https://coin.ponr.org/${INDEXNOW_KEY}.txt`,
+        urlList,
+      }),
+    });
+    console.log(`[10/10] IndexNow ping: HTTP ${res.status} (${urlList.length} URLs submitted)`);
+  } catch (e) {
+    console.log(`[10/10] IndexNow ping FAILED (non-fatal, continuing): ${e.message}`);
+  }
+}
+
 // ---------------------------------------------------------------------------
-function main() {
+async function main() {
   if (CONFIG.slug.startsWith('REPLACE-ME')) {
     console.error('Fill in CONFIG at the top of this script before running.');
     process.exit(1);
@@ -610,6 +644,7 @@ function main() {
   regenerateFeeds();
   updateSiteJsDates();
   propagateHashesIfChanged();
+  await pingIndexNow();
   console.log('\nDone. Now: (1) fix the TODO-cardDesc placeholder(s) in index.html/en/index.html left where the');
   console.log('previously-featured article got demoted into the grid, (2) spot-check JSON-LD validity and tag');
   console.log('balance on the touched files, (3) verify in the browser.');
