@@ -99,7 +99,7 @@
         var price = d.usd;
         var chg = d.usd_24h_change || 0;
         var up = chg >= 0;
-        var chgText = (up ? '+' : '') + chg.toFixed(2) + '%';
+        var chgText = (up ? '▲' : '▼') + ' ' + (up ? '+' : '') + chg.toFixed(2) + '%';
         return '<a class="ticker-item" href="https://www.coingecko.com/en/coins/' + c.id + '" target="_blank" rel="noopener noreferrer"><span class="ticker-sym">' + c.sym + '</span>' +
           '<span class="ticker-price">$' + fmtPrice(price) + '</span>' +
           '<span class="ticker-chg ' + (up ? 'ticker-up' : 'ticker-down') + '">' + chgText + '</span></a>';
