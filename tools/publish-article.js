@@ -479,6 +479,21 @@ function updateSitemap() {
   if (!t.includes(zhAnchor) || !t.includes(enAnchor)) { console.log('[6/9] SKIP (anchor not found in sitemap.xml)'); return; }
   t = t.replace(zhAnchor, zhEntry + zhAnchor);
   t = t.replace(enAnchor, enEntry + enAnchor);
+  // The homepage and both article-index pages change on every publish (new
+  // featured card, new archive row) but their <lastmod> was never refreshed,
+  // sending crawlers a stale "nothing changed here" signal indefinitely.
+  // Bump all four to today's publish date on every run.
+  const freshDate = CONFIG.publishedISO.slice(0, 10);
+  const homeUrls = [
+    'https://coin.ponr.org/',
+    'https://coin.ponr.org/articles.html',
+    'https://coin.ponr.org/en/',
+    'https://coin.ponr.org/en/articles.html',
+  ];
+  homeUrls.forEach((loc) => {
+    const re = new RegExp(`(<loc>${loc.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}</loc>\\s*<lastmod>)[^<]*(</lastmod>)`);
+    t = t.replace(re, `$1${freshDate}$2`);
+  });
   fs.writeFileSync(p, t, 'utf-8');
   console.log('[6/9] sitemap.xml updated');
 }
