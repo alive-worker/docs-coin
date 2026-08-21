@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'perpetual-funding-manipulation-verification',
-  publishedISO: '2026-08-21T10:02:00+08:00',
-  tagColor: 'azure',                     // must already exist as .archive-tag--<color> in styles.css
-  topic: 'market',                       // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'crosschain-swap-mev-frontrun-verification-guide',
+  publishedISO: '2026-08-21T11:50:00+08:00',
+  tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
+  topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '资金费率被做偏了吗：快照套利痕迹核验',
-    tagLabel: '资金费率核验',
-    cardDesc: '资金费率飙升未必是有机情绪信号，也可能是被设计出的信号。本文聚焦操纵检测方法：结算前一致性仓位聚集、跨所费率背离且结算后迅速回归、快照TWAP窗口与指数构成如何决定可操纵性，教研究者用公开数据区分真实多空博弈与故意做偏快照的痕迹，并延伸至连环清算获利路径。仅供学习研究，不构成投资建议。',
+    h1: '跨链兑换滑点去哪了：套利机器人为何总抢先',
+    tagLabel: '抢跑核验',
+    cardDesc: '跨链兑换比同链swap多出一段源链确认到目标链执行之间的等待窗口，这段窗口在中继与目标链内存池里可被公开监听，套利机器人靠预判目标链价格冲击抢先下单获利。本文教你识别这段窗口如何被利用、为什么宽松滑点等于主动让利，以及事后核验是否被精准狙击的具体信号。仅供学习研究，不构成投资建议。',
   },
   en: {
-    h1: 'Perpetual Funding Rate: Organic Signal or Gamed Snapshot?',
-    tagLabel: 'Funding Verification',
-    cardDesc: 'Funding rate spikes can be organic, or a gamed snapshot. How to spot pre-settlement clustering, fast-reverting cross-exchange divergence, and TWAP window risk.',
+    h1: 'Why Bots Always Beat You to Cross-Chain Swap Arbitrage',
+    tagLabel: 'Front-Run Check',
+    cardDesc: 'Cross-chain swaps add a latency window same-chain swaps lack. Bots watch relayer queues, predict destination price impact, and front-run before you execute — mechanism and after-the-fact checks.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'perpetual-funding-manipulation-verification',
     'rwa-redemption-legal-claim-verification',
     'agent-downtime-failure-liability-verification',
     'longtail-token-swap-liquidity-risk-guide',

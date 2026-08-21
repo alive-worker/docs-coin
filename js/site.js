@@ -53,6 +53,30 @@
     document.fonts.ready.then(syncStickyOffset);
   }
 
+  // Count-up animation for the hero stat numbers (篇文章/个主题) — skips the
+  // ∞ symbol (not a finite number to count to; it gets a CSS glow instead).
+  // Respects prefers-reduced-motion by just skipping straight to the final value.
+  var heroStatNums = Array.prototype.slice.call(document.querySelectorAll('.hero-stat-num'));
+  if (heroStatNums.length) {
+    var reduceMotionStats = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    heroStatNums.forEach(function (el) {
+      var target = parseInt(el.textContent, 10);
+      if (isNaN(target)) return; // the ∞ entity
+      if (reduceMotionStats) return;
+      var duration = 900;
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
   var tickerTrack = document.getElementById('ticker-track');
   if (tickerTrack) {
     var COINS = [
@@ -195,12 +219,14 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/crosschain-swap-mev-frontrun-verification-guide.html': '2026-08-21 11:50:00',
     '/articles/perpetual-funding-manipulation-verification.html': '2026-08-21 10:02:00',
     '/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',
     '/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/articles/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
-'/en/articles/perpetual-funding-manipulation-verification.html': '2026-08-21 10:02:00',
+'/en/articles/crosschain-swap-mev-frontrun-verification-guide.html': '2026-08-21 11:50:00',
+    '/en/articles/perpetual-funding-manipulation-verification.html': '2026-08-21 10:02:00',
 '/en/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',
 '/en/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
 '/en/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
