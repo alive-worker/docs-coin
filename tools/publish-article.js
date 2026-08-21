@@ -25,6 +25,12 @@
 //   - Add a brand-new archive-tag color to styles.css if the topic needs one not
 //     already defined (grep for archive-tag--<color> first).
 //   - Draw the AI-tech cover SVGs (zh + en) if the topic is new.
+//     Cover accent hue should follow the article's data-topic, not always default
+//     teal/blue (that flattened every cover into one look — see the frontend-design
+//     pass on 2026-08-21): basics -> blue (#4a7bb0/#6fa8dc family), governance ->
+//     indigo/purple, market -> amber/gold (--accent-2 family), protocol -> teal/cyan.
+//     Keep dark background + glowing linework, but vary which hue glows so covers
+//     read as belonging to different sections, not one repeated template.
 //
 // Idempotent: safe to re-run — each step early-outs if the new slug is already present.
 
