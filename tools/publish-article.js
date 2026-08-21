@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-mev-frontrun-verification-guide',
-  publishedISO: '2026-08-21T11:50:00+08:00',
-  tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
+  slug: 'crosschain-swap-quote-staleness-verification-guide',
+  publishedISO: '2026-08-21T13:37:00+08:00',
+  tagColor: 'sky',                       // must already exist as .archive-tag--<color> in styles.css
   topic: 'protocol',                     // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链兑换滑点去哪了：套利机器人为何总抢先',
-    tagLabel: '抢跑核验',
-    cardDesc: '跨链兑换比同链swap多出一段源链确认到目标链执行之间的等待窗口，这段窗口在中继与目标链内存池里可被公开监听，套利机器人靠预判目标链价格冲击抢先下单获利。本文教你识别这段窗口如何被利用、为什么宽松滑点等于主动让利，以及事后核验是否被精准狙击的具体信号。仅供学习研究，不构成投资建议。',
+    h1: '跨链兑换报价为什么会过期：排队时价格早变了',
+    tagLabel: '报价失效核验',
+    cardDesc: '跨链兑换的报价是点击那一刻的快照，但真正上链执行往往在几十秒到几分钟之后。这段间隔里源链拥堵、目标链价格波动都可能让报价失效，滑点容忍度沦为默默吃掉差价的缓冲垫。本文拆解报价与执行之间的三段延迟、链下签名报价与链上实时报价的机制差异，以及兑换后怎样核对到账数量是否偏离原始报价太多。',
   },
   en: {
-    h1: 'Why Bots Always Beat You to Cross-Chain Swap Arbitrage',
-    tagLabel: 'Front-Run Check',
-    cardDesc: 'Cross-chain swaps add a latency window same-chain swaps lack. Bots watch relayer queues, predict destination price impact, and front-run before you execute — mechanism and after-the-fact checks.',
+    h1: 'Cross-Chain Swap Quotes: Why They Go Stale Before Execution',
+    tagLabel: 'Quote Staleness Check',
+    cardDesc: 'A swap quote is a snapshot, but execution lags behind confirmation and settlement. See the delay stages, how slippage hides the loss, and how to verify your actual fill against the market.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-mev-frontrun-verification-guide',
     'perpetual-funding-manipulation-verification',
     'rwa-redemption-legal-claim-verification',
     'agent-downtime-failure-liability-verification',

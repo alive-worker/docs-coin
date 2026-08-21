@@ -219,12 +219,14 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/crosschain-swap-quote-staleness-verification-guide.html': '2026-08-21 13:37:00',
     '/articles/crosschain-swap-mev-frontrun-verification-guide.html': '2026-08-21 11:50:00',
     '/articles/perpetual-funding-manipulation-verification.html': '2026-08-21 10:02:00',
     '/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',
     '/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/articles/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/articles/crosschain-swap-quote-staleness-verification-guide.html': '2026-08-21 13:37:00',
 '/en/articles/crosschain-swap-mev-frontrun-verification-guide.html': '2026-08-21 11:50:00',
     '/en/articles/perpetual-funding-manipulation-verification.html': '2026-08-21 10:02:00',
 '/en/articles/rwa-redemption-legal-claim-verification.html': '2026-08-20 16:38:00',

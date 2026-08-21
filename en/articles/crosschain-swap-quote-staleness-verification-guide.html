@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Chain Swap Quotes: Why They Go Stale Before Execution</title>
+  <meta name="description" content="A swap quote is a snapshot, but execution lags behind confirmation and settlement. See the delay stages, how slippage hides the loss, and verify your fill.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/articles/crosschain-swap-quote-staleness-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/articles/crosschain-swap-quote-staleness-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Chain Swap Quotes: Why They Go Stale Before Execution">
+  <meta property="og:description" content="Quotes are snapshots; execution lags behind them by seconds to minutes across source-chain confirmation and cross-chain settlement. That gap is where slippage tolerance quietly absorbs price drift instead of protecting you from it.">
+  <meta property="og:url" content="https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-21T13:37:00+08:00">
+  <meta property="article:modified_time" content="2026-08-21T13:37:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Chain Swap Quotes: Why They Go Stale Before Execution">
+  <meta name="twitter:description" content="Your quote is a snapshot, execution comes minutes later. The delay eats into your fill price, and slippage tolerance is what quietly absorbs the difference. Here's how to check.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-quote-staleness-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-Chain Swap Quotes: Why They Go Stale Before Execution cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-quote-staleness-verification-guide-en.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-quote-staleness-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=73235866">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "Original English-language crypto research on methodology, on-chain analysis, tokenomics, smart contract security, and DAO governance. For learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-quote-staleness-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html", "name": "Cross-Chain Swap Quotes: Why They Go Stale Before Execution", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Front-Run Check", "item": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#article", "headline": "Cross-Chain Swap Quotes: Why They Go Stale Before Execution", "description": "A quote is a price snapshot from the moment you click, but real execution across source-chain confirmation and cross-chain settlement can take minutes, during which slippage tolerance silently absorbs the price drift instead of protecting you. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["cross-chain swap quote", "stale quote", "slippage tolerance", "settlement delay", "aggregator quote mechanism", "fill price verification"], "wordCount": 1500, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-21T13:37:00+08:00", "dateModified": "2026-08-21T13:37:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/articles/crosschain-swap-quote-staleness-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/articles/crosschain-swap-quote-staleness-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Chain Swap Quotes: Why They Go Stale Before Execution</h1>
+        <p class="article-summary">The number you see when an aggregator quotes a cross-chain swap is a price snapshot from that exact instant — not a promise of what you'll actually receive. Between clicking "swap" and the transaction fully settling on both the source and destination chain, minutes can pass, and in that window the asset's price, network congestion, and even route availability can all shift. Most users assume the quote is what they should get and blame any shortfall on generic "slippage," but slippage tolerance is really just a band that lets the fill price drift away from the quote — and a stale quote combined with a loose tolerance setting can quietly cost you more than you realize. This piece breaks down exactly what makes up that delay, contrasts off-chain signed quotes against on-chain real-time quotes, and gives you a concrete way to check after the fact whether you actually got close to what you were quoted. For learning and research purposes only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-21T13:37:00+08:00">2026-08-21 13:37:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-quote-staleness-verification-guide-en.svg" alt="Cross-Chain Swap Quotes: Why They Go Stale Before Execution cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. Three independent delay stages between quote and settlement</h2>
+        <p>A cross-chain swap moves through three genuinely separate delay stages before it's done. The first is decision delay: the seconds to minutes you spend deciding whether to confirm, which you control but which is still eating into the quote's validity window. The second is source-chain confirmation delay: after you submit, the transaction sits in the mempool waiting to be included in a block and reach the number of confirmations the chain considers safe — typically ten-odd seconds to a couple of minutes on mainstream chains, but this can stretch to several minutes or more under congestion, and the asset's price keeps moving the entire time the transaction sits unconfirmed. The third is cross-chain settlement delay: once the source chain confirms, a relayer or validator set still has to pass the message to the destination chain, which then executes the swap or mint — this can be tens of seconds or, depending on the bridging mechanism, well over ten minutes. Stack all three together and the real elapsed time from quote to final settlement is often ten times or more the quote's own stated validity window, which is usually only 15 seconds to a couple of minutes.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. A stale quote isn't a bug — it's the default state</h2>
+        <p>It's worth correcting a common misconception: a quote going stale isn't a malfunction, it's the default behavior of cross-chain swap mechanics. Nearly every aggregator quote carries a stated validity window, typically 15 seconds to two minutes, after which the quote is officially considered unreliable. The problem is that the confirmation and settlement delays from section 1 routinely exceed that window during busy periods — by the time your transaction actually gets included on the source chain, the quote has often already technically expired, but most routes don't abort the transaction for that reason. Instead, they keep trying to fill against the current on-chain state within whatever slippage tolerance you set, and as long as the final price lands inside that band the swap completes normally with no "quote expired" notice at all. In other words, slippage tolerance is silently doing two unrelated jobs at once — absorbing genuine market volatility, and absorbing the price drift caused by quote staleness — and the final settlement record gives you no way to tell which one actually happened.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. From safety buffer to loss absorber: a worked example</h2>
+        <p>Say you're swapping $10,000 worth of an asset and the quote shows $9,970 of the destination token after estimated fees, with a 1% slippage tolerance — meaning you'll accept as little as $9,870. If source confirmation plus cross-chain settlement takes 4 minutes and the destination asset drops 0.6% in that window, what you actually receive is calculated off the lower post-drop price plus that 0.6% gap, landing around $9,910 — comfortably inside your 1% band, with no warning flagged and little reason for you to manually check. But if that same 4-minute delay happens during a volatile stretch, that 0.6% drift can become 2% or 3%; once it exceeds your slippage tolerance, the swap either fails and rolls back (with source-chain funds potentially locked pending manual recovery) or, under some mechanisms, forces a fill at the worst available price. The takeaway: the wider you set your slippage tolerance, the more "stale-quote loss" it silently absorbs — and that loss is a bill for the delay, not market risk you consciously chose to accept.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Off-chain signed quotes vs. on-chain real-time quotes</h2>
+        <p>Different aggregators price swaps through fundamentally different mechanisms, and this directly determines how sensitive a quote is to delay. One model is the off-chain signed quote: the service computes a price off-chain and has you sign an authorization for that specific price, then a market maker or solver executes it on-chain — tens of seconds can pass between signing and execution, and if the price moves beyond a preset threshold in that window the market maker usually has the right to decline execution rather than fill at a bad price. Under this model, what you're more likely to hit is a failed-and-retry transaction rather than silent hidden loss. The other model is the on-chain real-time quote: the contract computes the exchange ratio at the exact moment the transaction is included, based on on-chain reserves or oracle prices — the number shown in the interface is only an estimate, and the actual destination amount is set entirely by on-chain state at the moment a miner or validator includes the transaction. Under this model, any gap between quote and execution shows up purely as slippage, with no failure signal at all. Knowing which mechanism you're dealing with helps you judge whether a lower-than-expected fill is normal mechanism behavior, or a sign the route's quoting is loose or its slippage protection is essentially not doing anything.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Using a tool like AllSwap to check quote validity and execution model</h2>
+        <p>The practical way to gauge how exposed a given cross-chain swap route is to quote staleness is to check, before placing the order, whether the tool clearly states a quote validity window and discloses which of the two execution models from section 4 it uses. <a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a> is one example of this kind of cross-chain swap aggregation tool; the platform describes itself as displaying the estimated destination amount and slippage parameters before you confirm a transaction, letting you review them beforehand. That said, this description reflects the platform's own claims only — the actual quote refresh mechanism, stated validity window, and execution behavior should be verified against the platform's own current disclosures and your own testing; nothing here is an endorsement or a guarantee of any kind. Any use of a cross-chain swap tool must serve genuine, compliant asset-management needs and comply with the platform's terms and the laws of your jurisdiction — never use one for money laundering, sanctions evasion, or any other unlawful purpose.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Verifying after the fact: were you shorted by a stale quote</h2>
+        <p>The verification method itself isn't complicated, but it does require capturing a few specific numbers. First, record the estimated destination amount shown at order time and the market midpoint price at that same moment (cross-check against a venue like CoinGecko). Second, record the timestamp your transaction was actually submitted to the source chain, plus the source-chain confirmation time and destination-chain settlement time you can pull from a block explorer — the gap between these is the real delay described in section 1. Third, divide your actual received amount by the market midpoint at order time to get your implied fill price, then compare that against the order-time market midpoint to calculate the real price gap as a percentage. If the delay was only a few tens of seconds but the gap sits right at your slippage ceiling, that's worth treating as a red flag that the route may be systematically passing stale-quote loss on to users. If the delay ran several minutes but the gap stayed small, that's a sign the mechanism is doing a reasonably good job of protecting quote freshness. Run this check across a handful of swaps at different sizes and times of day, and you'll get a decent read on whether your usual route runs conservative or loose on quote staleness.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and verification checklist</h2>
+        <ul>
+        <li>A quote is a snapshot from click time; actual settlement waits on source confirmation plus cross-chain settlement, and real delay is often several times the quote's stated validity window.</li>
+        <li>Quote staleness is the default state, not a malfunction — most routes don't abort, they let slippage tolerance silently absorb the drift.</li>
+        <li>The wider your slippage tolerance, the more stale-quote loss it can mask; that's a delay cost, not market risk you chose.</li>
+        <li>Off-chain signed quotes tend to fail-and-retry; on-chain real-time quotes show any gap purely as slippage — same symptom, different mechanism.</li>
+        <li>Check the stated quote validity window and execution model before you confirm, not just the headline number.</li>
+        <li>After the fact, use timestamps, market midpoint, and actual received amount to compute your implied fill price and judge whether a route runs systematically loose.</li>
+        </ul>
+        <p>FAQ: If the quoted and actual amounts differ, was I definitely shortchanged? Not necessarily — normal delay plus market movement alone produces some gap; what matters is whether the gap clearly exceeds reasonable volatility for that window. Is a smaller slippage tolerance always better? Too tight and you'll see more failed transactions during normal volatility; there's a trade-off between fill success rate and price protection, with no universal "optimal" number. How do I quickly tell if a route quotes too loosely? Check the implied fill price across a few swaps with different delays — if short delays repeatedly produce gaps near your slippage ceiling, that's worth investigating further. This article is for learning and research methodology only and does not constitute investment advice; cross-chain operations carry technical and compliance risk, so make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The three delay stages</a></li>
+          <li><a href="#sec-2">2. Staleness is the default</a></li>
+          <li><a href="#sec-3">3. Slippage tolerance example</a></li>
+          <li><a href="#sec-4">4. Off-chain vs on-chain quotes</a></li>
+          <li><a href="#sec-5">5. Checking with AllSwap</a></li>
+          <li><a href="#sec-6">6. Verifying your fill price</a></li>
+          <li><a href="#sec-7">7. Summary and checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://etherscan.io/gastracker" target="_blank" rel="noopener">Etherscan Gas Tracker</a> — general reference for verifying source-chain confirmation delay and congestion</li>
+            <li><a href="https://l2beat.com/" target="_blank" rel="noopener">L2BEAT</a> — public comparison of cross-chain bridge and settlement mechanisms</li>
+            <li><a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko</a> — reference for market midpoint prices when computing implied fill price</li>
+          </ul>
+          <p class="ref-note">Third-party tools and platforms mentioned in this article may change over time; always verify against each platform's current official disclosures. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/articles/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>
+          <li><a href="/en/articles/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do Quoted Slippage and Fees Add Up</a></li>
+          <li><a href="/en/articles/crosschain-swap-dry-run-verification-guide.html">Test Before You Transfer: What to Verify Before a Big Cross-Chain Swap</a></li>
+          <li><a href="/en/articles/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck Mid-Transfer: Funds Left, Nothing Arrived</a></li>
+          <li><a href="/en/articles/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>
+          <li><a href="/en/articles/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens Cross-Chain: Thin Liquidity, Fake Tokens</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">English-language crypto research covering methodology, on-chain metrics, and capital flow analysis.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscriptions</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and risky — make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=13f9cc84"></script>
+</body>
+</html>
