@@ -31,6 +31,14 @@
 //     indigo/purple, market -> amber/gold (--accent-2 family), protocol -> teal/cyan.
 //     Keep dark background + glowing linework, but vary which hue glows so covers
 //     read as belonging to different sections, not one repeated template.
+//   - Open the article body with an `.article-verify-panel` block (CSS already
+//     defined in styles.css) right after the lede paragraph, before the first
+//     h2 — a short "核验清单 / Verification checklist" of 3-4 concrete claims the
+//     article checks, each as an `<li>` inside `.article-verify-list` with an
+//     `.article-verify-check` circle. This is the article-page counterpart to the
+//     homepage hero-hud and is what makes a verification-style article visually
+//     distinct from a generic blog post — don't skip it for new articles.
+//     Existing articles are intentionally left alone (73 files, out of scope).
 //
 // Idempotent: safe to re-run — each step early-outs if the new slug is already present.
 
