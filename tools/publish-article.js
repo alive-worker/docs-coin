@@ -38,26 +38,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'rwa-redemption-legal-claim-verification',
-  publishedISO: '2026-08-20T16:38:00+08:00',
-  tagColor: 'rust',                      // must already exist as .archive-tag--<color> in styles.css
-  topic: 'governance',                   // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'perpetual-funding-manipulation-verification',
+  publishedISO: '2026-08-21T10:02:00+08:00',
+  tagColor: 'azure',                     // must already exist as .archive-tag--<color> in styles.css
+  topic: 'market',                       // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '代币烧毁后，剩下的是权利还是承诺',
-    tagLabel: 'RWA赎回核验',
-    cardDesc: '当你烧毁RWA代币申请赎回，手里的到底是对底层资产的直接财产权、无担保债权人的普通请求权，还是仅对某个有限追索权SPV的一份合同请求权？本文教你去发行文件而非官网里找真实赎回条款、核验破产隔离是否为真、区分T+0宣传与多日结算现实，以及发行方赎回途中资不抵债时你的处境与文档中的红旗信号。',
+    h1: '资金费率被做偏了吗：快照套利痕迹核验',
+    tagLabel: '资金费率核验',
+    cardDesc: '资金费率飙升未必是有机情绪信号，也可能是被设计出的信号。本文聚焦操纵检测方法：结算前一致性仓位聚集、跨所费率背离且结算后迅速回归、快照TWAP窗口与指数构成如何决定可操纵性，教研究者用公开数据区分真实多空博弈与故意做偏快照的痕迹，并延伸至连环清算获利路径。仅供学习研究，不构成投资建议。',
   },
   en: {
-    h1: 'After You Burn the Token, What Legal Claim Is Left?',
-    tagLabel: 'RWA Redemption',
-    cardDesc: 'Burning a tokenized RWA to redeem it: property right, unsecured debt, or limited-recourse SPV claim? How to find the real clause and spot the red flags.',
+    h1: 'Perpetual Funding Rate: Organic Signal or Gamed Snapshot?',
+    tagLabel: 'Funding Verification',
+    cardDesc: 'Funding rate spikes can be organic, or a gamed snapshot. How to spot pre-settlement clustering, fast-reverting cross-exchange divergence, and TWAP window risk.',
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'rwa-redemption-legal-claim-verification',
     'agent-downtime-failure-liability-verification',
     'longtail-token-swap-liquidity-risk-guide',
     'crosschain-swap-fee-optimization-guide',
