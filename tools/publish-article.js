@@ -54,26 +54,27 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dao-treasury-multisig-timelock-verification-guide',
-  publishedISO: '2026-08-21T15:47:00+08:00',
-  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
-  topic: 'governance',                    // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'otc-fiat-offramp-counterparty-verification-guide',
+  publishedISO: '2026-08-22T16:11:00+08:00',
+  tagColor: 'amber',                      // must already exist as .archive-tag--<color> in styles.css
+  topic: 'market',                        // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '国库多签核验：签名者换人、时间锁被绕开',
-    tagLabel: '国库多签核验',
-    cardDesc: 'DAO国库多签常被当作最后一道安全防线，但门槛数字和签名者名单会随时间悄悄漂移：换人、降低阈值、开通能绕开时间锁的紧急模块，这些变化未必被公开披露、也未必经过完整社区投票。本文给出对照官方文档与链上owners、threshold、模块列表三处，核验签名者与时间锁是否仍然可信的具体方法与排查顺序。',
+    h1: 'OTC场外换汇：对手方资质和资金隔离核验',
+    tagLabel: 'OTC换汇核验',
+    cardDesc: 'OTC场外换汇的报价方往往是个人或工作室，不是持牌机构，交易所层面的KYC和资金托管在这里基本不存在。本文讲清楚该核实对手方的哪几项资质、怎么核对收款账户与本人身份是否一致、报价点差多大算正常，以及为什么大额换汇更容易触发银行的反洗钱风控。',
   },
   en: {
-    h1: 'DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass',
-    tagLabel: 'Treasury Multisig Check',
-    cardDesc: "A treasury multisig is only as safe as its signer set and timelock, both drift quietly. Here's how to verify on-chain owners, threshold, and bypass modules.",
+    h1: 'OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire',
+    tagLabel: 'OTC Off-Ramp Check',
+    cardDesc: "Your OTC counterparty is usually an individual, not a licensed entity, so exchange-level KYC and custody don't apply. Verify their track record, the receiving account, and the rate spread before you wire.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'dao-treasury-multisig-timelock-verification-guide',
     'crosschain-swap-quote-staleness-verification-guide',
     'crosschain-swap-mev-frontrun-verification-guide',
     'perpetual-funding-manipulation-verification',
