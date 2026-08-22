@@ -613,21 +613,18 @@ async function pingIndexNow() {
     `https://coin.ponr.org/articles/${CONFIG.slug}.html`,
     `https://coin.ponr.org/en/articles/${CONFIG.slug}.html`,
   ];
-  try {
-    const res = await fetch('https://api.indexnow.org/indexnow', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({
-        host: 'coin.ponr.org',
-        key: INDEXNOW_KEY,
-        keyLocation: `https://coin.ponr.org/${INDEXNOW_KEY}.txt`,
-        urlList,
-      }),
-    });
-    console.log(`[10/10] IndexNow ping: HTTP ${res.status} (${urlList.length} URLs submitted)`);
-  } catch (e) {
-    console.log(`[10/10] IndexNow ping FAILED (non-fatal, continuing): ${e.message}`);
+  // NOTE: the bulk POST /indexnow endpoint reliably returns 403
+  // UserForbiddedToAccessSite for this host even with a byte-correct key file,
+  // while the single-URL GET endpoint works (202) — verified by hand on
+  // 2026-08-22. Loop GET requests instead until the POST path is understood.
+  let okCount = 0;
+  for (const url of urlList) {
+    try {
+      const res = await fetch(`https://api.indexnow.org/indexnow?url=${encodeURIComponent(url)}&key=${INDEXNOW_KEY}`);
+      if (res.status === 200 || res.status === 202) okCount++;
+    } catch (e) { /* non-fatal, continue */ }
   }
+  console.log(`[10/10] IndexNow ping: ${okCount}/${urlList.length} URLs accepted`);
 }
 
 // ---------------------------------------------------------------------------
