@@ -17,6 +17,9 @@
 //      only if) either file's content actually changed (e.g. a new tag color).
 //   10. Pings IndexNow (Bing/Yandex/Seznam) with the new/changed URLs so they get
 //       actively crawled instead of waiting on a new domain's limited crawl budget.
+//   11. Regenerates the 4 topic hub pages (research/<topic>/index.html +
+//       en/research/<topic>/index.html) via tools/generate-topic-hubs.js, since
+//       the new article changes what each hub's article list contains.
 //
 // EDITORIAL GUIDELINES (per an external SEO review on 2026-08-22 — read before
 // picking a topic or writing a word):
@@ -691,6 +694,7 @@ async function main() {
   regenerateFeeds();
   updateSiteJsDates();
   propagateHashesIfChanged();
+  execSync('node tools/generate-topic-hubs.js', { cwd: root, stdio: 'inherit' });
   await pingIndexNow();
   console.log('\nDone. Now: (1) fix the TODO-cardDesc placeholder(s) in index.html/en/index.html left where the');
   console.log('previously-featured article got demoted into the grid, (2) spot-check JSON-LD validity and tag');

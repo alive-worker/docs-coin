@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks - Crypto Research Notes</title>
+  <meta name="description" content="Governance mechanisms look decentralized on paper, but execution details are where things quietly drift — multisig thresholds, timelock windows, how off-chain v">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks">
+  <meta property="og:description" content="Governance mechanisms look decentralized on paper, but execution details are where things quietly drift — multisig thresholds, timelock windows, how off-chain v">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=a8edc1b8">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "CollectionPage", "@id": "https://coin.ponr.org/en/research/governance/#webpage", "url": "https://coin.ponr.org/en/research/governance/", "name": "Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/#breadcrumb" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks", "item": "https://coin.ponr.org/en/research/governance/" }
+    ] },
+    { "@type": "ItemList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Bridge Guardian Set Verification: When Was the Threshold Cut", "url": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html" },
+        { "@type": "ListItem", "position": 2, "name": "Off-Chain Governance Vote Execution Verification Guide", "url": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html" },
+        { "@type": "ListItem", "position": 3, "name": "DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass", "url": "https://coin.ponr.org/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html" },
+        { "@type": "ListItem", "position": 4, "name": "After You Burn the Token, What Legal Claim Is Left?", "url": "https://coin.ponr.org/en/research/governance/rwa-redemption-legal-claim-verification.html" },
+        { "@type": "ListItem", "position": 5, "name": "Credit Pool Tranche Risk: What Does a Senior Share Actually Get You", "url": "https://coin.ponr.org/en/research/governance/credit-pool-tranche-risk.html" },
+        { "@type": "ListItem", "position": 6, "name": "Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation", "url": "https://coin.ponr.org/en/research/governance/vote-escrow-lock-verification.html" },
+        { "@type": "ListItem", "position": 7, "name": "RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset", "url": "https://coin.ponr.org/en/research/governance/rwa-tokenization-trust-structure.html" },
+        { "@type": "ListItem", "position": 8, "name": "Verifying Stablecoin Pegs: Does the Redemption Path Actually Deliver on the $1 Promise", "url": "https://coin.ponr.org/en/research/governance/stablecoin-peg-mechanism-research-guide.html" },
+        { "@type": "ListItem", "position": 9, "name": "Verifying On-Chain Insurance: Coverage Looks Broad Until You File a Claim", "url": "https://coin.ponr.org/en/research/governance/onchain-insurance-research-guide.html" },
+        { "@type": "ListItem", "position": 10, "name": "Vote-Bribery Markets: When Governance Votes Have a Price Tag, Is It Still Governance", "url": "https://coin.ponr.org/en/research/governance/vote-market-research-guide.html" },
+        { "@type": "ListItem", "position": 11, "name": "Verifying NFT Floor Price: One Wash Trade Can Inflate the “Floor” by Multiples", "url": "https://coin.ponr.org/en/research/governance/nft-collection-research-guide.html" },
+        { "@type": "ListItem", "position": 12, "name": "Verifying Airdrop Distribution: A High Address Count Can Still Be One Person's Sybil Farm", "url": "https://coin.ponr.org/en/research/governance/airdrop-sybil-detection-research-guide.html" },
+        { "@type": "ListItem", "position": 13, "name": "What Proof of Reserves Actually Proves: A Merkle Tree Verifies Inclusion, Not Solvency", "url": "https://coin.ponr.org/en/research/governance/exchange-reserves-research-guide.html" },
+        { "@type": "ListItem", "position": 14, "name": "DAO Governance: When Voting Power Concentrates in a Few Addresses, Does “Decentralized” Still Hold", "url": "https://coin.ponr.org/en/research/governance/dao-governance-research-guide.html" },
+        { "@type": "ListItem", "position": 15, "name": "Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement", "url": "https://coin.ponr.org/en/research/governance/stablecoin-crosschain-flows.html" }
+    ] }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--single">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <h1>Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks</h1>
+        </header>
+        <div class="article-body">
+        <p>Governance mechanisms look decentralized on paper, but execution details are where things quietly drift — multisig thresholds, timelock windows, how off-chain votes actually get executed, the legal fine print behind asset redemption. This category focuses on those overlooked execution details with concrete verification steps, not abstract governance theory. This category collects 15 articles.</p>
+        <ul class="hub-link-list">
+          <li><a href="/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">Bridge Guardian Set Verification: When Was the Threshold Cut</a> — Most cross-chain message bridges rely on a "guardian set" — variously called guardians…</li>
+          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a> — Snapshot became the default voting tool for most DAOs precisely because it's gasless…</li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a> — A DAO treasury's multisig and the funds it guards are often treated as a static fact of…</li>
+          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a> — "RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset" covered…</li>
+          <li><a href="/en/research/governance/credit-pool-tranche-risk.html">Credit Pool Tranche Risk: What Does a Senior Share Actually Get You</a> — This article takes a deep dive into real-world credit pools: why these pools differ…</li>
+          <li><a href="/en/research/governance/vote-escrow-lock-verification.html">Vote-Escrow Token Locks: Does the Claimed Lock Duration Actually Remove Supply from Circulation</a> — This article takes a deep dive into vote-escrow (ve) token locking mechanisms: why a…</li>
+          <li><a href="/en/research/governance/rwa-tokenization-trust-structure.html">RWA Tokenization: The On-Chain Token Is Just a Pointer to an Off-Chain Asset</a> — This article takes a deep dive into the trust structure behind RWA tokenization: why an…</li>
+          <li><a href="/en/research/governance/stablecoin-peg-mechanism-research-guide.html">Verifying Stablecoin Pegs: Does the Redemption Path Actually Deliver on the $1 Promise</a> — This article introduces research methods for stablecoin peg mechanisms: how the three…</li>
+          <li><a href="/en/research/governance/onchain-insurance-research-guide.html">Verifying On-Chain Insurance: Coverage Looks Broad Until You File a Claim</a> — This article introduces research methods for on-chain insurance/cover protocols: how to…</li>
+          <li><a href="/en/research/governance/vote-market-research-guide.html">Vote-Bribery Markets: When Governance Votes Have a Price Tag, Is It Still Governance</a> — This article introduces research methods for governance vote-locking and bribe markets:…</li>
+          <li><a href="/en/research/governance/nft-collection-research-guide.html">Verifying NFT Floor Price: One Wash Trade Can Inflate the “Floor” by Multiples</a> — This article introduces research methods for NFT collections: how to independently verify…</li>
+          <li><a href="/en/research/governance/airdrop-sybil-detection-research-guide.html">Verifying Airdrop Distribution: A High Address Count Can Still Be One Person's Sybil Farm</a> — Across this series, "An Audit Report Says “Audited” — But Audited What, Exactly: From…</li>
+          <li><a href="/en/research/governance/exchange-reserves-research-guide.html">What Proof of Reserves Actually Proves: A Merkle Tree Verifies Inclusion, Not Solvency</a> — Across the first seven articles in this series, we built up a research framework — how to…</li>
+          <li><a href="/en/research/governance/dao-governance-research-guide.html">DAO Governance: When Voting Power Concentrates in a Few Addresses, Does “Decentralized” Still Hold</a> — Across the first six installments of this series, we built a project research framework…</li>
+          <li><a href="/en/research/governance/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Bridges, and On-Chain Fund Flows: A Researcher's View of Asset Movement</a> — From the stablecoin landscape and cross-chain fundamentals to on-chain fund-flow…</li>
+        </ul>
+        </div>
+        <div class="back-row"><a href="/articles.html?topic=governance">Filter all articles by this topic</a> · <a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A research site on crypto project methodology, on-chain data, and stablecoin cross-chain flows.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/research/basics/">Research Foundations</a></li>
+          <li><a href="/en/research/protocol/">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/research/market/">Market Structure & Liquidity</a></li>
+          <li><a href="/en/research/governance/">Governance, Assets & Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=97b8fd81"></script>
+</body>
+</html>
