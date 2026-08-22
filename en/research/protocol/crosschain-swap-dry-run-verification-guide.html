@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Chain Swap Dry Run: Test Small Before You Go Big</title>
+  <meta name="description" content="Before a large cross-chain swap, test small first: right chain, right token and decimals, real arrival time, actual fee vs. quote. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/crosschain-swap-dry-run-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/crosschain-swap-dry-run-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer">
+  <meta property="og:description" content="Before committing a large cross-chain swap, run a small test transaction first: does it land on the right chain, the right token contract and decimals, real arrival time, and actual fee vs. quote. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-18T14:00:00+08:00">
+  <meta property="article:modified_time" content="2026-08-18T14:00:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Chain Swap Dry Run: Test Small First">
+  <meta name="twitter:description" content="A small test transaction before a large cross-chain swap: verify the chain, the token contract, arrival time, and the real fee. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-Chain Swap Dry Run cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide-en.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-dry-run-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-dry-run-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html", "name": "Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Cross-Chain Swap Dry Run", "item": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#article", "headline": "Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer", "description": "Before committing a large cross-chain swap, run a small test transaction first: does it land on the right chain, the right token contract and decimals, real arrival time, and actual fee vs. quote. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["cross-chain swap dry run", "small test transaction", "route verification", "contract address check", "arrival time verification", "cross-chain swap security", "USDT cross-chain"], "wordCount": 1900, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-18T14:00:00+08:00", "dateModified": "2026-08-18T14:00:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-dry-run-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/crosschain-swap-dry-run-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</h1>
+        <p class="article-summary">The previous two pieces covered post-hoc verification of a swap's slippage and fees, and the abstract methodology of aggregator routing. This one moves a step earlier: before you commit a large swap, run one much smaller test transaction through the whole path first. The test isn't a formality — it has a specific job: confirm the asset actually lands on the destination chain, that it's the correct token contract rather than some substituted variant, that decimals haven't been mangled, and that the real arrival time and real fee roughly match what the quote screen promised. Any mismatch is a signal to hold off on scaling up. This is a practical, methods-only tutorial and not investment advice.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-18T14:00:00+08:00">2026-08-18 14:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-dry-run-verification-guide-en.svg" alt="Cross-Chain Swap Dry Run cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. Why Test First Instead of Just Executing the Quote</h2>
+        <p>The slippage, fees, and arrival estimate on a quote screen all rest on assumptions the routing algorithm makes at that moment: the contract behaves as expected, the bridge hasn't been substituted, and the token contract address on the destination chain is really the one you think it is. Those assumptions hold most of the time — but "most of the time" isn't enough certainty for a transfer that represents a meaningful share of your holdings. A small test transaction turns those assumptions from "what the quote screen told me" into "what I verified on-chain myself," at the cost of a few dollars in gas and fees, in exchange for catching avoidable problems before real money is on the line.</p>
+        <p>A test transaction isn't a guarantee that "small means safe" either — it verifies the routing and contract layer specifically; price slippage still varies with transaction size. Its purpose is narrow and specific: confirm the path itself has no structural issue, not substitute for a separate assessment of slippage and market depth at the actual large size.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Sizing the Test: Too Small Proves Nothing, Too Large Defeats the Point</h2>
+        <p>Too small, and you may fall below a bridge's or aggregator's minimum swap amount, so the transaction just errors out and verifies nothing. Too large, and you've defeated the point of testing small in the first place — a real loss if something goes wrong. A workable starting point: size the test at several times the minimum gas an operation needs on the destination chain, and no lower than the platform's published minimum, typically landing between 1% and 5% of the amount you plan to move overall — or an absolute figure you wouldn't mind losing entirely, whichever is larger. If the platform doesn't publish a minimum, place a very small order first, see if it errors, and adjust from the message rather than guessing.</p>
+        <p>For larger transfers split across multiple batches, leave an observation window between the test batch and the next real batch rather than firing off the entire remaining amount the instant the test confirms — that window is there to catch delayed follow-on notices or anomalies.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Four Things to Check Once the Test Transaction Lands</h2>
+        <h3 id="sec-3-1">3.1 Right Chain: Did It Actually Land Where You Expect</h3>
+        <p>Confirm the arrival record shows up on the block explorer for the chain you actually intended — not a similarly named testnet, a sidechain, or a different chain it got misrouted to because of shared address formatting. Multiple EVM-compatible chains share the same address format, so the same address "exists" on several chains at once — this is exactly the class of mistake that's easiest to make and hardest to undo after the fact. Catching it during a test is far cheaper than catching it after a large transfer.</p>
+        <h3 id="sec-3-2">3.2 Right Contract and Decimals: Is What Arrived the "Correct Version" of the Token</h3>
+        <p>Compare the contract address of the token that arrived against the official contract address for that token on the destination chain, character by character. Cross-chain routing can sometimes quietly substitute what you thought was a native asset with a bridged/wrapped version instead (a "bridged USDT" rather than the destination chain's native USDT) — both may show the same symbol in your wallet, but the contract addresses, liquidity, and redeemability differ entirely. Also check decimal precision: if the arrival amount looks off by orders of magnitude (extra or missing zeros), it's almost certainly a decimals-handling issue, not an actual shortfall.</p>
+        <h3 id="sec-3-3">3.3 Arrival Time: How Far Off From the Quoted Estimate</h3>
+        <p>Record the actual time elapsed from submitting the transaction to seeing it land on the destination chain, and compare it to the quote's estimated window. Some variance is normal, but if the actual time is several multiples of the estimate, it suggests congestion or bridge-layer queuing on this path under current network conditions — the same delay at a much larger transfer size will feel more stressful, and tests how well you've internalized that "slow" isn't the same as "lost."</p>
+        <h3 id="sec-3-4">3.4 Actual Fee: How Far Off From the Quoted Number</h3>
+        <p>Add up the gas, bridging fee, and service fee actually deducted in the test, and compare the percentage gap against the quoted estimate. A small test's absolute fee often looks "expensive" simply because fixed costs make up a larger share — that's normal and shouldn't be linearly extrapolated to a large transfer. But if the deviation is far larger than fixed-cost overhead can explain, that's worth understanding before you scale up.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Red Flags: Don't Scale Up If You See These</h2>
+        <ul>
+        <li>Test arrival time far exceeds the quoted window, and a transit-status lookup stays stuck "in progress" for a long time.</li>
+        <li>The arrived token's contract address doesn't match the destination chain's official contract, or the wallet flags it as an "unknown token."</li>
+        <li>The route silently substitutes the native asset you selected with a bridged/wrapped version, without a clear upfront warning in the interface.</li>
+        <li>The actual fee deviates from the quoted estimate by far more than small-transaction fixed costs can explain.</li>
+        <li>The destination address or the official support contact/contract doesn't match a version you previously verified.</li>
+        <li>The test transaction requires manual intervention or an appeal to complete, rather than settling automatically.</li>
+        </ul>
+        <p>If any of these show up, the right move isn't "try again and hope" — contact the platform's support or check its official docs to understand why first, and switch routes or tools, or abandon that path entirely, before deciding whether to continue.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. A Related Scenario: Does the Swap Tool Support a "Test Small, Then Go Big" Workflow</h2>
+        <p>To put the checks above into practice, you need a tool that supports cross-chain asset swaps and doesn't impose disproportionate minimums or fees on small transactions. Some tools set high minimums or relatively higher flat fees on small trades, which makes the cautious "test then scale" habit uneconomical — and indirectly encourages people to skip the test and go straight to a large transaction.</p>
+        <p>There are plenty of cross-chain swap aggregator tools out there; <a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a> is one example — the platform describes itself as a cross-chain swap aggregation tool supporting asset swaps across several mainstream public chains, and it displays an estimated arrival amount, slippage, and fee breakdown before you confirm, which in principle could also be used to run the kind of small dry-run test described here. To be clear, the description above is drawn solely from the platform's own self-reported information — please verify actual supported chains, minimum swap amounts, and real-world arrival experience against the provider's latest official disclosures and your own testing; this article offers no endorsement or guarantee whatsoever. Any use of a cross-chain swap tool must serve a genuine, compliant asset-management purpose and follow the relevant platform's terms and your local laws — never for money laundering, sanctions evasion, or other illegal purposes.</p>
+        <p>Whichever tool you use, don't skip the dry run because it seems like a hassle or the amount feels too small to bother — the time and cost it takes is far less than what you'd spend untangling a large transfer that went down the wrong path.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. A Cross-Chain Swap Dry-Run Checklist</h2>
+        <ul>
+        <li>Check the platform's minimum swap amount first; size the test no lower than that, within 1%-5% of the planned total or an amount you can afford to lose.</li>
+        <li>Once submitted, record the source-chain transaction hash, the quoted slippage and fee estimate, and the quote's validity window.</li>
+        <li>After arrival, verify: the correct destination chain, a token contract address matching the official one, and normal decimal precision.</li>
+        <li>Compare actual arrival time against the quoted window; if it's significantly longer, check transit status before assuming loss.</li>
+        <li>Compare the actual fee against the quoted estimate as a percentage; judge whether the gap is normal small-transaction fixed-cost overhead.</li>
+        <li>If any red flag appears, pause before scaling up — investigate or switch routes/tools first.</li>
+        <li>Once the test passes, execute a large transfer in batches with an observation window rather than firing the whole amount at once.</li>
+        </ul>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and Long-Tail Questions</h2>
+        <p>In one line: a test transaction verifies whether the path itself is reliable, not whether the price is a good deal; sizing it correctly triggers a platform's normal processing without amplifying risk; and the four post-arrival checks — chain, contract address and decimals, arrival time, actual fee — can each fail independently, so none can be skipped.</p>
+        <p>A few common questions: does the test have to use the exact same tool and route as the real transfer? Yes — the point is to verify that specific path; switching tools or routes means starting the test over, and prior results don't carry over. If the test passes, is the large transfer guaranteed to be fine? The test rules out structural issues at the routing and contract layer; price slippage, market depth, and real execution price at the larger size still need a separate assessment and aren't fully covered by the test. Does a high fee ratio on a small test mean the tool is a bad deal? Not necessarily — check whether the fee structure is similarly high for large transfers; linearly extrapolating a small test's fee rate to a large transfer isn't accurate, and you should check the tool's stated fee schedule for larger trades. This piece is shared purely for learning and research purposes and is not investment advice; crypto assets carry significant price and operational risk, so make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why Test First</a></li>
+          <li><a href="#sec-2">2. Sizing the Test</a></li>
+          <li><a href="#sec-3">3. Four Checks After Arrival</a></li>
+          <li><a href="#sec-4">4. Red Flags</a></li>
+          <li><a href="#sec-5">5. Choosing a Tool for the Dry Run</a></li>
+          <li><a href="#sec-6">6. Dry-Run Checklist</a></li>
+          <li><a href="#sec-7">7. Summary and Long-Tail Questions</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a> — look up source-chain transaction and arrival records</li>
+            <li><a href="https://layerzero.network/" target="_blank" rel="noopener">LayerZero Docs</a> — reference for cross-chain messaging and bridge settlement</li>
+            <li><a href="https://docs.uniswap.org/concepts/protocol/swaps" target="_blank" rel="noopener">Uniswap Swap Mechanics Docs</a> — background on slippage and price impact</li>
+          </ul>
+          <p class="ref-note">Cross-chain swap tools and third-party platform features mentioned in this article may change over time; refer to each platform's latest official disclosures. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>
+          <li><a href="/en/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security Guide: Network Selection, Bridge Verification, and Scam Recovery</a></li>
+          <li><a href="/en/research/market/swap-routing-research-guide.html">Verifying Swap Routing: What Costs Hide Behind the "Best Path" Quote</a></li>
+          <li><a href="/en/research/basics/exchange-fees-onramp-offramp-saving-guide.html">Exchange Fee & On/Off-Ramp Savings Tutorial: Accounting for Every Cost</a></li>
+          <li><a href="/en/research/basics/cex-kyc-withdrawal-limits-onramp-tutorial.html">Exchange KYC & Large Withdrawal Tutorial: Verification Tiers, Limits, and Risk Controls</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English site focused on crypto research methodology and on-chain data, documenting research frameworks, on-chain metrics, and fund flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Topics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscriptions</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets carry significant price volatility and risk — make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

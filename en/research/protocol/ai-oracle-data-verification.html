@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Oracle Data Trust Verification - Crypto Research</title>
+  <meta name="description" content="AI x On-Chain (2): verifying AI oracle data trust — models as fact sources, non-reproducible inference, manipulation surface in detail. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="AI Oracles and Trusted On-Chain Data Verification - Crypto Research">
+  <meta property="og:description" content="AI x On-Chain (2): verifying AI oracle data trust — models as fact sources, non-reproducible inference, manipulation surface. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html">
+  <meta property="article:published_time" content="2026-07-27T15:18:36+08:00">
+  <meta property="article:modified_time" content="2026-07-27T15:18:36+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI Oracle Data Trust Verification">
+  <meta name="twitter:description" content="AI oracles claim to turn messy off-chain reality — a match result, the truth of a filing, a satellite image — into an objective on-chain conclusion. But when a model becomes the source of truth a contract relies on, are its training data, inference and feed path independently verifiable? A methodology-only deep dive. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-ai-oracle-data-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="AI oracles and trusted on-chain data cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-ai-oracle-data-en.png">
+  <link rel="preload" as="image" href="/img/article-ai-oracle-data-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Prediction Market Resolution Research","On-Chain AI Agent Research","AI Agent Fund Custody Verification","AI Oracle Verification","Trusted On-Chain Data Sources"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-ai-oracle-data-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html", "name": "AI Oracles and Trusted On-Chain Data: When a Model Produces \"Truth,\" Who Verifies It - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "AI Oracles and Trusted On-Chain Data: When a Model Produces \"Truth,\" Who Verifies It", "item": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#article", "headline": "AI Oracles and Trusted On-Chain Data Verification", "description": "AI x On-Chain series (2): how AI oracles turn model output into on-chain truth, manipulation risks, and a verification checklist. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["ai oracle verification","trusted on-chain data source","model feed manipulation","ai inference reproducibility","trusted execution environment tee","multi-source cross-check"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-27T15:18:36+08:00", "dateModified": "2026-07-27T15:18:36+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/ai-oracle-data-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>AI Oracles and Trusted On-Chain Data: When a Model Produces "Truth," Who Verifies It</h1>
+        <p class="article-summary">This is the second article in the "AI × On-Chain" series. The previous piece examined permission verification for an AI agent acting as a "fund executor"; this one turns to a subtler role — when AI is no longer merely executing trades but starts being trusted by contracts as the source of "truth," how does the verification problem change. AI oracles claim to turn the vague, unstructured information of the off-chain world — the outcome of a match, the authenticity of a filing, the reading of a satellite image — into an "objective conclusion" a contract can consume directly. But one question must be pressed: as the conclusion moves from a price aggregation anyone can recompute to a model inference almost no one can reproduce, where exactly has trust been relocated. The piece covers six dimensions: the trust shift when a model becomes the source of truth, the non-reproducibility of training data and inference, the manipulation surface of single-model feeds, multi-source cross-checking and dispute resolution, what a trusted execution environment can and cannot prove, and a reusable checklist. The entire piece discusses abstract mechanism principles only — it does not name any real product, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-07-27T15:18:36+08:00">2026-07-27 15:18:36</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-ai-oracle-data-en.svg" alt="AI Oracles and Trusted On-Chain Data: When a Model Produces Truth, Who Verifies It cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. From "aggregated price" to "model conclusion": where trust moves</h2>
+<p>To understand what AI oracles change, first look at the trust model of a traditional oracle. A typical price oracle collects prices from several exchanges or on-chain markets, aggregates them by some rule (median, weighted average), and writes the result on-chain. The defining feature of this process is that it is recomputable — any researcher who obtains the same raw quotes and aggregation rule can run the numbers again and check whether the feed's value is reasonable. Trust here rests mainly on "is the data source manipulated" and "is the aggregation logic transparent," and both can be traced through on-chain or public market data.</p>
+<p>AI oracles change exactly that recomputable premise. What they process is often not an already-numeric price but a vague, unstructured input: whether a news text is true, the final result of a sports match, an inventory reading of oil tanks from a satellite image, whether an off-chain contract was fulfilled. The model "understands" these inputs into a conclusion a contract can consume — yes or no, pay or don't pay, some value. The problem is that this conclusion no longer comes from a formula anyone can recompute, but from one inference under a specific model, specific weights, specific inputs. Trust thus shifts from "data and formula" as a whole to a new object: the model itself, its training data, its inference environment, and whether the party running it is honest. Verifying an AI oracle begins with recognizing this shift — you are no longer just assessing "is the data right," but "why does this conclusion-producing model, and the person running it, deserve trust."</p>
+<ul>
+<li>A traditional oracle's core trait is recomputability: with the same quotes and aggregation rule, anyone can independently verify the feed.</li>
+<li>AI oracles process unstructured inputs and generate conclusions via model inference, breaking the "anyone can recompute" premise.</li>
+<li>Trust moves from "data and formula" to "the model, its training data, its inference environment, and whether the operator is honest" — the starting point of verification.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Non-reproducibility: why model inference is hard to recompute</h2>
+<p>A traditional oracle is verifiable because every step can be replayed; the trickiest thing about an AI oracle is precisely that its conclusion is inherently hard to reproduce independently. This non-reproducibility comes from several stacked layers. First, the model's own opacity — if the weights are not public, an outside researcher simply cannot rerun the same input and can only passively accept the output; even with public weights, large-model inference is often affected by floating-point ordering, hardware differences, sampling temperature and random seeds, so the same input need not yield a bit-identical output. Second, the input leaves no trace — if the raw material the model judged (that text, that image) was not recorded completely and tamper-evidently, there is no way to check afterward "what exactly did it see."</p>
+<p>This creates a verification dilemma quite different from a traditional oracle: when an AI oracle produces a disputed conclusion and you try to recheck it, you find there is almost nothing to grab onto. You don't know which model version it used, you don't know whether the input was preprocessed or cropped, and you cannot guarantee your own rerun gets the same result. So "verification" easily degrades into "trust the operator's self-attestation" — it says the model judged this way, and you can only believe it. Researchers facing an AI oracle should treat non-reproducibility as an explicit risk dimension to interrogate: is the model version pinned and its hash published? Are key inputs fully attested (for example, hashing the input on-chain)? Is there a mechanism that lets a third party at least verify after the fact that the "input-model-output" chain was not swapped midway? If none of this exists, then the word "objective" for this oracle rests, in essence, on unconditional trust in the operator.</p>
+<ul>
+<li>Non-reproducibility is multi-layered: weights not public, inference affected by hardware and randomness, input material not tamper-evidently recorded.</li>
+<li>The result: verification degrades to "trust the operator's self-attestation" — it says the model judged so, and outsiders can hardly refute it.</li>
+<li>What to check: is the model version pinned and hash-published, are key inputs attested on-chain, can one verify after the fact that "input-model-output" was not swapped.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Single-model feeds: a new single point of manipulation</h2>
+<p>In earlier discussions of oracle manipulation, this site repeatedly stressed one principle: a single data source is a single point of failure. AI oracles carry this problem into a new dimension — if a series of on-chain contracts all depend on the same model, the same operator's conclusions, then that model becomes a highly concentrated manipulation surface, and one whose manipulation is subtler than a traditional feed's. Manipulating a traditional feed usually requires moving a price in a real market (e.g., a flash-loan pump), which leaves traces on-chain; manipulating a model conclusion can happen where you cannot see: biased data fed in during training, carefully crafted adversarial input at inference time that makes the model misjudge, or the operator simply tampering at the output stage while claiming "that's just what the model concluded."</p>
+<p>More worrying is incentive misalignment. If an AI oracle's operator simultaneously holds positions in the markets it feeds, it has a motive to make the model "happen to" produce a conclusion in its own favor at a critical moment — and because of the non-reproducibility of Section 2, such manipulation is extremely hard to prove from the outside. Verifiers need to treat "who runs this model, do they have a conflict of interest, how many independent parties provide the same kind of conclusion" as core questions. A healthy design should not let a single model's single output directly decide the liquidation or payout of a large sum; at minimum there should be cross-checking across multiple independent models or operators, a challenge window for anomalous conclusions, and fallback logic when results diverge. If the entire system's "truth" is decided by one black-box model, then no matter how accurate it usually is, it is a single point that can be exploited at any time.</p>
+<ul>
+<li>An AI oracle relying on a single model/operator is a manipulation surface subtler than a traditional feed.</li>
+<li>Manipulation can occur unseen — in training (biased data), inference (adversarial input) or output (the operator tampering directly).</li>
+<li>The most dangerous case is incentive misalignment: an operator holding positions in the fed markets has a motive to make the model "happen to" favor itself.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Multi-source cross-checking and dispute resolution: who backstops the model's conclusion</h2>
+<p>Since a single model is untrustworthy, the sensible direction is to let no single conclusion be final. In traditional oracles this corresponds to "multi-source aggregation"; in AI oracles it is more complex, because a model's conclusion is often a discrete judgment (yes/no, pay/don't pay), not a price you can simply take the median of. What is worth verifying here is whether the system has a clear dispute-resolution mechanism: when multiple models or operators disagree, what does the system do? Simple majority, human arbitration, an optimistic challenge period, or a fallback to a more conservative default? In discussing prediction-market resolution, this site raised a similar "propose-challenge-final-ruling" structure — AI oracles must likewise answer "who ultimately holds final authority."</p>
+<p>A well-designed system usually positions the AI model as an "efficient preliminary judge" rather than an "irreversible final court": the model gives a conclusion first, but a challenge window is kept, and anyone can stake to challenge within it, triggering a higher-cost, more transparent review (e.g., decentralized human voting or multi-model re-adjudication). This way, even if a single model errs or is manipulated, there is an economic and procedural backstop. Verifiers should ask: is this AI oracle's conclusion "instantly final" or "challengeable"? Is the cost and path of a challenge feasible for ordinary participants, or so high as to be a dead letter? Who ultimately adjudicates a dispute, and is that adjudicator itself a new centralized single point? Pressing these questions is how you judge whether the system is "an AI-accelerated extra layer" or "an AI black box that replaced an otherwise verifiable process."</p>
+<ul>
+<li>The sensible direction is to let no single conclusion be final; but model conclusions are mostly discrete judgments, not prices you can median.</li>
+<li>The key is the dispute-resolution mechanism: on disagreement, majority, human arbitration, optimistic challenge, or conservative fallback.</li>
+<li>Healthy designs treat the model as a "preliminary judge," not a "final court," keeping a feasible challenge window as an economic and procedural backstop.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Trusted execution environments (TEE): what they can and cannot prove</h2>
+<p>Against the model's non-reproducibility, a common technical response is the trusted execution environment (TEE) — running the model inside a hardware-level "safe," where the chip produces a remote attestation claiming "this code really ran in an untampered environment, with the specified input, and produced this output." This is a valuable tool, but its boundaries are often overstated, and verifiers must distinguish what it can and cannot prove.</p>
+<p>What a TEE can prove is "execution integrity": ideally, it lets you believe the operator did not secretly swap the model, did not tamper with the inference, and that the output really came from the claimed code and input. But it cannot prove "the input itself is correct" — if the raw data fed to the model (that image, that text) was forged or cherry-picked to begin with, the TEE will faithfully wrap the inference of a bad input into a "trusted" output: garbage in, garbage out. It also cannot prove "the model's judgment is right" — the model may run meticulously inside the TEE and produce a wrong conclusion or one misled by an adversarial sample, while the attestation only guarantees "it really ran this way," not "it ran correctly." Moreover, the TEE itself depends on the hardware vendor's root of trust, and side-channel attacks have appeared historically. So the pragmatic stance is: treat a TEE's remote attestation as evidence that "execution was not tampered with," not evidence that "the conclusion is trustworthy"; it addresses part of Section 2's "input-model-output was not swapped," but in no way replaces the multi-source cross-checking and dispute resolution of Sections 3 and 4. A genuinely robust system usually stacks TEE, multi-source cross-checking and challengeable adjudication together, rather than expecting any single technology to be a one-shot fix.</p>
+<ul>
+<li>A TEE can prove "execution integrity": the model and inference were not tampered with; the output came from the specified code and input.</li>
+<li>A TEE cannot prove "the input is real" nor "the judgment is right" — garbage in, garbage out is still wrapped as a "trusted" output.</li>
+<li>Pragmatic framing: a TEE is evidence "execution was not tampered with," to be stacked with multi-source cross-checking and challengeable adjudication, not a cure-all.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Checklist and summary</h2>
+<p>Condensing the five sections into a reusable checklist, you can run through it against any oracle or data service claiming to "use AI to bring off-chain facts on-chain": First, where does trust land — does the conclusion come from a recomputable formula, or some model's inference? If the latter, is the model version pinned and its hash public? Second, how is reproducibility — are key inputs fully attested (e.g., input hashes on-chain), and can a third party verify after the fact that the "input-model-output" chain was not swapped? Third, is it a single point — does it depend on a single model or operator, and does the operator have a conflict of interest in the markets it feeds? Fourth, is there a backstop — how are disagreements among multiple independent conclusions adjudicated, and is there a cost-feasible challenge window and conservative fallback? Fifth, are the boundaries of the technical proof honestly labeled — if a TEE is used, it proves execution integrity, but has the operator packaged it as "the conclusion is trustworthy" to mislead users?</p>
+<p>It bears repeating: AI oracles make "turning complex off-chain facts into on-chain conclusions" efficient, but the price of efficiency is reduced verifiability — a process anyone could recompute is replaced by a black box requiring trust in the model and its operator. This is not necessarily bad, but the researcher's job is to put that layer of trust explicitly on the table, rather than let it be waved away by phrases like "AI is more objective" or "hardware-level trust." The most pragmatic principle is: the more significant and irreversible the on-chain action (large liquidations, final payouts, result adjudication), the less it should be decided directly by a single model's single output, and the more it needs a multi-source, challengeable, fallback-equipped structure as a backstop. This entire piece discusses abstract mechanism categories and verification methods only — it does not name or evaluate any real product or protocol, and does not constitute any form of investment advice. As the second article in the "AI × On-Chain" series, the next piece plans to push further into trusted execution and verification of on-chain models — when we want not only to know "the model ran" but to prove cheaply on-chain that "the model ran correctly," what new possibilities and new pitfalls do directions like zero-knowledge machine learning (zkML) bring.</p>
+<ul>
+<li>Five checklist questions: where trust lands, reproducibility, whether it is a single point, dispute backstop, and honest labeling of the technical proof's boundaries.</li>
+<li>Pragmatic principle: the more significant and irreversible the on-chain action, the less it should be decided by a single model's single output.</li>
+<li>The piece is a discussion of mechanism categories and methodology, names no real product, and is not investment advice; the next in the series turns to zkML and trusted execution of on-chain models.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. From "aggregated price" to "model conclusion": where trust moves</a></li>
+          <li><a href="#sec-2">2. Non-reproducibility: why model inference is hard to recompute</a></li>
+          <li><a href="#sec-3">3. Single-model feeds: a new single point of manipulation</a></li>
+          <li><a href="#sec-4">4. Multi-source cross-checking and dispute resolution</a></li>
+          <li><a href="#sec-5">5. Trusted execution environments (TEE): what they can and cannot prove</a></li>
+          <li><a href="#sec-6">6. Checklist and summary</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/oracles/" target="_blank" rel="noopener">Ethereum.org Oracles</a>: useful for understanding oracle models, decentralized feeds and trust assumptions</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer for checking a feed contract's update history, data submitters and aggregation logic</li>
+          </ul>
+          <p class="ref-note">The tools, data sources and third-party platform features mentioned may change over time; please refer to the latest official information. This article is for learning and research reference only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/agent-identity-credential-verification.html">Agent Identity and Credential Verification: Is This Identity Still Valid (series part 6)</a></li>
+          <li><a href="/en/research/protocol/agent-service-marketplace-verification.html">Agent Service Marketplace Verification: Whose Quote Can You Trust (series part 5)</a></li>
+          <li><a href="/en/research/protocol/agent-to-agent-payment-verification.html">Agent-to-Agent Settlement Verification: Where the Credit Chain Breaks</a></li>
+          <li><a href="/en/research/protocol/zkml-onchain-model-verification.html">zkML and Trusted On-Chain Model Execution (next in series)</a></li>
+          <li><a href="/en/research/protocol/ai-agent-onchain-verification.html">On-Chain AI Agent Verification: When Automation Holds Your Keys, Who Sets the Limits</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/protocol/prediction-market-resolution-risk.html">Prediction Market Resolution Risk: Who Actually Holds Final Authority</a></li>
+          <li><a href="/en/research/basics/onchain-data-analysis.html">On-Chain Data Analysis: An Address Is Not an Identity, a Transaction Is Not Intent</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/agent-strategy-execution-verification.html">Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'</a></li>
+          <li><a href="/en/research/protocol/agent-audit-log-integrity-verification.html">Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/market/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</a></li>
+          <li><a href="/en/research/protocol/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/research/protocol/depin-compute-network-verification.html">DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real</a></li>
+          <li><a href="/en/research/protocol/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>
+          <li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li>
+          <li><a href="/en/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner's Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>          <li><a href="/en/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">AI Agent Billing Verification: Real Usage Doesn't Guarantee an Accurate Bill</a></li>          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods and on-chain data, documenting research frameworks, on-chain metric interpretation and capital-flow observations to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Topics</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Go-Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute any investment advice; crypto asset prices are highly volatile and risky, so please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

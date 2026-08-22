@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On-Chain Forensics and Fund-Tracing - Crypto Research</title>
+  <meta name="description" content="How address clustering works and where it fails, why mixers break traceability, and cash-out node identification for practical use. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/onchain-forensics.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/onchain-forensics.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/onchain-forensics.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/onchain-forensics.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="On-Chain Forensics and Fund-Tracing - Crypto Research">
+  <meta property="og:description" content="How address clustering works and where it fails, why mixers break traceability, and cash-out node identification. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/onchain-forensics.html">
+  <meta property="article:published_time" content="2026-08-05T10:31:19+08:00">
+  <meta property="article:modified_time" content="2026-08-05T10:31:19+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="On-Chain Forensics and Fund-Tracing">
+  <meta name="twitter:description" content="How far can researchers actually trace stolen funds, and where does the trail necessarily break? A methodology-only breakdown of clustering, mixers, and cross-chain tracing limits. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-onchain-forensics-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-onchain-forensics-en.png">
+  <link rel="preload" as="image" href="/img/article-onchain-forensics-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English/Chinese bilingual site focused on cryptocurrency research methodology and on-chain data analysis. Content is for research purposes only and is not investment advice.", "knowsAbout": ["Cryptocurrency research","On-chain data analysis","Token economics","Stablecoins","Cross-chain interoperability","Smart contract security","DAO governance","Proof of reserves","AI oracle verification","zkML and on-chain model verification","AI agent identity and credential verification","AI agent strategy execution verification","AI agent audit-log integrity verification","On-chain forensics and fund tracing"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#primaryimage", "url": "https://coin.ponr.org/img/article-onchain-forensics-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html", "name": "On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go", "item": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#article", "headline": "On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go", "description": "A methodology breakdown of on-chain forensics: how address clustering works and where it fails, why mixers and privacy protocols break traceability, the mechanics of cross-chain fund tracing, and how to identify cash-out nodes. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["on-chain forensics methodology","address clustering algorithms","mixer detection","cross-chain fund tracing","exchange cash-out nodes","fund-flow graphs"], "wordCount": 3600, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-05T10:31:19+08:00", "dateModified": "2026-08-05T10:31:19+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/onchain-forensics.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/onchain-forensics.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</h1>
+        <p class="article-summary">After every major hack, the community asks the same question first: where did the money go. That question sounds like a simple lookup, but behind it sits an entire research discipline — deciding which addresses downstream of a theft belong to the same controller (clustering), understanding where the trail necessarily breaks once funds pass through a mixer or privacy protocol, re-establishing a path once funds jump to another chain, and verifying that funds landing at an exchange or other identifiable node really are the same batch rather than a coincidence. This article does not analyze any specific hack, project, or event. It treats on-chain forensics as a standalone research methodology topic: what the method can and cannot do, and the discipline a researcher should follow when reconstructing a fund flow. The entire piece is a methodology discussion only, is not investment advice, and does not draw conclusions about any specific address, project, or event.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-05T10:31:19+08:00">2026-08-05 10:31:19</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-onchain-forensics-en.svg" alt="On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. The Starting Point: Where a Fund-Flow Reconstruction Begins</h2>
+            <p>Every on-chain forensics effort starts from one or a handful of "incident addresses" — the address funds were moved out of. All a researcher has to work with is public transaction data: amounts, timestamps, sender and receiver addresses, and any contracts involved. The first step is not to rush downstream, but to profile the incident address's prior behavior: is it a long-active address or one created just before receiving a large sum; has it previously interacted with known exchange deposit addresses, bridge contracts, or DeFi protocols; did the funds leave in one lump transfer or in staggered batches. These basics shape the tracing strategy — staggered transfers often suggest the operator is testing whether downstream channels are clear, while a single large transfer more often points to a pre-planned route.</p>
+            <ul>
+              <li>Forensics work begins with profiling the incident address's history, not jumping straight to the next hop.</li>
+              <li>The transfer pattern (lump sum vs. staggered) is itself an analyzable signal of operator planning.</li>
+              <li>All material is public on-chain data; the credibility of any conclusion depends on how thoroughly it is cross-checked.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. Address Clustering: Piecing Scattered Addresses Back Together</h2>
+            <p>Address clustering is the core technique of on-chain forensics: determining whether multiple seemingly independent addresses are controlled by the same actual party. Common clustering signals include multiple addresses appearing as joint inputs in a single transaction (especially telling on UTXO-model chains, since a multi-input transaction typically requires one party to hold all the relevant keys), frequent small "change"-style transfers between addresses, multiple addresses created almost simultaneously and funded from the same upstream address, and consistent behavioral fingerprints in gas-payment patterns or contract choices. None of these signals is conclusive alone, but combined they meaningfully raise confidence in a clustering call.</p>
+            <p>Clustering has clear limits. First, any clustering output is a probabilistic judgment, not proof — key nodes always need manual review before being treated as conclusions. Second, an operator with reasonable operational security — avoiding direct transfers between addresses, using one-time relay addresses, staggering creation and usage windows — can substantially degrade clustering accuracy. Researchers citing clustering results should state the method and confidence level used, rather than asserting unconditionally that a set of addresses "are the same person."</p>
+            <ul>
+              <li>Joint inputs, change patterns, creation timing, and behavioral fingerprints are four common clustering signals.</li>
+              <li>Clustering output is probabilistic and needs manual review, not a substitute for proof.</li>
+              <li>Operational security on the operator's side can significantly weaken clustering effectiveness.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Mixers and Privacy Protocols: Where the Trail Breaks</h2>
+            <p>When funds pass through a mixer or a privacy-preserving protocol, the trace typically hits a hard break. Mixers work by pooling deposits from many unrelated users and redistributing withdrawals in a way that is deliberately decoupled from the original deposit records, making it hard to pair any single deposit with any single withdrawal purely from the transaction graph. Zero-knowledge privacy protocols go further: by design, they do not expose any link between deposits and withdrawals at all — this is not missing data, it is an intentional property of the protocol.</p>
+            <p>Researchers are not entirely powerless here, but options are limited. Timing correlation — checking whether deposit and withdrawal windows line up and whether amounts reconcile after reasonable fee deductions — can still yield useful leads in some cases, but the result is always a probability, not a verifiable causal link. Stating this honestly is more consistent with rigorous research than forcing a confident-sounding conclusion. Specialized tools and data services that analyze mixer flow patterns do exist in the industry, but even their output should be treated as probabilistic reference material, not definitive proof.</p>
+            <ul>
+              <li>Mixers and privacy protocols are designed specifically to sever the traceable link between deposits and withdrawals.</li>
+              <li>Timing and amount correlation still has reference value, but only yields probabilistic inference.</li>
+              <li>Researchers should flag the uncertainty introduced at the mixing stage rather than presenting false certainty.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Cross-Chain Hops: Re-Locating Funds on a New Chain</h2>
+            <p>Once funds move through a bridge to another chain, tracing tools and clustering experience from the original chain often don't transfer directly. Bridges broadly fall into two categories. Lock-and-mint bridges lock funds in a bridge contract on the source chain and mint an equivalent wrapped asset on the destination chain — this leaves an auditable mapping record between the two sides, so in principle the funds can be matched up once the mapping rule is known. Liquidity-pool swap bridges instead have funds deposited into a source-chain pool and withdrawn from existing liquidity in a destination-chain pool, with no one-to-one lock-and-mint record — relocating funds through this type of bridge is meaningfully harder, since the withdrawn funds may originally have come from an entirely different depositor.</p>
+            <p>Some operators also deliberately chain multiple cross-chain hops in sequence. Each additional hop adds a layer of re-indexing cost to the trace. Handling this typically requires the researcher to master the target chain's block explorer and bridge event-log parsing separately for each chain, rebuilding the fund path chain by chain — the workload grows roughly linearly, or faster, with the number of hops. This is exactly why multi-chain hopping is a common evasion tactic.</p>
+            <ul>
+              <li>Lock-and-mint bridges leave an auditable mapping; liquidity-pool swap bridges are considerably harder to relocate funds through.</li>
+              <li>Sequential multi-chain hops substantially raise tracing cost, requiring a rebuilt path on every chain.</li>
+              <li>Cross-chain analysis is one of the easiest places for methodological shortcuts to creep in — each hop needs independent verification.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. Identifying Cash-Out Nodes: Where the Funds End Up</h2>
+            <p>The downstream endpoint of a fund-flow reconstruction is usually a "cash-out node" — the point where funds convert into another asset class or exit the crypto ecosystem entirely, most commonly a centralized exchange deposit address. The standard method for identifying cash-out nodes is comparing traced addresses against known exchange address-labeling databases; many block explorers and on-chain analytics platforms maintain public or semi-public address labels that flag some known exchange deposit addresses and notable institutional addresses. It's worth stating plainly that the accuracy and freshness of this labeling data varies a great deal by platform, and mislabeling or stale labels are not uncommon — relying on a single labeling source carries real risk.</p>
+            <p>Even when funds are confirmed to land at an identifiable exchange deposit address, that only means the funds entered that institution's custody — it does not mean the operator's identity has been established. Whether the trail can be pushed further to a specific account holder depends on that institution's compliance process and law-enforcement cooperation, which is outside the scope of what on-chain data analysis alone can answer. When describing "funds flowed into an exchange," researchers should make this boundary explicit, rather than leaving readers with the impression that an identity has already been confirmed.</p>
+            <ul>
+              <li>Cash-out node identification relies on address-labeling databases; label accuracy and freshness need cross-checking.</li>
+              <li>Funds reaching an exchange deposit address is not equivalent to identity confirmation — that requires institutional compliance and law-enforcement cooperation.</li>
+              <li>Clearly separating "on-chain verifiable fact" from "off-chain identity confirmation" is the key boundary for rigorous research.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. A Reusable Fund-Flow Reconstruction Checklist</h2>
+            <p>Consolidating the sections above into a checklist that can be reused across actual investigations helps avoid missing key steps and gives teams a consistent standard when collaborating.</p>
+            <ul>
+              <li>Profile the incident address's prior behavior and determine whether outflows were lump-sum or staggered.</li>
+              <li>Cluster downstream addresses and explicitly record the signals and confidence level used — avoid unconditional conclusions.</li>
+              <li>Flag whether funds passed through a mixer or privacy protocol, and if so, state clearly that the trail carries added uncertainty from that point on.</li>
+              <li>Rebuild cross-chain paths chain by chain, distinguishing lock-and-mint bridges from liquidity-pool swap bridges by tracing difficulty.</li>
+              <li>Cross-check cash-out node identification against multiple independent labeling sources rather than relying on one.</li>
+              <li>Clearly separate "on-chain verifiable facts" from "identity information that requires off-chain cooperation to confirm."</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>On-chain forensics is a research method built on public data but full of uncertainty: address clustering yields probability rather than proof, mixers and privacy protocols create breaks that data analysis alone cannot cross, cross-chain hops require rebuilding the path chain by chain, and cash-out node identification depends on the quality of external labeling data. The method can help researchers, audit teams, and communities piece together as complete a fund-flow narrative as possible after an incident, but its output is always "a reasonable inference based on currently available data," not an unassailable conclusion. This article discusses methodology only, draws no conclusions about any specific address, project, event, or individual, and is not investment advice of any kind. When reading on-chain forensics analysis elsewhere, readers should watch for method transparency and explicit uncertainty statements, and stay skeptical of any overly confident claims.</p>
+          </section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#sec-1">The Starting Point</a></li>
+            <li><a href="#sec-2">Address Clustering</a></li>
+            <li><a href="#sec-3">Mixers and Privacy Protocols</a></li>
+            <li><a href="#sec-4">Cross-Chain Hops</a></li>
+            <li><a href="#sec-5">Identifying Cash-Out Nodes</a></li>
+            <li><a href="#sec-6">Reusable Checklist</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources &amp; further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+              <li><a href="https://chainabuse.com/" target="_blank" rel="noopener noreferrer nofollow">Public address labeling and abuse reporting database (third party, reference only)</a></li>
+              <li><a href="https://docs.chainalysis.com/" target="_blank" rel="noopener noreferrer nofollow">On-chain analytics methodology documentation (third party, reference only)</a></li>
+              <li><a href="https://ethereum.org/en/developers/docs/data-and-analytics/block-explorers/" target="_blank" rel="noopener noreferrer nofollow">Block explorers and analytics tools overview (Ethereum.org, third party)</a></li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+              <li><a href="/en/research/governance/airdrop-sybil-detection-research-guide.html">Airdrop and Sybil Detection Research Methods</a></li>
+              <li><a href="/en/research/protocol/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Methods</a></li>
+              <li><a href="/en/research/protocol/agent-audit-log-integrity-verification.html">AI Agent Audit-Log Integrity Verification</a></li>
+              <li><a href="/en/research/market/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</a></li>
+              <li><a href="/en/research/protocol/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+              <li><a href="/en/research/protocol/depin-compute-network-verification.html">DePIN Compute Network Verification</a></li>          <li><a href="/en/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">AI Agent Billing Verification: Real Usage Doesn't Guarantee an Accurate Bill</a></li>          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

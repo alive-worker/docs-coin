@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>When an On-Chain Agent Goes Down, Who Is Liable?</title>
+  <meta name="description" content="When an on-chain agent silently stalls, a missed rebalance can go unnoticed for hours. Detecting failure, assigning fault, and reading SLA loopholes, explained.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/agent-downtime-failure-liability-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/agent-downtime-failure-liability-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="When an On-Chain Agent Goes Down, Who Is Liable?">
+  <meta property="og:description" content="Detecting a silently stalled on-chain agent, telling its fault apart from RPC outages, stale oracles, or your own misconfiguration, and reading best-effort liability clause loopholes.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html">
+  <meta property="article:published_time" content="2026-08-20T13:38:00+08:00">
+  <meta property="article:modified_time" content="2026-08-20T13:38:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="When an On-Chain Agent Goes Down, Who Is Liable?">
+  <meta name="twitter:description" content="An on-chain agent goes silent. Was it the agent, an outage, or your config? Best-effort liability clauses rarely say.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-agent-downtime-failure-liability-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="When an On-Chain Agent Goes Down, Who Is Liable? cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-agent-downtime-failure-liability-verification-en.png">
+  <link rel="preload" as="image" href="/img/article-agent-downtime-failure-liability-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-agent-downtime-failure-liability-verification-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html", "name": "When an On-Chain Agent Goes Down, Who Is Liable?", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "AI x On-Chain", "item": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#article", "headline": "When an On-Chain Agent Goes Down, Who Is Liable?", "description": "When an on-chain agent silently stalls, a missed rebalance can go unnoticed for hours. Detecting failure, assigning fault among agent, external dependency, or user misconfiguration, and reading best-effort liability clause loopholes. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["on-chain agent downtime", "agent failure liability", "heartbeat liveness check", "RPC node outage", "stale oracle data", "best-effort clause", "circuit breaker"], "wordCount": 1800, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-20T13:38:00+08:00", "dateModified": "2026-08-20T13:38:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/agent-downtime-failure-liability-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/agent-downtime-failure-liability-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>When an On-Chain Agent Goes Down, Who Is Liable?</h1>
+        <p class="article-summary">Earlier pieces in the "AI x On-Chain" series covered an agent's permission boundaries, usage billing, identity credentials, strategy-execution fidelity, and audit-log tamper resistance — all of which quietly assume the agent is actually running. This piece covers what happens once that assumption breaks: when an AI agent managing a DeFi position, executing a trading strategy, or handling automated payments suddenly goes down or stalls, the damage is often already done before anyone notices — a liquidation-avoidance action that should have fired never did, a rebalance that should have happened never happened because the agent's off-chain component crashed, a scheduled payment failed without a sound. This piece works through four questions: how do you even tell that an agent has silently stopped rather than genuinely having nothing to do; what technical evidence separates a fault in the agent itself from an external dependency failure or a user misconfiguration; how liability and compensation clauses are typically worded and where the common loopholes sit; and what to verify before handing an agent anything with real financial consequences. For learning and methodology purposes only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-20T13:38:00+08:00">2026-08-20 13:38:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-agent-downtime-failure-liability-verification-en.svg" alt="When an On-Chain Agent Goes Down, Who Is Liable? cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. "Nothing to do" versus "not running" — how do you tell them apart</h2>
+        <p>An agent going quiet has two very different possible causes: the market and position state genuinely never crossed any threshold that would trigger an action, so doing nothing is correct behavior; or the agent's off-chain component has crashed, hung, or lost communication with its on-chain side, and nobody happened to notice. From the outside these look identical — both show up as "no transactions for a while." The absence of new on-chain transactions alone can't distinguish the two, and the default assumption most users make is exactly backwards: treating silence as "everything's fine, nothing needs doing" rather than actively confirming the agent is still alive. The only reliable signal is a heartbeat or liveness check independent of business logic — does the agent, separate from sending transactions when conditions are met, emit a signal on a fixed cadence that exists purely to prove "I'm still running": a tiny periodic on-chain heartbeat transaction, a health-check endpoint an external party can poll, or a status report to an independent monitoring service. Without that kind of mechanism designed in, a user has no way to tell "the agent chose not to act" from "the agent has stopped" — until the damage has already happened.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Three buckets for assigning fault: the agent, an external dependency, or user misconfiguration</h2>
+        <p>Once you've confirmed the agent has actually stalled, the next question is who's at fault — and that determines how liability and compensation get negotiated. Failures generally fall into three buckets. First, a problem in the agent itself: the process running it crashed, an uncovered edge case in the code, or a key-management failure that broke signing. Second, a failure in infrastructure the agent depends on: the RPC endpoint it connects to went down or started returning bad data, the oracle price feed it reads went stale or stopped updating, or the destination chain got congested enough that gas spiked past the agent's preset ceiling and its transactions never got included. Third, a misconfiguration on the user's own side: an approval allowance set too low, insufficient gas-token balance in the agent's wallet, or a whitelist missing a necessary contract address. These three buckets carry entirely different liability: the operator generally bears responsibility for the first, liability for the second depends on how the service terms allocate it, and the third generally isn't the operator's fault at all. Without first placing a failure into one of these three buckets, there's no meaningful basis for a liability discussion.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. What verifiable trace each type of failure leaves behind</h2>
+        <p>The good news is that these three failure types usually leave distinct technical traces, and with deliberate checking you can largely reconstruct what actually happened. A crash in the agent itself typically stops the heartbeat too — a sign the whole process or service is down, not just one category of business transaction; if the operator kept internal error logs or stack traces, those point directly to the code path. An external-dependency failure looks different: the heartbeat may keep running fine while business transactions visibly stall at one specific step — you can check whether a public status page or third-party monitor logged an outage for the RPC endpoint the agent used during that window, check the last on-chain update timestamp on the oracle contract the agent reads against the failure window, or pull the actual gas-price curve for the destination chain during that period to see whether it genuinely exceeded the agent's configured ceiling. A user misconfiguration usually leaves a trace directly on-chain: insufficient allowance or balance produces a failed or rejected transaction when the agent tries to act, and that record is itself the most direct evidence. Verification should proceed in order — check whether the heartbeat stopped, check whether the external dependency had a publicly documented anomaly at the time, check on-chain for a rejected transaction tied to a configuration issue — rather than settling for the operator's bare claim of "system normal" or "external cause."</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. "Best effort" clauses: they read like a promise, but rarely function like one</h2>
+        <p>Most agent service terms include language along the lines of "best effort to maintain continuity and timeliness of service," which reads like a liability commitment at first glance but rarely functions as an enforceable compensation obligation once you unpack it: it gives no concrete uptime figure, no defined threshold for how long a failure has to last before it counts as a breach, and no stated formula or cap for what gets paid out if it does. A genuinely binding clause, by contrast, needs several concrete elements: a specific availability or response-time metric (e.g., heartbeat silence beyond N minutes counts as unavailable); a clear allocation of fault, spelling out which external-dependency failures the operator is on the hook for and which it isn't; a concrete compensation formula — refund of a service period's fee, or actual-loss reimbursement; and whether that compensation is capped, and whether the cap is reasonable relative to what a user could plausibly lose. Common loopholes include: using unquantifiable phrases like "best effort" or "commercially reasonable effort" as the entire service commitment; limiting compensation to a fee refund while excluding any financial loss caused by the failure outright; and preemptively disclaiming all liability for any third-party infrastructure failure, without distinguishing whether the operator chose and configured that infrastructure itself. The most direct test of whether a clause has real teeth: if the agent's own fault genuinely caused a loss, can you point to the clause and demand a specific, calculable payout — if the answer is no, the clause is functionally just a disclaimer.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Don't rely on the agent alone: user-side self-monitoring and circuit breakers</h2>
+        <p>Even a clearly written compensation clause only reimburses damage after the fact — it can't retroactively fire a missed liquidation-avoidance action or recover a payment that already failed to send, so anything with real financial consequences shouldn't rest its full trust on a single path through the agent. Practical user-side backstops include: a monitoring script independent of the agent, controlled by the user, that periodically checks the agent's heartbeat and key position metrics and fires an alert the moment silence exceeds a preset threshold; a circuit breaker set up for the worst case, such as a user-controlled stop-loss or liquidation-protection order that sits independently of the agent and still functions even if the agent goes fully dark; and for automated-payment use cases, a hard cap on the amount per transaction and per period, so a logic bug in the agent can't produce an unbounded loss. The common thread across all of these is not depending on the agent to self-report that it's fine, but keeping an independent verification and fallback mechanism the agent can't unilaterally bypass — so that even while a liability determination and compensation process plays out over time, the actual financial exposure has already been bounded to something tolerable.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. What to verify before trusting an agent with real money</h2>
+        <p>Before handing an AI agent anything with real financial consequences, it's worth verifying, item by item: does the agent expose a heartbeat or health-check mechanism independent of its business transactions, and can a user subscribe to or poll it directly rather than waiting to be notified; do the service terms state concrete availability and compensation figures rather than unquantifiable language like "best effort"; do the terms clearly separate liability for the agent's own faults from liability for external-dependency failures; is the compensation cap reasonable relative to the scale of funds the agent manages, or is it low enough to be effectively meaningless; can a user set an independent stop-loss, liquidation protection, or amount cap outside the agent without it conflicting with or being overridden by the agent's own logic; and has the operator had downtime or failure incidents before, and how were they handled and disclosed at the time. Clear answers to these before entrusting real funds to an agent make liability determination and remediation far smoother if a failure does occur; if these questions can't currently be answered, the scale of funds under the agent's management should be capped at whatever amount you can tolerate losing if it fails.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and a verification checklist</h2>
+        <ul>
+        <li>Absence of new on-chain transactions alone isn't proof the agent is fine — a heartbeat or liveness signal independent of business logic is needed to separate "nothing to do" from "already stopped."</li>
+        <li>Fault falls into three buckets — the agent itself, external dependencies like RPC/oracles, or user misconfiguration — and liability differs entirely across them.</li>
+        <li>Verify in order: whether the heartbeat stopped, whether the external dependency had a documented anomaly at the time, and whether on-chain records show a transaction rejected due to misconfiguration.</li>
+        <li>"Best effort" language rarely constitutes an enforceable compensation obligation; a binding clause needs a concrete availability metric, fault allocation, and payout formula.</li>
+        <li>Don't put full trust in a single path through the agent — user-controlled monitoring alerts, independent stop-loss/liquidation protection, and amount caps are necessary backstops.</li>
+        <li>Before trusting an agent with real funds, verify its heartbeat mechanism, concrete contract terms, fault allocation, compensation cap, and whether self-backstops are actually usable.</li>
+        </ul>
+        <p>Frequently asked: does an agent going quiet for a while mean it has failed? Not necessarily — it may simply be that market conditions never triggered an action; an independent heartbeat signal is needed to tell the two apart. Is the operator always liable for downtime? It depends on the failure type — the operator typically bears responsibility for faults in the agent itself, while liability for external-dependency failures or user misconfiguration depends on the specific terms and evidence. Can a "best effort" commitment be used to demand compensation? Rarely — that kind of language usually doesn't constitute a concrete, enforceable obligation; check whether the terms give a quantifiable metric and payout formula. This article is for learning and research purposes only, discusses abstract mechanisms without naming any real product, and does not constitute investment advice; please make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. "Nothing to do" vs. "not running"</a></li>
+          <li><a href="#sec-2">2. Three buckets for assigning fault</a></li>
+          <li><a href="#sec-3">3. Verifiable traces of each failure type</a></li>
+          <li><a href="#sec-4">4. Loopholes in "best effort" clauses</a></li>
+          <li><a href="#sec-5">5. Self-monitoring and circuit breakers</a></li>
+          <li><a href="#sec-6">6. What to verify before you rely on one</a></li>
+          <li><a href="#sec-7">7. Summary and checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/nodes-and-clients/" target="_blank" rel="noopener">Ethereum.org Nodes and Clients</a> — background on the role RPC nodes play when an agent executes on-chain transactions</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan and comparable block explorers</a> — checking an agent wallet's actual transaction and failure history</li>
+          </ul>
+          <p class="ref-note">The mechanisms and verification methods discussed here may evolve as industry practice changes; refer to the current official terms of any service you actually use. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/agent-audit-log-integrity-verification.html">Agent Audit Log Integrity Verification</a></li>
+          <li><a href="/en/research/protocol/agent-strategy-execution-verification.html">Agent Strategy Execution Verification</a></li>
+          <li><a href="/en/research/protocol/agent-identity-credential-verification.html">Agent Identity & Credential Verification</a></li>
+          <li><a href="/en/research/protocol/agent-service-marketplace-verification.html">Agent Service Marketplace Verification</a></li>
+          <li><a href="/en/research/protocol/agent-to-agent-payment-verification.html">Agent-to-Agent Payment Verification</a></li>
+          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">Agent Usage Billing Verification</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English site on crypto research methodology and on-chain data, tracking research frameworks, on-chain metrics, and fund-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

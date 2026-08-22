@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inside USDT: Issuance and Reserves - Crypto Research</title>
+  <meta name="description" content="USDT basics beyond '1 USDT = 1 dollar': who issues it, what reserves hold, how mints/burns happen on-chain, and what keeps the peg. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/usdt-issuance-reserve-basics.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/usdt-issuance-reserve-basics.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Inside USDT: How the Stablecoin Is Actually Issued, Redeemed, and Kept at $1">
+  <meta property="og:description" content="USDT basics beyond '1 USDT = 1 dollar': who issues it, what reserves hold, how mints/burns happen on-chain, and what keeps the peg. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html">
+  <meta property="article:published_time" content="2026-08-15T15:30:00+08:00">
+  <meta property="article:modified_time" content="2026-08-15T15:30:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Inside USDT: Issuance and Reserves">
+  <meta name="twitter:description" content="Issuance, reserves, mint/burn, and peg maintenance — USDT basics for researchers. Not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-usdt-issuance-reserve-basics-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Inside USDT: Issuance and Reserve Mechanics cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-usdt-issuance-reserve-basics-en.png">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-usdt-issuance-reserve-basics-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 } },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#primaryimage", "url": "https://coin.ponr.org/img/article-usdt-issuance-reserve-basics-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#webpage", "url": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html", "name": "Inside USDT: Issuance and Reserve Mechanics - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Inside USDT: Issuance and Reserve Mechanics", "item": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#article", "headline": "Inside USDT: How the Stablecoin Is Actually Issued, Redeemed, and Kept at $1", "description": "USDT basics in four layers a researcher cares about: issuer, reserves, on-chain mint/burn, and peg maintenance. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["USDT basics", "USDT issuance", "USDT reserves", "stablecoin mint burn", "peg mechanism", "Tether", "virtual credit card"], "wordCount": 5800, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-15T15:30:00+08:00", "dateModified": "2026-08-15T15:30:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/usdt-issuance-reserve-basics.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/usdt-issuance-reserve-basics.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Inside USDT: How the Stablecoin Is Actually Issued, Redeemed, and Kept at $1</h1>
+        <p class="article-summary">Ask what USDT basics really mean and most people default to "1 USDT equals 1 dollar" — then stop. But under that one line sits a very concrete machine: who is allowed to mint a fresh USDT? How do those tokens tie back to actual dollars? Why does the total supply sometimes jump by billions overnight, and then drop by billions the next week? This piece is not about "should you buy it" — it takes a researcher's angle and pulls apart four layers: issuer, reserves, on-chain mint/burn, and the peg-maintenance mechanism. Learn these, and the next "USDT freshly minted" headline stops feeling like a mystery. For learning and research only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-15T15:30:00+08:00">2026-08-15 15:30</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-usdt-issuance-reserve-basics-en.svg" alt="Inside USDT: Issuance and Reserve Mechanics cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <section id="sec-1">
+        <h2>1. Start With the Issuer: USDT Is a "Company Liability," Not a Protocol Output</h2>
+        <p>To get USDT basics right, the first thing to un-learn is the assumption that USDT is a naturally emitted crypto asset like BTC. It is not. USDT is a token issued by a company called Tether — a redeemable liability that "each token corresponds to $1 or equivalent assets" — and that liability happens to be tokenized and to run across several blockchains.</p>
+        <p>That distinction matters. BTC's issuance rules are hard-coded into a protocol; no single party on Earth can "print" extra BTC. USDT's issuance sits with one company, Tether, and only Tether decides when to mint new USDT and when to burn it. Every large on-chain mint you watch is, at its core, a Tether-side operation being reflected on-chain.</p>
+        <p>So a baseline stance for stablecoin research: with BTC we study the protocol; with USDT we study "company + protocol" — the reserve composition, disclosure quality, and legal entity live off-chain and must be examined alongside on-chain data.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Reserve Composition: What Actually Sits Behind the Dollar</h2>
+        <h3 id="sec-2-1">2.1 Cash, Cash Equivalents, and Treasury Bills</h3>
+        <p>Tether publishes a reserve breakdown every quarter. In recent years the mix falls into roughly a few buckets: cash and bank deposits — the closest to "real money," immediately redeemable; short-term US Treasury bills (T-Bills), extremely liquid and treated as cash equivalents, currently the largest single bucket; money-market funds and reverse repos, also short-duration and highly liquid; and a smaller allocation to commercial paper, corporate bonds, secured loans, precious metals, and other investments.</p>
+        <p>Why the mix instead of holding pure cash? Simple economics: T-Bills are safe and yield interest. That is a core Tether profit engine — mint a USDT, receive $1, park it in T-Bills, earn the yield, and the user's USDT is still worth $1. At the size Tether operates today, that translates into billions of dollars of annual income.</p>
+        <h3 id="sec-2-2">2.2 "Sufficient" Reserves and "Liquid" Reserves Are Two Different Questions</h3>
+        <p>Researchers commonly conflate two questions: is the total reserve ≥ total USDT outstanding, and can that reserve actually be liquidated fast enough under a redemption rush?</p>
+        <p>On paper, Tether has for years disclosed reserves slightly in excess of circulating USDT — an over-collateralization stance. But whether that reserve can be turned into cash quickly depends on the share of highly liquid assets in the mix. T-Bills usually settle in days; commercial paper is less liquid; corporate bonds and secured loans even less. Any serious USDT reserve analysis has to look at total size and liquidity structure separately.</p>
+        <h3 id="sec-2-3">2.3 Attestation vs. Audit — A Wording Detail That Matters</h3>
+        <p>One important language note: Tether currently publishes "attestations," not full annual "audits." An attestation is a point-in-time verification of the reserve snapshot by an accounting firm; a full audit is a continuous, year-round review. A large share of industry critique of Tether concentrates here — many years of attestations, but not a full annual audit from a top-tier firm. That fact alone is not a conclusion — but it is a premise any honest USDT-basics discussion must acknowledge.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. The On-Chain View: How USDT Actually Gets Minted and Burned</h2>
+        <h3 id="sec-3-1">3.1 A Typical Mint Flow</h3>
+        <p>Zoom in on-chain and a typical USDT mint is surprisingly clean. An institutional client — usually a large exchange, an OTC desk, or a market maker — wires USD or equivalent assets to Tether's corporate account. Once Tether confirms receipt, its on-chain Treasury contract calls issue(), minting fresh USDT that lands first in Tether's Treasury address. That batch is then transferred from Treasury to the institutional client's wallet, and the client distributes it further.</p>
+        <p>You can follow Tether Treasury outflows directly on block explorers like Etherscan or Tronscan; community bots such as Whale Alert track exactly this stage. Headlines about "N billion USDT freshly minted" are almost always a synthesis of these on-chain events.</p>
+        <h3 id="sec-3-2">3.2 A Typical Burn Flow</h3>
+        <p>The reverse process is redemption. An institutional client sends its USDT back to Tether's Treasury address. Tether confirms, calls redeem() or a related contract method to permanently remove that batch from circulation, and wires the equivalent dollars or assets back to the client's corporate account.</p>
+        <p>That is why you see the Tether Treasury address constantly receiving "inbound" transfers — not because "someone is donating," but because those are queued redemption requests. When studying stablecoin supply dynamics, watching the total supply curve alone is incomplete; you also need to watch Treasury inflow/outflow to read the real net issuance vs. net redemption rhythm.</p>
+        <h3 id="sec-3-3">3.3 Freeze and Blacklist: A Stablecoin With a Central Kill Switch</h3>
+        <p>Another inescapable property of USDT basics: the Tether contract retains authority to blacklist a specific address and destroy its balance (addBlackList / destroyBlackFunds). This helps in combating illicit finance and cooperating with law enforcement, but it also means USDT is not "absolutely censorship-resistant" — any given USDT can, in principle, be frozen. When researching stablecoin censorship-resistance or picking a DeFi settlement asset, this is a required variable.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Peg Maintenance: Why USDT Stays So Close to $1 Most of the Time</h2>
+        <h3 id="sec-4-1">4.1 Primary Market: Institutional Arbitrage Drags the Price Back</h3>
+        <p>USDT's peg is not enforced by code — it is maintained by an arbitrage loop. When USDT trades at $0.99 on the secondary market, an institution can buy up USDT there and redeem it 1:1 with Tether, pocketing the cent. When USDT trades at $1.01, an institution can wire dollars to Tether, mint fresh USDT, and sell into the market, again earning a cent. Two-directional arbitrage keeps prices circling $1.</p>
+        <p>Key detail: this mechanism only works for parties that can settle directly with Tether. Retail cannot go through this loop. So the peg is really upheld by a small number of institutional players, not by aggregate retail confidence.</p>
+        <h3 id="sec-4-2">4.2 Secondary Market: Exchange Depth and Cross-Venue Arbitrage</h3>
+        <p>The USDT price you see in exchange tickers is set by many order books simultaneously. When USDT drifts visibly cheaper on one venue (say $0.985), cross-venue arb bots move the cheap coins to the expensive venue and pull the price flat. This layer of arb requires no Tether involvement — venue depth and inter-exchange capital flow are enough.</p>
+        <p>What you see in your price app most days — USDT at $0.999 to $1.001 — is the joint output of primary-market arb (institutions vs. Tether) and secondary-market arb (bots across exchanges).</p>
+        <h3 id="sec-4-3">4.3 When Does the Peg Actually Break?</h3>
+        <p>USDT has had noticeable depegs in the past — around adverse Tether-related news, or when major partner banks ran into trouble, USDT briefly traded at $0.95 or lower. A depeg is fundamentally a drop in confidence that "USDT can still be redeemed 1:1 for dollars" — usually visible as delayed or blocked redemption windows, questioned reserve disclosures, and concentrated short-term selling. A researcher should watch which upstream conditions are degrading, not just what the price prints — price is a lagging output; the mechanism state is the cause.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Bridging Scenario: Putting USDT Into Everyday Spending</h2>
+        <p>Understanding USDT basics is only half the picture; the other half is how USDT actually enters real spending. Beyond on-chain transfers, DeFi interaction, and exchange on/off-ramps, more and more users hit a very concrete need: paying overseas bills directly from stablecoins — an AI API subscription, a cross-border SaaS invoice, a monthly overseas cloud server. Most of those merchants do not accept on-chain wallets; they only accept cards.</p>
+        <p>This creates the "stablecoin → card" bridge need. A common answer on the market is the virtual credit card: no physical mailing wait, online onboarding gets you a usable card number in minutes; some platforms offer a US virtual credit card whose BIN range enjoys higher acceptance across mainstream merchants. A service like <a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC (Rongda virtual credit card)</a> self-describes as a virtual card issuing platform, supports Visa virtual card and other major networks, and lets users top up cards directly with USDT — as a virtual credit card platform, it targets the "stablecoin → overseas card payment" path. Worth a mention here because it shares a logic with everything discussed above: a stablecoin is a unit of account; what makes it usable is the full chain of trust and settlement connecting on-chain balances to real-world payments. The above is the platform's own description; actual features, fees, and settlement experience should be judged from official disclosures and your own usage — this article makes no endorsement. Any pairing of a virtual card with stablecoins must serve genuine, compliant spending, follow platform terms and the laws of your jurisdiction, and must never be used for cash-out, laundering, or evading regional restrictions.</p>
+        <p>From a researcher's angle, on-chain reserve composition and off-chain payment rails are two sides of one question: how usable is a stablecoin, in reality? Any broken link along that chain quietly discounts the "1 USDT = 1 dollar" claim.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. A USDT Basics Research Checklist</h2>
+        <p>The whole piece condensed into a reusable checklist:</p>
+        <ul>
+        <li>Watch the size: net issuance/net redemption at the Tether Treasury address is a truer signal than the total-supply line.</li>
+        <li>Watch disclosures: distinguish "attestation" from "audit" and note the most recent date and issuing firm.</li>
+        <li>Watch composition: the split among cash, T-Bills, money-market instruments, and other assets — especially the high-liquidity share.</li>
+        <li>Watch the endpoints: main banking partners, custodians, and auditors — any change is a signal.</li>
+        <li>Watch on-chain distribution: USDT balances across Tron, Ethereum, Solana, Arbitrum, etc. reflect use-case shifts.</li>
+        <li>Watch peg behavior: intraday lows, cross-venue spreads, redemption channel smoothness — leading indicators for depeg stress.</li>
+        <li>Watch compliance behavior: changes in the blacklist / freeze log reflect how often the central switch is actually used.</li>
+        <li>Watch usage rails: exchange on/off-ramp health, DeFi integrations, and "stablecoin → card" bridges as availability metrics.</li>
+        </ul>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and Long-Tail Questions</h2>
+        <p>One-line summary: USDT basics are not the phrase "pegged to $1." They are the combination of company credit + reserve composition + on-chain mint/burn + arbitrage-based peg maintenance. Once you pull those four layers apart, you can tell which layer any USDT-related headline is actually talking about, and you can separate marketing language from actual mechanism discussion.</p>
+        <p>Long-tail questions worth flagging: does a USDT mint always mean "money-printing that pumps the market"? Not necessarily — most mints are lagging responses to on-chain liquidity demand, not proactive stimulus signals. What's the real difference between USDT and USDC? Issuer, reserve mix, disclosure cadence, and compliance posture. Can USDT go to zero? Theoretically it depends on reserve redeemability and the continuity of the legal entity; history has depegs that were quickly restored, and long-run research should track reserve structure and redemption rails, not every wobble. Are Tron USDT and ERC20 USDT the same coin? Same issuer's same liability, tokenized on different chains — you cannot swap them directly, only via a cross-chain bridge or an in-exchange conversion. All of this can change with issuer policy and market conditions — always defer to the latest official disclosures. This article is a study and methodology piece, not investment advice. Crypto assets are highly volatile and risky; make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Start With the Issuer</a></li>
+          <li><a href="#sec-2">2. Reserve Composition</a></li>
+          <li><a href="#sec-3">3. On-Chain Mint and Burn</a></li>
+          <li><a href="#sec-4">4. Peg Maintenance</a></li>
+          <li><a href="#sec-5">5. Bridging USDT Into Everyday Spending</a></li>
+          <li><a href="#sec-6">6. A USDT Basics Research Checklist</a></li>
+          <li><a href="#sec-7">7. Summary and Long-Tail Questions</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://tether.to/en/transparency/" target="_blank" rel="noopener">Tether Transparency Page</a> — official reserve disclosures</li>
+            <li><a href="https://tronscan.org/#/token20/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" target="_blank" rel="noopener">Tronscan USDT-TRC20 contract</a> — on-chain supply and transfers</li>
+            <li><a href="https://etherscan.io/token/0xdac17f958d2ee523a2206206994597c13d831ec7" target="_blank" rel="noopener">Etherscan USDT-ERC20 contract</a> — on-chain supply and Treasury address</li>
+          </ul>
+          <p class="ref-note">Issuer disclosures, contract addresses, audit firms, and platform policies can change over time; always defer to the latest official sources. For learning and research only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>
+          <li><a href="/en/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner's Guide: Exchange On/Off-Ramp and DeFi Security</a></li>
+          <li><a href="/en/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security</a></li>
+          <li><a href="/en/research/basics/cex-kyc-withdrawal-limits-onramp-tutorial.html">CEX KYC and Large Withdrawal Tutorial</a></li>
+          <li><a href="/en/research/protocol/defi-token-approval-security-guide.html">DeFi Token Approval Security</a></li>          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">AI Agent Billing Verification: Real Usage Doesn't Guarantee an Accurate Bill</a></li>          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A bilingual site focused on cryptocurrency research methodology and on-chain data.</p>
+        </div>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About and Disclaimer</a></p>
+      <p>All content is for study and research only and is not investment advice; crypto assets are highly volatile and risky, so make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

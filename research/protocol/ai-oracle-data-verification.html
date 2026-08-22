@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI预言机数据可信源核验 - 加密货币研究</title>
+  <meta name="description" content="AI×链上系列（二）：深度拆解 AI 预言机与链上数据可信来源——模型作为「事实」来源的信任转移、训练数据与推理过程的不可复现性、单一模型喂价的操纵面、多源交叉与可信执行环境，以及一套可复用的 AI 数据源核验清单。附清单，并说明常见误区与需要重点关注的核验环节，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/ai-oracle-data-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="AI预言机数据可信源核验 - 加密货币研究">
+  <meta property="og:description" content="AI×链上系列（二）：深度拆解 AI 预言机与链上数据可信来源——模型作为「事实」来源的信任转移、训练数据与推理过程的不可复现性、单一模型喂价的操纵面、多源交叉与可信执行环境，以及一套可复用的 AI 数据源核验清单。不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html">
+  <meta property="article:published_time" content="2026-07-27T15:18:36+08:00">
+  <meta property="article:modified_time" content="2026-07-27T15:18:36+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI预言机数据可信源核验 - 加密货币研究">
+  <meta name="twitter:description" content="AI 预言机声称能把链下世界的价格、事件、结果「客观」搬上链，但当一个模型开始成为链上合约信赖的「事实」来源时，它的训练数据、推理过程、喂价路径是否可被独立核验？本文拆解 AI 数据源的信任转移与核验方法，仅为方法论探讨，不构成投资建议。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-ai-oracle-data.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-ai-oracle-data.png">
+  <link rel="preload" as="image" href="/img/article-ai-oracle-data.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","预测市场裁定机制研究","链上AI代理研究","AI代理资金托管核验","AI预言机核验","链上数据可信来源"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" } , "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#primaryimage", "url": "https://coin.ponr.org/img/article-ai-oracle-data.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#webpage", "url": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html", "name": "AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它", "item": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#article", "headline": "AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它", "description": "AI×链上系列（二）：深度拆解 AI 预言机与链上数据可信来源——模型作为「事实」来源的信任转移、训练数据与推理过程的不可复现性、单一模型喂价的操纵面、多源交叉与可信执行环境，以及一套可复用的 AI 数据源核验清单。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["AI预言机核验","链上数据可信来源","模型喂价操纵","AI推理可复现性","可信执行环境TEE","多源交叉验证"], "wordCount": 3700, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-07-27T15:18:36+08:00", "dateModified": "2026-07-27T15:18:36+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/ai-oracle-data-verification.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/ai-oracle-data-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它</h1>
+        <p class="article-summary">这是「AI×链上」系列的第二篇。上一篇我们讨论了 AI 代理作为「资金执行者」时的权限核验；这一篇把镜头转向一个更隐蔽的角色——当 AI 不再只是执行交易，而开始被合约信赖为「事实」的来源时，核验的难题会如何变化。AI 预言机声称能把链下世界里模糊、非结构化的信息——一场比赛的胜负、一份财报的真伪、一张卫星图的判读——转化成链上合约可以直接消费的「客观结论」。但一个必须被追问的问题是：这个结论从一个可被任何人复算的价格聚合，变成了一个几乎无法复现的模型推理输出，信任到底被转移到了哪里。全文围绕六个维度展开：模型作为事实来源的信任转移、训练数据与推理过程的不可复现性、单一模型喂价的操纵面、多源交叉与争议解决、可信执行环境能与不能证明什么，以及一套可复用的核验清单。全文仅讨论抽象机制原理，不点名任何真实产品，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-07-27T15:18:36+08:00">2026-07-27 15:18:36</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-ai-oracle-data.svg" alt="AI 预言机与链上数据可信来源：当模型开始生产「事实」，谁来核验它 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. 从「聚合价格」到「模型结论」：信任被转移到了哪里</h2>
+<p>要理解 AI 预言机带来的新问题，先要看清传统预言机的信任模型。一个典型的价格预言机，做的是把多个交易所或链上市场的价格采集回来、按某种规则（如取中位数、加权平均）聚合成一个数值，再写上链。这个过程的关键特征是「可复算」——任何研究者只要拿到相同的原始报价和聚合规则，就能自己算一遍，验证喂价合约给出的数字是否合理。信任在这里主要落在「数据源是否被操纵」和「聚合逻辑是否透明」上，而这两点都是可以在链上或公开市场数据里追查的。</p>
+<p>AI 预言机改变的正是这个「可复算」的前提。它处理的往往不是已经数值化的价格，而是模糊的、非结构化的输入：一段新闻文本的真伪、一场体育赛事的最终结果、一张卫星图像里油罐的库存判读、一份链下合同是否被履行。模型把这些输入「理解」成一个链上可消费的结论——是或否、赔付或不赔付、某个数值。问题在于，这个结论不再来自一个人人可复算的公式，而来自一次特定模型、特定权重、特定输入下的推理。信任于是从「数据与公式」整体转移到了一个新的对象上：这个模型本身、它的训练数据、它的推理环境，以及运行它的那一方是否诚实。核验 AI 预言机，第一步就是意识到这层转移——你要评估的不再只是「数据对不对」，而是「这个生产结论的模型和运行它的人，凭什么值得信赖」。</p>
+<ul>
+<li>传统预言机的核心特征是「可复算」：拿到相同报价与聚合规则，任何人都能独立验证喂价结果。</li>
+<li>AI 预言机处理非结构化输入，用模型推理生成结论，打破了「人人可复算」的前提。</li>
+<li>信任从「数据与公式」转移到「模型本身、训练数据、推理环境与运行方是否诚实」，这是核验的起点。</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 不可复现性：模型推理为什么难以被独立复算</h2>
+<p>传统预言机之所以可核验，是因为它的每一步都可以被重放；AI 预言机最棘手的地方，恰恰在于它的结论天然难以被独立复现。这种不可复现性来自几个叠加的层面。首先是模型本身的不透明——如果模型权重不公开，外部研究者根本无法在同样的输入上重跑一遍，只能被动接受输出；即便权重公开，大模型的推理也常常受浮点运算顺序、硬件差异、采样温度、随机种子等因素影响，同样的输入未必得到逐位一致的输出。其次是输入的不可留痕——模型判断依赖的原始素材（那段文本、那张图像）如果没有被完整、防篡改地记录下来，事后就无从核对「它当时到底看到了什么」。</p>
+<p>这带来一个和传统预言机截然不同的核验困境：当一个 AI 预言机给出了一个有争议的结论，你想复核时会发现，几乎没有抓手。你不知道它用的是哪个版本的模型，不知道输入是否被预处理或裁剪过，也无法保证自己重跑能得到相同结果。于是「核验」很容易退化成「信任运行方的自证」——它说模型是这么判断的，你只能信。研究者面对 AI 预言机时应当把不可复现性当成一个显式的风险维度来追问：模型版本是否被固定并公开哈希？关键输入是否被完整存证（例如把输入的哈希上链）？是否存在一种机制，让第三方至少能在事后验证「输入-模型-输出」这条链条没有被中途替换？如果这些都没有，那么这个预言机的「客观」二字，本质上是建立在对运行方的无条件信任之上的。</p>
+<ul>
+<li>不可复现性来自多层：模型权重不公开、推理受硬件与随机性影响、输入素材未被防篡改留痕。</li>
+<li>结果是核验退化为「信任运行方自证」——它说模型这样判断，外部难以独立反驳。</li>
+<li>核验方向：模型版本是否固定并公开哈希、关键输入是否上链存证、能否事后验证「输入-模型-输出」未被替换。</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 单一模型喂价：新的单点操纵面</h2>
+<p>本站此前讨论预言机操纵时，反复强调过一个原则：单一数据源就是单点故障。AI 预言机把这个问题带到了一个新的维度——如果链上一系列合约都依赖同一个模型、同一个运行方给出的结论，那么这个模型就成了一个高度集中的操纵面，而且它的操纵方式比传统喂价更隐蔽。传统喂价被操纵，往往需要在真实市场上砸出价格（例如闪电贷拉盘），这在链上会留下痕迹；而模型结论的操纵，可能发生在你看不见的地方：训练阶段被投喂带偏见的数据、推理阶段被喂进精心构造的对抗性输入（adversarial input）让模型误判、或者运行方直接在输出环节做手脚而对外声称「模型就是这么判断的」。</p>
+<p>更值得警惕的是激励错配。如果一个 AI 预言机的运行方，同时在它所喂价的市场里持有头寸，那么它就有动机在关键时刻让模型「恰好」给出对自己有利的结论——而由于第 2 节所说的不可复现性，这种操纵极难被外部证明。核验者需要把「谁在运行这个模型、他们有没有利益冲突、有多少独立主体在提供同类结论」当作核心问题。一个健康的设计，不应该让单一模型的单次输出直接决定大额资金的清算或赔付；至少应当有多个独立模型或独立运行方交叉、有异常结论的挑战期、有在结果分歧时的回退逻辑。如果整个系统的「事实」都由一个黑盒模型说了算，那么无论它平时多准，它都是一个随时可能被利用的单点。</p>
+<ul>
+<li>依赖单一模型/单一运行方的 AI 预言机，是一个比传统喂价更隐蔽的单点操纵面。</li>
+<li>操纵可发生在训练（投喂偏见数据）、推理（对抗性输入）或输出（运行方直接做手脚）等看不见的环节。</li>
+<li>最危险的是激励错配：运行方在所喂价市场持仓时，有动机让模型「恰好」给出对己有利的结论。</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 多源交叉与争议解决：谁在给模型的结论「兜底」</h2>
+<p>既然单一模型不可信，那么合理的方向就是不让任何单一结论成为终局。这在传统预言机里对应「多源聚合」，在 AI 预言机里则要复杂一些，因为模型的结论往往是离散的判断（是/否、赔/不赔），不像价格那样可以简单取中位数。这里值得核验的是系统有没有一套清晰的争议解决机制：当多个模型或多个运行方给出的结论不一致时，系统怎么办？是简单多数决，还是引入人工仲裁、乐观挑战期（optimistic challenge），或者回退到一个更保守的默认结论？本站在讨论预测市场裁定时提到过类似的「提议-挑战-终局裁决」结构——AI 预言机同样需要回答「终局裁决权到底落在谁手里」这个问题。</p>
+<p>一个设计良好的系统，通常会把 AI 模型定位成「高效的初步判断者」而非「不可推翻的终审法官」：模型先给出结论，但保留一个挑战窗口，任何人都可以在窗口内质押挑战，触发更高成本、更透明的复核流程（例如去中心化的人工投票或多模型重裁）。这样即便单个模型出错或被操纵，也有一层经济和程序上的兜底。核验者应当追问：这个 AI 预言机的结论是「即时终局」还是「可被挑战」？挑战的成本和路径是否对普通参与者可行，还是高到形同虚设？争议最终由谁裁定，这个裁定者本身是否又是一个新的中心化单点？把这些问题问清楚，才能判断这个系统究竟是「多了一层 AI 加速」，还是「用 AI 的黑盒替换掉了原本可核验的流程」。</p>
+<ul>
+<li>合理方向是不让任何单一结论终局；但模型结论多为离散判断，无法像价格那样简单取中位数。</li>
+<li>关键在争议解决机制：结论不一致时靠多数决、人工仲裁、乐观挑战期还是保守回退。</li>
+<li>健康设计把模型当「初步判断者」而非「终审法官」，保留可行的挑战窗口作为经济与程序兜底。</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 可信执行环境（TEE）：它能证明什么，不能证明什么</h2>
+<p>面对模型的不可复现性，业界常见的一种技术回应是可信执行环境（TEE，Trusted Execution Environment）——把模型放进一个硬件级的「保险箱」里运行，由芯片产生一份远程证明（remote attestation），声称「这段代码确实在未被篡改的环境里、用指定的输入跑出了这个输出」。这是一个有价值的工具，但它的能力边界经常被夸大，核验者必须分清它能证明什么、不能证明什么。</p>
+<p>TEE 能证明的是「执行完整性」：在理想情况下，它能让你相信运行方没有偷偷替换模型、没有篡改推理过程、输出确实来自声称的那段代码和那份输入。但它证明不了「输入本身是对的」——如果喂给模型的原始数据（那张图、那段文本）一开始就是伪造或被挑选过的，TEE 会忠实地把一个错误输入的推理结果封装成「可信」输出，垃圾进、垃圾出。它也证明不了「模型的判断是正确的」——模型可能在 TEE 里一丝不苟地跑出了一个错误或被对抗性样本误导的结论，而证明只保证了「它确实这么跑了」，不保证「它跑对了」。此外，TEE 本身也依赖硬件厂商的信任根，历史上侧信道攻击也屡有出现。所以务实的态度是：把 TEE 的远程证明当作「执行没被动手脚」的证据，而不是「结论可信」的证据；它解决的是第 2 节里「输入-模型-输出未被替换」的一部分，但完全不能替代第 3、4 节所说的多源交叉与争议解决。真正稳健的系统，往往是 TEE、多源交叉、可挑战裁决三者叠加，而不是指望任何单一技术一劳永逸。</p>
+<ul>
+<li>TEE 能证明「执行完整性」：模型与推理过程未被篡改、输出确来自指定代码与输入。</li>
+<li>TEE 证明不了「输入是真的」也证明不了「判断是对的」——垃圾进、垃圾出仍会被封装成「可信」输出。</li>
+<li>务实定位：TEE 是「执行没被动手脚」的证据，需与多源交叉、可挑战裁决叠加，而非单一技术包打天下。</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 核验清单与小结</h2>
+<p>把前面五节收敛成一套可复用的核验清单，面对任何一个声称「用 AI 把链下事实搬上链」的预言机或数据服务，都可以逐项过一遍：其一，信任落点在哪——这个结论来自可复算的公式，还是某个模型的推理？如果是后者，模型版本是否固定并公开哈希？其二，可复现性如何——关键输入是否被完整存证（如输入哈希上链），第三方能否事后验证「输入-模型-输出」这条链没有被替换？其三，是否单点——是否依赖单一模型或单一运行方，运行方在所喂价的市场里有没有利益冲突？其四，有没有兜底——多个独立结论不一致时如何裁定，是否存在成本可行的挑战窗口与保守回退逻辑？其五，技术证明的边界是否被诚实标注——如果用了 TEE，它证明的是执行完整性，运行方有没有把它包装成「结论可信」来误导用户？</p>
+<p>需要反复强调的是：AI 预言机让「把复杂的链下事实变成链上结论」这件事变得高效，但效率的代价是可核验性的下降——原本人人可复算的流程，被换成了一个需要信任模型和运行方的黑盒。这不必然是坏事，但研究者的职责是把这层信任显式地摆到台面上，而不是被「AI 更客观」「硬件级可信」这类措辞轻轻带过。最务实的原则是：越是重大、不可逆的链上动作（大额清算、最终赔付、结果裁定），越不应该由单一模型的单次输出直接决定，而应有多源、可挑战、有回退的结构兜底。本文通篇讨论的是抽象的机制类别与核验方法，不点名、不评价任何真实存在的产品或协议，全文不构成任何形式的投资建议。作为「AI×链上」系列的第二篇，下一篇我们计划把镜头进一步推进到链上模型的可信执行与验证——当我们不仅想知道「模型跑了」，还想在链上低成本地证明「模型跑对了」时，零知识机器学习（zkML）这类方向又带来了哪些新的可能与新的坑。</p>
+<ul>
+<li>核验清单五问：信任落点、可复现性、是否单点、争议兜底、技术证明边界是否被诚实标注。</li>
+<li>务实原则：越是重大不可逆的链上动作，越不应由单一模型单次输出直接决定。</li>
+<li>全文为机制类别与方法论讨论，不点名任何真实产品，不构成投资建议；系列下一篇将转向 zkML 与链上模型可信执行。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 从「聚合价格」到「模型结论」：信任被转移到了哪里</a></li>
+          <li><a href="#sec-2">2. 不可复现性：模型推理为什么难以被独立复算</a></li>
+          <li><a href="#sec-3">3. 单一模型喂价：新的单点操纵面</a></li>
+          <li><a href="#sec-4">4. 多源交叉与争议解决：谁在给模型的结论「兜底」</a></li>
+          <li><a href="#sec-5">5. 可信执行环境（TEE）：它能证明什么，不能证明什么</a></li>
+          <li><a href="#sec-6">6. 核验清单与小结</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://ethereum.org/zh/developers/docs/oracles/" target="_blank" rel="noopener">Ethereum.org 预言机</a>：可用于理解预言机的基本模型、去中心化喂价与信任假设</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核查喂价合约的更新记录、数据提交者与聚合逻辑</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/protocol/agent-identity-credential-verification.html">AI代理身份与凭证核验：这枚身份，还有效吗（系列第六篇）</a></li>
+          <li><a href="/research/protocol/agent-service-marketplace-verification.html">AI代理服务市场核验：谁的报价，值得被信任（系列第五篇）</a></li>
+          <li><a href="/research/protocol/agent-to-agent-payment-verification.html">AI代理间自动结算核验：当代理向代理付款，信用链条断在哪一环</a></li>
+          <li><a href="/research/protocol/zkml-onchain-model-verification.html">zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」（系列下一篇）</a></li>
+          <li><a href="/research/protocol/ai-agent-onchain-verification.html">链上 AI 代理核验：当自动化程序握着你的私钥，权限边界由谁设定</a></li>
+          <li><a href="/research/protocol/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li>
+          <li><a href="/research/protocol/prediction-market-resolution-risk.html">预测市场结果裁定核验：裁决权到底落在谁手里</a></li>
+          <li><a href="/research/basics/onchain-data-analysis.html">链上数据分析：地址不是身份，交易不是意图</a></li>
+          <li><a href="/research/protocol/contract-security-audit-guide.html">审计报告说「已审计」，到底审计了什么：从结论到链上复核</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          <li><a href="/research/protocol/agent-strategy-execution-verification.html">AI代理策略执行核验：一句「按策略执行」，到底是谁在把关</a></li>
+          <li><a href="/research/protocol/agent-audit-log-integrity-verification.html">AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过</a></li>
+          <li><a href="/research/protocol/onchain-forensics.html">链上取证与资金追踪方法论：被盗资金流向哪里，怎么查</a></li>
+          <li><a href="/research/market/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径</a></li>
+          <li><a href="/research/protocol/account-abstraction-wallet-security.html">账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱</a></li>
+          <li><a href="/research/protocol/depin-compute-network-verification.html">DePIN 算力网络核验：GPU 分布式云的算力是真的、需求是真的吗</a></li>
+          <li><a href="/research/protocol/restaking-avs-slashing-risk.html">再质押 AVS 惩罚风险核验：同一份 ETH，同时抵押给几个协议</a></li>
+          <li><a href="/research/protocol/cross-chain-messaging-protocol-verification.html">跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的</a></li>
+          <li><a href="/research/protocol/data-availability-layer-verification.html">数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</a></li>
+          <li><a href="/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT新手完全指南：交易所出入金教程与DeFi链上安全核验</a></li>          <li><a href="/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>          <li><a href="/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">USDT到底靠不靠谱？从稳定币基础、出入金教程到DeFi链上安全全解</a></li>          <li><a href="/research/protocol/agent-usage-billing-verification.html">AI Agent计费核验：用量是真的，账单就一定对吗</a></li>          <li><a href="/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">跨链兑换实操核验：报价滑点和到账金额，真的对得上吗</a></li>          <li><a href="/research/protocol/crosschain-swap-dry-run-verification-guide.html">跨链兑换前先测一笔：大额转账前该验证什么</a></li>          <li><a href="/research/basics/stablecoin-virtual-card-topup-verification-guide.html">稳定币充值虚拟卡：到账了，但对账了吗</a></li>          <li><a href="/research/basics/virtual-card-subscription-renewal-verification-guide.html">订阅说取消了，卡这边的扣款权限停了吗</a></li>          <li><a href="/research/protocol/crosschain-swap-stuck-recovery-guide.html">跨链兑换卡在中途：源链扣了，目标链没到</a></li>          <li><a href="/research/protocol/crosschain-swap-fee-optimization-guide.html">跨链兑换手续费怎么省：拆单前先看清费用结构</a></li>          <li><a href="/research/protocol/longtail-token-swap-liquidity-risk-guide.html">小币种跨链兑换：流动性薄，仿冒币多</a></li>          <li><a href="/research/protocol/agent-downtime-failure-liability-verification.html">AI代理宕机谁该赔：故障责任核验</a></li>          <li><a href="/research/governance/rwa-redemption-legal-claim-verification.html">代币烧毁后，剩下的是权利还是承诺</a></li>          <li><a href="/research/market/perpetual-funding-manipulation-verification.html">资金费率被做偏了吗：快照套利痕迹核验</a></li>          <li><a href="/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">跨链兑换滑点去哪了：套利机器人为何总抢先</a></li>          <li><a href="/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">跨链兑换报价为什么会过期：排队时价格早变了</a></li>          <li><a href="/research/governance/dao-treasury-multisig-timelock-verification-guide.html">国库多签核验：签名者换人、时间锁被绕开</a></li>          <li><a href="/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC场外换汇：对手方资质和资金隔离核验</a></li>          <li><a href="/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">境外交易所合规核验：牌照、托管与话术辨别</a></li>          <li><a href="/research/governance/snapshot-offchain-vote-execution-verification-guide.html">链下投票核验：Snapshot结果被谁执行</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

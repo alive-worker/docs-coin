@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verifying Perpetual DEX Vault Risk - Crypto Research</title>
+  <meta name="description" content="A deep dive into perpetual DEX vaults: why LPs are the direct counterparty to every trade, verifying disclosed APY, and checking skew and hedging controls.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/perpetual-dex-vault-counterparty.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/perpetual-dex-vault-counterparty.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Verifying Perpetual DEX Vault Risk - Crypto Research">
+  <meta property="og:description" content="A deep dive into perpetual DEX vaults: why LPs are the direct counterparty to every trade, verifying disclosed APY, and checking skew and hedging controls.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html">
+  <meta property="article:published_time" content="2026-07-20T10:07:57+08:00">
+  <meta property="article:modified_time" content="2026-07-20T10:07:57+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Verifying Perpetual DEX Vault Risk - Crypto Research">
+  <meta name="twitter:description" content="Is vault deposit yield really just fee income, where does the money come from when traders are collectively profitable, are a protocol's claimed risk controls actually enforced on-chain — a deep dive into the counterparty risk and verification methodology behind perpetual DEX vaults. Methodology only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-perp-vault-model-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Perpetual DEX Vault cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-perp-vault-model-en.png">
+  <link rel="preload" as="image" href="/img/article-perp-vault-model-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["Crypto Research","On-Chain Data Analysis","Tokenomics","Stablecoins","Cross-Chain","Smart Contract Security","DAO Governance","Proof of Reserves","Team & Developer Activity Research","Oracle & Price Data Research","Cross-Chain Bridge Security Research","DEX Liquidity and Swap Price Research","Lending Protocol Liquidation Research","NFT Collection Research","Layer2/Rollup Research","Liquidity Mining and LP Incentive Research","Vote-Market and Bribe Mechanism Research","Cross-Chain Swap Routing Research","Restaking Research","On-Chain Insurance Research","Stablecoin Peg Mechanism Research","Perpetual Futures Funding Rate Research","MEV and Private Order Flow Research","RWA Tokenization Research","Liquid Staking Token Research","Auto-Deleveraging Research","Vote-Escrow Lock Research","Perpetual DEX Vault Research"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#primaryimage", "url": "https://coin.ponr.org/img/article-perp-vault-model-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#webpage", "url": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html", "name": "Perpetual DEX Vaults: LPs Aren't Bystanders — They're the Counterparty to Every Trade - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Perpetual DEX Vaults: LPs Aren't Bystanders — They're the Counterparty to Every Trade", "item": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#article", "headline": "Perpetual DEX Vaults: LPs Aren't Bystanders — They're the Counterparty to Every Trade", "description": "A deep dive into perpetual DEX vaults: why LPs are the direct counterparty to every trade, verifying disclosed APY, and checking skew and hedging controls.", "image": { "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["perpetual DEX vault explained","LP counterparty risk","vault NAV APY verification","skew hedging verification","perpetual DEX stress test","vault depositor risk method"], "wordCount": 2383, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-07-20T10:07:57+08:00", "dateModified": "2026-07-20T15:48:55+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/perpetual-dex-vault-counterparty.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/perpetual-dex-vault-counterparty.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Perpetual DEX Vaults: LPs Aren't Bystanders — They're the Counterparty to Every Trade</h1>
+        <p class="article-summary">This article takes a deep dive into vault-model perpetual DEXs: why there is no separate insurance fund and LP depositors are directly the counterparty to every trader's position; how depositor risk actually works, with vault net asset value dropping directly when traders are collectively profitable; how to verify whether a disclosed APY nets in payouts to profitable traders or only shows fee income; whether a protocol's claimed skew-management and hedging mechanisms actually exist and are enforced; and how to stress-test how much vault NAV could drop during a strong sustained trend. The entire piece discusses abstract mechanism principles only — it does not name any real protocol, and does not constitute investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial Team · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-07-20T10:07:57+08:00">2026-07-20 10:07:57</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-perp-vault-model-en.svg" alt="Perpetual DEX Vault cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+<section id="sec-1">
+<h2>1. Why Vault-Model Perpetual DEXs Have No Separate Insurance Fund: The LPs Are the Counterparty</h2>
+<p>An earlier article in this series traced the liquidation waterfall on a centralized-exchange-style perpetual futures venue: ordinary liquidation, then an insurance fund absorbing shortfalls, then auto-deleveraging as the last resort once that fund runs dry. That entire structure rests on a specific assumption — that there is a separate balance sheet, belonging to "the exchange," sitting between the trader and the rest of the platform's users. A vault-model perpetual DEX removes that middle layer entirely. There is no exchange-operated fund standing between a trader's position and anyone else's capital, because the capital that takes the other side of the trade is the LP vault itself.</p>
+<p>Mechanically, this means every open position on the platform has the vault as its direct counterparty. When a trader opens a long, the vault is, in aggregate, implicitly short that same notional exposure; when a trader opens a short, the vault is implicitly long. The vault is not intermediating risk on behalf of some other party, and it is not merely routing the trade to be matched against another trader — it is the other side, full stop. This is a structurally different design from an order-book or peer-to-peer perpetual venue, and it is also different from a traditional constant-product AMM, where a liquidity provider's exposure is to the two pooled assets' relative price, not to a directional bet another market participant is making against them.</p>
+<p>The practical consequence is that depositing into this kind of vault is not the same activity as depositing into a conventional AMM pool, even though both are commonly marketed under the umbrella term "liquidity provision." A conventional LP collects swap fees and bears impermanent loss tied to asset-price divergence — a mechanism the liquidity-mining article in this series covered in detail. A vault-model perpetual LP collects trading fees and funding-rate income, but the dominant risk factor is not price divergence between two pooled tokens; it is the net trading result of every counterparty on the platform. A depositor who has not internalized this distinction is likely mispricing the risk being taken on.</p>
+<ul>
+<li>A vault-model perpetual DEX has no separate exchange-owned insurance fund; the LP vault is the direct counterparty to every trade.</li>
+<li>A trader's long implies the vault is implicitly short that exposure, and vice versa — this is structural, not incidental.</li>
+<li>Vault depositors are not passive fee-collectors like conventional AMM LPs; they are structurally underwriting aggregate trader P&amp;L.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. How Depositor Risk Actually Works: Vault NAV Drops Directly When Traders Are Collectively Profitable</h2>
+<p>Once the vault is understood as the direct counterparty, the mechanics of depositor risk follow directly. The vault holds a pool of assets, and it issues shares to depositors representing a claim on that pool; each share's net asset value (NAV) rises and falls with the vault's total assets relative to shares outstanding. Trading fees and funding payments collected from traders flow into the vault and push NAV per share up. But when open positions the vault is counterparty to move in the trader's favor, the vault owes that unrealized or realized profit, and it is paid out of the vault's own assets — pushing NAV per share down for every depositor, proportionally, regardless of when they deposited.</p>
+<p>The scenario that matters most for a researcher to model is a sustained, one-directional trend rather than a single volatile spike. Short, sharp volatility tends to produce a mix of winning and losing positions on both sides, which is close to a wash for the vault. A prolonged trend is different: if price rises steadily over an extended period, the majority of open interest tends to skew long and stay profitable for the duration of the move, and the vault — structurally short that aggregate exposure — pays out consistently for as long as the trend continues. This is the scenario where NAV drawdown compounds rather than nets out.</p>
+<p>The point a researcher should take away is that this is not an edge case or a tail risk sitting off to the side of the vault's normal operation — it is the central mechanism generating the vault's entire return profile. The same exposure that lets the vault earn fee and funding income during range-bound, mean-reverting conditions is precisely what causes it to pay out during a strong directional trend. A depositor is not exposed to an occasional adverse event; they are continuously exposed to the sign and magnitude of aggregate trader P&amp;L, every single day the vault is open for trading.</p>
+<ul>
+<li>Vault NAV per share moves inversely with aggregate trader P&amp;L: traders' net profit is the vault's direct, proportional loss.</li>
+<li>A sustained one-directional trend — not a brief spike — is the scenario that produces the deepest, most persistent NAV drawdown.</li>
+<li>This is not a rare tail event; it is the same core mechanism that generates the vault's fee and funding income in calmer conditions.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verifying Disclosed APY: Does It Net In Payouts to Profitable Traders, or Only Show Fee Income</h2>
+<p>The liquidity-mining article in this series argued that a headline APY on a conventional pool needs to be decomposed into fee income and emission income before it means anything, because impermanent loss never appears in that number by default. The equivalent — and arguably sharper — question for a vault-model perpetual DEX is whether the displayed APY already nets in the periods when the vault paid out to profitable traders, or whether it reflects only the income side: trading fees and funding-rate receipts, with drawdown periods quietly excluded or measured over a window that happens not to include one.</p>
+<p>A true, realized total-return APY has to be calculated from the vault's actual NAV-per-share history: take NAV per share at the start of a period and at the end, and the percentage change over that interval, annualized, is the only number that has genuinely netted in both income and payouts. An APY instead derived by annualizing recent fee and funding accrual — without reference to NAV — will systematically overstate the vault's real return whenever it is quoted from a period that did not include a strong trending phase where the vault was net paying out.</p>
+<p>Concretely, a researcher should look for a full historical NAV-per-share chart, ideally spanning at least one complete market cycle that includes both range-bound conditions and at least one strong sustained trend in either direction. A dashboard that shows only a recent, calm, low-volatility window — or that shows fee and funding revenue as a standalone number without ever plotting NAV per share over time — should be treated the same way this series treats any headline yield figure elsewhere: as an unverified claim rather than a total return. The presence or absence of a long NAV history, and whether that history visibly dips during known trending periods, is the single most direct test available.</p>
+<ul>
+<li>A true total-return APY is derived from NAV-per-share change over time, which nets in both trader payouts and fee/funding income.</li>
+<li>An APY built only from recent fee and funding accrual, without NAV history, can look attractive purely by excluding a trending period.</li>
+<li>Demand a full NAV-per-share chart spanning at least one full cycle, including a strong trend, not just a recent calm window.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Skew and Hedging: Do the Protocol's Claimed Risk Controls Actually Exist</h2>
+<p>Because the vault's exposure is a direct function of aggregate positioning, most vault-model protocols describe mechanisms intended to limit how far that exposure can drift from balanced. The most common is a funding-rate skew incentive: when the vault is net short (traders are net long), longs pay a higher funding rate than shorts receive, creating an economic incentive for new positioning to shift back toward balance, and vice versa when the vault is net long. A second common control is a hard position-size cap per market, limiting how large open interest on one side can grow relative to vault capital regardless of funding incentives. A third, less common mechanism is external hedging, where the protocol or an associated entity offsets net vault exposure using positions on other venues.</p>
+<p>Each of these claims is verifiable to a different degree, and a researcher should not treat documentation describing them as equivalent to confirmation that they operate. A position-size cap, if genuinely enforced, should be visible as a hard constraint in the deployed contract logic — a maximum open-interest or maximum-skew parameter that can be read directly rather than inferred from a whitepaper description. If that parameter cannot be located on-chain, or if it exists but has been observed to be overridden or adjusted upward under stress rather than held constant, the "cap" is better understood as a design intention than an enforced limit.</p>
+<p>Funding-rate skew incentives are easier to verify functionally: the protocol should disclose its current net exposure or skew ratio close to real time, alongside the funding rate itself, so a researcher can check whether elevated funding on the crowded side actually correlates with skew narrowing over subsequent periods, or whether skew persists despite the incentive being in place. External hedging is the hardest of the three to verify from outside the protocol, since it typically depends on off-chain positions on other venues that are not independently auditable; a claim made without disclosed hedge-position data should be weighted as unverifiable, not as a mitigant a researcher can rely on.</p>
+<ul>
+<li>Verify position-size caps as an on-chain, readable contract parameter — not merely a description in documentation.</li>
+<li>Check whether disclosed real-time skew and funding data actually shows incentives narrowing skew over time, or failing to.</li>
+<li>Treat claimed external hedging as unverifiable by default unless the protocol discloses auditable hedge-position data.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Stress-Testing a Strong Trend: How Much Could Vault NAV Actually Drop</h2>
+<p>The auto-deleveraging article in this series modeled a liquidation cascade tranche by tranche, comparing cumulative shortfall against a verified insurance-fund balance. The equivalent exercise for a vault-model perpetual DEX substitutes a different set of inputs — open-interest skew, average leverage, and total vault value — but the underlying discipline is the same: build an order-of-magnitude estimate of drawdown before assuming the vault's stated capital comfortably absorbs a bad scenario.</p>
+<p>Consider a fully invented illustrative scenario, with every figure fabricated solely to demonstrate the calculation. A fictional vault holds $50 million in total assets. Open interest across its markets sits at $180 million, split 70/30 in favor of longs — a fictional net skew of roughly $72 million that the vault is implicitly short. Average leverage across long positions is a fictional 8x. Now model a sustained trend: the underlying asset rises 15% over several weeks, a move well within normal volatility but sustained long enough that most long positions remain open and profitable throughout rather than closing early. Applying that 15% move to the $72 million net-short exposure the vault effectively carries (before accounting for any funding income collected along the way, which partially offsets it) produces a fictional payout obligation in the range of $10-11 million — roughly 20% of the vault's total assets in this invented example.</p>
+<p>The methodological point is not the specific numbers, which have no relationship to any real protocol, but the inputs a researcher needs to reconstruct this kind of estimate independently: the platform's current open-interest skew (long minus short notional), average leverage on the crowded side, and total vault assets, all of which reputable vault dashboards typically disclose in some form. Running this calculation across a range of plausible trend magnitudes — not just one — gives a rough drawdown curve, and comparing that curve against the vault's actual historical NAV troughs from Section 3 is a useful cross-check on whether the model is in the right order of magnitude.</p>
+<ul>
+<li>Stress-test inputs: open-interest skew, average leverage on the crowded side, and total vault assets.</li>
+<li>All figures in the illustrative example above are invented solely to demonstrate the calculation method, not observed data.</li>
+<li>Cross-check any modeled drawdown estimate against the vault's actual historical NAV troughs for plausibility.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common Misconceptions and Conclusion</h2>
+<p>Three misconceptions recur often enough with vault-model perpetual DEXs to state directly. The first, covered in Section 1, is treating vault deposit yield as a passive, fee-only return comparable to a standard AMM liquidity pool, when the dominant risk factor is not price divergence between two assets but direct underwriting of aggregate trader profit and loss. The second, covered in Section 3, is accepting a displayed APY at face value without checking whether it is derived from actual NAV-per-share history spanning a full cycle — including a strong trending period — rather than from a recent, calm window of fee and funding income alone. The third, covered in Section 4, is assuming that documented risk controls such as funding-rate skew incentives and position-size caps are actually enforced, rather than verifying them as on-chain parameters and checking whether disclosed skew data shows them working in practice.</p>
+<p>Taken together, the five preceding sections build a single line of reasoning: why this design removes the separate insurance-fund layer that centralized-exchange-style perpetuals rely on and replaces it with LP capital as the direct counterparty; why that makes NAV drawdown during a profitable-trader period the vault's core mechanism rather than an edge case; how to verify whether a stated APY has actually netted in that drawdown; how to check whether the protocol's stated skew-management tools are real constraints or just descriptions; and how to build an independent, order-of-magnitude estimate of how far NAV could fall under a sustained trend. None of this produces certainty about any specific vault — it replaces a dashboard's framing with a researcher's own verification trail.</p>
+<p>This article discusses abstract mechanism categories common to vault-model perpetual DEX design in general. It does not name, evaluate, or draw conclusions about any real protocol, and every figure used in the illustrative example in Section 5 was invented solely to demonstrate a calculation method. Nothing here constitutes investment advice or a recommendation regarding any specific vault, position, or platform.</p>
+<ul>
+<li>Vault deposit yield includes direct underwriting of trader P&amp;L — it is not a fee-only return like a standard liquidity pool.</li>
+<li>Never accept a displayed APY without checking whether it spans a full cycle, including a strong trending period, via NAV history.</li>
+<li>Verify skew-management mechanisms as enforced on-chain parameters and observable outcomes, not just documented intentions.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why Vault-Model Perpetual DEXs Have No Separate Insurance Fund: The LPs Are the Counterparty</a></li>
+          <li><a href="#sec-2">2. How Depositor Risk Actually Works: Vault NAV Drops Directly When Traders Are Collectively Profitable</a></li>
+          <li><a href="#sec-3">3. Verifying Disclosed APY: Does It Net In Payouts to Profitable Traders, or Only Show Fee Income</a></li>
+          <li><a href="#sec-4">4. Skew and Hedging: Do the Protocol's Claimed Risk Controls Actually Exist</a></li>
+          <li><a href="#sec-5">5. Stress-Testing a Strong Trend: How Much Could Vault NAV Actually Drop</a></li>
+          <li><a href="#sec-6">6. Common Misconceptions and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources & further reading">
+          <h2>Sources &amp; Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/" target="_blank" rel="noopener">Ethereum.org</a>: official developer documentation, useful for background on querying smart contract state</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: a block explorer useful for querying a vault contract's on-chain NAV and position state</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>: a public example of a cross-chain swap aggregation product, referenced here as a methodology resource</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features referenced here may change over time; always refer to the latest official information. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related Articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/options-vault-tail-risk.html">Decentralized Options Vaults: The Stable Weekly Yield Is Actually a Tail-Risk Premium</a></li>
+          <li><a href="/en/research/market/auto-deleveraging-insurance-fund.html">Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed</a></li>
+          <li><a href="/en/research/market/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Just Changed Hands</a></li>
+          <li><a href="/en/research/market/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetual Futures</a></li>
+          <li><a href="/en/research/market/swap-routing-research-guide.html">Verifying Swap Routing: What Costs Hide Behind the “Best Path” Quote</a></li>
+          <li><a href="/en/research/market/liquidity-mining-research-guide.html">Liquidity Mining Yield: How Much Does Impermanent Loss Eat Into That APY</a></li>
+          <li><a href="/en/research/protocol/agent-strategy-execution-verification.html">Agent Strategy Execution Verification: Who Actually Checks 'Followed the Strategy'</a></li>
+          <li><a href="/en/research/protocol/agent-audit-log-integrity-verification.html">Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/market/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who Routes a One-Line Order</a></li>
+          <li><a href="/en/research/protocol/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/research/protocol/depin-compute-network-verification.html">DePIN Compute Network Verification: Is the Compute Real, Is the Demand Real</a></li>
+          <li><a href="/en/research/protocol/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>
+          <li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li>
+          <li><a href="/en/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner's Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>          <li><a href="/en/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT Cross-Chain Transfer Security: Network Selection, Bridge Checks, and Recovery Pitfalls</a></li>          <li><a href="/en/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">Is USDT Actually Safe? USDT Fundamentals, On/Off-Ramp Tutorial, and DeFi On-Chain Security</a></li>          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">AI Agent Billing Verification: Real Usage Doesn't Guarantee an Accurate Bill</a></li>          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to overview</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language resource on crypto research methods and on-chain data — research frameworks, on-chain metrics, and fund-flow observation, written to help readers evaluate a crypto project more systematically.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Hot Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Foundations</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friend Links</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">CHDH Tools Directory</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">IE9</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research reference only and does not constitute investment advice; crypto assets are highly volatile and carry real risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

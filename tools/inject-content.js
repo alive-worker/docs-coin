@@ -76,10 +76,10 @@ const ZH_REFS = [
 ].join('\n            ');
 
 const ZH_RELATED = [
-  '<li><a href="/articles/usdt-beginner-onramp-defi-security-guide.html">USDT新手完全指南：交易所出入金教程与DeFi链上安全核验</a></li>',
-  '          <li><a href="/articles/stablecoin-crosschain-flows.html">稳定币与跨链资金流动</a></li>',
-  '          <li><a href="/articles/bridge-security-research-guide.html">跨链桥安全研究指南</a></li>',
-  '          <li><a href="/articles/onchain-forensics.html">链上取证与资金追踪方法论</a></li>',
+  '<li><a href="/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT新手完全指南：交易所出入金教程与DeFi链上安全核验</a></li>',
+  '          <li><a href="/research/governance/stablecoin-crosschain-flows.html">稳定币与跨链资金流动</a></li>',
+  '          <li><a href="/research/protocol/bridge-security-research-guide.html">跨链桥安全研究指南</a></li>',
+  '          <li><a href="/research/protocol/onchain-forensics.html">链上取证与资金追踪方法论</a></li>',
 ].join('\n          ');
 
 // ---- EN ----
@@ -155,10 +155,10 @@ const EN_REFS = [
 ].join('\n            ');
 
 const EN_RELATED = [
-  '<li><a href="/en/articles/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner\'s Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>',
-  '          <li><a href="/en/articles/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Activity, and On-Chain Fund Flows</a></li>',
-  '          <li><a href="/en/articles/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Guide</a></li>',
-  '          <li><a href="/en/articles/onchain-forensics.html">On-Chain Forensics and Fund Tracing</a></li>',
+  '<li><a href="/en/research/basics/usdt-beginner-onramp-defi-security-guide.html">USDT Beginner\'s Guide: Exchange On/Off-Ramp Tutorial and DeFi Security Checks</a></li>',
+  '          <li><a href="/en/research/governance/stablecoin-crosschain-flows.html">Stablecoins, Cross-Chain Activity, and On-Chain Fund Flows</a></li>',
+  '          <li><a href="/en/research/protocol/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Guide</a></li>',
+  '          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund Tracing</a></li>',
 ].join('\n          ');
 
 function injectContent(html, summary, body, toc, refs, related) {

@@ -19,11 +19,16 @@
 //       actively crawled instead of waiting on a new domain's limited crawl budget.
 //
 // What it does NOT do (do these yourself first):
-//   - Write the article's own two HTML pages (zh + en) — build those the way this
-//     session did (clone a similar existing article as a template, splice in the
-//     generated sections, keep an eye out for the corruption patterns the verify
-//     step catches: truncated paragraphs, "see above" placeholder subsections,
-//     a sponsored link that's plain text instead of an <a>).
+//   - Write the article's own two HTML pages (zh + en) at their NEW-scheme paths:
+//     research/<topic>/<slug>.html and en/research/<topic>/<slug>.html (topic =
+//     CONFIG.topic) — the flat /articles/<slug>.html layout was retired on
+//     2026-08-22; every old URL now redirects (client-side canonical + meta
+//     refresh stub, since there's no server access for real 301s) to its new
+//     research/<topic>/ location. Build the new pages the way past sessions did
+//     (clone a similar existing article as a template, splice in the generated
+//     sections, keep an eye out for the corruption patterns the verify step
+//     catches: truncated paragraphs, "see above" placeholder subsections, a
+//     sponsored link that's plain text instead of an <a>).
 //   - Add a brand-new archive-tag color to styles.css if the topic needs one not
 //     already defined (grep for archive-tag--<color> first).
 //   - Draw the AI-tech cover SVGs (zh + en) if the topic is new.
@@ -49,6 +54,21 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
+
+// URL scheme (since the 2026-08-22 restructure): articles live at
+// /research/<topic>/<slug>.html (and /en/research/<topic>/<slug>.html), not the old
+// flat /articles/<slug>.html. slug_topic_map.json at repo root is the persistent
+// slug->topic index used to resolve paths for existingSlugsNewestFirst entries,
+// whatever topic each one happens to be in — it's kept up to date automatically below.
+const slugTopicMapPath = path.join(root, 'slug_topic_map.json');
+const slugTopicMap = JSON.parse(fs.readFileSync(slugTopicMapPath, 'utf-8'));
+function topicOf(slug) {
+  const t = slugTopicMap[slug];
+  if (!t) throw new Error(`No topic mapping for slug "${slug}" in slug_topic_map.json — add it before running.`);
+  return t;
+}
+function zhPath(slug) { return `research/${topicOf(slug)}/${slug}.html`; }
+function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 
 // ---------------------------------------------------------------------------
 // CONFIG — fill this in for each new article, then run the script.
@@ -155,8 +175,8 @@ const CONFIG = {
 // ---------------------------------------------------------------------------
 
 function readArticle(slug, lang) {
-  const dir = lang === 'en' ? 'en/articles' : 'articles';
-  return fs.readFileSync(path.join(root, dir, `${slug}.html`), 'utf-8');
+  const rel = lang === 'en' ? enPath(slug) : zhPath(slug);
+  return fs.readFileSync(path.join(root, rel), 'utf-8');
 }
 
 function extractArticleMeta(slug, lang) {
@@ -179,18 +199,18 @@ function replacer(str, regex, fn) {
 function insertSidebarItems() {
   const files = [
     'index.html', '404.html',
-    ...CONFIG.existingSlugsNewestFirst.map(s => `articles/${s}.html`),
+    ...CONFIG.existingSlugsNewestFirst.map(zhPath),
     'en/index.html', 'en/404.html',
-    ...CONFIG.existingSlugsNewestFirst.map(s => `en/articles/${s}.html`),
+    ...CONFIG.existingSlugsNewestFirst.map(enPath),
   ];
-  const zhItem = `        <a class="side-item" href="/articles/${CONFIG.slug}.html">
+  const zhItem = `        <a class="side-item" href="/${zhPath(CONFIG.slug)}">
           <span class="side-body">
             <span class="side-title"><span class="side-tag archive-tag archive-tag--${CONFIG.tagColor}">${CONFIG.zh.tagLabel}</span>${CONFIG.zh.h1}</span>
             <span class="side-desc">${CONFIG.zh.cardDesc}</span>
           </span>
         </a>
 `;
-  const enItem = `        <a class="side-item" href="/en/articles/${CONFIG.slug}.html">
+  const enItem = `        <a class="side-item" href="/${enPath(CONFIG.slug)}">
           <span class="side-body">
             <span class="side-title"><span class="side-tag archive-tag archive-tag--${CONFIG.tagColor}">${CONFIG.en.tagLabel}</span>${CONFIG.en.h1}</span>
             <span class="side-desc">${CONFIG.en.cardDesc}</span>
@@ -216,11 +236,11 @@ function insertSidebarItems() {
 // --- Step 2: related-article item ---------------------------------------------
 function insertRelatedItems() {
   const files = [
-    ...CONFIG.existingSlugsNewestFirst.map(s => `articles/${s}.html`),
-    ...CONFIG.existingSlugsNewestFirst.map(s => `en/articles/${s}.html`),
+    ...CONFIG.existingSlugsNewestFirst.map(zhPath),
+    ...CONFIG.existingSlugsNewestFirst.map(enPath),
   ];
-  const zhLink = `          <li><a href="/articles/${CONFIG.slug}.html">${CONFIG.zh.h1}</a></li>\n`;
-  const enLink = `          <li><a href="/en/articles/${CONFIG.slug}.html">${CONFIG.en.h1}</a></li>\n`;
+  const zhLink = `          <li><a href="/${zhPath(CONFIG.slug)}">${CONFIG.zh.h1}</a></li>\n`;
+  const enLink = `          <li><a href="/${enPath(CONFIG.slug)}">${CONFIG.en.h1}</a></li>\n`;
   let count = 0;
   for (const rel of files) {
     const p = path.join(root, rel);
@@ -250,7 +270,7 @@ function updateItemLists() {
   for (const t of targets) {
     const p = path.join(root, t.file);
     let content = fs.readFileSync(p, 'utf-8');
-    if (content.includes(`"item": "${t.prefix}/articles/${CONFIG.slug}.html"`)) continue;
+    if (content.includes(`"item": "${t.prefix}/research/${CONFIG.topic}/${CONFIG.slug}.html"`)) continue;
     const start = content.indexOf('"@type": "ItemList"');
     const blockEnd = content.indexOf('] }', start) + 3;
     let block = content.slice(start, blockEnd);
@@ -258,7 +278,7 @@ function updateItemLists() {
     if (numMatch) block = block.replace(numMatch[0], `"numberOfItems": ${parseInt(numMatch[1], 10) + 1}`);
     const anchor = /(itemListElement": \[\r?\n)/;
     if (!anchor.test(block)) { console.log('  [itemlist] SKIP (anchor not found):', t.file); continue; }
-    const newItem = `        { "@type": "ListItem", "position": 1, "name": "${t.name}", "item": "${t.prefix}/articles/${CONFIG.slug}.html" },\n`;
+    const newItem = `        { "@type": "ListItem", "position": 1, "name": "${t.name}", "item": "${t.prefix}/research/${CONFIG.topic}/${CONFIG.slug}.html" },\n`;
     block = block.replace(anchor, (m, g1) => g1 + newItem);
     const positions = [...block.matchAll(/"position": (\d+)/g)];
     for (let i = positions.length - 1; i >= 1; i--) {
@@ -303,11 +323,9 @@ function countDistinctTopics(lang) {
 function rebuildHomepageCarouselAndGrid(lang) {
   const listFile = lang === 'en' ? 'en/articles.html' : 'articles.html';
   const homeFile = lang === 'en' ? 'en/index.html' : 'index.html';
-  const artDir = lang === 'en' ? 'en/articles' : 'articles';
-  const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
 
   const listC = fs.readFileSync(path.join(root, listFile), 'utf-8');
-  const re = /<li class="archive-item" data-topic="([a-z]+)">\s*<a href="\/(?:en\/)?articles\/([a-z0-9-]+)\.html">\s*<span class="archive-tag archive-tag--([a-z]+)" aria-hidden="true">([^<]*)<\/span>\s*<span class="archive-title">([^<]*)<\/span>\s*<span class="archive-date"><svg[^>]*>.*?<\/svg><time datetime="([^"]*)">/gs;
+  const re = /<li class="archive-item" data-topic="([a-z]+)">\s*<a href="\/(?:en\/)?research\/[a-z]+\/([a-z0-9-]+)\.html">\s*<span class="archive-tag archive-tag--([a-z]+)" aria-hidden="true">([^<]*)<\/span>\s*<span class="archive-title">([^<]*)<\/span>\s*<span class="archive-date"><svg[^>]*>.*?<\/svg><time datetime="([^"]*)">/gs;
   const items = [...listC.matchAll(re)].map(m => ({
     topic: m[1], slug: m[2], tagColor: m[3], tagLabel: m[4], h1: m[5], pub: m[6],
   }));
@@ -315,7 +333,8 @@ function rebuildHomepageCarouselAndGrid(lang) {
   if (items[0].slug !== CONFIG.slug) throw new Error(`[homepage-${lang}] newest archive item is "${items[0].slug}", expected "${CONFIG.slug}" — run insertArchiveItem first`);
 
   for (const it of items.slice(0, 18)) {
-    const artC = fs.readFileSync(path.join(root, artDir, `${it.slug}.html`), 'utf-8');
+    it.href = `/${lang === 'en' ? enPath(it.slug) : zhPath(it.slug)}`;
+    const artC = fs.readFileSync(path.join(root, it.href.slice(1)), 'utf-8');
     it.cardDesc = (artC.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
     it.cover = (artC.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
   }
@@ -332,7 +351,7 @@ function rebuildHomepageCarouselAndGrid(lang) {
 
   const slides = carouselItems.map((it, i) => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
-    return `            <a class="featured-card carousel-slide" href="${artPrefix}${it.slug}.html" aria-roledescription="slide" aria-label="${i + 1}/5">
+    return `            <a class="featured-card carousel-slide" href="${it.href}" aria-roledescription="slide" aria-label="${i + 1}/5">
               <span class="featured-cover-wrap">
                 <img class="featured-cover" src="${it.cover}" width="480" height="240" alt="${it.h1} ${coverAlt}"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
               </span>
@@ -360,7 +379,7 @@ function rebuildHomepageCarouselAndGrid(lang) {
   const hotpicksHtml = hotpicksItems.map((it, i) => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
     return `          <li class="hotpicks-item">
-            <a href="${artPrefix}${it.slug}.html">
+            <a href="${it.href}">
               <span class="hotpicks-num">${i + 1}</span>
               <span class="hotpicks-body">
                 <span class="hotpicks-item-title">${it.h1}</span>
@@ -393,14 +412,14 @@ ${hotpicksHtml}
   const gridCards = gridVisible.map(it => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
     return `      <article class="post-card" id="${it.slug}">
-        <a class="post-card-cover-link" href="${artPrefix}${it.slug}.html" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${it.cover}" width="600" height="300" alt="${it.h1} ${coverAlt}" fetchpriority="high"></a>
+        <a class="post-card-cover-link" href="${it.href}" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${it.cover}" width="600" height="300" alt="${it.h1} ${coverAlt}" fetchpriority="high"></a>
         <div class="post-card-body">
           <div class="post-card-tags"><span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span></div>
-          <h2 class="post-card-title"><a href="${artPrefix}${it.slug}.html">${it.h1}</a></h2>
+          <h2 class="post-card-title"><a href="${it.href}">${it.h1}</a></h2>
           <p class="post-card-desc">${it.cardDesc}</p>
           <div class="post-card-meta">
             ${cal}<time datetime="${it.pub}">${pubDisplay}</time>
-            <a class="read-link" href="${artPrefix}${it.slug}.html">${readLabel}</a>
+            <a class="read-link" href="${it.href}">${readLabel}</a>
           </div>
         </div>
       </article>`;
@@ -454,11 +473,11 @@ function insertArchiveItem(lang) {
   const p = path.join(root, file);
   let t = fs.readFileSync(p, 'utf-8');
   const cfgLang = lang === 'en' ? CONFIG.en : CONFIG.zh;
-  const artPrefix = lang === 'en' ? '/en/articles/' : '/articles/';
-  if (t.includes(`<a href="${artPrefix}${CONFIG.slug}.html">`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
+  const href = `/${lang === 'en' ? enPath(CONFIG.slug) : zhPath(CONFIG.slug)}`;
+  if (t.includes(`<a href="${href}">`)) { console.log(`  [archive-${lang}] already updated, skip`); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
   const item = `        <li class="archive-item" data-topic="${CONFIG.topic}">
-          <a href="${artPrefix}${CONFIG.slug}.html">
+          <a href="${href}">
             <span class="archive-tag archive-tag--${CONFIG.tagColor}" aria-hidden="true">${cfgLang.tagLabel}</span>
             <span class="archive-title">${cfgLang.h1}</span>
             <span class="archive-date"><svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="${CONFIG.publishedISO}">${pubDisplay}</time></span>
@@ -477,10 +496,10 @@ function updateSitemap() {
   const p = path.join(root, 'sitemap.xml');
   let t = fs.readFileSync(p, 'utf-8');
   if (t.includes(`${CONFIG.slug}.html`)) { console.log('[6/9] sitemap already updated, skip'); return; }
-  const zhAnchor = `  <url>\n    <loc>https://coin.ponr.org/articles/${CONFIG.existingSlugsNewestFirst[0]}.html</loc>`;
-  const enAnchor = `  <url>\n    <loc>https://coin.ponr.org/en/articles/${CONFIG.existingSlugsNewestFirst[0]}.html</loc>`;
-  const zhEntry = `  <url>\n    <loc>https://coin.ponr.org/articles/${CONFIG.slug}.html</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-  const enEntry = `  <url>\n    <loc>https://coin.ponr.org/en/articles/${CONFIG.slug}.html</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+  const zhAnchor = `  <url>\n    <loc>https://coin.ponr.org/${zhPath(CONFIG.existingSlugsNewestFirst[0])}</loc>`;
+  const enAnchor = `  <url>\n    <loc>https://coin.ponr.org/${enPath(CONFIG.existingSlugsNewestFirst[0])}</loc>`;
+  const zhEntry = `  <url>\n    <loc>https://coin.ponr.org/${zhPath(CONFIG.slug)}</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+  const enEntry = `  <url>\n    <loc>https://coin.ponr.org/${enPath(CONFIG.slug)}</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
   if (!t.includes(zhAnchor) || !t.includes(enAnchor)) { console.log('[6/9] SKIP (anchor not found in sitemap.xml)'); return; }
   t = t.replace(zhAnchor, zhEntry + zhAnchor);
   t = t.replace(enAnchor, enEntry + enAnchor);
@@ -520,8 +539,8 @@ function regenerateFeeds() {
   function buildFeed(lang) {
     const items = allSlugs.map(slug => {
       const meta = extractArticleMeta(slug, lang);
-      const artPrefix = lang === 'en' ? 'https://coin.ponr.org/en/articles/' : 'https://coin.ponr.org/articles/';
-      return { title: meta.h1, link: `${artPrefix}${slug}.html`, pub: meta.pub, category: meta.tagLabel, desc: meta.desc };
+      const link = `https://coin.ponr.org/${lang === 'en' ? enPath(slug) : zhPath(slug)}`;
+      return { title: meta.h1, link, pub: meta.pub, category: meta.tagLabel, desc: meta.desc };
     });
     items.sort((a, b) => new Date(b.pub) - new Date(a.pub));
     const itemsXml = items.map(it => `  <item>
@@ -558,11 +577,11 @@ function updateSiteJsDates() {
   let t = fs.readFileSync(p, 'utf-8');
   if (t.includes(`${CONFIG.slug}.html`)) { console.log('[8/9] site.js DATES already updated, skip'); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
-  const zhAnchor = `  var DATES = {\n    '/articles/${CONFIG.existingSlugsNewestFirst[0]}.html':`;
-  const enAnchor = `    '/en/articles/${CONFIG.existingSlugsNewestFirst[0]}.html':`;
+  const zhAnchor = `  var DATES = {\n    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`;
+  const enAnchor = `    '/${enPath(CONFIG.existingSlugsNewestFirst[0])}':`;
   if (!t.includes(zhAnchor) || !t.includes(enAnchor)) { console.log('[8/9] SKIP (anchor not found in site.js)'); return; }
-  t = t.replace(zhAnchor, `  var DATES = {\n    '/articles/${CONFIG.slug}.html': '${pubDisplay}',\n    '/articles/${CONFIG.existingSlugsNewestFirst[0]}.html':`);
-  t = t.replace(enAnchor, `'/en/articles/${CONFIG.slug}.html': '${pubDisplay}',\n    '/en/articles/${CONFIG.existingSlugsNewestFirst[0]}.html':`);
+  t = t.replace(zhAnchor, `  var DATES = {\n    '/${zhPath(CONFIG.slug)}': '${pubDisplay}',\n    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`);
+  t = t.replace(enAnchor, `'/${enPath(CONFIG.slug)}': '${pubDisplay}',\n    '/${enPath(CONFIG.existingSlugsNewestFirst[0])}':`);
   fs.writeFileSync(p, t, 'utf-8');
   console.log('[8/9] site.js DATES updated');
 }
@@ -610,8 +629,8 @@ async function pingIndexNow() {
     'https://coin.ponr.org/articles.html',
     'https://coin.ponr.org/en/',
     'https://coin.ponr.org/en/articles.html',
-    `https://coin.ponr.org/articles/${CONFIG.slug}.html`,
-    `https://coin.ponr.org/en/articles/${CONFIG.slug}.html`,
+    `https://coin.ponr.org/${zhPath(CONFIG.slug)}`,
+    `https://coin.ponr.org/${enPath(CONFIG.slug)}`,
   ];
   // NOTE: the bulk POST /indexnow endpoint reliably returns 403
   // UserForbiddedToAccessSite for this host even with a byte-correct key file,
@@ -632,6 +651,10 @@ async function main() {
   if (CONFIG.slug.startsWith('REPLACE-ME')) {
     console.error('Fill in CONFIG at the top of this script before running.');
     process.exit(1);
+  }
+  if (!slugTopicMap[CONFIG.slug]) {
+    slugTopicMap[CONFIG.slug] = CONFIG.topic;
+    fs.writeFileSync(slugTopicMapPath, JSON.stringify(slugTopicMap, null, 2) + '\n', 'utf-8');
   }
   insertSidebarItems();
   insertRelatedItems();

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Off-Chain Governance Vote Execution Verification Guide</title>
+  <meta name="description" content="Snapshot votes carry no on-chain force; a multisig decides execution. Verify calldata, snapshot timing, and quorum math before trusting an off-chain result.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/snapshot-offchain-vote-execution-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/snapshot-offchain-vote-execution-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Off-Chain Governance Vote Execution Verification Guide">
+  <meta property="og:description" content="Snapshot votes carry no on-chain force; a multisig decides execution. Verify calldata, snapshot timing, and quorum math before trusting an off-chain result.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-22T16:29:00+08:00">
+  <meta property="article:modified_time" content="2026-08-22T16:29:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Off-Chain Governance Vote Execution Verification Guide">
+  <meta name="twitter:description" content="Snapshot votes have no on-chain enforcement; execution depends on a multisig. Three checks: calldata match, snapshot-block timing, quorum math.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-snapshot-offchain-vote-execution-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Off-Chain Governance Vote Execution Verification Guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-snapshot-offchain-vote-execution-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-snapshot-offchain-vote-execution-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-snapshot-offchain-vote-execution-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html", "name": "Off-Chain Governance Vote Execution Verification Guide", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Off-Chain Vote Execution Check", "item": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#article", "headline": "Off-Chain Governance Vote Execution Verification Guide", "description": "Snapshot votes have no on-chain enforcement power. Whether a passed proposal is executed, when, and whether faithfully, depends entirely on the multisig holding execution rights. Three checks: calldata match, snapshot-block timing, and quorum math. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["Snapshot off-chain voting", "on-chain execution verification", "voting-power snapshot block", "quorum denominator", "SafeSnap", "selective execution", "DAO governance attack surface"], "wordCount": 1900, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-22T16:29:00+08:00", "dateModified": "2026-08-22T16:29:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/snapshot-offchain-vote-execution-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Off-Chain Governance Vote Execution Verification Guide</h1>
+        <p class="article-summary">Snapshot became the default voting tool for most DAOs precisely because it's gasless, low-friction, and lets essentially any token holder participate — but the price of that experience is that Snapshot itself is only a signature-based off-chain record-keeping system. Its vote results carry no on-chain enforcement power whatsoever. A proposal "passing" on Snapshot means only that a set of signatures and a final tally were recorded to IPFS off-chain; whether that result ever becomes an on-chain transaction, who executes it, when, and whether the execution actually matches the proposal text, depends entirely on whether the address holding execution rights — usually a multisig — actually follows through. This piece covers three concrete checks: how to verify that the execution transaction's calldata matches what the proposal text described, how to check whether the voting-power snapshot block and the proposal's creation/discussion timing leave an exploitable gap, and how to spot quorum math being diluted by low turnout. This discusses abstract mechanics only, names no specific DAO or project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-22T16:29:00+08:00">2026-08-22 16:29:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-snapshot-offchain-vote-execution-verification-guide-en.svg" alt="Off-Chain Governance Vote Execution Verification Guide cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Does the executing transaction's calldata match, field for field, the specific action described in the proposal text — was anything quietly altered</li>
+            <li><span class="article-verify-check">✓</span>Is there an exploitable gap between the voting-power snapshot block and the proposal's creation, discussion, and voting-start timestamps</li>
+            <li><span class="article-verify-check">✓</span>Is the quorum denominator total supply or delegated supply, and is turnout inflated by the same handful of active addresses appearing repeatedly</li>
+            <li><span class="article-verify-check">✓</span>Does every passed proposal trace to a matching on-chain execution transaction — any case of "passed but never executed" or partial execution</li>
+          </ul>
+        </div>
+
+        <section id="sec-1">
+        <h2>1. Snapshot executes nothing — it's an off-chain record, full stop</h2>
+        <p>The first step in understanding off-chain voting risk is to fully separate "the vote passed" from "the proposal was executed" in your head — they are not the same event. Snapshot's technical implementation: each token holder signs a message containing a proposal ID and choice with their wallet, that signature is submitted to Snapshot's backend, and the final tally plus the vote snapshot are written to IPFS, producing a verifiable but immutable record hash. At no point in this flow does a transaction get sent to any on-chain contract, which means a Snapshot vote has zero smart-contract-level enforcement power — it's closer to a cryptographically-signed, high-confidence opinion poll than to the kind of on-chain governance system where a passed vote automatically queues into a timelock. What actually turns a vote result into reality is a separate, independent step: some address holding execution authority — typically a multisig — sees the result and manually constructs a transaction to carry out whatever the proposal described. That step depends entirely on manual judgment and goodwill, and it is exactly the attack surface off-chain governance most often gets overlooked on — a multisig can execute selectively, delay execution, or simply never execute at all, and nothing in the off-chain vote itself can force a correction.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Calldata matching: does the executed transaction do what the proposal said</h2>
+        <p>Even when an executor genuinely submits an on-chain transaction to carry out a passed proposal, you can't assume the transaction's specific content exactly matches the proposal text. Proposal text is usually natural language — "transfer 500,000 tokens from the treasury into the liquidity-incentive contract" — while what actually executes is a transaction with concrete calldata encoding a target address, function selector, and parameters. The translation between the two is entirely under the executor's control, which leaves theoretical room to swap the target address, alter the amount, or slip in an extra action — especially when the executor bundles several proposals into a single batch transaction, where an ordinary voter has little practical ability to check every detail line by line. The check: find the on-chain execution transaction hash that corresponds to the passed proposal, decode its full calldata via a block explorer, and compare the decoded target address, function name, and parameters against the operation described in the proposal text item by item; if the proposal was attached to a SafeSnap-style plugin that pre-generates a verifiable execution transaction hash, also confirm the final executed transaction hash exactly matches the pre-generated one; proposals described only in natural language, with no concrete pre-committed calldata, leave the executor far more discretion — worth extra scrutiny.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Snapshot-block timing games: voting power can be borrowed for a moment</h2>
+        <p>Snapshot calculates each address's voting weight based on token balance or delegation as of a specific block — the snapshot block — rather than a real-time balance at the moment of voting. That design exists to prevent repeated transfers and double-counting during the voting window, but it introduces a different attack surface: if the timing of the snapshot block is predictable — say, fixed to some Nth block after proposal creation, or the same block as creation — anyone can, right before that block, temporarily acquire far more tokens than they normally hold through borrowing, a short-term buy, or an incoming transfer from another address, hold that inflated balance for exactly the snapshot moment, then return or move the tokens out immediately after voting. The entire operation only needs to span a narrow window around the snapshot block, at a fraction of the cost of holding the equivalent amount long-term. The check: identify exactly which block the proposal's snapshot used, then use a block explorer to chart key voting addresses' balance history around that block, looking for a pattern of "balance spikes right before the snapshot, then drops right after the vote"; also check whether the gap between proposal creation and voting start leaves enough lead time for this kind of maneuver to be planned — the shorter the gap and the more predictable the snapshot timing, the higher the risk.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Quorum denominator traps: hitting quorum isn't the same as real consensus</h2>
+        <p>Quorum mechanisms exist to stop a small minority from pushing through major proposals, but whether quorum actually achieves that depends on the denominator used to calculate it and the composition of who actually turns out. A common point of contention: should the denominator be total token supply, or actual delegated voting power that has ever participated in governance (since large amounts of supply may sit on exchanges, never delegated or voted with at all)? Using total supply as the denominator makes the quorum threshold look high on paper, but in practice it may only take convincing a handful of addresses holding large delegated weight — addresses that tend to show up repeatedly across successive votes, representing "active-delegate consensus" more than genuinely broad consensus. The check: identify exactly which denominator basis the quorum calculation uses (total supply, circulating supply, or historical total delegation), and confirm how that basis is defined in the proposal documentation or governance contract; further, tally whether the top-ranked addresses by voting weight across recent quorum-reaching proposals are highly overlapping — if the same handful of addresses decide whether quorum is reached every time, quorum's real effectiveness as a safeguard is far below what its nominal threshold suggests.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Passed but never executed: tracing the full path from proposal to transaction</h2>
+        <p>Because Snapshot voting and on-chain execution are two independent systems, an often-overlooked question worth asking is: of all the proposals that passed, how many actually ended up executed? Some DAOs run votes frequently on Snapshot, but only a subset of passed proposals ever map to an on-chain execution transaction — the rest either sit indefinitely unactioned or get effectively vetoed by the executor for one reason or another, and this kind of "silent veto" rarely comes with its own announcement. A concrete way to check a DAO's governance health: pull the full list of proposals marked "passed" on that DAO's Snapshot over the past six to twelve months, check each one individually for a matching on-chain execution transaction, and record the time gap between vote close and actual execution; if a significant share of passed proposals have no matching execution record, or execution gaps commonly stretch to months, that signals a systemic delay or selective-execution problem in the DAO's governance pipeline — no matter how active its Snapshot participation looks on the surface, real governance effectiveness should be discounted accordingly.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Before voting off-chain, confirm these first</h2>
+        <p>Before voting on a DAO's proposal, or judging whether a project's governance is trustworthy, it's worth confirming: whether the DAO has publicly disclosed exactly who holds the multisig authority to execute proposals, and whether that multisig's threshold and signer set can be independently verified; whether the rule for choosing the snapshot block is public and predictable, versus varying per-proposal with no explanation; whether the quorum denominator basis has a clear definition, and whether the voting-weight distribution behind recent quorum-reaching proposals has ever been independently examined; whether a SafeSnap-style mechanism cryptographically ties execution to the Snapshot vote hash, versus relying purely on the executor's goodwill; and whether any tracker independent of the project team, or a community-maintained spreadsheet, keeps a running record of "passed proposal vs. actually executed." If these questions can't be answered right now, there's likely a gap — one you haven't noticed yet — between how active this DAO's off-chain voting looks and how effective its actual on-chain governance is.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and verification checklist</h2>
+        <ul>
+        <li>Snapshot itself has no on-chain enforcement power — it's purely an off-chain signature-voting record system; "the vote passed" and "the proposal executed" are two completely separate events.</li>
+        <li>Check that the execution transaction's calldata matches the proposal text field for field, and watch for extra actions slipped into batched executions.</li>
+        <li>If the snapshot block's timing is predictable, voting power can be borrowed briefly to sway results — check key addresses' balance history around the snapshot for spikes.</li>
+        <li>Whether quorum is reached depends on the denominator definition and who actually turns out — watch for "surface consensus" driven by the same handful of active addresses.</li>
+        <li>Trace the full path from passed proposal to on-chain execution transaction, and flag systemic "passed but never executed" or chronically delayed execution.</li>
+        <li>Before trusting a DAO's governance, confirm the execution multisig's authority, the snapshot-block rule, and the quorum denominator are all public and independently verifiable.</li>
+        </ul>
+        <p>FAQ: Does Snapshot voting mean nothing at all? No — it still has value as a tool for off-chain opinion expression and building discussion-level consensus; the issue is that a passed vote can't be assumed to translate faithfully into execution, which needs separate verification. What makes a DAO's governance more trustworthy? DAOs that use mechanisms like SafeSnap to cryptographically tie execution to the vote result, keep snapshot-block timing public and non-predictable, define quorum denominators clearly, and regularly publish execution status for passed proposals are meaningfully more transparent. What's the fastest way to check whether a vote was faithfully executed? Look up the matching execution transaction hash on a block explorer, decode its calldata, compare it item by item against the proposal text, and confirm the execution timestamp falls within a reasonable window after voting closed. This discusses abstract mechanics only, names no specific DAO or project, and is not investment advice — use your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Snapshot executes nothing</a></li>
+          <li><a href="#sec-2">2. Calldata matching</a></li>
+          <li><a href="#sec-3">3. Snapshot-block timing games</a></li>
+          <li><a href="#sec-4">4. Quorum denominator traps</a></li>
+          <li><a href="#sec-5">5. Passed but never executed</a></li>
+          <li><a href="#sec-6">6. Before voting, confirm what</a></li>
+          <li><a href="#sec-7">7. Summary and verification checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://docs.snapshot.org/" target="_blank" rel="noopener">Snapshot official docs</a> — the standard reference for off-chain voting, snapshot blocks, and strategy mechanics</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan and similar block explorers</a> — decode execution calldata and verify balance history around a snapshot block</li>
+          </ul>
+          <p class="ref-note">The mechanisms and verification methods discussed here may evolve with industry practice; always defer to the official, current documentation of the protocol you're using. This article is for learning and research only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/governance/vote-escrow-lock-verification.html">Vote-Escrow Lock Verification: Is a ve-Token's Time Value Miscalculated?</a></li>
+          <li><a href="/en/research/governance/dao-governance-research-guide.html">DAO Governance Research: From Proposals to Voting Power Distribution</a></li>
+          <li><a href="/en/research/governance/vote-market-research-guide.html">Vote-Market Research: Bribery and Voting-Power Rental</a></li>
+          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After a Token Burn, What's Left: A Right or a Promise?</a></li>
+          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site on crypto research methodology and on-chain data — frameworks, indicator reading, and flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Sub</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and risky — use your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

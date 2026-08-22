@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OTC场外换汇：对手方资质和资金隔离核验 - 加密货币研究</title>
+  <meta name="description" content="OTC场外换汇把加密资产换成法币出境时，报价方不是交易所而是个人或工作室，资质、资金隔离和跑分风险都得自己核验：先看对手方是否有可验证的经营主体和历史交易记录，再核对收款账户是否本人所有，警惕明显偏离市场中间价的报价，大额交易前先用小额试单，避免因对手方资金池混同或触发银行反洗钱风控而被冻结账户。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="OTC场外换汇：对手方资质和资金隔离核验 - 加密货币研究">
+  <meta property="og:description" content="场外OTC把加密资产换成法币出境时，对手方常是个人而非持牌机构。核对经营主体、收款账户与本人身份是否一致、报价是否偏离市场中间价，大额前先小额试单，防止被风控冻结。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-22T16:11:00+08:00">
+  <meta property="article:modified_time" content="2026-08-22T16:11:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OTC场外换汇：对手方资质和资金隔离核验 - 加密货币研究">
+  <meta name="twitter:description" content="场外换汇的对手方多是个人，不是持牌机构。核实经营记录、收款账户一致性、报价点差，大额前先小额试单，避免资金被卷入他人的反洗钱风控。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-otc-fiat-offramp-counterparty-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="OTC场外换汇：对手方资质和资金隔离核验 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-otc-fiat-offramp-counterparty-verification-guide.png">
+  <link rel="dns-prefetch" href="https://chdh.me">
+  <link rel="preload" as="image" href="/img/article-otc-fiat-offramp-counterparty-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-otc-fiat-offramp-counterparty-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html", "name": "OTC场外换汇：对手方资质和资金隔离核验 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "OTC换汇核验", "item": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#article", "headline": "OTC场外换汇：对手方资质和资金隔离核验", "description": "场外OTC把加密资产换成法币出境时，对手方常是个人而非持牌机构。核对经营主体、收款账户与本人身份是否一致、报价是否偏离市场中间价，大额前先小额试单，防止被风控冻结。仅供学习研究，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["OTC场外交易", "加密货币换汇", "对手方风险", "资金隔离", "反洗钱风控", "出海换汇", "收款账户核验"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-22T16:11:00+08:00", "dateModified": "2026-08-22T16:11:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/otc-fiat-offramp-counterparty-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>OTC场外换汇：对手方资质和资金隔离核验</h1>
+        <p class="article-summary">很多人需要把加密资产换成法币用于出境留学、购房或日常生活开支，而在交易所出金额度受限、到账慢或干脆不支持目标法币时，场外OTC换汇成了绕不开的选项。但OTC的报价方往往是个人商户或小型工作室，不是持牌金融机构，这意味着交易所层面的KYC、资金托管和申诉机制在这里基本不存在——你面对的是一个身份不透明的对手方，一旦资金被卷入对方的资金池混同、或者报价里藏着远超市场中间价的点差，出问题时几乎没有平台可以追责。本文拆解一笔OTC场外换汇从下单到法币到账的完整链路，讲清楚该核实对手方的哪几项资质、怎么核对收款账户与本人身份是否一致、报价点差多大算正常，以及为什么大额换汇更容易触发银行的反洗钱风控。全文仅为方法层面的实操指南，不构成投资建议，也不为任何具体OTC商户或平台背书。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-22T16:11:00+08:00">2026-08-22 16:11:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-otc-fiat-offramp-counterparty-verification-guide.svg" alt="OTC场外换汇：对手方资质和资金隔离核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>对手方是否有可验证的经营主体或长期交易记录，而不是刚注册的匿名账号</li>
+            <li><span class="article-verify-check">✓</span>收款/付款银行账户户名是否与对方声称的身份或经营主体完全一致</li>
+            <li><span class="article-verify-check">✓</span>报价相对市场中间价的点差是否处于合理区间，而非明显偏离的"优惠价"</li>
+            <li><span class="article-verify-check">✓</span>大额换汇前是否先用小额试单验证对方的履约速度与到账路径</li>
+          </ul>
+        </div>
+
+        <section id="sec-1">
+        <h2>1. 一笔OTC场外换汇的完整资金链路</h2>
+        <p>场外换汇的操作顺序通常是：你先把加密资产转到一个双方都认可的托管地址或直接转给对手方钱包，对手方确认收到后，再从其银行账户把等值法币转到你指定的账户。这个链路里有两个天然的信任缺口。第一，加密资产的转移几乎是不可逆的——一旦链上确认，你就失去了对这笔资产的控制权，唯一能指望的是对方按约定付款的诚意或平台的担保机制。第二，法币这一端走的是传统银行系统，资金一旦进入对方账户，就混入了对方账户里其他所有交易的资金池，如果对方账户本身涉及多笔来源不明的资金往来，你收到的法币也可能被银行标记为"关联可疑资金"，即便你自己的换汇行为完全正常。理解这两个缺口，才能明白后面几节要核验的每一项具体是在防什么风险。</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. 对手方到底是谁：经营主体和历史记录怎么查</h2>
+        <p>多数OTC撮合发生在社群、群组或第三方担保平台上，报价方的身份信息往往只有一个昵称和一个二维码。核验的第一步是看对方是否有可交叉验证的经营时长：在同一个渠道或平台上是否有连续数月甚至数年的交易记录，是否有可查证的历史成交量和历史评价，而不是仅凭几条精心编排的截图。第二步是看对方是否愿意提供实名信息或营业资质用于核对，即便对方不是持牌金融机构，一个愿意在关键信息上保持透明、经得起交叉核实的对手方，风险天然低于一个从头到尾拒绝提供任何可验证信息、只靠"信誉分"或"担保保证金"说服你的账号。担保保证金本身也需要核实：保证金托管在哪个平台、平台的赔付条款是否覆盖你即将进行的这笔交易规模，很多担保机制对大额交易设有赔付上限，超出部分实际上没有保障。</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. 收款账户与本人身份是否一致：跑分风险的核心信号</h2>
+        <p>"跑分"是指利用他人银行账户走账来掩盖资金真实来源的操作模式，在OTC换汇里最常见的表现，是对方要求你把款项打到一个与其身份信息不符的第三方账户——可能是"朋友的账户""公司的账户"或干脆一个临时更换的账户号。这是整篇指南里最重要的单一信号：只要收款方姓名与你正在交易的对手方身份不一致，无论理由听起来多合理，都应该视为高风险信号，因为一旦这笔资金背后的其他持有人涉及违法资金往来，你的这笔转账在银行系统里会被一并关联审查，最坏情况下账户会被临时冻结、要求你自证资金来源清白，即便你本人的换汇行为完全合规。核验方法很直接：付款前核对收款户名与对方此前沟通中出示的身份信息（营业执照、个人姓名等）是否完全一致，任何"临时换个账户收款"的要求都应该按下暂停键，重新核实原因。</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. 报价里的点差：偏离市场中间价多少算正常</h2>
+        <p>OTC报价通常会相对交易所的市场中间价有一定折溢价，这本身是合理的——对手方承担了撮合、垫资和操作风险，理应收取一定报酬。核验的关键不是"有没有点差"，而是点差的幅度是否与市场正常水平匹配。可以用主流交易所的实时中间价作为基准，手工计算对方报价相对该基准的偏离百分比：如果偏离幅度明显高于同类型OTC商户的普遍水平（例如高出一倍以上），要么是对方在补偿更高的操作风险和不确定性，要么是刻意用低价吸引你进行大额交易后再变卦或拖延，两种情况都值得提高警惕。反过来，报价明显优于市场中间价、好到不合常理的"超优惠价"，往往是钓鱼或骗局的典型信号，值得比价差过大的报价更加警惕。</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. 出海资金规划：一个导航类工具能帮上什么忙</h2>
+        <p>决定要不要通过OTC换汇出境，很多时候是"出海"这件事的一个环节——留学缴费、海外购房首付、跨境电商结算，都会牵涉到选择哪种出境资金路径、目标地区有哪些合规服务商可用。<a href="https://chdh.me/" target="_blank" rel="noopener nofollow sponsored">出海导航（chdh.me）</a>这类网站的自我定位是面向出海人群的工具与资源导航站，收录跨境支付、合规服务、海外账户开设等相关信息入口，理论上可以作为你在动手换汇前，横向了解不同出境资金路径和服务商类型的起点。需要说明的是，以上仅为该平台自述定位，具体收录的服务商资质、信息更新的及时性与准确性，请以其官方页面最新披露和你自己的实地核实为准，本文不对其收录的任何具体服务或商户做背书或保证。任何出境资金安排都必须遵守你所在地区和目标地区的外汇管理与反洗钱法规，OTC换汇不能作为规避监管额度或申报义务的手段。</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. 为什么大额一次性换汇更容易被银行风控冻结</h2>
+        <p>银行和支付机构的反洗钱系统对"大额、单笔、来源不透明"的资金流动天然敏感，这与你换汇本身是否合规无关，而是风控模型基于交易模式做出的初筛判断。一笔金额明显偏离你历史流水规律的大额入账，尤其是来自个人账户而非机构账户的转账，很容易触发系统的自动审查，轻则要求你补充资金来源说明，重则临时冻结账户直至完成核查。分批、适度的资金流动通常更贴近正常个人财务行为的模式，但分批本身不是万能解药——如果分批的目的是刻意规避申报或监测阈值（俗称"拆分交易"），在多数司法辖区本身就是违法行为，风险比一次性大额转账更高。合规的做法是如实申报资金性质和来源，配合银行的常规核查要求，而不是试图用交易结构去绕开审查。</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. 总结与核验清单</h2>
+        <ul>
+        <li>OTC对手方通常是个人或工作室，不受交易所层面的KYC和资金托管保护，风险要靠自己核验。</li>
+        <li>先核实对手方是否有可交叉验证的经营时长和历史交易记录，别只看几张截图或信誉分。</li>
+        <li>收款账户户名必须与对手方身份一致，任何"换个账户收款"的要求都是高风险信号。</li>
+        <li>用交易所中间价核算报价点差，偏离过大或好到不合常理的报价都值得警惕。</li>
+        <li>出海前用像chdh.me这样的导航资源横向了解合规路径，但具体服务商仍需自行核实。</li>
+        <li>大额换汇前先小额试单，如实申报资金来源，别用拆分交易的方式规避银行监测。</li>
+        </ul>
+        <p>常见问题：OTC换汇比交易所出金更快更省手续费吗？确实可能更快，但对手方风险和资金隔离缺失是交易所层面不存在的额外成本，要一并计入决策。收款账户和对方身份不一致一定是骗局吗？不一定百分百是骗局，但这是最需要提高警惕、暂停交易重新核实的信号。大额换汇被银行问询正常吗？正常，如实说明资金来源和交易性质、配合核查即可，不必恐慌，但也不要试图用拆分交易规避监测。全文仅为学习与研究方法层面的分享，不构成任何投资建议，跨境资金安排请自行遵守当地法律法规并对自己的决策负责。</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. OTC换汇的资金链路</a></li>
+          <li><a href="#sec-2">2. 对手方经营主体核验</a></li>
+          <li><a href="#sec-3">3. 收款账户与身份一致性</a></li>
+          <li><a href="#sec-4">4. 报价点差是否正常</a></li>
+          <li><a href="#sec-5">5. 出海资金规划参考</a></li>
+          <li><a href="#sec-6">6. 大额换汇与银行风控</a></li>
+          <li><a href="#sec-7">7. 总结与核验清单</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko 行情站</a> —— 核对市场中间价、计算报价点差的参考工具</li>
+            <li><a href="https://www.fatf-gafi.org/" target="_blank" rel="noopener">FATF 金融行动特别工作组</a> —— 跨境反洗钱与合规标准的权威参考</li>
+            <li><a href="/research/basics/exchange-fees-onramp-offramp-saving-guide.html">交易所出入金手续费省钱指南</a> —— 交易所渠道出金的对比参考</li>
+          </ul>
+          <p class="ref-note">文中提及的第三方网站与工具功能可能随时间变化，请以各平台官方最新披露为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/protocol/crosschain-swap-fee-optimization-guide.html">跨链兑换手续费怎么省：拆单前先看清费用结构</a></li>
+          <li><a href="/research/basics/exchange-fees-onramp-offramp-saving-guide.html">交易所出入金手续费省钱指南</a></li>
+          <li><a href="/research/basics/cex-kyc-withdrawal-limits-onramp-tutorial.html">交易所KYC与提现限额入金教程</a></li>
+          <li><a href="/research/protocol/usdt-crosschain-transfer-security-recovery-guide.html">USDT跨链转账安全指南：网络选择、桥接核验与找回骗局防范</a></li>
+          <li><a href="/research/governance/dao-treasury-multisig-timelock-verification-guide.html">国库多签核验：签名者换人、时间锁被绕开</a></li>          <li><a href="/research/governance/snapshot-offchain-vote-execution-verification-guide.html">链下投票核验：Snapshot结果被谁执行</a></li>
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回摘要首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Flash Loan Attacks and Defense - Crypto Research</title>
+  <meta name="description" content="How a flash loan closes the borrow-manipulate-arbitrage-repay loop in one transaction, and how protocols defend for practical use. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/flashloan-attack-defense-defi-security.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/flashloan-attack-defense-defi-security.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research">
+  <meta property="og:title" content="DeFi Flash Loan Attacks and Defense - Crypto Research">
+  <meta property="og:description" content="How a flash loan closes the borrow-manipulate-arbitrage-repay loop in one transaction, and how protocols defend. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html">
+  <meta property="article:published_time" content="2026-08-13T14:30:00+08:00">
+  <meta property="article:modified_time" content="2026-08-13T14:30:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/en/about.html#author">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Flash Loan Attacks and Defense">
+  <meta name="twitter:description" content="Can one transaction really drain a liquidity pool? A full breakdown of flash loan attacks from technical principles to a defense checklist. For study and research only, not investment advice.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-flashloan-attack-defense-defi-security-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-flashloan-attack-defense-defi-security-en.png">
+  <link rel="preload" as="image" href="/img/article-flashloan-attack-defense-defi-security-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "A research-focused site on crypto methodology and on-chain data. Content is for study and research only and is not investment advice.", "knowsAbout": ["crypto research","DeFi security","flash loan attacks","on-chain security","smart contract audits","price oracles","reentrancy"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#primaryimage", "url": "https://coin.ponr.org/img/article-flashloan-attack-defense-defi-security-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html", "name": "DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool", "item": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#article", "headline": "DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool", "description": "A technical breakdown of DeFi flash loan attacks: how atomic transactions close the borrow-manipulate-arbitrage-repay loop in a single transaction, why price oracles are the weakest link, and how protocols use TWAP, reentrancy guards and slippage controls to build on-chain security defenses. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DeFi security","flash loan attack","on-chain security","price oracle","smart contract audit","atomic transaction","reentrancy"], "wordCount": 4000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-13T14:30:00+08:00", "dateModified": "2026-08-13T14:30:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/flashloan-attack-defense-defi-security.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/flashloan-attack-defense-defi-security.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool</h1>
+        <p class="article-summary">A flash loan is one of DeFi's most innovative financial primitives, and also an attacker's favorite weapon. Its core property is "uncollateralized and atomic": you can borrow tens of millions of dollars inside a single transaction, with no collateral at all, as long as you repay before that transaction ends. The design was meant to improve capital efficiency, but attackers use it to close a full loop of price manipulation, arbitrage, and pool draining in a matter of seconds. Over the past few years, flash loan attacks have caused cumulative losses in the hundreds of millions of dollars, hitting even top DeFi projects. This article breaks down the full path of a flash loan attack at a technical level: how it exploits on-chain security weaknesses in DeFi protocols, why the oracle is the most fragile link, and how defenders use TWAP, reentrancy guards, and slippage controls to build a real line of defense. We won't recommend any specific protocol. We focus only on the technical principles of attack and defense, so you can see this DeFi security battlefield clearly. Everything here is for study and research only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-13T14:30:00+08:00">2026-08-13 14:30</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-flashloan-attack-defense-defi-security-en.svg" alt="DeFi Flash Loan Attacks and Defense: How One Transaction Drains a Liquidity Pool cover illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+          <section id="sec-1">
+            <h2>1. How Flash Loans Work: Why Uncollateralized Lending Is Possible</h2>
+            <p>In traditional finance and most DeFi lending protocols, borrowing requires collateral. You put up $150 worth of assets to borrow $100. A flash loan is completely different: it lets you borrow a huge sum with no collateral at all, on one condition only, that you repay it within the same transaction. If you can't repay, the whole transaction is rolled back on-chain, as if it never happened.</p>
+            <p>The technical basis for this design is the blockchain's "atomicity": a transaction either fully succeeds or fully fails, with no in-between state. A flash loan smart contract executes, in order, inside one transaction: lend out funds → run your custom logic → check that the funds were returned. If that final check fails, the whole transaction reverts and the pool doesn't lose a cent. From the protocol's point of view, this is risk-free lending, because the money either comes back or the transaction never happened.</p>
+            <p>This mechanism was designed as an efficient tool for arbitrageurs, liquidation bots, and position restructuring. The problem is that it also gives attackers an unprecedented capability: to command enormous capital and manipulate a market in an instant, without any principal of their own. That's why flash loans became a standard weapon in DeFi attacks. They lowered the barrier from "you need tens of millions in principal" to "you just need to write a contract."</p>
+            <ul>
+              <li>Flash loans allow uncollateralized borrowing of large sums, as long as they are repaid within the same transaction, otherwise it reverts.</li>
+              <li>Atomicity makes it risk-free for the protocol: the money either comes back or the transaction never happened.</li>
+              <li>The barrier drops to "just write a contract," no large principal required.</li>
+            </ul>
+          </section>
+          <section id="sec-2">
+            <h2>2. The Attack Path: The Borrow-Manipulate-Arbitrage-Repay Loop</h2>
+            <p>A typical flash loan attack is a carefully engineered four-step loop, all completed inside a single transaction. Let's walk through a simplified example to see how the path works.</p>
+            <h3>2.1 Step One: Borrow a Huge Sum via Flash Loan</h3>
+            <p>The attacker borrows a large amount of tokens (say 10 million USDT) from a protocol that supports flash loans, like Aave or dYdX. This step needs no collateral. It only requires calling the protocol's flash loan interface and promising to return the principal plus a tiny fee (typically 0.09%) before the transaction ends.</p>
+            <h3>2.2 Step Two: Manipulate a Price Oracle or Liquidity Pool</h3>
+            <p>The attacker takes the borrowed sum and manipulates a thinly-traded pair. For example, on a small DEX, they aggressively buy token X with 5 million USDT, pushing X's price from $1 to $10. If that DEX price is used as an "oracle" by other DeFi protocols, those protocols now believe X is genuinely worth $10.</p>
+            <h3>2.3 Step Three: Arbitrage or Over-Borrow on the Victim Protocol</h3>
+            <p>The attacker moves to the victim lending protocol (say, one that uses a DEX spot price as its oracle), posts the X they just manipulated to $10 as collateral, and borrows assets far beyond its true value. X that is really worth $1 million can now borrow $8 million in USDT. Or they simply sell X on another protocol to cash out.</p>
+            <h3>2.4 Step Four: Repay the Flash Loan and Take the Profit</h3>
+            <p>The funds the attacker extracted from the victim protocol are enough to repay the flash loan principal and fee, and the rest is pure profit. The entire process completes inside one transaction. On-chain, you only see a single complex contract call: funds flow in and out within seconds, and the attacker walks away with the profit while the victim's pool is drained.</p>
+            <p>The key to this loop is the "time gap": the attacker exploits the fact that a DeFi protocol can't perceive, within the same transaction, that "the price has already been manipulated." By the time the next transaction begins, the price has returned to normal, but the damage is done. For DeFi security researchers, breaking any single link in this loop is an entry point for defense.</p>
+            <ul>
+              <li>A flash loan attack is a four-step borrow-manipulate-arbitrage-repay loop, all inside one transaction.</li>
+              <li>The core move is using a thin pool to manipulate price so the victim protocol misjudges asset value.</li>
+              <li>The attacker needs no principal, only well-designed contract logic; the profit comes from the victim's pool.</li>
+            </ul>
+          </section>
+          <section id="sec-3">
+            <h2>3. Price Oracles: The Biggest Vulnerability in Flash Loan Attacks</h2>
+            <p>If you review past flash loan attacks, you'll find a common thread: almost all of them exploited a flaw in the price oracle. The oracle is a DeFi protocol's only way to obtain off-chain data (like asset prices), and it is also the most fragile link in the whole system.</p>
+            <h3>3.1 Why DEX Spot Prices Can't Be Used Directly as Oracles</h3>
+            <p>The simplest and most dangerous approach is to read a DEX's current spot price from Uniswap or SushiSwap and treat it as "the market price." This design barely holds up for deep, liquid major pairs, but the moment you hit a thin, long-tail asset, an attacker only needs one large order to push the price to absurd levels. Worse, with a flash loan behind them, the attacker doesn't even need their own principal. Borrowed funds manipulate the price, complete the arbitrage, and repay the loan in one clean sweep.</p>
+            <h3>3.2 TWAP: Defense via Time-Weighted Average Price</h3>
+            <p>To address single-point spot price manipulation, Uniswap v2 introduced TWAP (Time-Weighted Average Price). It works by recording the cumulative price at each block, then averaging over a time window (say 10 minutes or 1 hour). Even if an attacker can manipulate the price within a single transaction, they can't change the historical cumulative price, so TWAP effectively resists a single flash loan attack.</p>
+            <p>But TWAP is no silver bullet. If an attacker controls hash power or can persistently manipulate prices across multiple blocks (through MEV or an extremely thin pool), TWAP can still be distorted. And TWAP lags. It reflects prices over a past window, and in violently volatile markets it may fail to keep up with real price moves, leading to delayed liquidations or arbitrage windows.</p>
+            <h3>3.3 Chainlink and Decentralized Oracle Networks</h3>
+            <p>A sturdier approach is to use a decentralized oracle network like Chainlink. These aggregate prices from multiple off-chain sources and submit them through multisig or on-chain consensus, so an attacker can't manipulate all sources within one transaction. The cost is a new trust assumption: you have to trust the honesty of the oracle nodes and the reliability of the data sources. Oracles also have update latency, and in extreme conditions there can be short-lived price deviations.</p>
+            <p>For a DeFi protocol, choosing an oracle is a trade-off between manipulation resistance, timeliness, and decentralization. There's no perfect option, only the combination best suited to your own risk model. For researchers tracking DeFi security developments and on-chain data, a handy <a href="https://chdh.me/" target="_blank" rel="noopener">going-global navigation hub</a> makes it quick to find entry points for oracle monitors, on-chain analytics, and audit reports, so you can line up the sources behind your defense checklist.</p>
+            <ul>
+              <li>The price oracle is the biggest vulnerability; reading a DEX spot price directly is trivially manipulated.</li>
+              <li>TWAP uses a time-window average to resist single-transaction attacks, but it lags and can be distorted by persistent manipulation.</li>
+              <li>Decentralized oracles like Chainlink are sturdier, at the cost of trust assumptions and update latency.</li>
+            </ul>
+          </section>
+          <section id="sec-4">
+            <h2>4. Combining Reentrancy with Flash Loans</h2>
+            <p>A flash loan attack rarely stands alone. It is often combined with other smart contract bugs, and the most classic pairing is "flash loan + reentrancy."</p>
+            <h3>4.1 What Is a Reentrancy Attack</h3>
+            <p>Reentrancy is a classic smart contract security bug. When a contract transfers funds or calls an external contract without first updating its own state (like deducting a balance), the attacker can call the same withdrawal function again inside a callback, repeatedly extracting funds. The famous 2016 The DAO incident lost $60 million to a reentrancy bug.</p>
+            <h3>4.2 How Flash Loans Amplify Reentrancy Damage</h3>
+            <p>A reentrancy attack usually requires the attacker to first deposit some money into the contract as "trigger capital." But combined with a flash loan, the attacker can borrow a huge sum, repeatedly trigger reentrancy inside one transaction, drain the pool, and then repay the loan. This way the attacker needs no principal, yet can amplify a bug that would otherwise "only enable small arbitrage" into a "drain the entire pool" catastrophe.</p>
+            <h3>4.3 Defense: The Checks-Effects-Interactions Pattern and Reentrancy Guards</h3>
+            <p>There are two standard defenses against reentrancy. One is to follow the Checks-Effects-Interactions pattern: run checks first, update state next, and only then call external contracts. The other is to use a reentrancy guard, which sets a flag during function execution to block recursive calls to the same function. These two measures effectively cut off the reentrancy path, but only if developers follow them strictly when writing the contract. Audit tools can detect obvious reentrancy risk, but subtle logical combinations still require manual review.</p>
+            <ul>
+              <li>Flash loans are often combined with reentrancy, amplifying a small bug into a pool-level catastrophe with no principal.</li>
+              <li>Reentrancy stems from a contract not updating state before transferring; the attacker extracts funds repeatedly in a callback.</li>
+              <li>Defense relies on Checks-Effects-Interactions and reentrancy guards, requiring strict developer discipline and audit coverage.</li>
+            </ul>
+          </section>
+          <section id="sec-5">
+            <h2>5. The Protocol Defense Checklist: How DeFi Builds On-Chain Security</h2>
+            <p>Now that the attack path is clear, what can defenders do? Below is an on-chain security defense checklist for DeFi protocols, where each item maps to a weak point that has been exploited in a real attack.</p>
+            <h3>5.1 Oracle Defense: Multi-Source Aggregation and Anomaly Detection</h3>
+            <p>Don't depend on a single price source. Pull prices from multiple oracles (say Chainlink + Uniswap TWAP) and take the median or weighted average. At the same time, set a price deviation threshold: if a new price deviates more than 10% from the last one, trigger a circuit breaker or manual review. This stops most attacks based on instantaneous price manipulation.</p>
+            <h3>5.2 Slippage and Liquidity Depth Checks</h3>
+            <p>Before executing a large swap or liquidation, check the pool's depth and slippage. If a transaction would cause more than 5% slippage, refuse to execute or execute in batches. This prevents an attacker from using a flash loan to "punch through the price" in a thin pool.</p>
+            <h3>5.3 Timelocks and Transaction Delays</h3>
+            <p>For high-risk operations (like large withdrawals or parameter changes), enforce a timelock. After a user submits a request, they must wait a number of blocks before it executes, and during that window anomalies can trigger an emergency pause. It sacrifices some user experience, but it effectively cuts off the "complete the attack inside one transaction" flash loan path.</p>
+            <h3>5.4 Emergency Pause and Multisig Governance</h3>
+            <p>Reserve an emergency pause switch for the protocol so that funds can be frozen the moment an attack is detected. But that switch is itself a risk point. If it's controlled by a single address, it can be abused or become an attack target. A safer approach is to control the pause permission with a multisig wallet or DAO governance, while setting a maximum pause duration to prevent indefinite freezing.</p>
+            <h3>5.5 Audits and Bug Bounty Programs</h3>
+            <p>Before mainnet launch, the code should pass review by at least two independent audit firms, with the reports published. After launch, run a continuous bug bounty program so white-hat hackers are motivated to find issues before attackers do. Auditing is not one-time; every contract upgrade or new feature needs a fresh audit. For teams that need to subscribe to overseas audit services, on-chain monitoring tools, or join international bug bounty platforms, a compliant and stable <a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">US virtual credit card</a> removes a lot of payment friction; virtual card issuing platforms like RDVCC are used by many DeFi teams to subscribe to audit and security services such as Certik and OpenZeppelin.</p>
+            <ul>
+              <li>Multi-source oracle aggregation plus a price-deviation circuit breaker stop instantaneous price manipulation.</li>
+              <li>Slippage and liquidity depth checks plus timelocks prevent punching through a thin pool in one transaction.</li>
+              <li>Emergency pause plus multisig governance, and continuous audits plus bug bounties, build layered defense.</li>
+            </ul>
+          </section>
+          <section id="sec-6">
+            <h2>6. The User's View: How to Spot a High-Risk DeFi Protocol</h2>
+            <p>If you're a DeFi user rather than a developer, how do you judge whether a protocol is vulnerable to flash loan attacks? Here are a few signals you can check yourself.</p>
+            <p>First, look at the oracle design. If the protocol docs say "uses Uniswap v2 spot price as the oracle," and the assets are long-tail or the pool is thin, that's an obvious red flag. A secure protocol will clearly state that it uses TWAP, Chainlink, or multi-source aggregation.</p>
+            <p>Second, check the audit reports. A protocol with no audit report can basically be ruled out; one that has audits but leaves "High/Critical" issues unfixed also warrants caution. Audit reports are usually published on the protocol's site or GitHub, and if you can't find them, just ask the team directly.</p>
+            <p>Third, look at TVL (Total Value Locked) and liquidity distribution. If a protocol has high TVL but most funds are concentrated in one or two pools while other pools are extremely thin, an attacker can easily manipulate the price in a thin pool and arbitrage against the deep one. A healthy protocol should have a relatively balanced liquidity distribution.</p>
+            <p>Fourth, watch the protocol's emergency response capability. Browse its Discord and Twitter and see how fast and transparent the team was in handling past security incidents. If there's a clear incident response process, multisig governance, and an emergency pause mechanism described, the team at least passes the bar on security awareness. To track each DeFi protocol's audit reports, TVL changes, and security incidents in real time, you can use a well-integrated <a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">cross-chain swap and DeFi data hub</a> to consolidate multiple monitoring dashboards in one place, which is far more efficient than checking sites one by one.</p>
+            <p>One final reminder: even if a protocol passes all the checks above, that doesn't mean it's absolutely safe. DeFi's composability means one protocol can be attacked collaterally because another protocol it depends on has a problem. On-chain security is a dynamic, adversarial process with no once-and-for-all solution. As a user, spreading risk and not betting all your funds on a single protocol is always the plainest and most effective self-protection.</p>
+            <ul>
+              <li>Check the oracle design: spot price plus thin pools is a red flag; TWAP/Chainlink/multi-source aggregation is safer.</li>
+              <li>Check audit reports and whether High/Critical issues are fixed; no audit or unfixed high-risk issues warrant caution.</li>
+              <li>Watch TVL distribution balance and the team's emergency response; spreading risk is the plainest self-protection.</li>
+            </ul>
+          </section>
+          <section id="sec-7">
+            <h2>7. Summary and Disclaimer</h2>
+            <p>The flash loan attack is one of the most destructive, and most technically elegant, exploits in DeFi history. Its core is exploiting the blockchain's atomicity to close the full borrow-manipulate-arbitrage-repay loop inside a single transaction, lowering the barrier from "you need huge principal" to "you just need to write a contract." This article broke down, from technical principles through the attack path to a defense checklist, how flash loan attacks tear open a DeFi protocol's defenses at the on-chain security layer: the price oracle is the most fragile link, combining reentrancy with a flash loan can amplify a bug's destructive power, and defenders need to build defense-in-depth across multi-source oracle aggregation, slippage control, timelocks, emergency pause, and continuous auditing.</p>
+            <p>To be clear, this article is written only from the angle of technical research and methodology. It does not rate the security of any specific protocol or project, nor does it constitute investment advice of any kind. The flash loan itself is a neutral financial tool; whether it's used for attack or for arbitrage and liquidation depends on the user's intent and the protocol's security design. DeFi's composability brings innovation, and also compound risk, where one protocol's bug can ripple across the whole ecosystem. For developers, security is not a one-time audit but a continuous cycle of adversarial iteration; for users, understanding risk, spreading funds, and staying alert are always the prerequisites for participating in DeFi. On-chain data can tell you a lot, but the final decision, and its responsibility, rests with you. The technical details, tools, and protocol states referenced here may change over time and with the market, so please rely on the latest information from official sources. This article is for study and research only and is not investment advice.</p>
+          </section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#sec-1">How Flash Loans Work: Why Uncollateralized Lending Is Possible</a></li>
+            <li><a href="#sec-2">The Attack Path: The Borrow-Manipulate-Arbitrage-Repay Loop</a></li>
+            <li><a href="#sec-3">Price Oracles: The Biggest Vulnerability</a></li>
+            <li><a href="#sec-4">Combining Reentrancy with Flash Loans</a></li>
+            <li><a href="#sec-5">The Protocol Defense Checklist</a></li>
+            <li><a href="#sec-6">The User's View: Spotting a High-Risk Protocol</a></li>
+            <li><a href="#sec-7">Summary and Disclaimer</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+              <li><a href="https://docs.aave.com/developers/guides/flash-loans" target="_blank" rel="noopener noreferrer nofollow">Aave Flash Loans technical docs (third party)</a></li>
+              <li><a href="https://uniswap.org/docs/v2/core-concepts/oracles/" target="_blank" rel="noopener noreferrer nofollow">Uniswap v2 TWAP Oracle docs (third party)</a></li>
+              <li><a href="https://blog.chain.link/flash-loans-and-the-importance-of-tamper-proof-oracles/" target="_blank" rel="noopener noreferrer nofollow">Chainlink - Flash Loans and Oracle Security (third-party blog)</a></li>
+              <li><a href="https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/" target="_blank" rel="noopener noreferrer nofollow">ConsenSys Diligence - Reentrancy defense guide (third party)</a></li>
+              <li><a href="https://rdvcc.com" target="_blank" rel="noopener nofollow sponsored">RDVCC virtual credit card platform (third-party service)</a></li>
+              <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">Cross-chain swap and DeFi data (third-party service)</a></li>
+              <li><a href="https://chdh.me" target="_blank" rel="noopener">Going-global navigation (third-party directory)</a></li>
+          </ul>
+          <p class="ref-note">The technical details, tools, and protocol states referenced here may change over time; please rely on the latest information from official sources. This article is for study and research only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+              <li><a href="/en/research/protocol/defi-smart-contract-audit-checklist.html">The DeFi Smart Contract Audit Checklist</a></li>
+              <li><a href="/en/research/market/token-unlock-sell-pressure-onchain-research.html">Token Unlocks and Sell Pressure: Spotting Dump Risk with On-Chain Data</a></li>
+              <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund Tracing</a></li>
+              <li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification</a></li>
+              <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification</a></li>          <li><a href="/en/research/protocol/agent-usage-billing-verification.html">AI Agent Billing Verification: Real Usage Doesn't Guarantee an Accurate Bill</a></li>          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: What to Verify Before a Large Transfer</a></li>          <li><a href="/en/research/basics/stablecoin-virtual-card-topup-verification-guide.html">Verifying a Stablecoin-Funded Virtual Card Top-Up: Rate, Time, and Limits</a></li>          <li><a href="/en/research/basics/virtual-card-subscription-renewal-verification-guide.html">Did Cancelling Really Stop Your Virtual Card Auto-Renewal?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>          <li><a href="/en/research/protocol/agent-downtime-failure-liability-verification.html">When an On-Chain Agent Goes Down, Who Is Liable?</a></li>          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Perpetual Funding Rate: Organic Signal or Gamed Snapshot?</a></li>          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Cross-Chain Swap Quotes: Why They Go Stale Before Execution</a></li>          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research</span>
+          <p class="site-foot-desc">A research-focused site on crypto methodology and on-chain data, documenting research frameworks, on-chain metric readings, and fund-flow observations to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going-Global Navigation</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>All content is for study and research only and does not constitute investment advice; crypto asset prices are highly volatile and risky, so make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c6353300"></script>
+</body>
+</html>
