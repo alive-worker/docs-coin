@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bridge Guardian Set Verification: When Was the Threshold Cut</title>
+  <meta name="description" content="Bridge security rests on an M-of-N guardian set whose threshold, roster, and activation delay drift quietly — verify all three before trusting a bridge.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Bridge Guardian Set Verification: When Was the Threshold Cut">
+  <meta property="og:description" content="Bridge security rests on an M-of-N guardian set whose threshold, roster, and activation delay drift quietly — verify all three before trusting a bridge.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-22T19:19:00+08:00">
+  <meta property="article:modified_time" content="2026-08-22T19:19:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bridge Guardian Set Verification: When Was the Threshold Cut">
+  <meta name="twitter:description" content="A bridge's guardian roster, threshold, and activation delay are all mutable state. Three on-chain checks for whether the guardian set still means what it says.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#4b3f9e">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-bridge-guardian-set-threshold-change-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Bridge Guardian Set Verification: When Was the Threshold Cut cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-bridge-guardian-set-threshold-change-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-bridge-guardian-set-threshold-change-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=135e44ea">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-bridge-guardian-set-threshold-change-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html", "name": "Bridge Guardian Set Verification: When Was the Threshold Cut", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Bridge Guardian Set Check", "item": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#article", "headline": "Bridge Guardian Set Verification: When Was the Threshold Cut", "description": "A bridge's guardian roster, threshold ratio, and activation delay window are mutable state, not fixed-at-deployment facts. How to verify the current guardian set, threshold history, and delay window on-chain. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["bridge guardian set", "multisig threshold", "GuardianSetUpgrade", "activation delay", "bridge governance", "validator drift", "cross-chain security"], "wordCount": 1900, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-22T19:19:00+08:00", "dateModified": "2026-08-22T19:19:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/bridge-guardian-set-threshold-change-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Bridge Guardian Set Verification: When Was the Threshold Cut</h1>
+        <p class="article-summary">Most cross-chain message bridges rely on a "guardian set" — variously called guardians, relayers, or an oracle set depending on the project — that observes events on a source chain and co-signs a message; only once enough signatures reach a preset threshold does the destination-chain contract release or mint the corresponding asset. Public documentation often boils this down to a single sentence, something like "19 independent entities, 13 signatures required to reach consensus" — real, specific numbers that do show up in the design of several live bridges and are genuinely the core parameter for assessing bridge security. But that parameter is not frozen at deployment: nearly every bridge keeps an upgrade path for updating the guardian set (commonly a GuardianSetUpgrade or UpdateValidatorSet-style on-chain transaction) that lets a new co-signed transaction replace the entire roster, or even change the threshold ratio itself, as long as the current threshold is met. Treating "19 entities, 13 signatures" as a permanent, static fact rather than continuously checking the set that is actually live on-chain is the first common way bridge risk gets underestimated — this parameter should be monitored as state that can change at any time, not taken as a one-time launch announcement. This discusses abstract mechanics only, draws no security conclusion about any specific bridge project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-22T19:19:00+08:00">2026-08-22 19:19:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-bridge-guardian-set-threshold-change-verification-guide-en.svg" alt="Bridge Guardian Set Verification: When Was the Threshold Cut cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Does the current on-chain guardian set's size and identities match the roster disclosed in official docs and governance announcements, one for one</li>
+            <li><span class="article-verify-check">✓</span>Does the current signature threshold ratio (e.g. 13-of-19) match the original setting or the last public upgrade — has it been quietly lowered</li>
+            <li><span class="article-verify-check">✓</span>Is there an activation delay window between a new guardian set being submitted and actually taking effect, and can that window be bypassed</li>
+            <li><span class="article-verify-check">✓</span>Do recent guardian set changes and threshold adjustments each trace back to an on-chain record of a completed governance or multi-party sign-off process</li>
+          </ul>
+        </div>
+
+        <section id="sec-1">
+        <h2>1. An M-of-N guardian set is mutable state, not a launch-day constant</h2>
+        <p>Most cross-chain bridge security descriptions follow the same pattern: an independent set of guardians observes events on the source chain and co-signs a message, and only once signatures reach a preset threshold does the destination-chain bridge contract execute the corresponding mint or release. Public docs often reduce this to something like "a network of 19 independent entities, requiring at least 13 signatures to reach consensus" — real numbers that do appear in the design of live bridges and are the central parameter for evaluating security. This parameter is not, however, frozen at deployment: the overwhelming majority of bridges retain an upgrade path for the guardian set (commonly a GuardianSetUpgrade or UpdateValidatorSet-style on-chain transaction) that allows a new co-signed transaction, once it meets the currently required threshold, to replace the entire roster or even change the threshold ratio itself. Treating "19 entities, 13 signatures" as a permanent fact rather than continuously verifying what is actually live on-chain is the first common way bridge risk gets underestimated — this parameter needs to be monitored as changeable state, not trusted as a one-time launch disclosure.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Guardian drift: from the launch roster to today's actual on-chain set</h2>
+        <p>At launch, a bridge typically publishes a guardian roster along with the identity of each entity, usually accompanied by specific public keys or addresses documented in a whitepaper, website, or audit report. The set does change over time — a guardian exits the network, a new entity joins, a signing key gets rotated after a security incident — and these are often necessary, reasonable operational changes. The question is whether every actual change to the guardian set corresponds to a verifiable on-chain upgrade transaction, and whether that transaction is backed by a sufficiently public, traceable multi-party sign-off or governance decision, rather than being pushed unilaterally by a small number of addresses holding upgrade authority. The check is to read the bridge contract's currently active guardian set directly (most expose a read-only interface like getGuardianSet or an equivalent, returning the current set index and address list) and compare it line by line against the roster disclosed in official docs and audit reports: is there a "stale guardian" still shown on the website but long since replaced on-chain; is there a newly added address on-chain with no disclosure anywhere in official channels. The bigger the gap between the disclosed roster and actual on-chain state, the further "who is actually attesting to cross-chain messages" has drifted from the publicly disclosed version.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Threshold ratio quietly lowered: from a real supermajority to a small minority</h2>
+        <p>The threshold determines the minimum number of signatures required to release a cross-chain message, and it is the single most direct numerical measure of the guardian set's security model: a 19-guardian set with a 13-of-19 threshold requires roughly two-thirds of guardians to collude or be compromised before a message can be forged; if that threshold is adjusted down to, say, 7-of-19 in some upgrade, the security margin drops sharply, since collusion by just over a third of guardians would now suffice. Threshold adjustments typically go through the same upgrade path as guardian set changes, meaning the transaction that executes the change only needs to satisfy the pre-change threshold to go through — so even when a threshold adjustment was negotiated off-chain among multiple parties, the specific on-chain transaction executing it still needs to be individually confirmed to correspond to that disclosed agreement, rather than being folded into what looks like a routine "roster refresh" upgrade. The check: periodically query the bridge contract's current threshold-to-total-guardian ratio and compare against the last recorded value; if the ratio has dropped, trace back the corresponding upgrade transaction hash and confirm it can be matched to an official announcement, a security council record, or an on-chain governance proposal; a threshold reduction with no traceable explanation anywhere is itself a signal that warrants immediate scrutiny.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Activation delay: a real window for the community to react, or bypassed entirely</h2>
+        <p>Some more carefully designed bridges insert a fixed activation delay — 24 hours or longer — between a new guardian set being submitted and it actually taking effect and beginning to co-sign cross-chain messages, giving independent monitors and security researchers a window to verify the legitimacy of the change and raise an alarm, or even coordinate an emergency response, before it goes live. Whether this delay window genuinely exists, and whether it applies uniformly to every type of set change — versus only covering "adding a new guardian" while the more dangerous "lowering the threshold" path skips the delay entirely — is something many bridges' security documentation leaves vague. The check is to find the specific function logic in the bridge contract that handles guardian set upgrades, and confirm whether it contains an explicit delay timestamp check (for example, requiring the current block time to be later than the set's submission time plus a fixed interval before that set is allowed to participate in signature verification); if the delay is set to zero, or the delay check only covers part of the upgrade paths while leaving a bypass that can take effect immediately, the "reaction window" that is supposed to exist is effectively nonexistent.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Read all three checks together — passing any one alone proves nothing</h2>
+        <p>Checking the guardian roster, threshold ratio, or delay window in isolation can each individually come back "looks fine," but the real risk in a bridge usually shows up in the combined state of all three. A pattern worth watching for: the guardian roster matches official disclosure exactly, and the threshold has stayed at 13-of-19 without ever changing, yet the delay window's actual implementation only covers "adding a new guardian" — while "replacing an existing guardian" or "lowering the threshold," the two more dangerous operations, can take effect immediately. In that case, the publicly advertised "13-of-19 with delay protection" security narrative does not reflect the real attack surface. Conversely, even if the delay window applies rigorously to every upgrade path, if the historical record shows a threshold ratio that was once lowered with no corresponding public explanation and later restored, whether the bridge's real security margin during that window ever fell below what users believed is worth separately tracing and confirming. The correct sequence is to pull the current guardian roster, threshold ratio, and delay window as raw on-chain state first, cross-reference each against official disclosures and upgrade transaction history, and finally check for any combination that creates a gap between the "public narrative" and "actual on-chain state" — skipping any one step can miss the real risk.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Before trusting a bridge, confirm these first</h2>
+        <p>Before moving funds through a given cross-chain bridge, or assessing how heavily a protocol depends on one, it's worth confirming: whether the bridge contract address and guardian-set query interface are publicly callable and independently verifiable, versus relying solely on the project's own announcement page; whether the project maintains a continuously updated guardian roster and threshold page, versus one published once at launch and never synced since; whether historical guardian set changes and threshold adjustments trace fully back to matching upgrade transaction hashes and public explanations, versus only showing on-chain events with no accompanying rationale; whether the activation delay window applies uniformly to every type of set change, and what the specific delay duration is; and whether monitoring or alerting independent of the project team exists, capable of broadcasting guardian set or threshold changes the moment they happen. If these questions can't be answered right now, there is likely a gap — one you haven't found yet — between this bridge's actual security model and the one it advertises.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and verification checklist</h2>
+        <ul>
+        <li>An M-of-N guardian set is not a constant fixed at deployment — the roster, threshold ratio, and activation delay are all mutable state that later upgrade transactions can change.</li>
+        <li>Guardians drift: verify the currently active address list against the officially disclosed roster, and flag stale unremoved entries or undisclosed new additions.</li>
+        <li>Threshold ratios can be quietly lowered: confirm every historical change to the threshold-to-total ratio traces back to a public explanation.</li>
+        <li>Activation delays may only cover part of the upgrade paths: check whether the delay applies uniformly to adding, replacing, and lowering the threshold alike.</li>
+        <li>No single check is sufficient — cross-reference the combined state of the guardian roster, threshold ratio, and delay window together, not one at a time.</li>
+        <li>Before using a bridge, confirm the guardian roster is kept continuously public, changes are traceable, and monitoring independent of the project team exists.</li>
+        </ul>
+        <p>FAQ: Once set, do a bridge's guardian roster and threshold stay fixed? No — they are state that can be changed via on-chain upgrade transactions, so they need continuous re-verification rather than trusting the launch announcement. Does every bridge have an activation delay window? No — some bridges have no such protection at all, or it only applies to certain upgrade paths, so the actual contract logic needs to be checked directly. What's the fastest way to check a bridge's real current guardian set? Call its public set-query interface (such as getGuardianSet or an equivalent method) directly on the bridge contract address via a block explorer — all of this is public, readable on-chain data. This discusses abstract mechanics only, draws no security conclusion about any specific bridge project, and is not investment advice — use your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Guardian set isn't a launch-day constant</a></li>
+          <li><a href="#sec-2">2. Verifying guardian drift</a></li>
+          <li><a href="#sec-3">3. Threshold quietly lowered</a></li>
+          <li><a href="#sec-4">4. Is the activation delay bypassed</a></li>
+          <li><a href="#sec-5">5. Reading the three checks together</a></li>
+          <li><a href="#sec-6">6. Before trusting a bridge, confirm what</a></li>
+          <li><a href="#sec-7">7. Summary and verification checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://wormhole.com/" target="_blank" rel="noopener">Wormhole official docs</a> — a public reference example of a 19-party guardian network with a 13-of-19 signature threshold design</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan and similar block explorers</a> — call a bridge contract's set-query interface directly to verify current state</li>
+          </ul>
+          <p class="ref-note">The mechanisms and verification methods discussed here may evolve with industry practice; always defer to the official, current documentation of the bridge protocol you're using. This article is for learning and research only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: When Assets Aren't Locked, Who Proves a Message Is Real</a></li>
+          <li><a href="/en/research/protocol/bridge-security-research-guide.html">Bridge Security Research: From Lock Mechanisms to Validator Trust Models</a></li>
+          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>
+          <li><a href="/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html">Vetting an Offshore Crypto Exchange: Licenses & Custody</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site on crypto research methodology and on-chain data — frameworks, indicator reading, and flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Sub</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and risky — use your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=97b8fd81"></script>
+</body>
+</html>

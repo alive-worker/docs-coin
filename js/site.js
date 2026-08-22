@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/governance/bridge-guardian-set-threshold-change-verification-guide.html': '2026-08-22 19:19:00',
     '/research/governance/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
     '/research/basics/offshore-crypto-exchange-compliance-verification-guide.html': '2026-08-22 16:11:00',
     '/research/market/otc-fiat-offramp-counterparty-verification-guide.html': '2026-08-22 16:11:00',
@@ -230,7 +231,8 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
-'/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
+'/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html': '2026-08-22 19:19:00',
+    '/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
     '/en/research/basics/offshore-crypto-exchange-compliance-verification-guide.html': '2026-08-22 16:11:00',
     '/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html': '2026-08-22 16:11:00',
     '/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html': '2026-08-21 15:47:00',

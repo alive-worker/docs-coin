@@ -97,26 +97,27 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'snapshot-offchain-vote-execution-verification-guide',
-  publishedISO: '2026-08-22T16:29:00+08:00',
-  tagColor: 'violet',                     // must already exist as .archive-tag--<color> in styles.css
+  slug: 'bridge-guardian-set-threshold-change-verification-guide',
+  publishedISO: '2026-08-22T19:19:00+08:00',
+  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
   topic: 'governance',                    // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '链下投票核验：Snapshot结果被谁执行',
-    tagLabel: '链下投票执行核验',
-    cardDesc: 'DAO常用Snapshot做链下投票，免Gas但不具备链上执行力：投票通过后谁来执行、何时执行、是否按原样执行，取决于执行多签是否自觉。本文给出三处核验：比对提案calldata与执行交易、核实投票权快照区块与提案时点是否存在时间差、检查quorum基数是否被低参与度稀释，判断投票结果是否真的落地。',
+    h1: '跨链桥验证者集阈值核验：多签门槛何时被调低',
+    tagLabel: '跨链桥验证者集核验',
+    cardDesc: '跨链桥的安全性由M-of-N验证者集（guardian）门槛决定，但门槛数字、验证者名单与生效延迟并非部署时锁死的常量：本文给出三处核验方法——比对当前guardian集合与官方披露名单是否一致、核实门槛数字是否被静默调低、检查新guardian集合生效前是否留有可供社区反应的延迟窗口。',
   },
   en: {
-    h1: 'Off-Chain Governance Vote Execution Verification Guide',
-    tagLabel: 'Off-Chain Vote Execution',
-    cardDesc: "Snapshot votes carry no on-chain force; a multisig decides execution. Verify calldata, snapshot timing, and quorum math before trusting an off-chain result.",
+    h1: 'Bridge Guardian Set Verification: When Was the Threshold Cut',
+    tagLabel: 'Bridge Guardian Set Check',
+    cardDesc: "Bridge security rests on an M-of-N guardian set whose threshold, roster, and activation delay drift quietly — verify all three before trusting a bridge.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'snapshot-offchain-vote-execution-verification-guide',
     'offshore-crypto-exchange-compliance-verification-guide',
     'otc-fiat-offramp-counterparty-verification-guide',
     'dao-treasury-multisig-timelock-verification-guide',
