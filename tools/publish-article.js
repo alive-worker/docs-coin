@@ -54,20 +54,20 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'otc-fiat-offramp-counterparty-verification-guide',
+  slug: 'offshore-crypto-exchange-compliance-verification-guide',
   publishedISO: '2026-08-22T16:11:00+08:00',
-  tagColor: 'amber',                      // must already exist as .archive-tag--<color> in styles.css
-  topic: 'market',                        // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  tagColor: 'blue',                       // must already exist as .archive-tag--<color> in styles.css
+  topic: 'basics',                        // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: 'OTC场外换汇：对手方资质和资金隔离核验',
-    tagLabel: 'OTC换汇核验',
-    cardDesc: 'OTC场外换汇的报价方往往是个人或工作室，不是持牌机构，交易所层面的KYC和资金托管在这里基本不存在。本文讲清楚该核实对手方的哪几项资质、怎么核对收款账户与本人身份是否一致、报价点差多大算正常，以及为什么大额换汇更容易触发银行的反洗钱风控。',
+    h1: '境外交易所合规核验：牌照、托管与话术辨别',
+    tagLabel: '境外合规核验',
+    cardDesc: '境外加密交易所常在官网自称持牌合规，但牌照编号是否真实、注册主体和监管名录是否对得上、储备证明与托管结构是否经审计，未必经得起核对。本文给出四步核验方法：查监管牌照辖区与业务范围、比对注册主体与官网披露、查验储备证明与托管披露、核对KYC分级和提现限额是否落到产品里，帮你在开户前分清真合规与营销话术。',
   },
   en: {
-    h1: 'OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire',
-    tagLabel: 'OTC Off-Ramp Check',
-    cardDesc: "Your OTC counterparty is usually an individual, not a licensed entity, so exchange-level KYC and custody don't apply. Verify their track record, the receiving account, and the rate spread before you wire.",
+    h1: 'Vetting an Offshore Crypto Exchange: Licenses & Custody',
+    tagLabel: 'Offshore Exchange Vetting',
+    cardDesc: "License numbers, registered entities, and reserve proofs are not always what they seem. A four-step method to verify an offshore exchange before you sign up.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
