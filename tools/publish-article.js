@@ -54,26 +54,28 @@ const root = path.resolve(__dirname, '..');
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'offshore-crypto-exchange-compliance-verification-guide',
-  publishedISO: '2026-08-22T16:11:00+08:00',
-  tagColor: 'blue',                       // must already exist as .archive-tag--<color> in styles.css
-  topic: 'basics',                        // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'snapshot-offchain-vote-execution-verification-guide',
+  publishedISO: '2026-08-22T16:29:00+08:00',
+  tagColor: 'violet',                     // must already exist as .archive-tag--<color> in styles.css
+  topic: 'governance',                    // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '境外交易所合规核验：牌照、托管与话术辨别',
-    tagLabel: '境外合规核验',
-    cardDesc: '境外加密交易所常在官网自称持牌合规，但牌照编号是否真实、注册主体和监管名录是否对得上、储备证明与托管结构是否经审计，未必经得起核对。本文给出四步核验方法：查监管牌照辖区与业务范围、比对注册主体与官网披露、查验储备证明与托管披露、核对KYC分级和提现限额是否落到产品里，帮你在开户前分清真合规与营销话术。',
+    h1: '链下投票核验：Snapshot结果被谁执行',
+    tagLabel: '链下投票执行核验',
+    cardDesc: 'DAO常用Snapshot做链下投票，免Gas但不具备链上执行力：投票通过后谁来执行、何时执行、是否按原样执行，取决于执行多签是否自觉。本文给出三处核验：比对提案calldata与执行交易、核实投票权快照区块与提案时点是否存在时间差、检查quorum基数是否被低参与度稀释，判断投票结果是否真的落地。',
   },
   en: {
-    h1: 'Vetting an Offshore Crypto Exchange: Licenses & Custody',
-    tagLabel: 'Offshore Exchange Vetting',
-    cardDesc: "License numbers, registered entities, and reserve proofs are not always what they seem. A four-step method to verify an offshore exchange before you sign up.",
+    h1: 'Off-Chain Governance Vote Execution Verification Guide',
+    tagLabel: 'Off-Chain Vote Execution',
+    cardDesc: "Snapshot votes carry no on-chain force; a multisig decides execution. Verify calldata, snapshot timing, and quorum math before trusting an off-chain result.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'offshore-crypto-exchange-compliance-verification-guide',
+    'otc-fiat-offramp-counterparty-verification-guide',
     'dao-treasury-multisig-timelock-verification-guide',
     'crosschain-swap-quote-staleness-verification-guide',
     'crosschain-swap-mev-frontrun-verification-guide',

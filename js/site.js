@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/articles/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
     '/articles/offshore-crypto-exchange-compliance-verification-guide.html': '2026-08-22 16:11:00',
     '/articles/otc-fiat-offramp-counterparty-verification-guide.html': '2026-08-22 16:11:00',
     '/articles/dao-treasury-multisig-timelock-verification-guide.html': '2026-08-21 15:47:00',
@@ -229,7 +230,8 @@
     '/articles/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/articles/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/articles/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
-'/en/articles/offshore-crypto-exchange-compliance-verification-guide.html': '2026-08-22 16:11:00',
+'/en/articles/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
+    '/en/articles/offshore-crypto-exchange-compliance-verification-guide.html': '2026-08-22 16:11:00',
     '/en/articles/otc-fiat-offramp-counterparty-verification-guide.html': '2026-08-22 16:11:00',
     '/en/articles/dao-treasury-multisig-timelock-verification-guide.html': '2026-08-21 15:47:00',
 '/en/articles/crosschain-swap-quote-staleness-verification-guide.html': '2026-08-21 13:37:00',
