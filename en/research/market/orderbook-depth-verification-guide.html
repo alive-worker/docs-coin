@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Book Depth Verification: Why Displayed Liquidity Vanishes</title>
+  <meta name="description" content="The depth shown on an order book and the amount you can actually fill at that price are often two different things. This piece breaks down how iceberg orders hide true size, why quotes cancel the instant you click buy, how aggregated depth masks a thin single source, and how researchers can verify displayed depth with repeated snapshots and small probe orders.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Order Book Depth Verification: Why Displayed Liquidity Vanishes">
+  <meta property="og:description" content="Iceberg orders, ghost liquidity, and aggregated-depth illusions: how to verify what an order book actually shows versus what you can fill.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-23T15:59:00+08:00">
+  <meta property="article:modified_time" content="2026-08-23T15:59:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Order Book Depth Verification: Why Displayed Liquidity Vanishes">
+  <meta name="twitter:description" content="Iceberg orders, ghost liquidity, aggregated-depth illusions — verifying real fillable depth with snapshots and probe orders.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-orderbook-depth-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Order Book Depth Verification: Why Displayed Liquidity Vanishes">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-orderbook-depth-verification-en.png">
+  <link rel="preload" as="image" href="/img/article-orderbook-depth-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=c8f57843">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-and-Chinese site focused on crypto research methodology and on-chain data, for study and research purposes only, not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-orderbook-depth-verification-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html", "name": "Order Book Depth Verification: Why Displayed Liquidity Vanishes - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Order Book Depth Verification: Why Displayed Liquidity Vanishes", "item": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#article", "headline": "Order Book Depth Verification: Why Displayed Liquidity Vanishes", "description": "Iceberg orders, ghost liquidity, and aggregated-depth illusions: how the gap between displayed and fillable depth forms, and how to verify it with snapshots and probe orders. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["order book depth verification","iceberg order detection","ghost liquidity","aggregated depth illusion","slippage curve verification","market maker quote cancellation"], "wordCount": 2400, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-23T15:59:00+08:00", "dateModified": "2026-08-23T15:59:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/orderbook-depth-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Order Book Depth Verification: Why Displayed Liquidity Vanishes Before You Can Hit It</h1>
+        <p class="article-summary">This piece breaks down the gap between an order book's displayed depth and what you can actually fill: how iceberg orders expose only a sliver of a resting order while keeping the true size hidden internally; why quotes so often cancel the instant you click buy, producing "ghost liquidity" that's hard to observe directly but real in effect; why aggregators that sum depth across multiple sources can end up masking a single source's genuine thinness; and how researchers can separate "displayed size" from "actually fillable price" using repeated order-book snapshots and small probe orders. This piece discusses abstract mechanisms and general verification methods only — it does not name any real exchange, market maker, or aggregator product, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Team · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-23T15:59:00+08:00">2026-08-23 15:59:00 UTC+8</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-orderbook-depth-verification-en.svg" alt="Order Book Depth Verification: Why Displayed Liquidity Vanishes cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Has the displayed order size at a given price level been confirmed as fully transparent, or could it be an iceberg order exposing only a fraction of the real size</li>
+            <li><span class="article-verify-check">✓</span>Do repeated snapshots of the same price level, taken seconds apart, show orders appearing and vanishing before any real fill hits them — the signature of ghost liquidity</li>
+            <li><span class="article-verify-check">✓</span>Does the slippage curve traced by a series of small test orders roughly match the executable price implied by the displayed depth</li>
+            <li><span class="article-verify-check">✓</span>If the route goes through an aggregator combining depth from multiple sources, has each source's own fillable depth been checked individually rather than trusting the combined total</li>
+          </ul>
+        </div>
+<section id="sec-1">
+<h2>1. Displayed depth ≠ fillable depth: how iceberg orders hide the real size</h2>
+<p>The first time a researcher opens an order book, it's tempting to treat the displayed size at each price level as fact — that number is what's there, first come first served. But real order books are more complicated: many venues support iceberg orders, which let the order placer publicly show only a small slice of the total size while keeping the bulk hidden internally. Each time the visible slice gets filled, the system automatically replenishes it from the hidden reserve and redisplays the same small amount, repeating until the full order is exhausted. The intent is usually to let a large market maker or institution place size without revealing their full intent and inviting front-running — but for an ordinary researcher, it means the number on screen may just be a continuously refreshing "front layer," not the total liquidity actually present at that level. You can infer a floor, not a ceiling — and a small displayed size could equally mean a large hidden reserve or genuinely thin liquidity that's simply staying low; the interface alone can't tell the two apart.</p>
+<ul>
+<li>An iceberg order only shows a slice; the hidden portion refills automatically once the visible part is taken</li>
+<li>Researchers can only infer a floor on liquidity from displayed size, never a ceiling</li>
+<li>Small displayed size can mean either a hidden large order or genuinely thin depth — indistinguishable from the interface alone</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. The cancel-and-requote game: why quotes vanish the instant you click</h2>
+<p>An even more confusing phenomenon than iceberg orders: you see what looks like a large enough resting order at a price, click to fill it, and the price has already moved, or you get an "insufficient liquidity at this level" message. This is often the result of market makers or high-frequency quoters continuously watching depth signals and cancelling-and-requoting within an extremely short window in response to market movement — the resting order may never have been intended to be filled at size at that price at all, existing more to make the book "look" deep for statistical or psychological effect. The instant a signal of genuine fill intent appears (say, the size gets probed by several small orders in quick succession), the quoter can cancel and requote at a less favorable price within milliseconds. This has no single agreed name, but is sometimes called "ghost" or "flickering" liquidity in the industry: it was genuinely present in a snapshot, but statistically was never really obtainable by most ordinary traders. Judging whether a market has a meaningful ghost-liquidity problem requires looking at how stable a price level's size is over a very short time scale — not a single snapshot.</p>
+<ul>
+<li>Quoters can cancel and requote within milliseconds in response to probing signals</li>
+<li>A resting order's presence doesn't mean that liquidity is genuinely available to ordinary traders</li>
+<li>Judge by the size's stability over a short time window, not by a single snapshot</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. The repeated-snapshot method: separating displayed depth from fillable depth</h2>
+<p>To judge whether a book's displayed depth is trustworthy, a more reliable approach than glancing at one screenshot is to take multiple consecutive snapshots of the same trading pair's order book within a short window (a few seconds to tens of seconds), logging how the size at each key price level changes. If a level's size fluctuates sharply and repeatedly with no corresponding entries in the trade tape, that's direct evidence of ghost liquidity. If the size stays stable and roughly tracks what the trade tape actually shows executing, that depth is comparatively more trustworthy. This method essentially converts "what does the book look like at one instant" — a static observation — into "how does the book evolve over a period" — a dynamic one, which carries far more information and is closer to how market makers and high-frequency traders themselves assess market quality.</p>
+<ul>
+<li>Take multiple consecutive snapshots within a short window rather than relying on one instant</li>
+<li>Sharp, repeated fluctuation in size with no matching trade-tape entries is direct evidence of ghost liquidity</li>
+<li>Dynamic observation over time carries far more information than a single static screenshot</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. The aggregated-depth illusion: a combined number can hide a thin single source</h2>
+<p>With the rise of cross-chain aggregators and multi-route products, a lot of "depth" shown on trading interfaces is actually the sum of order sizes or reserves from multiple sources — different exchanges, different liquidity pools — added together. That combined figure is appealing from a marketing standpoint: the total looks bigger and seemingly better able to absorb a large trade. But for a researcher, the combined number obscures a key issue: at execution time, a trade may get split by the routing algorithm across those sources, with a meaningfully sized chunk landing on a source whose depth is thin — a source whose own ability to absorb price impact may be far below what the combined figure implies. As a hypothetical: if a routing algorithm allocates 70% of a trade's size to a deeper source and 30% to a much thinner one (a made-up ratio for illustration only), the slippage contributed by that 30% could disproportionately drag down the overall average execution price — something completely invisible on an interface that only shows the combined depth number. Researchers should get in the habit of checking each routed source's own depth individually rather than being reassured by one aggregate figure.</p>
+<ul>
+<li>Aggregated depth is a sum across multiple sources and easily creates an illusion of ample liquidity</li>
+<li>A trade may actually be split with a meaningful portion routed to a thin single source</li>
+<li>Check each routed source's real depth individually rather than trusting the combined total</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. What researchers can actually do: trace a real slippage curve with small probe orders</h2>
+<p>Rather than getting stuck debating how much is genuinely resting at a given price — something largely unverifiable from the outside — a more actionable method is to sidestep the guessing game entirely and probe the real execution price directly with a series of increasingly sized small test orders, tracing an "order size vs. actual average execution price" slippage curve. The practical steps: start with a size far smaller than the displayed depth, small enough to have negligible market impact, place a market or limit order, and record the actual average fill price; then progressively increase the test size and repeat, until slippage begins accelerating noticeably — that inflection point is usually the true boundary of what depth the market can actually absorb, not the number labeled on the order-book interface. This curve reflects a market's genuine capacity to handle a given trade size far better than any single "depth screenshot," and is one of the standard methods market makers and quant teams use to assess whether a market is tradeable — ordinary researchers can reproduce it with a very small amount of test capital.</p>
+<ul>
+<li>Probe the real execution price with increasingly sized small test orders instead of guessing at resting size</li>
+<li>Trace an "order size vs. average execution price" curve and find where slippage starts accelerating</li>
+<li>That inflection point — not the displayed depth number — is the true boundary of absorbable depth</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common misconceptions and methodology boundaries</h2>
+<p>Two common misconceptions are worth flagging. First, treating an order-book screenshot as a complete, static picture of market depth at a moment in time, while ignoring the two dynamic factors — orders can be hidden (iceberg orders) and can be cancelled and requoted instantly (ghost liquidity) — leading to overly optimistic conclusions about how much a market can actually absorb. Second, seeing a high combined depth number from an aggregator and assuming a large trade will execute smoothly, without breaking down which specific sources the trade will actually be routed through and whether each source's real depth can hold up. A methodology note: this piece discusses only the abstract mechanisms and general verification methods around order-book depth, iceberg orders, and aggregated routing — it does not name any real exchange, market maker, or aggregator product, and all ratios cited are hypothetical illustrations only. Nothing here constitutes investment advice of any kind.</p>
+<ul>
+<li>Misconception 1: treating a static screenshot as the complete picture of depth, ignoring hiding and cancel-requote dynamics</li>
+<li>Misconception 2: assuming a large trade executes smoothly from a high combined depth number without checking routed sources</li>
+<li>Methodology boundary: abstract mechanisms and general methods only, no real entities named, all figures hypothetical</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Displayed depth ≠ fillable depth</a></li>
+          <li><a href="#sec-2">2. The cancel-and-requote game</a></li>
+          <li><a href="#sec-3">3. The repeated-snapshot method</a></li>
+          <li><a href="#sec-4">4. The aggregated-depth illusion</a></li>
+          <li><a href="#sec-5">5. What researchers can actually do</a></li>
+          <li><a href="#sec-6">6. Common misconceptions and boundaries</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.investopedia.com/terms/i/icebergorder.asp" target="_blank" rel="noopener">Investopedia</a>: general definition and background on iceberg orders</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: block explorer, useful for verifying an on-chain liquidity pool's real reserves</li>
+            <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>: a public cross-chain aggregation and swap-routing product, referenced as a methodology example</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time — refer to official current information. For study and research purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Changed Tactics</a></li>
+          <li><a href="/en/research/market/dex-liquidity-research-guide.html">DEX Liquidity Depth Verification: A Good-Looking Quote Doesn't Mean It Fills</a></li>
+          <li><a href="/en/research/market/swap-routing-research-guide.html">Cross-Chain Aggregator Routing Verification: What's Hidden Behind the "Best Route" Quote</a></li>
+          <li><a href="/en/research/market/intent-centric-solver-verification.html">Intent-Centric Trading and Solver Network Verification: Who's Finding Your Route</a></li>
+          <li><a href="/en/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">Why Cross-Chain Swap Quotes Go Stale: The Price Moved While You Waited in Line</a></li>
+          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Where Did Your Cross-Chain Swap Slippage Go: Why Arbitrage Bots Always Get There First</a></li>
+          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Is the Funding Rate Being Skewed? Verifying Snapshot Arbitrage Traces</a></li>
+          <li><a href="/en/research/market/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetuals</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metrics, and capital-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscriptions</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Cards</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for study and research purposes only and does not constitute investment advice; crypto assets are highly volatile and risky — make your own decisions and take responsibility for them.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=46aa7137"></script>
+</body>
+</html>

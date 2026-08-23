@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/market/orderbook-depth-verification-guide.html': '2026-08-23 15:59:00',
     '/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html': '2026-08-23 11:07:00',
     '/research/governance/bridge-guardian-set-threshold-change-verification-guide.html': '2026-08-22 19:19:00',
     '/research/governance/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',
@@ -232,6 +233,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/market/orderbook-depth-verification-guide.html': '2026-08-23 15:59:00',
 '/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html': '2026-08-23 11:07:00',
     '/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html': '2026-08-22 19:19:00',
     '/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html': '2026-08-22 16:29:00',

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>订单簿深度核验：挂单量为何总在成交前消失 - 加密货币研究</title>
+  <meta name="description" content="订单簿显示的挂单深度，和你真正能以该价格成交的数量，往往是两回事。本文拆解冰山单如何隐藏真实规模、报价为何在你下单瞬间撤销、聚合器合并深度如何掩盖单一池子的真实薄弱，以及研究者如何用连续快照与小额探测单核验显示深度是否可信。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/orderbook-depth-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="订单簿深度核验：挂单量为何总在成交前消失 - 加密货币研究">
+  <meta property="og:description" content="订单簿显示的挂单深度，和你真正能以该价格成交的数量，往往是两回事。本文拆解冰山单、幽灵流动性与聚合深度伪装的核验方法。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-23T15:59:00+08:00">
+  <meta property="article:modified_time" content="2026-08-23T15:59:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="订单簿深度核验：挂单量为何总在成交前消失 - 加密货币研究">
+  <meta name="twitter:description" content="冰山单、幽灵流动性与聚合深度伪装：显示深度与可成交深度之间的落差，如何用连续快照与探测单核验。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-orderbook-depth-verification.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="订单簿深度核验：挂单量为何总在成交前消失">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-orderbook-depth-verification.png">
+  <link rel="preload" as="image" href="/img/article-orderbook-depth-verification.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=c8f57843">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-orderbook-depth-verification.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html", "name": "订单簿深度核验：挂单量为何总在成交前消失 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "订单簿深度核验：挂单量为何总在成交前消失", "item": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#article", "headline": "订单簿深度核验：挂单量为何总在成交前消失", "description": "拆解冰山单、幽灵流动性与聚合深度伪装：显示深度与可成交深度的落差如何形成，研究者如何用连续快照与探测单核验。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["订单簿深度核验","冰山单识别","幽灵流动性","聚合器深度伪装","滑点曲线核验","做市商撤单博弈"], "wordCount": 2600, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-23T15:59:00+08:00", "dateModified": "2026-08-23T15:59:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/orderbook-depth-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/orderbook-depth-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>订单簿深度核验：挂单量为何总在成交前消失</h1>
+        <p class="article-summary">本文深入拆解订单簿显示深度与真实可成交深度之间的落差：冰山单如何只暴露一小部分挂单、把真实规模藏在系统内部；报价为何总在你点击下单的瞬间被撤销，形成研究者难以直接观察却真实存在的"幽灵流动性"；聚合器把多个来源的深度叠加显示后，为何反而掩盖了单一池子可能极薄的事实；以及研究者应如何用连续订单簿快照和小额探测单，把"显示的挂单量"和"实际能吃到的价格"这两件事分开核验。全文仅讨论抽象机制与通用核验方法，不点名任何真实交易所、做市商或聚合器产品，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-23T15:59:00+08:00">2026-08-23 15:59:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-orderbook-depth-verification.svg" alt="订单簿深度核验：挂单量为何总在成交前消失 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>订单簿界面显示的某一价位挂单量，是否已核实为完全透明的挂单，还是可能包含只暴露一小部分的冰山单</li>
+            <li><span class="article-verify-check">✓</span>对同一价位连续截取多次快照，是否存在挂单短暂出现、尚未被真实吃掉就迅速撤销的"幽灵流动性"模式</li>
+            <li><span class="article-verify-check">✓</span>用远小于显示深度的小额测试单实际下单，绘制出的滑点曲线是否与显示深度所暗示的可成交价格基本吻合</li>
+            <li><span class="article-verify-check">✓</span>若成交路径经过聚合器合并了多个来源的深度，是否拆开核实过每个来源池子各自的真实可成交量，而非只看合并后的总深度数字</li>
+          </ul>
+        </div>
+<section id="sec-1">
+<h2>1. 显示深度≠可成交深度：冰山单的隐藏逻辑</h2>
+<p>研究者第一次打开一个交易对的订单簿时，很容易把界面上显示的挂单量当作"事实"——某个价位挂了多少，那就是多少，谁先下单谁先吃到。但真实的订单簿远比这复杂：不少交易场所支持冰山单（Iceberg Order），允许下单者只公开一小部分挂单数量，剩余的大额部分留在系统内部，每当公开的那一小部分被吃掉，系统就自动从隐藏部分补充等量挂单重新显示出来，循环往复，直到整笔大单被消化完毕。这种设计的本意是让大额做市商或机构挂单时不至于暴露全部意图、引发跟风或抢跑，但对普通研究者而言，这意味着订单簿界面上看到的挂单量，可能只是一个不断刷新的"表演层"，并不等于该价位真实存在的全部流动性——你能推断出的只是下限，而不是上限，反过来也可能出现挂单显示很小、但实际隐藏规模同样很小、只是恰好长期维持在低位这种情况，两者从界面上完全无法区分。</p>
+<ul>
+<li>冰山单只公开一部分挂单量，隐藏部分在被吃掉后自动补充显示</li>
+<li>研究者据此只能推断出流动性的下限，无法确认上限</li>
+<li>显示深度小，既可能是隐藏了大单，也可能是真实就很薄</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 撤单博弈：为什么报价总在你下单瞬间消失</h2>
+<p>比冰山单更容易让研究者产生错觉的，是另一种现象：眼看着某个价位挂着一笔足够大的单子，点击下单的一瞬间，价格却已经变了，或者提示"该价位流动性不足"。这背后往往是做市商或高频报价方在持续观察市场深度信息、根据极短时间窗口内的行情波动主动撤单重挂的结果——挂单本身可能从未打算真的在原价位被大额吃掉，而更多是为了让订单簿"看起来"深，起到心理与统计层面的作用，一旦有实际吃单意图出现的信号（比如挂单量突然被小额多次探测），报价方就会在毫秒级时间内撤单重挂到更不利于吃单方的价位。这种现象没有一个统一称呼，业内有时称之为"幽灵流动性"（Ghost/Flickering Liquidity）：它在快照里真实存在过，但从统计意义上说，它对绝大多数普通交易者而言并不真正可得。判断某个市场是否存在明显的幽灵流动性问题，不能只看某一次快照，而要看同一价位挂单量在极短时间尺度内的稳定性。</p>
+<ul>
+<li>报价方会根据探测信号在毫秒级时间内撤单重挂</li>
+<li>挂单的存在不等于该价位的流动性对普通交易者真正可得</li>
+<li>判断依据应是同一价位挂单量在短时间尺度内的稳定性，而非单次快照</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 连续快照法：把"显示深度"和"可成交深度"分开核验</h2>
+<p>要判断一份订单簿的显示深度是否可信，比较可靠的方法是放弃"看一眼截图就下结论"的习惯，改为在短时间窗口内（比如几秒到几十秒）对同一交易对的订单簿连续截取多次快照，逐一记录每个关键价位的挂单量变化。如果某个价位的挂单量在没有明显成交记录的情况下频繁大幅波动、时有时无，这就是幽灵流动性存在的直接证据；如果挂单量始终稳定、且和成交记录（Trade Tape）中实际发生的成交量能大致对应上，才说明这部分深度相对可信。这种方法本质上是把"某一时刻订单簿长什么样"这种静态观察，转变为"订单簿在一段时间内如何演变"这种动态观察，后者提供的信息量远大于前者，也更接近做市商和高频交易者自己评估市场质量时使用的方法。</p>
+<ul>
+<li>在短时间窗口内连续截取多次快照，而非只看单一时刻</li>
+<li>挂单量无成交记录支撑却频繁大幅波动，是幽灵流动性的直接证据</li>
+<li>动态演变观察提供的信息量远大于静态截图观察</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 聚合深度的伪装：合并数字掩盖了单一来源的真实薄弱</h2>
+<p>随着跨链聚合与多路由产品的普及，不少交易界面展示的"深度"其实是把多个来源（不同交易所、不同流动性池）的挂单或储备叠加计算后的合并数字。这类合并深度在营销层面很有吸引力——总深度数字更大、看起来更能满足大额交易需求——但对研究者而言，合并深度掩盖了一个关键问题：真正执行时，交易可能会按照路由算法被拆分到其中某个深度较薄的单一来源，而这个来源单独承受冲击成本的能力，可能远低于合并数字给人的印象。举例来说，如果某笔交易的路由算法把70%的规模分配给深度较厚的来源、30%分配给深度很薄的来源（虚构比例，仅用于说明方法），最终成交价格中由那30%贡献的滑点，可能不成比例地拖累整体成交均价，而这一点在只看到合并深度数字的界面上完全无法察觉。研究者应当养成拆开核验每个来源各自深度的习惯，而不是被一个综合数字说服。</p>
+<ul>
+<li>聚合深度是多个来源叠加后的合并数字，容易给人"深度充足"的错觉</li>
+<li>实际执行时交易可能被拆分到其中深度较薄的单一来源</li>
+<li>应拆开核验每个路由来源各自的真实深度，而非只看合并总数</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 研究者能做什么：用小额探测单绘制真实滑点曲线</h2>
+<p>比起纠结"这个价位到底挂了多少"这种难以从外部完全证实的问题，更具操作性的方法是绕开对挂单量本身的猜测，直接用一系列递增规模的小额测试单去探测真实的成交价格，绘制出一条"下单规模-实际成交均价"的滑点曲线。具体做法是：先以一个远小于显示深度、几乎不会对市场造成影响的规模下一笔市价单或限价单，记录实际成交均价；再逐步放大测试规模，重复记录，直到滑点开始明显加速上升——这个拐点往往就是真实可承受深度的边界，而不是订单簿界面上标注的那个数字。这条曲线比任何单一的"深度截图"都更能反映一个市场对某个规模交易的真实承受能力，也是做市商和量化团队评估一个市场是否可交易时的标准做法之一，普通研究者同样可以用极小规模的测试资金复现这套方法。</p>
+<ul>
+<li>用递增规模的小额测试单探测真实成交价格，而非猜测挂单量</li>
+<li>绘制"下单规模-实际成交均价"曲线，找到滑点加速上升的拐点</li>
+<li>该拐点才是真实可承受深度的边界，比界面显示的深度数字更可信</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 常见认知误区与方法论边界</h2>
+<p>本篇提醒研究者留意两类常见误区。其一，把订单簿截图当作某一时刻市场深度的完整、静止的真相，而忽视了挂单可以被隐藏（冰山单）、可以被瞬间撤销重挂（幽灵流动性）这两个动态因素，导致对市场承受能力产生过度乐观的判断。其二，看到聚合器展示的高合并深度数字就直接认定大额交易可以顺畅执行，而不去拆解这笔交易实际会被路由到哪些具体来源、每个来源各自的真实深度是否经得起考验。需要说明方法论边界：本篇仅讨论订单簿深度、冰山单与聚合路由的抽象机制与通用核验方法，不点名任何真实交易所、做市商或聚合器产品，文中比例数字均为虚构示例，仅用于说明分析方法，不构成任何形式的投资建议。</p>
+<ul>
+<li>误区一：把静态截图当作市场深度的完整真相，忽视隐藏与撤单两个动态因素</li>
+<li>误区二：看到合并深度数字高就默认大额交易能顺畅执行，不拆解路由来源</li>
+<li>方法论边界：仅讨论抽象机制与通用核验方法，不点名真实主体，数值均为虚构示例</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 显示深度≠可成交深度：冰山单的隐藏逻辑</a></li>
+          <li><a href="#sec-2">2. 撤单博弈：为什么报价总在你下单瞬间消失</a></li>
+          <li><a href="#sec-3">3. 连续快照法：把"显示深度"和"可成交深度"分开核验</a></li>
+          <li><a href="#sec-4">4. 聚合深度的伪装：合并数字掩盖了单一来源的真实薄弱</a></li>
+          <li><a href="#sec-5">5. 研究者能做什么：用小额探测单绘制真实滑点曲线</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与方法论边界</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.investopedia.com/terms/i/icebergorder.asp" target="_blank" rel="noopener">Investopedia</a>：冰山单（Iceberg Order）机制的通用定义与背景介绍</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核实链上流动性池的真实储备规模</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>：一个公开的跨链聚合与Swap路由产品示例，供方法参考</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/mev-private-order-flow.html">MEV与私有交易通道：三明治攻击换了打法，没有消失</a></li>
+          <li><a href="/research/market/dex-liquidity-research-guide.html">DEX流动性深度核验：报价好看，不代表真的能成交</a></li>
+          <li><a href="/research/market/swap-routing-research-guide.html">跨链聚合路由核验：「最优路径」报价之外，隐藏了哪些成本</a></li>
+          <li><a href="/research/market/intent-centric-solver-verification.html">意图驱动交易与求解者网络核验：「一句话下单」的背后，谁在替你找路径</a></li>
+          <li><a href="/research/protocol/crosschain-swap-quote-staleness-verification-guide.html">跨链兑换报价为什么会过期：排队时价格早变了</a></li>
+          <li><a href="/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">跨链兑换滑点去哪了：套利机器人为何总抢先</a></li>
+          <li><a href="/research/market/perpetual-funding-manipulation-verification.html">资金费率被做偏了吗：快照套利痕迹核验</a></li>
+          <li><a href="/research/market/funding-rate-divergence.html">资金费率背离：永续合约里最容易被误读的信号</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/methodology.html">研究方法论</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=46aa7137"></script>
+</body>
+</html>

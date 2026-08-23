@@ -100,26 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crosschain-swap-destination-sandwich-attack-guide',
-  publishedISO: '2026-08-23T11:07:00+08:00',
-  tagColor: 'rust',                       // must already exist as .archive-tag--<color> in styles.css
-  topic: 'protocol',                      // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'orderbook-depth-verification-guide',
+  publishedISO: '2026-08-23T15:59:00+08:00',
+  tagColor: 'gold',
+  topic: 'market',
 
   zh: {
-    h1: '目的链三明治攻击核验：滑点容差为何被打满',
-    tagLabel: '目的链三明治攻击核验',
-    cardDesc: '跨链兑换的滑点容差常被设成一个固定百分比，但目的链的实际成交价要等源链确认后才揭晓，这段确认延迟恰好给了套利机器人在目的链上精确计算并打满你容差上限的操作空间。本文教你核对源链确认延迟、目的链实际成交价与容差上限三者的对应关系，从交易顺序识别三明治攻击痕迹，并给出把容差收紧到安全区间的判断方法。',
+    h1: '订单簿深度核验：挂单量为何总在成交前消失',
+    tagLabel: '订单簿深度核验',
+    cardDesc: '订单簿显示的挂单深度，和你真正能以该价格成交的数量，往往是两回事。本文拆解冰山单如何隐藏真实规模、报价为何在你下单瞬间撤销、聚合器合并深度如何掩盖单一池子的真实薄弱，以及研究者如何用连续快照与小额探测单核验显示深度是否可信。',
   },
   en: {
-    h1: 'Why Cross-Chain Swaps Get Sandwiched on the Destination Chain',
-    tagLabel: 'Destination Sandwich Check',
-    cardDesc: "Slippage tolerance is fixed, but the fill price only settles after source-chain confirmation — bots use that delay to compute and hit your cap exactly on the destination chain.",
+    h1: 'Order Book Depth Verification: Why Displayed Liquidity Vanishes Before You Can Hit It',
+    tagLabel: 'Order Book Depth Check',
+    cardDesc: 'The depth an order book shows and what you can actually fill are often two different things — iceberg orders hide true size, quotes cancel the instant you click, and aggregators mask a thin single source.',
   },
 
-  // Every OTHER existing article slug, in the site's current newest-first order.
-  // Copy this from the previous run of this script / from articles.html's <ol>,
-  // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'crosschain-swap-destination-sandwich-attack-guide',
     'bridge-guardian-set-threshold-change-verification-guide',
     'snapshot-offchain-vote-execution-verification-guide',
     'offshore-crypto-exchange-compliance-verification-guide',
