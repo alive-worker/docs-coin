@@ -91,6 +91,16 @@
         <div class="article-columns">
         <div class="article-body">
 
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Use the source- and destination-chain transaction hashes to check status on both block explorers, pinning down whether it's stuck at the source chain, the bridge/relayer, or the destination chain</li>
+            <li><span class="article-verify-check">✓</span>Compare the elapsed wait against the aggregator's own published expected-processing-time range for that route to judge whether it's abnormal</li>
+            <li><span class="article-verify-check">✓</span>Before contacting support, gather the source/destination transaction hashes and the route ID or order number instead of just saying "my money is missing"</li>
+            <li><span class="article-verify-check">✓</span>If funds are refunded to the source chain, verify the refunded asset type and amount match what was originally sent, and treat any "support" asking for your seed phrase or an upfront "unlock fee" as a scam</li>
+          </ul>
+        </div>
+
         <section id="sec-1">
         <h2>1. The three stages a cross-chain swap passes through</h2>
         <p>A cross-chain swap moves through at least three independent stages between when you submit it and when it arrives, and understanding this breakdown is the first step to diagnosing a problem. Stage one is the source-chain transaction itself: your swap request is packaged and confirmed on the source chain, funds leave your address — this is no different from a normal on-chain transfer, and usually confirms within minutes if the source chain isn't congested. Stage two is bridge or relayer pickup and processing: once the source transaction confirms, a bridge or the relayer network behind an aggregator needs to detect it, validate it, and then trigger the corresponding mint or release on the destination chain — this stage doesn't happen on any single chain and is where delays or genuine stalls are most likely. Stage three is destination-chain confirmation: after the relayer initiates the operation, the destination chain still needs to package and confirm it before the asset actually lands in your target address. A stall can happen at any of the three stages, and from a user's perspective, your wallet balance alone almost never tells you which one — you have to go check actively.</p>

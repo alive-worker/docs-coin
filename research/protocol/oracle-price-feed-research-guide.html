@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-oracle-price-feed.svg" alt="预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>在业务合约源码中定位实际调用的预言机地址，确认与官方文档所列地址一致，并核查该地址是否可被管理员动态替换</li>
+            <li><span class="article-verify-check">✓</span>读取预言机合约的历史交易，核实价格更新频率、最近一次更新时间戳，是否已超过代码设定的陈旧阈值（staleness threshold）</li>
+            <li><span class="article-verify-check">✓</span>交叉比对至少两个互相独立、无数据共享关系的价格来源，判断偏离是否落在该资产历史正常波动区间内</li>
+            <li><span class="article-verify-check">✓</span>核查文档所称的断路器/价格偏离上限/备用预言机等防护机制，在合约代码中是否覆盖了全部取价路径而非部分入口</li>
+          </ul>
+        </div>
+
         <section id="sec-1">
         <h2>1. 为什么预言机与价格数据研究值得单独成篇</h2>
         <p>在此前的系列文章中，《审计报告到底审计了什么》指出审计报告给出的"通过"结论不能替代研究者对合约权限、可升级性与关键函数的直接查验；《储备证明能证明什么》指出储备证明快照不能替代对链上实际资金进出的追踪核验；《团队与开发者活跃度核验》则指出路线图或更新日志中的表述不能替代对真实提交记录与发布历史的检查。三篇文章从不同的研究对象出发，共同搭建起一条贯穿全系列的方法论主线：任何出现在文档、报告或界面中的"声称"，其本质都只是一个待验证的陈述，而不是证据本身，研究者必须对照其所描述的底层原始数据，独立完成核验，才能判断这个声称是否成立。</p>

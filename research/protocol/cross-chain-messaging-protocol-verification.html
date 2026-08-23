@@ -90,6 +90,15 @@
         <img class="article-cover" src="/img/article-cross-chain-messaging-protocol-verification.svg" alt="跨链消息协议核验：当资产不再被锁定，谁来证明这条消息是真的 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>查证协议白名单里的预言机与中继器运营方地址是否重叠或存在明显关联，判断"多方分工"是否真正独立</li>
+            <li><span class="article-verify-check">✓</span>核实具体接入应用实际选用的 DVN 节点数量与确认门限比例，而不是只确认底层协议是否支持 DVN</li>
+            <li><span class="article-verify-check">✓</span>核实源链事件确认所等待的区块数是否按该链自身的终局性特性单独设置，以及是否存在防止消息重复执行的唯一 nonce/序列号机制</li>
+            <li><span class="article-verify-check">✓</span>核实接入应用是否设置了业务层二次校验（如金额上限、异常提现延迟到账）以及独立于底层协议的紧急暂停能力</li>
+          </ul>
+        </div>
           <section id="sec-1">
             <h2>1. 起点：通用消息层和「锁定-铸造」桥到底是不是一回事</h2>
             <p>要核验跨链消息协议的风险，第一步是分清它和传统资产桥的本质区别。传统的锁定-铸造桥解决的是「资产怎么从A链搬到B链」的问题：用户把资产存进A链上的合约锁死，桥的验证方确认锁定事件发生后，在B链铸造出对应的包装资产。而LayerZero、Wormhole这类通用消息层解决的是一个更底层的问题——「A链上发生的任意一个事件，怎么让B链上的合约知道并且相信它确实发生了」。资产跨链只是这套消息传递能力上跑的一个应用，除此之外还可以用来传递治理指令、状态同步、跨链调用等等任意信息。</p>

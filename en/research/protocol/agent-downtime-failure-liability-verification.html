@@ -90,6 +90,16 @@
         <div class="article-columns">
         <div class="article-body">
 
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Confirm the agent provides a heartbeat signal independent of business transactions (e.g. a periodic micro on-chain heartbeat transaction or a pollable health-check endpoint) — absence of new on-chain transactions alone cannot prove the agent is healthy</li>
+            <li><span class="article-verify-check">✓</span>When downtime is suspected, check in order: whether the heartbeat also stopped, whether the RPC endpoint the agent uses had a publicly documented incident at that time, and whether the oracle's last price-update timestamp predates the failure window</li>
+            <li><span class="article-verify-check">✓</span>Check whether the terms of service specify a concrete availability metric (e.g. heartbeat silence beyond a defined number of minutes counts as downtime) and a calculable payout, rather than unquantifiable language like "best effort"</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether you can set an independent stop-loss, liquidation protection, or per-transaction/per-period amount cap outside the agent itself as a backstop if it goes unresponsive</li>
+          </ul>
+        </div>
+
         <section id="sec-1">
         <h2>1. "Nothing to do" versus "not running" — how do you tell them apart</h2>
         <p>An agent going quiet has two very different possible causes: the market and position state genuinely never crossed any threshold that would trigger an action, so doing nothing is correct behavior; or the agent's off-chain component has crashed, hung, or lost communication with its on-chain side, and nobody happened to notice. From the outside these look identical — both show up as "no transactions for a while." The absence of new on-chain transactions alone can't distinguish the two, and the default assumption most users make is exactly backwards: treating silence as "everything's fine, nothing needs doing" rather than actively confirming the agent is still alive. The only reliable signal is a heartbeat or liveness check independent of business logic — does the agent, separate from sending transactions when conditions are met, emit a signal on a fixed cadence that exists purely to prove "I'm still running": a tiny periodic on-chain heartbeat transaction, a health-check endpoint an external party can poll, or a status report to an independent monitoring service. Without that kind of mechanism designed in, a user has no way to tell "the agent chose not to act" from "the agent has stopped" — until the damage has already happened.</p>

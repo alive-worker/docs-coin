@@ -90,6 +90,15 @@
         <img class="article-cover" src="/img/article-contract-security-en.svg" alt="An Audit Report Says “Audited” — But Audited What, Exactly: From Conclusions to On-Chain Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>On the multisig contract's "Read Contract" page in a block explorer, check the returned signer address list and execution threshold against the M-of-N figure disclosed in the project's documentation</li>
+            <li><span class="article-verify-check">✓</span>Query the timelock contract's minimum delay parameter, and check which addresses currently hold the PROPOSER/EXECUTOR/CANCELLER and TIMELOCK_ADMIN roles, and whether the admin role has been renounced</li>
+            <li><span class="article-verify-check">✓</span>Check whether the proxy contract's current implementation address matches the version the audit report actually covered; for UUPS proxies, also confirm the new implementation retains a working upgrade function</li>
+            <li><span class="article-verify-check">✓</span>Go through each "High" or "Critical" finding in the audit report and check its remediation status (Resolved / Acknowledged / Won't Fix) individually, rather than trusting the "audited" label on the cover page</li>
+          </ul>
+        </div>
         <section id="sec-1">
         <h2>1. Why Contract Security and Audit Reports Deserve Their Own Deep Dive</h2>
         <p>When the first article, "Crypto Research Fundamentals," laid out the overall framework, the risk checklist was just one section among many, and "has it been audited" was often reduced to a simple checkbox: audited, add points; not audited, subtract points. Section 6 of that article already flagged a key point — an audit does not guarantee absolute safety, it only reduces certain risks — but that was mentioned only in passing, without unpacking the mechanics behind it. This article's job is to take that sentence apart and spell out exactly where the gap between "reducing risk" and "guaranteeing safety" shows up in technical terms: an audit report is a technical document with a defined scope, methodological limits, and a shelf life — not a one-time, permanently valid safety certificate. The same audit report, read on the day a contract is first deployed versus after the contract has gone through multiple upgrades and parameter changes, may vouch for something that has already changed completely.</p>

@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-zkml-verification-en.svg" alt="zkML and trusted on-chain model execution theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Verify whether the quantization and approximation error between the circuit version of the model and the original advertised model has been independently evaluated and publicly disclosed</li>
+            <li><span class="article-verify-check">✓</span>Check whether marketing materials conflate "computational integrity" with "the conclusion is trustworthy," and confirm the proof does not cover input authenticity or the correctness of the model's judgment</li>
+            <li><span class="article-verify-check">✓</span>Check whether the circuit implementation has been independently audited with a public report, and if a trusted setup ceremony was used, whether participants were diverse and the process publicly verifiable</li>
+            <li><span class="article-verify-check">✓</span>Verify whether the system layers multi-source cross-checking or a challengeable arbitration mechanism on top of zkML/TEE to cover input forgery and model misjudgment risks</li>
+          </ul>
+        </div>
+
 <section id="sec-1">
 <h2>1. The Third Stop for Trust: From "Trust the Operator" to "Trust a Piece of Math"</h2>
 <p>The second piece in this series noted that model inference's non-reproducibility ultimately degrades verification into "trusting the operator's self-attestation" — it says the model judged this way, and you just have to believe it. zkML tries to break that deadlock: it expresses a model's inference process — matrix multiplications, activation functions, the data flow between layers — as an arithmetic circuit, then uses a zero-knowledge proof system (SNARK- or STARK-based, for example) to produce a proof claiming "this specific input, run through this specific model (identified by a hash or commitment to its weights), did in fact produce this specific output." Anyone holding the verification key can then check that proof on-chain, at a small fraction of the compute cost of re-running the whole model, and confirm it holds. This is another shift in where trust lands — from "trust that a centralized operator isn't cheating" to "trust that the cryptographic assumptions and implementation behind the zero-knowledge proof system have no flaws."</p>

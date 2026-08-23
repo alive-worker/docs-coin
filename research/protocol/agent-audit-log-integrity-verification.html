@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-agent-audit-log-integrity.svg" alt="AI代理审计日志防篡改核验：日志说它做了什么，谁能证明日志没被改过 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实日志条目之间是否存在哈希链，摘要是否被定期锚定到运行方无法单方面修改的外部位置（如公链交易或第三方时间戳服务）</li>
+            <li><span class="article-verify-check">✓</span>核对日志中的操作序号是否连续，并将日志声称的链上操作与该代理地址的实际链上交易历史逐笔交叉核对，找出遗漏记录</li>
+            <li><span class="article-verify-check">✓</span>确认日志时间戳来自本地系统时钟还是独立第三方权威或公链区块时间，并核实外部锚定的频率（逐条锚定还是仅按季度锚定）</li>
+            <li><span class="article-verify-check">✓</span>核实独立存证方与被审计运行方之间是否存在股权、资金或其他可能影响独立性的利益关联</li>
+          </ul>
+        </div>
+
 <section id="sec-1">
 <h2>1. 日志本身的防篡改承诺：能不能证明它没被事后编辑过</h2>
 <p>几乎每一份AI代理的操作日志都会声称完整记录了「代理做过的所有事」，但这句声明本身需要一个可核验的技术承诺来支撑：日志条目一旦写入，是否存在某种机制让事后的编辑或删除变得可被检测，还是仅仅是一份存放在运行方自己数据库里的普通记录，理论上可以被随时改写而不留痕迹。常见的防篡改技术手段包括：把每条日志条目的哈希值链接进前一条日志的哈希，形成一条哈希链，使得任何一处历史条目被修改都会导致后续所有哈希值不再匹配；把日志的摘要哈希定期发布到公开可查的位置（例如写入某条公链的交易或某个可公开验证的时间戳服务），使得外部观察者可以独立核对某个历史时点的日志摘要是否与后来展示的日志内容一致。如果日志既没有内部哈希链、也没有任何形式的外部锚定，那么它本质上只是一份「运行方说了什么就是什么」的叙事，与链上交易记录的不可篡改性完全不是同一个信任等级。</p>

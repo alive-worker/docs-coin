@@ -91,6 +91,15 @@
         <img class="article-cover" src="/img/article-dex-liquidity.svg" alt="DEX流动性核验：TVL数字之外，AMM池子的真实深度是多少 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>某交易对的池子地址是否直接从DEX工厂合约查得，而非采信前端页面里默认嵌入的地址（同一代币对可能因手续费档位不同对应多个并行池子）</li>
+            <li><span class="article-verify-check">✓</span>集中流动性池的资金在各价格区间的实际分布，而非只看headline TVL——把"总锁仓"与"当前价位附近的可执行深度"分开核验</li>
+            <li><span class="article-verify-check">✓</span>用恒定乘积公式(x0+Δx)·(y0-Δy)=x0·y0手工推算出的理论价格影响，与路由合约quote接口实测返回值之间的偏差是否超出手续费与四舍五入范围</li>
+            <li><span class="article-verify-check">✓</span>自己的swap所在区块内，紧邻前后是否存在方向相同、地址关联、把价格先推高后打回的三笔交易组合（三明治结构的可观测特征）</li>
+          </ul>
+        </div>
 <section id="sec-1">
 <h2>1. 为什么DEX定价机制值得单独研究：与预言机研究的分工</h2>
 <p>在本系列此前关于预言机与价格数据的一篇中，讨论的核心问题是「协议如何从外部获取价格」：一个借贷市场、一个衍生品协议在计算抵押率、判断清算线时，需要一个它自己不产生、只是读取的价格数字，于是就有了预言机——链下报价源、链上聚合合约、更新频率、陈旧阈值、多源交叉核验，这一整套机制解决的是「信任谁的数字」的问题。但这条链路里始终有一个环节被悬置：那个被预言机采集、被协议读取的价格，最初是从哪里生成出来的？很大一部分答案就是DEX（去中心化交易所）本身。DEX不是价格的搬运者，而是价格的生产者——它内部的做市曲线、流动性分布、每一笔swap的执行路径，共同决定了某个交易对在某一时刻「应该是多少」。这是一个与预言机研究平行、但方向相反的问题：预言机研究问的是「这个价格从哪里传来、可不可信」，DEX定价研究问的是「这个价格是怎么被算出来的、这套算法本身有没有被操纵的空间」。</p>

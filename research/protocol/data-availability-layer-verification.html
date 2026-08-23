@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-data-availability-layer-verification.svg" alt="数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>这条Rollup选择的DA方案（如以太坊blob空间、Celestia、EigenDA、Avail等）安全假设经过了多长时间、多大规模的市场与审计检验</li>
+            <li><span class="article-verify-check">✓</span>DAS的采样失败率阈值与独立采样次数是否有公开的数学证明支撑，是否有KZG多项式承诺等密码学工具验证编码正确性</li>
+            <li><span class="article-verify-check">✓</span>该方案是乐观Rollup还是ZK Rollup：乐观Rollup看挑战窗口期内的数据可用性保障，ZK Rollup看是否有独立于排序器的数据获取渠道</li>
+            <li><span class="article-verify-check">✓</span>DA层验证者集合的质押分布，是否与依赖它的Rollup项目方存在可追踪的资金或治理关联</li>
+          </ul>
+        </div>
+
           <section id="sec-1">
             <h2>1. 起点：DA层解决的问题，为什么值得单独拆出来核验</h2>
             <p>在理解DA层核验方法之前，先要搞清楚它存在的理由。一个Rollup把交易在链下批量执行，再把结果打包提交给主链，如果只提交「执行后的结果」而不提交「执行前的原始交易数据」，任何人都无法验证这个结果是否真的按规则算出来的——你只能选择相信打包方没有作恶。这就是为什么Rollup必须把交易数据本身也发布出去：只有数据可用，才有人能够重新执行一遍、核对结果，或者在结果有问题时生成一份欺诈证明去挑战它。</p>

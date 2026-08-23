@@ -90,6 +90,15 @@
         <img class="article-cover" src="/img/article-lending-liquidation.svg" alt="借贷清算机制核验：一次预言机延迟，如何触发连锁清算 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>协议风控配置合约中读取到的抵押率与清算门槛，是否为两个独立参数，而非前端简化展示的同一个数字</li>
+            <li><span class="article-verify-check">✓</span>close factor（单次清算最多可偿还欠款的比例上限）与清算奖励折扣的链上原始值，是否与官方文档描述一致，历史上是否被治理提案调整过</li>
+            <li><span class="article-verify-check">✓</span>从一笔真实Liquidate/LiquidationCall事件反推出的实际清算折扣（没收抵押品价值/偿还债务价值-1），是否与链上配置的名义清算折扣参数相符</li>
+            <li><span class="article-verify-check">✓</span>协议全部抵押品中单一资产占比是否偏高，以及该资产在主要DEX上的可执行深度，能否吸收一次同等规模清算抛售而不引发连锁反馈</li>
+          </ul>
+        </div>
 <section id="sec-1">
 <h2>1. 为什么清算机制值得单独研究：与预言机、DEX流动性研究的分工关系</h2>
 <p>借贷协议（lending protocol）向用户提供的核心功能非常直观：用户把某种资产存入协议作为抵押品，随后可以基于这份抵押品的价值借出另一种资产，全程无需信用审查，只需要抵押品本身的价值始终覆盖借款价值即可。这类协议之所以能够在没有中心化信用体系的情况下安全运转，靠的不是对借款人的信任，而是一套完全由代码强制执行的超额抵押（over-collateralization）规则：借款人借出的价值必须始终显著低于其抵押品的价值，一旦抵押品价值下跌到某个阈值以下，协议会允许第三方介入，强制平仓这笔头寸、收回欠款并没收部分抵押品作为补偿。这个强制平仓的过程，就是本文要系统研究的清算（liquidation）机制——它是整个超额抵押借贷模型得以维持偿付能力的最后一道防线，也是决定一个借贷协议在极端行情下究竟是稳健收场还是引发连锁损失的关键环节。研究者如果只关注协议的存款利率、借款利率、支持哪些资产这些表层参数，而不深入理解清算机制的具体规则与实际执行方式，就无法对这个协议的真实风险状况形成完整判断。</p>

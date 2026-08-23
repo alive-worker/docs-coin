@@ -90,6 +90,15 @@
         <img class="article-cover" src="/img/article-mev-order-flow.svg" alt="MEV与私有交易通道：三明治攻击换了打法，没有消失 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>受害交易实际提交时设置的滑点容忍度数值，与攻击者插入交易能推动的价格幅度是否吻合这套因果关系，而不是笼统归咎为"系统缺陷"</li>
+            <li><span class="article-verify-check">✓</span>某一区块内，是否存在紧贴受害交易前后、方向相反且价格路径互补的三笔交易，这才是判断三明治攻击是否发生的结构性证据，而非单看某笔交易是否"被抢跑"</li>
+            <li><span class="article-verify-check">✓</span>近期一段统计窗口内，是否存在三到四家构建者合计构建绝大多数区块的集中度趋势，以及这一比例是在扩大还是收窄</li>
+            <li><span class="article-verify-check">✓</span>公开内存池交易占比下降后，三明治攻击的可观测频率是否真实下降，还是只是转移到了私有通道内部而无法被外部核验</li>
+          </ul>
+        </div>
 <section id="sec-1">
 <h2>1. MEV不是"链上隐藏税"，而是排序权的定价</h2>
 <p>研究者第一次接触MEV（Miner/Maximal Extractable Value）时，容易把它理解成一种应该被消灭的系统漏洞——仿佛只要打好补丁，这种"额外征收"就会消失。但更准确的理解是：区块内交易的排列顺序本身是一种稀缺资源，谁能决定这个顺序，谁就掌握了一种可以变现的权力。MEV就是市场对这种排序权的定价，而不是协议之外强加的税。只要存在"调整交易顺序、插入交易、审查交易"能带来额外收益的空间，MEV就会以某种形式存在——链上环境的这个属性不会因为某项具体产品的出现而根本改变。我们在《DEX流动性深度核验》中讨论过，AMM的价格冲击机制天然为三明治攻击提供了可预测的获利空间；本篇要展开的，是这种攻击的完整交易结构，以及交易提交路径——公开内存池还是私有通道——如何重新分配了"谁能实施攻击"这个问题的答案。</p>

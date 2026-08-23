@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-swap-routing-en.svg" alt="Verifying Swap Routing Costs cover image" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Decompose the headline "estimated receive" figure into its three parts — realized slippage, each underlying bridge's own fee along the route, and the destination-chain gas reserve needed to finish remaining steps — and verify each separately rather than trusting the combined number</li>
+            <li><span class="article-verify-check">✓</span>Compare candidate routes by net proceeds after all fees, not by the aggregator's nominal-rate ranking, before assuming a route with more hops actually settles for more</li>
+            <li><span class="article-verify-check">✓</span>Check whether the routing contract briefly holds custody of funds between hops during multi-step execution, and whether that permission is bounded by a multisig or timelock rather than open-ended forwarding authority</li>
+            <li><span class="article-verify-check">✓</span>Sample the aggregator's past bridge-selection history for the same trading pair to see whether it systematically favors particular bridges — a sign the choice may reflect an undisclosed business relationship rather than pure best-execution logic</li>
+          </ul>
+        </div>
+
 <section id="sec-1">
 <h2>1. Why Routing and Aggregation Need Their Own Research Lens</h2>
 <p>Two earlier pieces in this series each looked at one layer of a swap. The DEX liquidity article examined how price impact and slippage behave inside a single pool, and how a researcher verifies depth before trusting a quoted price. The bridge security article examined how a single bridge custodies funds in transit and how its validator or multisig trust model can be checked. Neither question, on its own, answers what happens when a trade cannot be filled by one pool or one bridge and must instead be split, sequenced, or routed across several of them to reach a destination asset or chain.</p>

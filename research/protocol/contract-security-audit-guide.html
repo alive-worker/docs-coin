@@ -89,6 +89,15 @@
         <img class="article-cover" src="/img/article-contract-security.svg" alt="审计报告说「已审计」，到底审计了什么：从结论到链上复核 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>在区块浏览器多签合约的"读取合约"页面，核对返回的签名人地址列表与执行门槛，是否与项目文档披露的 M/N 数字一致</li>
+            <li><span class="article-verify-check">✓</span>查询时间锁合约的最短延迟参数，以及 PROPOSER/EXECUTOR/CANCELLER 与 TIMELOCK_ADMIN 角色分别授予了哪些地址、admin 角色是否已放弃</li>
+            <li><span class="article-verify-check">✓</span>核对代理合约当前指向的实现合约地址是否与审计报告审计的版本一致；若为 UUPS 模式，还需确认新实现合约是否正确保留了升级函数</li>
+            <li><span class="article-verify-check">✓</span>逐条查阅审计报告中标注"高"或"严重"级别问题的修复状态（已解决/已确认/不予修复），而不是只看封面「已通过审计」几个字</li>
+          </ul>
+        </div>
         <section id="sec-1">
         <h2>1. 为什么合约安全与审计报告值得单独拿出来研究</h2>
         <p>第一篇《加密项目研究方法论》搭建整体框架时，风险清单只是众多小节之一，「是否经过审计」往往被简化成一个可以打勾的选项：有审计，加分；没有审计，减分。那篇文章的第六节已经提到一句关键判断——审计并不能保证绝对安全，只是降低了部分风险。这句话当时只是顺带一提，没有展开背后的机制。这一篇要做的，就是把这句话拆开揉碎，具体说明「降低风险」和「保证安全」之间的差距究竟体现在哪些技术细节上：审计报告本身是一份有覆盖范围、有方法局限、有时效性的技术文档，而不是一张一次性签发、永久有效的安全证书。同一份审计报告，放在合约刚刚部署的那一天和放在合约经历过多次升级、参数调整之后再看，它所能担保的内容可能已经完全不同。</p>

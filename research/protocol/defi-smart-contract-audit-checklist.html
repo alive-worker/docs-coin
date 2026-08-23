@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-defi-smart-contract-audit-checklist.svg" alt="DeFi智能合约审计清单：别让漏洞成为黑客的提款机 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>涉及外部合约调用的转账函数是否遵循"检查-生效-交互"顺序，或是否用了ReentrancyGuard锁防重入</li>
+            <li><span class="article-verify-check">✓</span>金额计算是否运行在0.8.0+编译器下，unchecked块内的运算逻辑是否经过严格验证，避免整数溢出/下溢</li>
+            <li><span class="article-verify-check">✓</span>owner/admin权限的设置与转移方式、多签钱包的实际签名门槛（如3/5还是2/5）与签名者身份是否公开透明</li>
+            <li><span class="article-verify-check">✓</span>合约升级权限是否设有时间锁（建议至少24-48小时），时间锁期间用户能否无损退出，升级是否需要链上治理投票</li>
+          </ul>
+        </div>
+
           <section id="sec-1">
             <h2>1. 为什么DeFi合约比普通智能合约更危险</h2>
             <p>智能合约的安全问题不是新话题，但DeFi合约的风险密度远高于一般的链上应用。原因有三点。第一，DeFi合约直接管理大量资金，一个漏洞的直接后果是资产被盗，而不是功能异常或数据错误；第二，DeFi协议之间高度可组合，一个合约的漏洞可能通过闪电贷、跨协议调用被放大成系统性风险；第三，DeFi合约部署后通常不可升级或升级受到严格限制，一旦上线就很难修补，攻击者有充足时间研究代码寻找突破口。2021年Poly Network跨链桥被盗6.1亿美元、2022年Ronin桥被盗6.25亿美元、2023年Mixin Network被盗2亿美元，这些不是理论推演，而是已经发生的真实案例。</p>

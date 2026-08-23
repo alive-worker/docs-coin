@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-agent-audit-log-integrity-en.svg" alt="Agent Audit Log Integrity Verification: The Log Says What It Did - Who Proves It Wasn't Altered cover image" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether log entries are linked by a hash chain, and whether the digest is periodically anchored to a location the operator cannot unilaterally modify (an on-chain transaction or a third-party timestamp service)</li>
+            <li><span class="article-verify-check">✓</span>Confirm the log's operation sequence numbers are continuous, and cross-check the on-chain operations claimed in the log against the agent address's actual on-chain transaction history to spot omissions</li>
+            <li><span class="article-verify-check">✓</span>Determine whether log timestamps come from a local system clock or an independent third-party authority/block time, and check how frequently the digest is externally anchored (per entry versus only quarterly)</li>
+            <li><span class="article-verify-check">✓</span>Verify whether the independent attestor has any equity, funding, or other relationship with the audited operator that could compromise its independence</li>
+          </ul>
+        </div>
+
 <section id="sec-1">
 <h2>1. The Log's Own Tamper-Resistance Promise: Can It Prove It Wasn't Edited After the Fact</h2>
 <p>Nearly every AI agent's operation log claims to completely record "everything the agent did," but that claim itself needs a verifiable technical guarantee behind it: once a log entry is written, is there a mechanism that makes any after-the-fact edit or deletion detectable, or is the log simply an ordinary record sitting in the operator's own database that could, in principle, be rewritten at any time without leaving a trace. Common tamper-resistance techniques include chaining each log entry's hash to the previous entry's hash, forming a hash chain so that modifying any historical entry breaks the hash match for every entry after it; and periodically publishing a digest hash of the log to a publicly checkable location - for example, writing it into a transaction on some public chain, or submitting it to a publicly verifiable timestamping service - so outside observers can independently confirm whether the log's content, as later displayed, matches the digest published at that historical point in time. If a log has neither an internal hash chain nor any form of external anchoring, then it is fundamentally just a narrative of "whatever the operator says happened" - a completely different trust tier from the immutability of on-chain transaction records.</p>

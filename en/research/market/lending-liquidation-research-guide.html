@@ -90,6 +90,15 @@
         <img class="article-cover" src="/img/article-lending-liquidation-en.svg" alt="Verifying Lending Liquidation Risk cover image" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Confirm the collateral factor and liquidation threshold read from the protocol's own risk-configuration contract are two distinct parameters, not a single number simplified by the front end</li>
+            <li><span class="article-verify-check">✓</span>Check the close factor (max share of debt repayable per liquidation call) and the liquidation bonus as configured on-chain, and whether either has been changed by a past governance action</li>
+            <li><span class="article-verify-check">✓</span>Reconstruct the effective liquidation bonus from a real Liquidate/LiquidationCall event (seized collateral value / repaid debt value - 1) and compare it against the contract's nominal bonus parameter</li>
+            <li><span class="article-verify-check">✓</span>Check what share of total protocol collateral sits in a single asset, and whether that asset's executable DEX depth could absorb a liquidation-sized sell-off without triggering a further cascade</li>
+          </ul>
+        </div>
 <section id="sec-1">
 <h2>1. Why Liquidation Mechanics Deserve Their Own Line of Inquiry</h2>
 <p>An over-collateralized lending protocol runs on a deceptively simple promise: a user deposits an asset as collateral, borrows some other asset against it, and the protocol enforces that the value of what has been borrowed never exceeds some safe fraction of what has been deposited. As long as that inequality holds, the protocol's solvency is, in principle, mechanical and self-evident — every open loan is backed by more value than it owes. The entire architecture of a lending market exists to keep that inequality true at every moment, under every market condition, without requiring a human being to intervene. Liquidation is the enforcement mechanism that makes this promise credible: it is the process by which a protocol detects that a specific position has fallen below its required collateralization level and forcibly closes or partially closes that position — seizing collateral and repaying debt — before the position can slip into a state where the collateral is worth less than the debt it secures. Without a functioning liquidation mechanism, a lending protocol is not actually over-collateralized at all; it is simply a set of unsecured loans that happens to display a collateral ratio on a dashboard.</p>

@@ -91,6 +91,16 @@
         <div class="article-columns">
         <div class="article-body">
 
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether your bridging scheme's relay status endpoint can be publicly polled — this determines how early bots can learn your transaction details</li>
+            <li><span class="article-verify-check">✓</span>Look for a same-direction large trade in the same pool right before your destination-chain execution, with the same address closing an opposite position soon after — a strong frontrunning signature</li>
+            <li><span class="article-verify-check">✓</span>Compare how far your actual fill price deviates from the market mid-price against your set slippage tolerance — landing precisely at that edge, rather than randomly, is suspicious</li>
+            <li><span class="article-verify-check">✓</span>Compare the gap between source-chain confirmation and destination-chain execution against that route's historical median delay</li>
+          </ul>
+        </div>
+
         <section id="sec-1">
         <h2>1. The window a cross-chain swap adds: confirmed on source, not yet executed on destination</h2>
         <p>A same-chain swap goes from submission to confirmation in essentially one block-packing cycle — mempool exposure measured in seconds. A cross-chain swap is structurally different: the user first submits a transaction on the source chain and waits for it to confirm (finality requirements vary by chain — sometimes one or two blocks, sometimes a dozen or more to guard against reorgs). Only after that confirmation does the transaction's state and amount get picked up by a relayer — which might be an independent validator set, a light-client proof system, or a monitoring service run by the operator itself — which then submits a new transaction on the destination chain to actually execute the swap. The span between source confirmation and destination execution typically runs from tens of seconds to a few minutes depending on the bridging scheme and both chains' block times, not the one-shot packing wait of a same-chain swap. The key property of this window is that it isn't a black box any single block producer can instantly skip past — it's a process spanning two independent systems, with an observable intermediate state on both ends. The longer the window, the more time there theoretically is to exploit it — which the next section breaks down.</p>

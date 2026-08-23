@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-zkml-verification.svg" alt="zkML与链上模型可信执行：证明「跑了」不等于证明「跑对了」 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实被证明的电路版模型与对外宣传使用的原始模型之间，量化与近似带来的误差是否被独立评估、是否公开披露</li>
+            <li><span class="article-verify-check">✓</span>确认宣传材料是否把「计算完整性」偷换成「结论可信」，明确证明本身不覆盖输入真实性与模型判断正确性</li>
+            <li><span class="article-verify-check">✓</span>查证电路实现代码是否经过独立审计、审计报告是否可查阅，若依赖可信设置仪式，参与方是否多元、过程是否可公开验证</li>
+            <li><span class="article-verify-check">✓</span>核实系统在zkML/TEE之外，是否还叠加了多源交叉核验或可挑战裁决机制来覆盖输入造假与模型误判风险</li>
+          </ul>
+        </div>
+
 <section id="sec-1">
 <h2>1. 信任转移的第三站：从「信任运行方」到「信任一段数学」</h2>
 <p>本系列第二篇讨论 AI 预言机时提到，模型推理的不可复现性最终会把核验退化成「信任运行方的自证」——它说模型是这么判断的，你只能信。zkML 试图打破这个死结：它把模型的推理过程（矩阵乘法、激活函数、层与层之间的数据流）表达成一个算术电路，再用零知识证明系统（如基于 SNARK 或 STARK 的方案）生成一份证明，声称「这个特定输入，经过这个特定模型（用其权重的哈希或承诺来标识），确实产生了这个特定输出」。任何持有验证密钥的一方，都可以在链上用远小于重新执行整个模型的算力，快速验证这份证明是否成立。这是一次信任落点的再次转移——从「相信某个中心化的运行方没有作弊」，转移到「相信零知识证明系统背后的密码学假设与实现代码没有漏洞」。</p>

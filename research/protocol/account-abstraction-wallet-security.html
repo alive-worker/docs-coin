@@ -90,6 +90,17 @@
         <img class="article-cover" src="/img/article-account-abstraction-wallet-security.svg" alt="账户抽象钱包安全核验：会话密钥授权范围没搞懂，被清空的可能就是你的钱 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>点开会话密钥授权详情页，逐一核对单次额度、每日累计上限、到期时间与目标合约白名单是否精确到具体地址，而非模糊的"DeFi协议"范围</li>
+            <li><span class="article-verify-check">✓</span>核实Bundler网络的集中化程度，查是否绝大多数UserOperation都经由同一家Bundler打包，评估潜在的交易审查风险</li>
+            <li><span class="article-verify-check">✓</span>核实Paymaster的资金储备是否公开可查，以及Paymaster服务中断时是否存在用原生代币完成交易的备用路径</li>
+            <li><span class="article-verify-check">✓</span>若启用社交恢复，核实监护人数量门槛、是否存在强制等待期（时间锁），以及账户所有者能否在等待期内主动否决恢复请求</li>
+          </ul>
+        </div>
+
           <section id="sec-1">
             <h2>1. 起点：账户抽象钱包的风险模型和普通钱包不一样</h2>
             <p>普通的外部账户（EOA）钱包只有一种失败模式：私钥泄露，账户里的一切归零。风险很单一，但也很粗暴——没有任何折中空间，签名权限是全有或全无。账户抽象钱包（通常指遵循ERC-4337标准的智能合约账户）想解决的正是这个问题：把「谁能动用这个账户」从一把静态私钥，变成一套可编程的权限规则。你可以给一个自动化交易机器人发一把只能调用特定合约、额度有限、到期自动失效的「会话密钥」，即使这把密钥被盗或者机器人程序出问题，损失也被锁在预设边界内，而不是主账户全部清零。</p>

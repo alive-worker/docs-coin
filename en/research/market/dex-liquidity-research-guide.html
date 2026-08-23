@@ -91,6 +91,15 @@
         <img class="article-cover" src="/img/article-dex-liquidity-en.svg" alt="Verifying DEX Liquidity Depth cover image" width="1200" height="600" fetchpriority="high" decoding="async">
         <div class="article-columns">
         <div class="article-body">
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Confirm the pool address for a given pair by querying the DEX's factory contract directly, rather than trusting whatever address is embedded by default in the front-end pair page (the same token pair can map to several parallel pools at different fee tiers)</li>
+            <li><span class="article-verify-check">✓</span>Pull a concentrated-liquidity pool's actual distribution of capital across price ranges instead of reading the headline TVL alone — separate "total value locked" from "depth actually executable near the current price"</li>
+            <li><span class="article-verify-check">✓</span>Check whether the theoretical price impact hand-derived from the constant-product formula (x0+Δx)·(y0-Δy)=x0·y0 diverges from the router's quote-call result by more than fees and rounding can explain</li>
+            <li><span class="article-verify-check">✓</span>Look at the block your swap landed in for a same-direction, address-linked pair of transactions immediately before and after it that push the price up then back down — the observable signature of a sandwich</li>
+          </ul>
+        </div>
 <section id="sec-1">
 <h2>1. Why DEX Pricing Mechanisms Deserve Their Own Line of Inquiry: The Division of Labor with Oracle Research</h2>
 <p>An earlier piece in this series on oracles and price data centered on a single question: how does a protocol obtain a price from outside itself? A lending market or a derivatives protocol calculating collateral ratios or liquidation thresholds needs a number it does not generate on its own — it only reads it. That is what oracles are for: off-chain price feeds, on-chain aggregation contracts, update frequency, staleness thresholds, cross-source verification. The whole apparatus exists to answer one question — whose number can be trusted? But that chain of reasoning always leaves one link unexamined: where did the price being collected by the oracle and read by the protocol actually come from in the first place? A large part of the answer is the DEX (decentralized exchange) itself. A DEX doesn't just relay a price — it produces one. Its market-making curve, the distribution of its liquidity, and the execution path of every single swap jointly determine what a given trading pair 'should' cost at a given moment. This is a question that runs parallel to oracle research but points in the opposite direction: oracle research asks where a price came from and whether it can be trusted; DEX pricing research asks how that price was actually computed, and whether the computation itself leaves room to be manipulated.</p>

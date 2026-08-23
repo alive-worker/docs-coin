@@ -91,6 +91,16 @@
         <div class="article-columns">
         <div class="article-body">
 
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Is the quote's validity window clearly stated (typically 15 seconds to 2 minutes)?</li>
+            <li><span class="article-verify-check">✓</span>Is the quote an off-chain signed price or a real-time on-chain calculation — the two behave differently</li>
+            <li><span class="article-verify-check">✓</span>Compare the mid-market price at order time against the actual implied execution price</li>
+            <li><span class="article-verify-check">✓</span>Does the delay length scale proportionally with the final price gap?</li>
+          </ul>
+        </div>
+
         <section id="sec-1">
         <h2>1. Three independent delay stages between quote and settlement</h2>
         <p>A cross-chain swap moves through three genuinely separate delay stages before it's done. The first is decision delay: the seconds to minutes you spend deciding whether to confirm, which you control but which is still eating into the quote's validity window. The second is source-chain confirmation delay: after you submit, the transaction sits in the mempool waiting to be included in a block and reach the number of confirmations the chain considers safe — typically ten-odd seconds to a couple of minutes on mainstream chains, but this can stretch to several minutes or more under congestion, and the asset's price keeps moving the entire time the transaction sits unconfirmed. The third is cross-chain settlement delay: once the source chain confirms, a relayer or validator set still has to pass the message to the destination chain, which then executes the swap or mint — this can be tens of seconds or, depending on the bridging mechanism, well over ten minutes. Stack all three together and the real elapsed time from quote to final settlement is often ten times or more the quote's own stated validity window, which is usually only 15 seconds to a couple of minutes.</p>
