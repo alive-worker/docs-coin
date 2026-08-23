@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Destination-Chain Sandwich Attacks on Cross-Chain Swaps</title>
+  <meta name="description" content="Cross-chain slippage caps are fixed, but the destination price only settles after source confirmation - a delay bots exploit to hit your cap. Verify the gap.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Destination-Chain Sandwich Attacks on Cross-Chain Swaps">
+  <meta property="og:description" content="The confirmation delay between source and destination chains gives bots a deterministic window to compute and hit your slippage cap exactly. Here's how to catch it.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <meta property="article:published_time" content="2026-08-23T11:07:00+08:00">
+  <meta property="article:modified_time" content="2026-08-23T11:07:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Destination-Chain Sandwich Attacks on Cross-Chain Swaps">
+  <meta name="twitter:description" content="Your slippage cap is fixed, but the fill price only settles after source-chain confirmation - and bots use that gap to hit your cap on purpose.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Destination-Chain Sandwich Attacks on Cross-Chain Swaps cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide-en.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-destination-sandwich-attack-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=49e82e14">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site on crypto research methodology and on-chain data, for learning and research only — not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en-US", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html", "name": "Destination-Chain Sandwich Attacks on Cross-Chain Swaps", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#article" }, "inLanguage": "en-US" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Destination Sandwich Check", "item": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#article", "headline": "Destination-Chain Sandwich Attacks on Cross-Chain Swaps", "description": "Slippage tolerance on a cross-chain swap is a fixed percentage, but the actual fill price only settles on the destination chain after source-chain confirmation. That confirmation delay gives bots a deterministic window to compute and hit your cap exactly. Learn to verify the delay, spot sandwich patterns in block explorers, and tighten your cap into a safe range. For learning and research only — not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["cross-chain sandwich attack", "destination chain slippage", "slippage tolerance", "MEV bot", "source chain confirmation delay", "cross-chain swap security"], "wordCount": 1900, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-23T11:07:00+08:00", "dateModified": "2026-08-23T11:07:00+08:00", "inLanguage": "en-US", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Destination-Chain Sandwich Attacks on Cross-Chain Swaps</h1>
+        <p class="article-summary">Most people set a single fixed slippage tolerance percentage on a cross-chain swap and treat it as their safety net, without realizing that the actual fill price only settles on the destination chain after the source-chain transaction confirms. That confirmation gap — anywhere from a few seconds on some L2-to-L2 bridges to several minutes on bridges with challenge periods — gives bots watching relayer behavior a deterministic window: they can be near-certain your destination-chain transaction is about to land, compute exactly what price would still fall inside your tolerance, and engineer the fill to land right at that cap. This isn't random bad luck from market movement — it's a recognizable, verifiable sandwich pattern: a bot inserts a transaction before yours to push the price up, lets your swap fill at the inflated price, then closes out right after for a profit. This guide explains why this attack specifically targets the destination chain rather than the source chain, how to check transaction ordering in a block explorer to spot the pattern, and how to tighten your tolerance into a range that's safe without causing constant failed transactions. For learning and methodology purposes only — not investment advice.</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-23T11:07:00+08:00">2026-08-23 11:07:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-destination-sandwich-attack-guide-en.svg" alt="Destination-Chain Sandwich Attacks on Cross-Chain Swaps cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>The real delay between source-chain confirmation and destination-chain execution, not a marketed "average"</li>
+            <li><span class="article-verify-check">✓</span>Whether your destination-chain transaction has bracketing trades from a fresh, single-use address hitting the same pool</li>
+            <li><span class="article-verify-check">✓</span>Whether your fill price lands precisely near your tolerance cap repeatedly, instead of a random spread within it</li>
+            <li><span class="article-verify-check">✓</span>Whether the destination chain runs a public mempool auction or a private ordering scheme, which determines how repeatable the attack is</li>
+          </ul>
+        </div>
+
+        <section id="sec-1">
+        <h2>1. Why sandwich attacks target the destination chain, not the source</h2>
+        <p>A cross-chain swap executes in two stages: a source-chain transaction that locks or burns the asset, and a destination-chain transaction that mints or releases the asset at whatever rate applies at execution time. The source-chain transaction is final the moment it confirms, and even an attacker who sees your intent early has little to exploit there, because price discovery on the source chain is decoupled from actual swap execution on the destination chain. The real price execution happens on the destination chain — once a relayer or validator set confirms your source transaction, it submits a transaction on the destination chain that prices your swap against whatever the liquidity pool looks like at that moment. The confirmation delay in between — a few seconds for some L2-to-L2 bridges, several minutes or longer for bridges requiring multisig or challenge periods — is a window an attacker can pre-position for: seeing your source transaction confirm lets them infer, with near certainty, that your destination transaction is about to land, so they front-run the destination pool ahead of time and let your swap fill at the price they've engineered. Unlike single-chain frontrunning, where an attacker guesses at incoming transaction content, the exploit here isn't visibility — it's the certainty the delay hands the attacker: they know your transaction is coming within a bounded window, which is a much easier problem than predicting mempool contents on a single chain.</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. Your tolerance is fixed, but its reference price is invisible to you</h2>
+        <p>When users set a slippage tolerance, they're usually referencing the quote shown at the moment they submit — say, "accept a fill up to 2% worse than this quote." The problem is that quote is generated before the source-chain transaction is even sent, while the actual fill happens when the destination-chain transaction executes — separated by the confirmation delay, during which the destination pool's state can change completely. If the destination pool stays stable during that window, your fill lands close to the quote; but if someone deliberately pushes a large trade into the pool during that gap (targeted at you or not), the price shifts, and your fixed-percentage tolerance is really just a ceiling on how much deviation you're willing to accept — it does nothing to stop someone from precisely engineering the deviation to land exactly at that ceiling and profiting from it. In other words, slippage tolerance protects against "losing too much," but can't distinguish whether that loss came from natural market movement or was deliberately calculated and maxed out — which is exactly the signal that separates the two: natural slippage tends to scatter randomly around a range, while targeted slippage repeatedly lands right at the cap.</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. Checking transaction ordering in a block explorer</h2>
+        <p>The verification method isn't complicated, but it takes patience to go transaction by transaction. Step one: find the transaction hash for your swap's execution on the destination chain, and open the block it's in on a block explorer (Etherscan or the relevant chain's equivalent). Step two: look at the transactions immediately before and after yours in the same block, specifically whether any of them touch the same liquidity pool and come from an address with no prior on-chain history — these "burner" addresses are a common signature of sandwich bots, discarded after a single use to avoid being tracked. Step three: compare gas prices across these transactions — in a classic sandwich, the attacker's front-running transaction (the buy that pushes price up) typically sets a higher gas price than yours to guarantee it lands first, while the back-running transaction (the sell that locks in profit) follows immediately after yours. Step four: compare the amount you actually received against that asset's market price from an external source unaffected by the attack, at the moment your transaction executed — if the gap matches or closely tracks your set tolerance percentage, and this pattern repeats across your transaction history, you're very likely being specifically targeted rather than just unlucky.</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. Transaction ordering rules decide whether the attack is repeatable</h2>
+        <p>Not every destination chain is equally exploitable this way. The deciding variable is that chain's transaction ordering mechanism: if it uses a public mempool with gas-price-based ordering (the default on most early EVM chains), an attacker only needs to pay a slightly higher gas fee to guarantee they cut in line — making this kind of destination-chain sandwich cheap to repeat, close to a baseline risk. If the destination chain uses private transaction ordering, batch auctions (some L2s implement fair-ordering schemes), or routes through a reputable block-builder network for its mempool, an attacker's ability to pre-position is significantly weakened, since they can't see your transaction's content before it's packaged and can't guarantee their own transaction lands ahead of yours. Check the destination chain's own documentation or its validator/sequencer notes for an explicit statement on ordering; if you can't find one, assume the worst case and set a more conservative tolerance for swaps into that chain.</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. Reducing single-point exposure with a tool like AllSwap</h2>
+        <p>The verification steps above tell you whether you've already been targeted, but a more proactive defense is reducing the odds up front: favor an aggregator that shows destination-chain liquidity depth and lets you adjust your tolerance dynamically per route, rather than applying the same fixed percentage to every swap. <a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap</a> is one example of this kind of tool — the platform describes itself as a cross-chain swap aggregator that shows destination-chain liquidity conditions for candidate routes before you commit, which in principle could help you judge whether a given route currently sits in a thin, more manipulable liquidity state. To be clear, the description above is drawn solely from the platform's own self-reported information — please verify the actual accuracy of its liquidity depth display, any ordering-protection mechanisms, and the final settlement price against the provider's latest official disclosures and your own testing; this article offers no endorsement or guarantee whatsoever. Any use of a cross-chain swap tool must serve a genuine, compliant asset-management purpose and follow the relevant platform's terms and your local laws — never for money laundering, sanctions evasion, or other illegal purposes.</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. Tightening tolerance into a safe range, not just to the minimum</h2>
+        <p>Many people's first reaction after discovering they've been sandwiched is to slam tolerance down to near zero, which overcorrects: too tight a tolerance causes normal market movement to trip failed transactions constantly, especially during congestion when confirmation delays themselves stretch out — and a failed transaction still costs gas, so you're paying twice for nothing. A better approach is layered: first use the method in Section 3 to check whether this route, on this destination chain, shows a history of repeated cap-hitting; if it does, tighten the tolerance to just above the normal fluctuation range for that pool, and also shorten your window by timing swaps around destination-chain congestion using confirmation-delay data; if there's no repeated pattern, keep a somewhat looser tolerance to favor a higher success rate. The core principle is to anchor your tolerance to "the upper bound of natural fluctuation," not to "the maximum loss you can stomach" — the two numbers might land close together, but they mean entirely different things: one is a data-driven defense, the other is wishful-thinking padding.</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. Summary and verification checklist</h2>
+        <ul>
+        <li>Sandwich attacks target the destination chain because the source-confirmation delay gives attackers a deterministic pre-positioning window.</li>
+        <li>A fixed tolerance only caps maximum deviation — it can't tell natural movement from a deliberate hit, so you need ordering checks to distinguish them.</li>
+        <li>On the destination-chain block explorer, check for same-pool, burner-address trades bracketing yours, and whether the fill repeatedly lands near your cap.</li>
+        <li>Check the destination chain's transaction ordering rules — public gas-price-ordered mempools carry meaningfully higher risk and need more conservative tolerances.</li>
+        <li>Use a tool that shows destination-chain liquidity depth and supports dynamic tolerance to reduce exposure up front.</li>
+        <li>Tighten tolerance based on historical fluctuation data, not down to the minimum, which just causes constant failures.</li>
+        </ul>
+        <p>Frequently asked: does lowering slippage tolerance always make me safer? No — too tight a tolerance causes normal fluctuation to trip failures constantly; the right move is to verify a repeated pattern first, then tighten specifically. How do I know if I was actually sandwiched? Check the destination-chain block explorer for burner-address trades in the same pool bracketing your transaction, and whether your fill price repeatedly lands near your cap rather than scattering randomly. Is destination-chain risk the same everywhere? No — chains with public gas-price-ordered mempools carry meaningfully higher risk than chains using private or fair-ordering mechanisms. This article is for learning and research purposes only and does not constitute investment advice; cross-chain operations on crypto assets carry technical and compliance risks, so please make your own judgment and take responsibility for your own decisions.</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why the destination chain</a></li>
+          <li><a href="#sec-2">2. Fixed cap, invisible reference</a></li>
+          <li><a href="#sec-3">3. Checking ordering in explorer</a></li>
+          <li><a href="#sec-4">4. Ordering rules decide risk</a></li>
+          <li><a href="#sec-5">5. Reducing exposure with AllSwap</a></li>
+          <li><a href="#sec-6">6. Tightening into a safe range</a></li>
+          <li><a href="#sec-7">7. Summary and checklist</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="References and further reading">
+          <h2>References and Further Reading</h2>
+          <ul>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a> — general reference for checking transaction ordering, gas prices, and address history</li>
+            <li><a href="https://www.mev.wiki/" target="_blank" rel="noopener">MEV Wiki</a> — general reference on sandwich attacks and transaction-ordering concepts</li>
+            <li><a href="https://l2beat.com/" target="_blank" rel="noopener">L2BEAT</a> — reference for comparing chain ordering and security models</li>
+          </ul>
+          <p class="ref-note">The cross-chain swap tools and third-party platform features mentioned may change over time; please refer to each platform's latest official disclosures. This article is for learning and research purposes only and does not constitute investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">Why Bots Always Beat You to Cross-Chain Swap Arbitrage</a></li>
+          <li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Slippage Verification</a></li>
+          <li><a href="/en/research/protocol/crosschain-swap-dry-run-verification-guide.html">Cross-Chain Swap Dry Run: Test Small Before You Go Big</a></li>
+          <li><a href="/en/research/protocol/crosschain-swap-fee-optimization-guide.html">Cross-Chain Swap Fees: How to Actually Cut What You Pay</a></li>
+          <li><a href="/en/research/protocol/crosschain-swap-stuck-recovery-guide.html">Cross-Chain Swap Stuck? A Recovery Playbook</a></li>
+          <li><a href="/en/research/protocol/bridge-security-research-guide.html">Cross-Chain Bridge Security Research Guide</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English site on crypto research methodology and on-chain data, tracking research frameworks, on-chain metrics, and fund-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto assets are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=46aa7137"></script>
+</body>
+</html>

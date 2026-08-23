@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>目的链三明治攻击核验：滑点容差为何被打满 - 加密货币研究</title>
+  <meta name="description" content="跨链兑换的滑点容差常被设成一个固定百分比，但目的链实际成交价要等源链确认后才揭晓，这段确认延迟恰好给了套利机器人在目的链上精确算好并打满你容差上限的操作空间。本文教你核对源链确认延迟、目的链实际成交价与容差上限三者对应关系，从交易顺序识别三明治攻击痕迹，并给出收紧容差区间的判断方法。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="目的链三明治攻击核验：滑点容差为何被打满 - 加密货币研究">
+  <meta property="og:description" content="源链确认延迟给了套利机器人在目的链上精确算好并打满你容差上限的空间。核对源链延迟、目的链成交价与容差上限三者关系，识别三明治攻击痕迹。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html">
+  <meta property="article:published_time" content="2026-08-23T11:07:00+08:00">
+  <meta property="article:modified_time" content="2026-08-23T11:07:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="目的链三明治攻击核验：滑点容差为何被打满 - 加密货币研究">
+  <meta name="twitter:description" content="滑点容差是固定的，但目的链成交价要等源链确认后才揭晓——这段延迟被套利机器人用来在目的链上精确打满你的容差上限。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="目的链三明治攻击核验：滑点容差为何被打满 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide.png">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-crosschain-swap-destination-sandwich-attack-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=49e82e14">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crosschain-swap-destination-sandwich-attack-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#webpage", "url": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html", "name": "目的链三明治攻击核验：滑点容差为何被打满 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "目的链三明治攻击核验", "item": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#article", "headline": "目的链三明治攻击核验：滑点容差为何被打满", "description": "跨链兑换的滑点容差是固定百分比，但目的链实际成交价要等源链确认后才揭晓。这段确认延迟给了套利机器人在目的链上精确计算并打满容差上限的空间。核对源链确认延迟、目的链成交价与容差上限三者关系，识别三明治攻击痕迹，收紧容差到安全区间。仅供学习研究，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["跨链兑换三明治攻击", "目的链滑点", "滑点容差", "MEV套利机器人", "源链确认延迟", "跨链兑换安全"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-23T11:07:00+08:00", "dateModified": "2026-08-23T11:07:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/crosschain-swap-destination-sandwich-attack-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>目的链三明治攻击核验：滑点容差为何被打满</h1>
+        <p class="article-summary">跨链兑换里，用户通常只设置一个固定的滑点容差百分比，以为这是保护自己的安全垫，却很少意识到目的链上的实际成交价要等源链交易确认之后才会揭晓——这段确认延迟窗口，从以太坊主网的十几秒到某些侧链的几分钟不等，恰恰给了监听中继商行为的套利机器人足够的时间，在目的链交易执行前精确算出你能接受的最大滑点，再把成交价刚好打到容差上限。这不是随机的价格波动吃亏，而是一种可识别、可核验的三明治攻击模式：机器人在你的兑换交易前后各插入一笔交易，先推高价格、再吃掉你的兑换、最后把价格打回去获利离场。本文讲清这种攻击为什么专门盯上目的链而不是源链、怎样通过区块浏览器核对交易顺序识别攻击痕迹、以及如何把容差设置收紧到既不会因为过窄而频繁失败、又不会给机器人留出操作空间的安全区间。全文仅为方法层面的实操教程，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-23T11:07:00+08:00">2026-08-23 11:07:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crosschain-swap-destination-sandwich-attack-guide.svg" alt="目的链三明治攻击核验：滑点容差为何被打满 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>源链交易确认到目的链交易执行之间的实际延迟时长，而不是官方宣传的"平均"数字</li>
+            <li><span class="article-verify-check">✓</span>目的链区块浏览器上，你的兑换交易前后是否各有一笔来自同一地址或同一Bundle的交易</li>
+            <li><span class="article-verify-check">✓</span>实际成交价是否精确落在你设定容差上限附近，而不是随机分布在容差区间内</li>
+            <li><span class="article-verify-check">✓</span>目的链是否存在公开的交易排序拍卖或私有内存池，决定攻击者能否稳定复现这套手法</li>
+          </ul>
+        </div>
+
+        <section id="sec-1">
+        <h2>1. 为什么三明治攻击专门盯上目的链，而不是源链</h2>
+        <p>跨链兑换分两段执行：源链上锁定或销毁资产的交易，以及目的链上按当时汇率铸造或释放资产的交易。源链交易一旦确认就无法反悔，攻击者即便提前看到你的意图也很难在源链上做手脚，因为源链的价格发现和目的链上的实际兑换执行是分离的。真正的价格执行发生在目的链——中继商或验证者网络确认源链交易后，会在目的链上提交一笔交易，按当时目的链上的流动性池状态计算你能拿到多少目标资产。这中间的确认延迟，短则十几秒（比如同链上的Layer2到Layer2桥接），长则几分钟甚至更久（某些需要多重签名或挑战期的桥），构成了一个攻击者可以提前布局的时间窗口：他们看到你的源链交易被确认、能推断出你的目的链交易大概率即将执行，就可以抢先在目的链流动性池里布局，等你的交易进来时用抬高的价格成交，再迅速平仓获利。跟站内单链交易的抢跑不同，这里的关键漏洞不是交易可见性，而是确认延迟给了攻击者"确定性"——他们几乎能肯定你的交易会在某个时间窗口内到达目的链，这比单链MEV里"猜测下一笔交易内容"要容易得多。</p>
+        </section>
+
+        <section id="sec-2">
+        <h2>2. 滑点容差是固定值，但成交价的"参照系"你其实看不到</h2>
+        <p>用户设置滑点容差时，参照的通常是下单那一刻聚合器展示的报价，比如"最多接受比报价低2%的成交价"。但问题在于，这个报价是在源链交易发出之前生成的，而实际成交发生在目的链交易执行的那一刻——中间隔着源链确认延迟，目的链上的流动性池状态完全可能已经变化。如果目的链流动性池在这段时间里保持稳定，你的成交价会接近报价；但如果有人在延迟窗口里主动往池子里加了一笔大额交易（不管是不是针对你），流动性池的价格就会偏离，而你设置的固定百分比容差，本质上只是给了系统一个"我愿意接受多大偏离"的上限，并不能阻止有人刻意把偏离幅度精确控制在这个上限之内然后收割。换句话说，滑点容差保护的是"不要吃太大的亏"，但完全无法区分这个"亏"是市场自然波动导致的，还是被人精确计算后刻意打满的——这正是识别三明治攻击的核心：自然波动导致的滑点通常呈随机分布，忽高忽低；被刻意针对的滑点则会反复精确贴近容差上限。</p>
+        </section>
+
+        <section id="sec-3">
+        <h2>3. 怎么在区块浏览器上核对交易顺序，识别攻击痕迹</h2>
+        <p>核验方法并不复杂，但需要耐心逐笔核对。第一步，找到你这笔跨链兑换在目的链上执行的那笔交易哈希，在区块浏览器（如Etherscan、对应链的浏览器）上打开它所在的区块。第二步，查看同一区块内、紧邻你这笔交易前后的交易，尤其关注是否有交易与你的交易操作同一个流动性池、且发送方地址此前没有其他链上活动记录（这类"一次性"地址是三明治攻击机器人的常见特征，用完即弃避免被追踪）。第三步，对比这几笔交易的Gas价格：经典的三明治攻击中，攻击者的前置交易（买入推高价格）通常会设置比你的交易更高的Gas价格以确保排在你前面执行，而后置交易（卖出获利）则会紧跟在你之后。第四步，把你实际拿到的目标资产数量，和这笔交易执行那一刻该资产在其他外部行情源（不是被攻击的那个池子）的市场价对比，如果差额精确等于或接近你设置的容差百分比，且这种模式在你的历史交易中反复出现，基本可以确认你正在被针对性地"打满容差"，而不是单纯运气不好。</p>
+        </section>
+
+        <section id="sec-4">
+        <h2>4. 交易排序机制决定了攻击能否稳定复现</h2>
+        <p>不是所有目的链都同样容易被这种手法针对。关键变量是该链的交易排序机制：如果目的链使用公开内存池、按Gas价格竞价排序（多数早期EVM链的默认模式），攻击者只需要付出略高的Gas费就能确保插队，这种链上三明治攻击的复现成本很低、几乎可以说是常态化风险。如果目的链采用了私有交易排序、批量拍卖出块（如部分Layer2采用的公平排序机制）或者委托给声誉良好的构建者网络处理内存池，攻击者提前布局的能力会被显著削弱，因为他们看不到你的交易在被打包前的具体内容，也无法确保自己的插队交易排在你前面。核验时可以直接查该目的链官方文档或验证者/排序器说明，看是否明确提到交易排序方式；如果找不到相关说明，默认按最坏情况处理，把该链上的跨链兑换容差设置得更保守。</p>
+        </section>
+
+        <section id="sec-5">
+        <h2>5. 用像AllSwap这样支持多路径比较的工具降低单点暴露</h2>
+        <p>前几节的核验方法能帮你确认自己是否被针对，但更主动的防御是从源头降低被攻击的概率：优先选择能展示目的链流动性深度、并允许你按实际市场深度动态调整容差（而不是所有兑换一律用同一个固定百分比）的聚合工具。<a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>是这一类工具的一个例子，其平台自述定位为跨链兑换聚合工具，会在下单前展示候选路径对应的目的链流动性状况，理论上可以用来判断某条路径在当前时刻是否处于流动性偏薄、更容易被操纵的状态。需要说明的是，以上仅为该平台自述信息，具体的流动性深度展示准确度、排序保护机制与最终成交价，请以官方最新披露和你自己的实测为准，本文不做任何背书或保证。任何跨链兑换工具的使用都必须服务于真实、合规的资产管理需求，遵守相关平台条款和你所在地区的法律法规，切勿用于洗钱、规避制裁或其他非法用途。</p>
+        </section>
+
+        <section id="sec-6">
+        <h2>6. 把容差收紧到安全区间，而不是一律调到最低</h2>
+        <p>很多人发现被三明治攻击后的第一反应是把滑点容差调到接近0，这其实矫枉过正：容差过窄会导致正常的市场波动也频繁触发交易失败，尤其在网络拥堵、确认延迟本身被拉长的时段，失败率会明显上升，而失败的交易依然要支付Gas，等于白白多付一次成本。更合理的做法是分层设置：先用第3节的方法核实这条路径、这个目的链历史上是否存在规律性的容差打满现象；如果存在，把容差收窄到略高于该池子正常波动区间的上沿，同时缩短兑换发起的等待窗口（比如避开目的链拥堵高峰，参考确认延迟数据选择相对空闲的时段发起）；如果不存在规律性打满，维持稍宽松的容差以换取更高的成交成功率即可。核心原则是让容差贴近"自然波动的上限"而不是贴近"你能承受的最大亏损"，两者数值可能接近，但含义完全不同——前者是基于数据的防御，后者只是一厢情愿的兜底。</p>
+        </section>
+
+        <section id="sec-7">
+        <h2>7. 总结与核验清单</h2>
+        <ul>
+        <li>三明治攻击专盯目的链，因为源链确认延迟给了攻击者提前布局的确定性窗口。</li>
+        <li>固定滑点容差只限制最大偏离幅度，不能区分自然波动和刻意打满，需要靠交易顺序核验来分辨。</li>
+        <li>在目的链区块浏览器上核对你交易前后是否有同池、同模式的一次性地址交易，且成交价是否反复精确贴近容差上限。</li>
+        <li>查清目的链的交易排序机制：公开内存池竞价排序的链风险明显更高，需要更保守的容差。</li>
+        <li>用能展示目的链流动性深度、支持动态容差的工具，从源头降低被针对的概率。</li>
+        <li>容差收紧要基于历史波动数据设定安全上沿，而不是一律调到最低造成频繁失败。</li>
+        </ul>
+        <p>常见问题：滑点容差调低是不是就安全了？不是，过窄的容差反而会因正常波动频繁失败，关键是核实是否存在规律性打满，再针对性收紧。怎么判断是不是真的被三明治攻击了？看目的链区块浏览器上你交易前后是否有同池的一次性地址交易，以及成交价是否反复精确贴近容差上限，而不是随机分布。所有目的链风险都一样吗？不一样，公开内存池竞价排序的链风险明显更高，采用私有排序或公平排序机制的链风险较低。全文仅为学习与研究方法层面的分享，不构成任何投资建议，加密资产的跨链操作存在技术与合规风险，请自行判断并对自己的决策负责。</p>
+        </section>
+
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 为何专盯目的链</a></li>
+          <li><a href="#sec-2">2. 容差固定但参照系看不到</a></li>
+          <li><a href="#sec-3">3. 怎么核对交易顺序</a></li>
+          <li><a href="#sec-4">4. 排序机制决定风险高低</a></li>
+          <li><a href="#sec-5">5. 用AllSwap降低单点暴露</a></li>
+          <li><a href="#sec-6">6. 把容差收紧到安全区间</a></li>
+          <li><a href="#sec-7">7. 总结与核验清单</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="参考来源与延伸阅读">
+          <h2>参考来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan 区块浏览器</a> —— 核对交易顺序、Gas价格与地址历史的通用工具参考</li>
+            <li><a href="https://www.mev.wiki/" target="_blank" rel="noopener">MEV Wiki</a> —— 三明治攻击、交易排序机制等MEV概念的通用参考</li>
+            <li><a href="https://l2beat.com/" target="_blank" rel="noopener">L2BEAT</a> —— 各链交易排序与安全模型对比参考</li>
+          </ul>
+          <p class="ref-note">文中提及的跨链兑换工具与第三方平台功能可能随时间变化，请以各平台官方最新披露为准；本文仅为学习研究之用，不构成任何投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/protocol/crosschain-swap-mev-frontrun-verification-guide.html">跨链兑换滑点去哪了：套利机器人为何总抢先</a></li>
+          <li><a href="/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">跨链兑换实操核验：报价滑点和到账金额，真的对得上吗</a></li>
+          <li><a href="/research/protocol/crosschain-swap-dry-run-verification-guide.html">跨链兑换前先测一笔：大额转账前该验证什么</a></li>
+          <li><a href="/research/protocol/crosschain-swap-fee-optimization-guide.html">跨链兑换手续费怎么省：拆单前先看清费用结构</a></li>
+          <li><a href="/research/protocol/crosschain-swap-stuck-recovery-guide.html">跨链兑换卡在中途：源链扣了，目标链没到</a></li>
+          <li><a href="/research/protocol/bridge-security-research-guide.html">跨链桥安全研究指南：从技术原理到风险评估</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回摘要首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=46aa7137"></script>
+</body>
+</html>

@@ -100,26 +100,27 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'bridge-guardian-set-threshold-change-verification-guide',
-  publishedISO: '2026-08-22T19:19:00+08:00',
-  tagColor: 'indigo',                     // must already exist as .archive-tag--<color> in styles.css
-  topic: 'governance',                    // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
+  slug: 'crosschain-swap-destination-sandwich-attack-guide',
+  publishedISO: '2026-08-23T11:07:00+08:00',
+  tagColor: 'rust',                       // must already exist as .archive-tag--<color> in styles.css
+  topic: 'protocol',                      // data-topic bucket on the archive-list <li>, must match articles.html taxonomy
 
   zh: {
-    h1: '跨链桥验证者集阈值核验：多签门槛何时被调低',
-    tagLabel: '跨链桥验证者集核验',
-    cardDesc: '跨链桥的安全性由M-of-N验证者集（guardian）门槛决定，但门槛数字、验证者名单与生效延迟并非部署时锁死的常量：本文给出三处核验方法——比对当前guardian集合与官方披露名单是否一致、核实门槛数字是否被静默调低、检查新guardian集合生效前是否留有可供社区反应的延迟窗口。',
+    h1: '目的链三明治攻击核验：滑点容差为何被打满',
+    tagLabel: '目的链三明治攻击核验',
+    cardDesc: '跨链兑换的滑点容差常被设成一个固定百分比，但目的链的实际成交价要等源链确认后才揭晓，这段确认延迟恰好给了套利机器人在目的链上精确计算并打满你容差上限的操作空间。本文教你核对源链确认延迟、目的链实际成交价与容差上限三者的对应关系，从交易顺序识别三明治攻击痕迹，并给出把容差收紧到安全区间的判断方法。',
   },
   en: {
-    h1: 'Bridge Guardian Set Verification: When Was the Threshold Cut',
-    tagLabel: 'Bridge Guardian Set Check',
-    cardDesc: "Bridge security rests on an M-of-N guardian set whose threshold, roster, and activation delay drift quietly — verify all three before trusting a bridge.",
+    h1: 'Why Cross-Chain Swaps Get Sandwiched on the Destination Chain',
+    tagLabel: 'Destination Sandwich Check',
+    cardDesc: "Slippage tolerance is fixed, but the fill price only settles after source-chain confirmation — bots use that delay to compute and hit your cap exactly on the destination chain.",
   },
 
   // Every OTHER existing article slug, in the site's current newest-first order.
   // Copy this from the previous run of this script / from articles.html's <ol>,
   // and just leave off the slug you're publishing now.
   existingSlugsNewestFirst: [
+    'bridge-guardian-set-threshold-change-verification-guide',
     'snapshot-offchain-vote-execution-verification-guide',
     'offshore-crypto-exchange-compliance-verification-guide',
     'otc-fiat-offramp-counterparty-verification-guide',
