@@ -19,7 +19,7 @@ const TOPICS = {
     zhLabel: '治理、资产与专项核验', enLabel: 'Governance, Assets & Special Checks',
     zhTitle: '治理与资产核验：DAO投票、多签与专项风险排查',
     enTitle: 'Governance & Asset Verification: DAO Voting, Multisig & Special-Case Checks',
-    zhIntro: '治理机制看起来"去中心化"，但执行环节往往藏着可以被悄悄改动的地方：多签门槛、时间锁窗口、链下投票的执行方式、资产赎回的法律条款。本类目专注这些容易被忽视的执行细节，给出具体的核验步骤而不是泛泛而谈的治理理念。',
+    zhIntro: '治理机制看起来「去中心化」，但执行环节往往藏着可以被悄悄改动的地方：多签门槛、时间锁窗口、链下投票的执行方式、资产赎回的法律条款。本类目专注这些容易被忽视的执行细节，给出具体的核验步骤而不是泛泛而谈的治理理念。',
     enIntro: "Governance mechanisms look decentralized on paper, but execution details are where things quietly drift — multisig thresholds, timelock windows, how off-chain votes actually get executed, the legal fine print behind asset redemption. This category focuses on those overlooked execution details with concrete verification steps, not abstract governance theory.",
   },
   market: {
