@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'open-interest-concentration-verification-guide',
-  publishedISO: '2026-08-24T15:03:00+08:00',
-  tagColor: 'copper',
-  topic: 'market',
+  slug: 'virtual-card-fx-spread-hidden-fee-verification-guide',
+  publishedISO: '2026-08-24T17:41:00+08:00',
+  tagColor: 'slate',
+  topic: 'basics',
 
   zh: {
-    h1: '永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠',
-    tagLabel: '永续合约持仓量核验',
-    cardDesc: '未平仓合约（OI）暴涨常被解读为「市场热度上升」，但同一个数字既可能来自大量新增参与者，也可能只是少数账户不断加杠杆。本文拆解如何核验OI增长的真实构成：持仓集中度、资金费率交叉核验、强平热力图与跨交易所对比。',
+    h1: '虚拟卡汇率加点核验：官网写的费率，和你实际到账的对不对得上',
+    tagLabel: '虚拟卡汇率加点核验',
+    cardDesc: '虚拟卡官网常写「零手续费」，但汇率加点、清算延迟和卡组织转换费往往藏在不同环节。本文给出一套三段式拆解方法：充值汇率、清算汇率、卡组织汇率分别对账，附带小额测试单实操核验清单。',
   },
   en: {
-    h1: 'Open Interest Verification: Is the Surge Real Demand or Stacked Leverage',
-    tagLabel: 'Open Interest Verification',
-    cardDesc: 'A spike in open interest (OI) is often read as rising market heat, but the same number can come from broad new participation or a few accounts stacking leverage — four checks to tell them apart.',
+    h1: 'Virtual Card FX Spread Verification: The Advertised Rate vs. What Actually Lands',
+    tagLabel: 'Virtual Card FX Spread Verification',
+    cardDesc: '"Zero fees" rarely means zero cost — FX spread hides across top-up, settlement, and card-network conversion. A three-stage reconciliation method plus a small test-transaction checklist.',
   },
 
   existingSlugsNewestFirst: [
+    'open-interest-concentration-verification-guide',
     'dao-grant-milestone-release-verification-guide',
     'orderbook-depth-verification-guide',
     'crosschain-swap-destination-sandwich-attack-guide',
