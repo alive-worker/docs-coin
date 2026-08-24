@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'orderbook-depth-verification-guide',
-  publishedISO: '2026-08-23T15:59:00+08:00',
-  tagColor: 'gold',
-  topic: 'market',
+  slug: 'dao-grant-milestone-release-verification-guide',
+  publishedISO: '2026-08-24T13:32:00+08:00',
+  tagColor: 'plum',
+  topic: 'governance',
 
   zh: {
-    h1: '订单簿深度核验：挂单量为何总在成交前消失',
-    tagLabel: '订单簿深度核验',
-    cardDesc: '订单簿显示的挂单深度，和你真正能以该价格成交的数量，往往是两回事。本文拆解冰山单如何隐藏真实规模、报价为何在你下单瞬间撤销、聚合器合并深度如何掩盖单一池子的真实薄弱，以及研究者如何用连续快照与小额探测单核验显示深度是否可信。',
+    h1: 'DAO资助拨款核验：写着「分期解锁」，链上却一次性到账',
+    tagLabel: 'DAO资助拨款核验',
+    cardDesc: 'DAO资助提案常把拨款包装成按里程碑分期释放，听起来像是有约束的谨慎安排。但里程碑是否有客观标准、链上转账是否真的分批、资金到账后流向哪里，都需要单独核验，而不能只信提案文本。',
   },
   en: {
-    h1: 'Order Book Depth Verification: Why Displayed Liquidity Vanishes Before You Can Hit It',
-    tagLabel: 'Order Book Depth Check',
-    cardDesc: 'The depth an order book shows and what you can actually fill are often two different things — iceberg orders hide true size, quotes cancel the instant you click, and aggregators mask a thin single source.',
+    h1: 'DAO Grant Verification: Milestone-Based on Paper, One Lump Sum On-Chain',
+    tagLabel: 'DAO Grant Verification',
+    cardDesc: 'DAO grants promise milestone-based release, but whether milestones are verifiable, transfers actually staged, and funds\' downstream flow all need separate checks rather than trusting the proposal text.',
   },
 
   existingSlugsNewestFirst: [
+    'orderbook-depth-verification-guide',
     'crosschain-swap-destination-sandwich-attack-guide',
     'bridge-guardian-set-threshold-change-verification-guide',
     'snapshot-offchain-vote-execution-verification-guide',

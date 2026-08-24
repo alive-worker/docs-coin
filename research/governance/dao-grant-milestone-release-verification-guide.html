@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAO资助拨款核验：写着「分期解锁」，链上却一次性到账</title>
+  <meta name="description" content="DAO资助提案常把拨款包装成「按里程碑分期释放」，听起来像是有约束的谨慎安排。但里程碑是否有可验证的客观标准、链上转账是否真的按提案节奏分批执行、资金到账后又流向了哪里——这三件事需要单独核验，而不能只信提案文本。本文给出对照提案条款与链上转账记录、识别模糊里程碑话术、追踪资助方地址后续流向的具体方法。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-grant-milestone-release-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="DAO资助拨款核验：写着「分期解锁」，链上却一次性到账 - 加密货币研究">
+  <meta property="og:description" content="DAO资助提案常把拨款包装成按里程碑分期释放，但里程碑是否有客观标准、链上转账是否真的分批、资金到账后流向哪里，都需要单独核验。">
+  <meta property="og:url" content="https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-24T13:32:00+08:00">
+  <meta property="article:modified_time" content="2026-08-24T13:32:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAO资助拨款核验：写着「分期解锁」，链上却一次性到账 - 加密货币研究">
+  <meta name="twitter:description" content="里程碑是否可验证、拨款是否真的分批、资金到账后流向哪里——DAO资助拨款的三处链上核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-grant-milestone-release-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DAO资助拨款核验：写着分期解锁，链上却一次性到账 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-grant-milestone-release-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-dao-grant-milestone-release-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=6aade64e">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-grant-milestone-release-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html", "name": "DAO资助拨款核验：写着「分期解锁」，链上却一次性到账 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "DAO资助拨款核验", "item": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#article", "headline": "DAO资助拨款核验：写着「分期解锁」，链上却一次性到账", "description": "DAO资助提案常把拨款包装成按里程碑分期释放，但里程碑是否有客观标准、链上转账是否真的分批、资金到账后流向哪里，都需要单独核验，而不能只信提案文本。仅供学习研究，不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DAO资助拨款核验", "里程碑释放核验", "国库拨款追踪", "伪里程碑话术", "资助方地址追踪", "治理提案时序核验"], "wordCount": 2500, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-24T13:32:00+08:00", "dateModified": "2026-08-24T13:32:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/governance/dao-grant-milestone-release-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/governance/dao-grant-milestone-release-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DAO资助拨款核验：写着「分期解锁」，链上却一次性到账</h1>
+        <p class="article-summary">DAO资助（Grant）提案在文本上几乎都会写「按里程碑分期释放资金」这句话，听起来像是一种有约束、能防止资金滥用的谨慎安排——完不成阶段目标，后续款项就不会释放。但这句话本身只是提案文本的承诺，它是否真的对应到链上一笔笔按节奏发生的转账，是完全可以独立核验、也经常被忽略的事情。本文围绕三个具体问题展开：所谓「里程碑」是否有客观、可验证的完成标准，而不是一句模糊描述；链上实际的拨款交易记录是否真的按提案节奏分批执行，还是投票通过后不久就被一次性打满；以及拨款到账后，资助方地址后续的资金流向能否合理解释其用途。全文仅讨论抽象机制与通用核验方法，不点名任何真实DAO、资助项目或个人，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-24T13:32:00+08:00">2026-08-24 13:32:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dao-grant-milestone-release-verification-guide.svg" alt="DAO资助拨款核验：写着分期解锁，链上却一次性到账 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>提案里写的「里程碑」是否有可验证的客观标准（如具体交付物、可查询的链上指标），而非「持续推进」「阶段性成果」这类模糊描述</li>
+            <li><span class="article-verify-check">✓</span>链上实际转账记录的笔数、金额与时间间隔，是否与提案文本里的分期节奏对应，还是在投票通过后短时间内就已打满</li>
+            <li><span class="article-verify-check">✓</span>投票通过时间与首笔拨款转账时间的先后顺序，是否存在提案还在讨论阶段、资金却已经转出的异常情况</li>
+            <li><span class="article-verify-check">✓</span>资助方地址收到资金后的后续流向，是否停留在与项目相关的地址，还是短期内大量转入交易所或分散到多个新钱包</li>
+          </ul>
+        </div>
+<section id="sec-1">
+<h2>1. 「按里程碑分期释放」，是提案的承诺，不是链上的事实</h2>
+<p>几乎每一份DAO资助提案在描述拨款方式时，都会用到「按里程碑分期释放」「完成阶段目标后解锁下一笔」这类表述。这套设计的逻辑很清楚：与其一次性把全部资助金额打给申请方、寄希望于对方按承诺完成工作，不如把资金拆成几笔，每笔对应一个可检查的阶段目标，DAO保留在任何一个阶段发现问题就暂停后续拨款的权力。这本身是一种合理的风险控制思路，但需要清楚区分的是：提案文本里写的这套分期释放机制，只是一份治理层面的承诺和意图；它是否真的对应到链上实际发生的、一笔笔独立的转账交易，这两者之间并不天然等价。一份提案完全可以在文本里写得极其严谨——三个阶段、每阶段验收标准、每阶段拨款比例——但实际执行时，资金托管方或多签持有者仍然有能力在提案通过后不久，就把全部或大部分金额一次性转给资助方，而这个操作在链上是完全可以被观察到、也完全应该被核验的。</p>
+<ul>
+<li>「分期释放」是提案文本层面的治理承诺，不等同于链上实际执行方式</li>
+<li>合理的分期设计本意是保留在任一阶段暂停后续拨款的权力</li>
+<li>提案文本的严谨程度，与实际链上转账是否真的分批执行，是两件独立的事</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 核验「里程碑」本身：是客观标准，还是一句漂亮话</h2>
+<p>核验拨款是否按里程碑执行之前，首先要核验「里程碑」这个词在具体提案里到底指什么。一种是客观、可验证的标准：比如某个测试网合约地址已部署并通过审计、某项功能已上线主网且可在区块浏览器查询到对应交易、某个链上指标达到具体数值。这类标准的共同点是，任何第三方都可以不依赖资助方自己的陈述，独立去核实它是否成立。另一种则是模糊、主观的描述：比如「项目正在稳步推进」「已取得阶段性成果」「团队持续投入研发」，这类表述的问题在于，它们无法被第三方独立验证，最终是否「达成里程碑」，实际上完全取决于资金托管方或提案发起人自己的主观判断，而这个判断过程本身往往并不透明。研究者在核验一份资助提案时，应当优先去看每个里程碑的具体定义，如果发现里程碑定义在提案通过后被悄悄修改或放宽——比如从「合约完成审计」改成「合约代码已提交」——这本身就是一个需要警惕的信号。</p>
+<ul>
+<li>客观里程碑：第三方可独立核实的具体交付物或可查询的链上指标</li>
+<li>模糊里程碑：依赖资助方自我陈述、缺乏第三方核验路径的主观描述</li>
+<li>警惕信号：里程碑定义在提案通过后被悄悄修改或放宽</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 链上转账节奏核验：分几笔打的，间隔多久</h2>
+<p>确认里程碑定义足够清晰之后，下一步是直接在区块浏览器上核对资助方地址收到的实际转账记录。核验的具体做法是：找到国库或治理执行合约向该资助方地址转账的全部交易，记录每一笔的金额、时间戳，与提案文本里承诺的分期金额、分期节奏逐一比对。如果提案写明分三期、每期间隔至少一个季度，但链上记录显示全部三笔转账在两周内就已完成，这就说明所谓的分期释放在实际执行层面并未生效——不论中间是否有人工核实过里程碑完成情况，至少从时间间隔上看，不存在真正意义上「等待验收结果」的窗口期。另一种需要关注的模式是转账笔数与提案分期数量不匹配：提案写三期，链上却只有一笔转账对应总金额，这意味着无论后续是否会补发说明，实际执行方式已经和提案文本承诺的机制脱节。</p>
+<ul>
+<li>核对资助方地址收到的每一笔转账的金额、时间戳，逐一比对提案承诺的分期节奏</li>
+<li>分期间隔过短，说明不存在真正意义上等待验收结果的窗口期</li>
+<li>转账笔数与提案分期数量不匹配，说明实际执行已与提案文本脱节</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 时序核验：投票还没通过，钱是不是已经在路上</h2>
+<p>比转账节奏更值得警惕的一种异常，是治理提案的投票通过时间，与实际拨款交易的时间顺序倒挂。正常情况下，一笔资助拨款的因果链条应当是：提案在治理论坛或链上投票中获得通过，随后国库执行方根据投票结果发起转账。核验方法是直接对比两个时间戳：链上投票合约记录的提案执行时间（或投票截止时间），与资助方地址收到首笔款项的时间。如果发现首笔转账的时间戳早于投票通过时间，甚至早于提案正式发布讨论的时间，这说明实际的资金流动可能根本没有等待治理流程的结果，投票本身更接近一种事后走过场的形式，而非真正决定资金是否发放的关卡。这种时序错位在链上是可以被客观记录、无法事后抵赖的证据，是核验一份资助提案治理流程是否名副其实的关键切入点。</p>
+<ul>
+<li>正常因果链条：提案投票通过在先，国库转账执行在后</li>
+<li>核验方法：直接对比投票执行时间戳与首笔转账时间戳的先后顺序</li>
+<li>转账早于投票通过，说明治理流程可能只是事后走过场</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 资金到账之后：追踪资助方地址的后续流向</h2>
+<p>核验拨款是否合规，不应止步于确认资金按节奏、按时序到了资助方地址，还应当继续观察资金到账后的后续去向。一个相对健康的模式是，资助方地址收到款项后，资金逐步、分散地流向与项目实际运营相关的支出，比如支付开发人员薪酬的多笔小额转账、购买链上服务或基础设施的交易。需要警惕的模式则包括：资金到账后短时间内（比如24小时内）就被整笔转入某个中心化交易所的充值地址，这种模式很难与「用于项目长期研发」的资助初衷对应起来；或者资金被迅速拆分转入多个此前从未出现过、彼此之间没有明显关联的新地址，这种拆分模式在链上分析中通常被视为试图规避追踪的信号。当然，单一一次转入交易所不必然等同于挪用，但如果这成为资助方收款后的固定模式，就值得在下一次审议拨款申请时纳入考量。</p>
+<ul>
+<li>相对健康的模式：资金逐步、分散流向与项目运营相关的实际支出</li>
+<li>需要警惕的模式：到账后短时间内整笔转入交易所充值地址</li>
+<li>另一种警惕模式：资金被迅速拆分转入多个无关联的新地址</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 常见认知误区与方法论边界</h2>
+<p>本篇提醒研究者留意两类常见误区。其一，看到提案文本里「按里程碑分期释放」这句话，就默认这套机制一定会被严格执行，而不去核对链上实际的转账记录是否真的分批、分节奏发生——提案文本的严谨程度和实际执行力度是两件需要分别核实的事情。其二，只关注资金是否「到了」资助方地址，把这当作核验的终点，而不继续追踪资金到账后的后续流向，忽视了一笔拨款从治理投票、链上转账到最终使用，是一条完整的资金旅程，任何一环出现异常都值得关注。需要说明方法论边界：本篇仅讨论DAO资助拨款机制的抽象核验方法，不点名任何真实DAO、资助项目、申请方或个人，文中提及的时间间隔、比例等均为说明示例，不构成对任何具体资助行为的指控，也不构成投资建议。</p>
+<ul>
+<li>误区一：默认提案里的分期释放承诺一定会被严格执行，不核对链上实际记录</li>
+<li>误区二：只核验资金是否到账，不继续追踪到账后的资金去向</li>
+<li>方法论边界：仅讨论抽象核验方法，不点名真实主体，不构成任何指控或投资建议</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 「分期释放」是承诺，不是链上事实</a></li>
+          <li><a href="#sec-2">2. 核验「里程碑」本身</a></li>
+          <li><a href="#sec-3">3. 链上转账节奏核验</a></li>
+          <li><a href="#sec-4">4. 时序核验：投票与转账先后</a></li>
+          <li><a href="#sec-5">5. 追踪资助方地址后续流向</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与方法论边界</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>：区块浏览器，可用于核对国库转账记录与地址后续流向</li>
+            <li><a href="https://www.tally.xyz/" target="_blank" rel="noopener">Tally</a>：链上治理提案与投票记录查询平台示例</li>
+            <li><a href="https://allswap.io/zh-hans" target="_blank" rel="noopener nofollow sponsored">AllSwap</a>：一个公开的跨链聚合与Swap路由产品示例，供方法参考</li>
+          </ul>
+          <p class="ref-note">文中提及的机制与核验方法可能随治理实践演进而变化，请以具体DAO当前的治理文档为准；本文仅供学习研究，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/governance/dao-treasury-multisig-timelock-verification-guide.html">国库多签核验：签名者换人、时间锁被绕开</a></li>
+          <li><a href="/research/governance/dao-governance-research-guide.html">DAO治理研究：投票权集中在少数地址，「去中心化」还成立吗</a></li>
+          <li><a href="/research/governance/snapshot-offchain-vote-execution-verification-guide.html">链下投票核验：Snapshot结果被谁执行</a></li>
+          <li><a href="/research/governance/vote-market-research-guide.html">治理投票权贿选市场：当投票权可以标价出售，治理还是治理吗</a></li>
+          <li><a href="/research/governance/exchange-reserves-research-guide.html">储备证明能证明什么：Merkle树只验证包含关系，没验证偿付能力</a></li>
+          <li><a href="/research/protocol/onchain-forensics.html">链上取证与资金追踪方法论：被盗资金流向哪里，怎么查</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/methodology.html">研究方法论</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=db1448ee"></script>
+</body>
+</html>
