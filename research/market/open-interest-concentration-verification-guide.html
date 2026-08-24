@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠</title>
+  <meta name="description" content="未平仓合约（OI）暴涨常被解读为「市场热度上升」，但同一个数字既可能来自大量新增参与者，也可能只是少数账户不断加杠杆。本文拆解如何核验OI增长的真实构成：持仓集中度、与资金费率方向的交叉核验、强平价格分布热力图，以及跨交易所OI对比方法，避免把杠杆堆叠误读为真实需求扩张。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠 - 加密货币研究">
+  <meta property="og:description" content="OI暴涨可能来自新增参与者，也可能只是少数账户加杠杆。本文给出持仓集中度、资金费率交叉核验、强平热力图与跨交易所对比四个核验方法。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-24T15:03:00+08:00">
+  <meta property="article:modified_time" content="2026-08-24T15:03:00+08:00">
+  <meta property="article:author" content="https://coin.ponr.org/about.html#author">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠 - 加密货币研究">
+  <meta name="twitter:description" content="持仓集中度、资金费率交叉核验、强平热力图、跨交易所对比——四个核验OI增长真实构成的方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-open-interest-concentration-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-open-interest-concentration-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-open-interest-concentration-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=10f7ebd2">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-open-interest-concentration-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html", "name": "永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#article" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "永续合约持仓量核验", "item": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#article", "headline": "永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠", "description": "拆解未平仓合约（OI）增长的真实构成核验方法：持仓集中度、资金费率交叉核验、强平热力图、跨交易所对比。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["未平仓合约核验", "OI持仓集中度", "资金费率交叉核验", "强平热力图", "跨交易所OI对比", "杠杆堆叠风险"], "wordCount": 2500, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-24T15:03:00+08:00", "dateModified": "2026-08-24T15:03:00+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/open-interest-concentration-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠</h1>
+        <p class="article-summary">未平仓合约（Open Interest，OI）是永续合约市场最常被引用的"热度"指标之一，OI暴涨常被直接解读为"市场关注度上升、资金大量涌入"。但这个数字本身只反映"当前尚未平仓的合约总量"，完全无法区分它是来自大量新增参与者的真实需求扩张，还是少数账户在同一方向反复加杠杆堆叠出来的结果——两者对应的风险结构截然不同，前者相对健康，后者往往意味着一旦价格反向波动，会触发集中的强制平仓连锁反应。本文围绕四个具体问题展开：如何核验OI增长背后的持仓集中度、如何把OI变化与资金费率方向交叉核验判断谁在加杠杆、如何通过强平价格分布热力图评估连环平仓风险，以及为什么必须跨交易所对比OI而不能只看单一平台的数字。全文仅讨论抽象核验方法，不针对任何具体交易所或代币做结论，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-24T15:03:00+08:00">2026-08-24 15:03:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-open-interest-concentration-verification-guide.svg" alt="永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>OI 增长的同时，持仓地址/账户数量是否也同步增长，还是账户数几乎不变、只是每个账户的名义持仓在扩大</li>
+            <li><span class="article-verify-check">✓</span>OI 上升期间资金费率的方向与幅度，是否指向多空双方均衡加仓，还是明显偏向一侧的单边杠杆堆叠</li>
+            <li><span class="article-verify-check">✓</span>当前强平价格分布是否在某个较窄区间内异常集中，形成一旦触及就可能引发连环平仓的"密集带"</li>
+            <li><span class="article-verify-check">✓</span>OI 增长是否集中在单一交易所，还是在主要平台间同步出现——单一平台异常堆积本身就是一个值得警惕的信号</li>
+          </ul>
+        </div>
+<section id="sec-1">
+<h2>1. OI这个数字，本身说明不了"谁在买"</h2>
+<p>未平仓合约统计的是某一时刻所有尚未平仓的合约总量，它是一个存量指标，而不是流量指标——它告诉你"现在场内还压着多少仓位"，却完全不告诉你这些仓位是刚刚建立还是持续了很久，是分散在成百上千个账户手中，还是集中在少数几个大户身上。研究者常犯的错误，是把OI单周期内的大幅上升直接等同于"市场情绪转向""资金大举入场"，而不去追问这个增量究竟由谁贡献。如果OI从10亿美元涨到15亿美元（虚构数值，仅用于说明方法），可能是5000个新账户各自开出10万美元仓位，也可能只是50个账户各自把仓位从原来的200万美元加到300万美元——这两种情况在OI曲线上呈现出的形状完全一样，但背后的市场结构和后续风险截然不同，需要用其他数据交叉验证才能区分。</p>
+<ul>
+<li>OI是存量指标，反映"现在压着多少仓位"，不反映"谁在压"</li>
+<li>同样的OI增长曲线，可能对应完全不同的参与者结构</li>
+<li>把OI暴涨直接解读为"资金大举入场"是一种常见的过度简化</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. 持仓集中度核验：账户数量是否同步增长</h2>
+<p>核验OI增长真实构成的第一步，是尝试获取持仓账户数量或大户持仓占比的变化趋势——不少交易所或第三方数据平台会公开"大户多空持仓比"或类似指标，将其与OI总量的变化曲线并列观察。如果OI持续攀升的同时，参与账户数量或多空持仓人数比也在同步扩大，说明增长更可能来自真实的新增参与者；但如果OI大幅上升、而账户数量或持仓人数比几乎没有变化，就说明这轮增长的贡献主要来自现有账户加仓，也就是杠杆堆叠而非需求扩张。这类持仓集中度数据未必所有交易所都公开，也未必所有代币都有覆盖，这是这套方法本身的局限，但只要能获取到，就应当作为核验OI质量的第一道关卡，而不是想当然地认定"OI涨了就是好事"。</p>
+<ul>
+<li>核对大户多空持仓比、参与账户数量等指标是否与OI同步变化</li>
+<li>账户数同步增长，倾向于说明增量来自真实新增参与者</li>
+<li>账户数不变而OI暴涨，倾向于说明是现有仓位在加杠杆</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. 与资金费率方向交叉核验：谁在往哪个方向加杠杆</h2>
+<p>资金费率（Funding Rate）反映的是永续合约价格相对现货的偏离程度，本质上是多空双方为了维持仓位需要向对方支付的费用，其方向和幅度可以作为核验OI增长方向的重要交叉信号。如果OI快速上升的同时，资金费率也持续走高并维持在明显正值，说明市场里做多方远多于做空方、且愿意持续支付溢价维持多头仓位，这是典型的单边杠杆堆叠信号，一旦价格出现反向波动，容易触发多头集中平仓；反之如果资金费率始终在零附近小幅波动、没有明显偏向，即便OI在上升，也更可能反映的是多空双方均衡建仓，而不是单边押注。将OI曲线与资金费率曲线叠加对照，是判断"这轮持仓量增长是不是健康的"这一问题最直接、成本最低的核验方法之一。</p>
+<ul>
+<li>资金费率持续走高且维持正值，配合OI上升，是单边多头杠杆堆叠的信号</li>
+<li>资金费率在零附近波动而OI上升，更可能反映多空均衡建仓</li>
+<li>叠加对照OI曲线与资金费率曲线，是判断增长健康度的低成本方法</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. 强平价格分布核验：清算密集带在哪里</h2>
+<p>即便持仓账户数量分散、资金费率也未明显偏向一侧，仍然存在一种风险：大量账户即使方向不同，也可能把强平价格设置在相近的价格区间内，形成一条一旦价格触及就会引发连环平仓的"密集带"。不少数据平台会提供基于交易所公开合约参数估算出的强平价格分布热力图，研究者应当核验的是：当前价格附近一定幅度范围内（比如上下5%或10%，具体幅度视标的波动性而定），是否存在强平仓位异常密集堆积的区间。如果存在，即使OI本身的账户结构看起来健康，这个价格区间本身也是一个需要持续关注的风险点——价格一旦触及，可能引发的连锁平仓会在短时间内制造远超正常波动的价格冲击，这也是本系列此前讨论过的自动减仓机制在极端行情下真正被触发的前置条件之一。</p>
+<ul>
+<li>强平价格热力图能揭示不同方向账户是否在相近价格区间集中设置止损线</li>
+<li>核验当前价格附近是否存在异常密集的强平仓位堆积区间</li>
+<li>密集带一旦被触及，可能引发远超正常波动幅度的连环平仓冲击</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. 跨交易所对比：数据是否只在一个平台堆积</h2>
+<p>最后一层核验，是把目光从单一交易所扩展到整个市场：同一标的的OI增长，是在主要交易平台上大致同步出现，还是异常集中堆积在某一个平台。如果多个主流交易所的OI都在同一时间段内同步上升，说明这更可能是全市场层面的真实需求或情绪变化；但如果只有某一个平台的OI出现远超其他平台的异常增长，而其余平台数据平稳，这种孤立的堆积模式本身就值得警惕——它可能反映的是该平台特有的产品设计（比如更高的杠杆倍数上限）吸引了集中的投机性仓位，也可能是该平台数据统计口径或健康度存在其他值得关注的问题。跨平台对比不需要复杂工具，多数聚合数据网站已经提供分交易所的OI拆分数据，核验成本很低，却经常被忽略。日常做境外工具与平台调研时，善用像<a href="https://chdh.me/" target="_blank" rel="noopener nofollow sponsored">出海导航</a>这类工具导航网站，也能更快找到覆盖多交易所数据的第三方聚合平台入口，减少四处搜索的时间成本。</p>
+<ul>
+<li>核对OI增长是否在主要交易所间大致同步，而非只集中在单一平台</li>
+<li>单一平台孤立堆积可能反映该平台特有的产品设计或数据口径问题</li>
+<li>跨平台OI拆分数据核验成本很低，是容易被忽略的一步</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. 常见认知误区与方法论边界</h2>
+<p>本篇提醒研究者留意两类常见误区。其一，把OI单一数字的上升等同于市场健康度的提升，而不去核验其背后的账户结构与杠杆方向——同样的曲线形状可能对应完全不同的风险状态。其二，只关注OI与资金费率这类"表层"指标，而忽视强平价格分布这类需要额外数据源才能获取、但对判断连环平仓风险至关重要的"深层"信息。需要说明方法论边界：本篇仅讨论未平仓合约核验的抽象方法，不针对任何真实交易所或代币做结论，文中所有数值均为虚构示例，仅用于说明分析方法，不构成任何形式的投资建议。</p>
+<ul>
+<li>误区一：把OI上升本身等同于市场健康，不核验账户结构与杠杆方向</li>
+<li>误区二：只看OI与资金费率表层指标，忽视强平热力图这类深层信息</li>
+<li>方法论边界：仅讨论抽象核验方法，不点名真实主体，数值均为虚构示例</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. OI说明不了"谁在买"</a></li>
+          <li><a href="#sec-2">2. 持仓集中度核验</a></li>
+          <li><a href="#sec-3">3. 与资金费率方向交叉核验</a></li>
+          <li><a href="#sec-4">4. 强平价格分布核验</a></li>
+          <li><a href="#sec-5">5. 跨交易所对比</a></li>
+          <li><a href="#sec-6">6. 常见认知误区与方法论边界</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.binance.com/zh-CN/futures/funding-history/perpetual/funding-fee-history" target="_blank" rel="noopener">交易所资金费率历史查询</a>：核对资金费率变化趋势的常见入口示例</li>
+            <li><a href="https://coinglass.com/" target="_blank" rel="noopener">Coinglass</a>：提供跨交易所OI拆分与强平热力图数据的第三方聚合平台示例</li>
+            <li><a href="https://chdh.me/" target="_blank" rel="noopener nofollow sponsored">出海导航</a>：境外工具与平台资源导航站示例</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/funding-rate-divergence.html">资金费率背离：永续合约里最容易被误读的信号</a></li>
+          <li><a href="/research/market/auto-deleveraging-insurance-fund.html">自动减仓机制：保险基金见底后，谁的仓位会被强制平掉</a></li>
+          <li><a href="/research/market/perpetual-funding-manipulation-verification.html">资金费率被做偏了吗：快照套利痕迹核验</a></li>
+          <li><a href="/research/market/perpetual-dex-vault-counterparty.html">永续合约资金池模式：LP不是旁观者，是每一笔交易的对手方</a></li>
+          <li><a href="/research/market/orderbook-depth-verification-guide.html">订单簿深度核验：挂单量为何总在成交前消失</a></li>
+          <li><a href="/research/market/mev-private-order-flow.html">MEV与私有交易通道：三明治攻击换了打法，没有消失</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/methodology.html">研究方法论</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f0911604"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Interest Verification: Is the Surge Real Demand or Stacked Leverage</title>
+  <meta name="description" content="A spike in open interest (OI) is often read as rising market heat, but the same number can come from broad new participation or a handful of accounts repeatedly stacking leverage. This piece breaks down how to verify what's really behind OI growth: position concentration, cross-checking against funding rate direction, liquidation price heatmaps, and cross-exchange comparison — so stacked leverage doesn't get mistaken for real demand.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/open-interest-concentration-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Open Interest Verification: Is the Surge Real Demand or Stacked Leverage">
+  <meta property="og:description" content="OI can spike from broad new participation or a few accounts stacking leverage. Four checks: position concentration, funding-rate cross-check, liquidation heatmap, cross-exchange comparison.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-24T15:03:00+08:00">
+  <meta property="article:modified_time" content="2026-08-24T15:03:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Open Interest Verification: Is the Surge Real Demand or Stacked Leverage">
+  <meta name="twitter:description" content="Position concentration, funding-rate cross-check, liquidation heatmap, cross-exchange comparison — four checks for what's really behind OI growth.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-open-interest-concentration-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Open Interest Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-open-interest-concentration-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-open-interest-concentration-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=10f7ebd2">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-and-Chinese site focused on crypto research methodology and on-chain data, for study and research purposes only, not investment advice.", "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-open-interest-concentration-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html", "name": "Open Interest Verification: Is the Surge Real Demand or Stacked Leverage - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#breadcrumb" }, "mainEntity": { "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#article" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Open Interest Verification", "item": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#article", "headline": "Open Interest Verification: Is the Surge Real Demand or Stacked Leverage", "description": "Verification methods for what's really behind open interest growth: position concentration, funding-rate cross-checks, liquidation heatmaps, cross-exchange comparison. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["open interest verification", "OI position concentration", "funding rate cross-check", "liquidation heatmap", "cross-exchange OI comparison", "stacked leverage risk"], "wordCount": 2300, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-08-24T15:03:00+08:00", "dateModified": "2026-08-24T15:03:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/open-interest-concentration-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/open-interest-concentration-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Open Interest Verification: Is the Surge Real Demand or Stacked Leverage</h1>
+        <p class="article-summary">Open interest (OI) is one of the most frequently cited "heat" metrics in perpetual futures markets, and a sharp rise is routinely read as "rising attention, capital flooding in." But the number itself only reflects how many contracts are currently unclosed — it can't distinguish between broad new participation and a handful of accounts repeatedly stacking leverage in the same direction, and those two scenarios carry entirely different risk profiles: the former is comparatively healthy, the latter often means that once price reverses, a concentrated cascade of forced liquidations follows. This piece works through four concrete questions: how to verify the position concentration behind OI growth, how to cross-check OI changes against funding rate direction to see who's adding leverage, how to use liquidation price heatmaps to assess cascade risk, and why OI has to be compared across exchanges rather than read from a single platform. This piece discusses abstract verification methods only — it does not draw conclusions about any specific exchange or token, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Team · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-24T15:03:00+08:00">2026-08-24 15:03:00 UTC+8</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-open-interest-concentration-verification-guide-en.svg" alt="Open Interest Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>As OI grows, is the number of holding addresses/accounts also growing, or does the account count stay flat while each account's notional position expands</li>
+            <li><span class="article-verify-check">✓</span>During the OI rise, does the funding rate's direction and magnitude point to balanced positioning from both sides, or to clearly one-sided leverage stacking</li>
+            <li><span class="article-verify-check">✓</span>Is the current liquidation price distribution abnormally concentrated in a narrow band that could trigger a cascade if touched</li>
+            <li><span class="article-verify-check">✓</span>Is OI growth appearing in sync across major exchanges, or concentrated in isolation on a single platform — isolated buildup on one platform is itself worth flagging</li>
+          </ul>
+        </div>
+<section id="sec-1">
+<h2>1. The OI number alone doesn't tell you who's buying</h2>
+<p>Open interest tallies the total volume of contracts unclosed at a given moment — it's a stock metric, not a flow metric. It tells you how much is currently sitting open in the market, but says nothing about whether those positions were just opened or have been sitting for a while, or whether they're spread across hundreds of accounts or concentrated in a handful of large ones. A common mistake researchers make is treating a sharp single-period rise in OI as automatic evidence of "sentiment shifting" or "capital flooding in," without asking who actually contributed the increase. If OI rises from $1 billion to $1.5 billion (a hypothetical figure, for illustration only), that could mean 5,000 new accounts each opening a $100K position, or it could mean just 50 accounts each scaling their position from $2M to $3M. Both scenarios produce an identical-looking OI curve, but the underlying market structure and downstream risk are completely different — distinguishing them requires cross-checking against other data.</p>
+<ul>
+<li>OI is a stock metric reflecting how much is currently open, not who's holding it</li>
+<li>The same OI growth curve can correspond to entirely different participant structures</li>
+<li>Reading an OI spike as "capital flooding in" is a common oversimplification</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verify position concentration: is account count growing too</h2>
+<p>The first step in verifying what's really behind OI growth is trying to obtain data on the number of holding accounts, or a long/short account-ratio metric — many exchanges or third-party data platforms publish something like a "top-trader long/short ratio," which can be plotted alongside the OI total. If OI keeps climbing while the number of participating accounts, or the long/short account ratio, is also expanding, that growth more likely reflects genuine new participation. But if OI rises sharply while account count or the account ratio barely moves, that indicates the growth is mainly coming from existing accounts adding to their positions — leverage stacking rather than demand expansion. This kind of concentration data isn't published by every exchange and doesn't cover every token — that's a real limitation of the method — but wherever it's available, it should be treated as the first gate for judging OI quality, rather than assuming "OI went up, so it's a good sign."</p>
+<ul>
+<li>Check whether top-trader ratio or participating account count moves in sync with OI</li>
+<li>Account count growing in sync suggests the increase reflects genuine new participants</li>
+<li>Flat account count with a sharp OI rise suggests existing positions are adding leverage</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Cross-check against funding rate direction: who's leveraging up, and which way</h2>
+<p>The funding rate reflects how far a perpetual's price deviates from spot — essentially a payment one side makes to the other to maintain positions — and its direction and magnitude serve as an important cross-check signal for verifying which way OI growth is skewed. If OI is rising fast while the funding rate stays persistently and clearly positive, that means longs significantly outnumber shorts and are willing to keep paying a premium to hold positions — a textbook sign of one-sided leverage stacking, which leaves the market vulnerable to a concentrated long liquidation cascade if price reverses. Conversely, if the funding rate stays close to zero with only small fluctuations even as OI rises, that more likely reflects balanced position-building from both sides rather than a one-sided bet. Overlaying the OI curve against the funding rate curve is one of the most direct, lowest-cost ways to answer the question "is this round of OI growth healthy."</p>
+<ul>
+<li>A persistently high, clearly positive funding rate alongside rising OI signals one-sided long leverage stacking</li>
+<li>A funding rate hovering near zero alongside rising OI more likely reflects balanced position-building</li>
+<li>Overlaying OI against the funding rate curve is a low-cost way to gauge growth health</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Verify liquidation price distribution: where's the dense band</h2>
+<p>Even if the account count is spread out and the funding rate shows no clear skew, one risk still remains: a large number of accounts, even in different directions, might set their liquidation prices in a similar price range, forming a "dense band" that triggers a cascade the moment price touches it. Several data platforms provide liquidation-price heatmaps estimated from each exchange's public contract parameters. What researchers should check is whether, within a certain range around the current price (say ±5% or ±10%, depending on the underlying's volatility), there's an abnormally dense cluster of liquidation positions. If there is, that price range remains a risk worth watching even if the OI's account structure otherwise looks healthy — reaching that band can trigger cascading liquidations that produce a price shock far beyond normal volatility, which is also one of the preconditions under which the auto-deleveraging mechanism discussed elsewhere in this series actually gets triggered during extreme moves.</p>
+<ul>
+<li>Liquidation heatmaps reveal whether accounts in different directions have clustered stop-out prices in a similar range</li>
+<li>Check whether an abnormally dense cluster of liquidation positions exists near the current price</li>
+<li>A dense band, once touched, can trigger cascading liquidations far beyond normal price swings</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-exchange comparison: is it building up on one platform only</h2>
+<p>The last layer of verification widens the lens from a single exchange to the market as a whole: is the same asset's OI growth appearing roughly in sync across major trading platforms, or is it abnormally concentrated on a single one? If OI on multiple major exchanges rises around the same window, that more likely reflects a genuine market-wide shift in demand or sentiment. But if only one platform shows OI growth far outpacing the rest, with other platforms staying flat, that isolated buildup pattern is itself worth flagging — it could reflect that platform's specific product design (say, a higher max leverage cap) attracting a concentrated pool of speculative positions, or it could point to other issues worth examining in that platform's data methodology or health. Cross-platform comparison doesn't require sophisticated tooling — most aggregator sites already publish per-exchange OI breakdowns — the verification cost is low, yet this step gets skipped constantly.</p>
+<ul>
+<li>Check whether OI growth is roughly synchronized across major exchanges rather than isolated to one</li>
+<li>Isolated buildup on a single platform may reflect that platform's specific product design or data issues</li>
+<li>Cross-platform OI breakdown data is low-cost to check yet frequently overlooked</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Common misconceptions and methodology boundaries</h2>
+<p>Two common misconceptions are worth flagging. First, treating a rise in the single OI number as equivalent to improved market health, without verifying the account structure and leverage direction behind it — the same curve shape can correspond to entirely different risk states. Second, checking only surface-level metrics like OI and funding rate while ignoring liquidation price distribution — deeper information that requires an additional data source but is critical for assessing cascade risk. A methodology note: this piece discusses only the abstract verification methods around open interest — it does not draw conclusions about any real exchange or token, and all figures cited are hypothetical illustrations only, not investment advice of any kind.</p>
+<ul>
+<li>Misconception 1: treating OI growth as equivalent to market health without checking account structure or leverage direction</li>
+<li>Misconception 2: checking only surface metrics like OI and funding rate, ignoring liquidation-distribution data</li>
+<li>Methodology boundary: abstract verification methods only, no real entities named, all figures hypothetical</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. OI alone doesn't tell you who's buying</a></li>
+          <li><a href="#sec-2">2. Verify position concentration</a></li>
+          <li><a href="#sec-3">3. Cross-check funding rate direction</a></li>
+          <li><a href="#sec-4">4. Verify liquidation distribution</a></li>
+          <li><a href="#sec-5">5. Cross-exchange comparison</a></li>
+          <li><a href="#sec-6">6. Misconceptions and boundaries</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.binance.com/en/futures/funding-history/perpetual/funding-fee-history" target="_blank" rel="noopener">Exchange funding rate history</a>: an example entry point for checking funding rate trends</li>
+            <li><a href="https://coinglass.com/" target="_blank" rel="noopener">Coinglass</a>: an example third-party aggregator offering cross-exchange OI breakdowns and liquidation heatmaps</li>
+            <li><a href="https://chdh.me/" target="_blank" rel="noopener nofollow sponsored">chdh.me</a>: an example directory of overseas tools and platforms</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time — refer to official current information. For study and research purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/funding-rate-divergence.html">Funding Rate Divergence: The Most Misread Signal in Perpetuals</a></li>
+          <li><a href="/en/research/market/auto-deleveraging-insurance-fund.html">Auto-Deleveraging: Whose Position Gets Force-Closed When the Insurance Fund Runs Dry</a></li>
+          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Is the Funding Rate Being Skewed? Verifying Snapshot Arbitrage Traces</a></li>
+          <li><a href="/en/research/market/perpetual-dex-vault-counterparty.html">Perpetual Vault Models: LPs Aren't Bystanders, They're the Counterparty to Every Trade</a></li>
+          <li><a href="/en/research/market/orderbook-depth-verification-guide.html">Order Book Depth Verification: Why Displayed Liquidity Vanishes</a></li>
+          <li><a href="/en/research/market/mev-private-order-flow.html">MEV and Private Order Flow: The Sandwich Attack Didn't Disappear, It Changed Tactics</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to homepage</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metrics, and capital-flow observations.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscriptions</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Cards</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for study and research purposes only and does not constitute investment advice; crypto assets are highly volatile and risky — make your own decisions and take responsibility for them.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f0911604"></script>
+</body>
+</html>

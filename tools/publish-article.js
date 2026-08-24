@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dao-grant-milestone-release-verification-guide',
-  publishedISO: '2026-08-24T13:32:00+08:00',
-  tagColor: 'plum',
-  topic: 'governance',
+  slug: 'open-interest-concentration-verification-guide',
+  publishedISO: '2026-08-24T15:03:00+08:00',
+  tagColor: 'copper',
+  topic: 'market',
 
   zh: {
-    h1: 'DAO资助拨款核验：写着「分期解锁」，链上却一次性到账',
-    tagLabel: 'DAO资助拨款核验',
-    cardDesc: 'DAO资助提案常把拨款包装成按里程碑分期释放，听起来像是有约束的谨慎安排。但里程碑是否有客观标准、链上转账是否真的分批、资金到账后流向哪里，都需要单独核验，而不能只信提案文本。',
+    h1: '永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠',
+    tagLabel: '永续合约持仓量核验',
+    cardDesc: '未平仓合约（OI）暴涨常被解读为「市场热度上升」，但同一个数字既可能来自大量新增参与者，也可能只是少数账户不断加杠杆。本文拆解如何核验OI增长的真实构成：持仓集中度、资金费率交叉核验、强平热力图与跨交易所对比。',
   },
   en: {
-    h1: 'DAO Grant Verification: Milestone-Based on Paper, One Lump Sum On-Chain',
-    tagLabel: 'DAO Grant Verification',
-    cardDesc: 'DAO grants promise milestone-based release, but whether milestones are verifiable, transfers actually staged, and funds\' downstream flow all need separate checks rather than trusting the proposal text.',
+    h1: 'Open Interest Verification: Is the Surge Real Demand or Stacked Leverage',
+    tagLabel: 'Open Interest Verification',
+    cardDesc: 'A spike in open interest (OI) is often read as rising market heat, but the same number can come from broad new participation or a few accounts stacking leverage — four checks to tell them apart.',
   },
 
   existingSlugsNewestFirst: [
+    'dao-grant-milestone-release-verification-guide',
     'orderbook-depth-verification-guide',
     'crosschain-swap-destination-sandwich-attack-guide',
     'bridge-guardian-set-threshold-change-verification-guide',
