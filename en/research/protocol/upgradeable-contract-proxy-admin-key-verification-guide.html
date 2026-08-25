@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting - Crypto Research</title>
+  <meta name="description" content="\"This contract has been audited\" only covers the one version of logic that was running on-chain at audit time — because a proxy pattern lets whoever holds upgrade authority swap the logic contract for entirely different, possibly unaudited code, without the address users interact with ever changing. This piece breaks down the trust shift behind proxy patterns, how to verify the proxy standard and who actually holds upgrade authority, whether a timelock delay gives the community time to react, hidden risks like storage slot collisions, and a cross-protocol comparison framework for upgrade-authority evolution. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting - Crypto Research">
+  <meta property="og:description" content="\"This contract has been audited\" only covers the one version of logic that was running on-chain at audit time — because a proxy pattern lets whoever holds upgrade authority swap the logic contract for entirely different, possibly unaudited code, without the address users interact with ever changing. This piece breaks down the trust shift behind proxy patterns, how to verify the proxy standard and who actually holds upgrade authority, whether a timelock delay gives the community time to react, hidden risks like storage slot collisions, and a cross-protocol comparison framework for upgrade-authority evolution. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-25T15:37:00+08:00">
+  <meta property="article:modified_time" content="2026-08-25T15:37:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Upgradeable Contract Proxy Verification">
+  <meta name="twitter:description" content="Under a proxy pattern, the address staying the same doesn't mean the code stays the same. A method to verify upgrade authority, timelocks, and storage slot collision risk.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-upgradeable-contract-proxy-admin-key-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Upgradeable contract proxy admin key verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-upgradeable-contract-proxy-admin-key-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-upgradeable-contract-proxy-admin-key-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=10f7ebd2">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","upgradeable contract proxy verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-upgradeable-contract-proxy-admin-key-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html", "name": "Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Upgradeable Contract Proxy Verification", "item": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#article", "headline": "Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting With One Transaction", "description": "A proxy pattern lets whoever holds upgrade authority swap the logic contract's code at will while the address users interact with stays the same — meaning \"audited\" only covers the current version. This piece breaks down proxy standard verification, upgrade-authority ownership, timelock adequacy, and hidden risks like storage slot collisions. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["upgradeable contract verification","proxy upgrade authority verification","timelock verification","storage slot collision risk","smart contract admin key verification"], "wordCount": 2300, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-25T15:37:00+08:00", "dateModified": "2026-08-25T15:37:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting With One Transaction</h1>
+        <p class="article-summary">For most DeFi protocols, "this contract has been audited" only covers one thing: the specific version of code that was running on-chain at the time of the audit. But if that contract uses a proxy pattern, the audit's shelf life can be far shorter than it appears — a proxy splits "the address users interact with" from "the logic code that actually executes," and whoever holds upgrade authority can swap the logic contract for entirely different, possibly never-audited code, without changing the address or requiring any user action. This isn't an edge case — it's the architecture most large DeFi protocols adopt precisely because they anticipate needing to patch bugs or ship new features after launch. This piece breaks down the trust shift a proxy pattern introduces, how to verify which specific proxy standard a contract uses and who actually holds upgrade authority, whether a timelock delay gives the community a real window to react, easily overlooked technical risks like storage slot collisions and initialization re-entrancy, and a cross-protocol comparison framework for how far upgrade authority has evolved — from a personal key, to a multisig, to DAO governance. The entire piece discusses abstract mechanism categories only, names no real protocol, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-25T15:37:00+08:00">2026-08-25 15:37:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-upgradeable-contract-proxy-admin-key-verification-guide-en.svg" alt="Upgradeable contract proxy admin key verification theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Verify exactly which proxy standard the contract uses (Transparent/UUPS/Beacon) and which specific address holds the authority to call the upgrade function</li>
+            <li><span class="article-verify-check">✓</span>Check whether upgrades are protected by a timelock, and whether the delay is on the order of tens of hours or more — long enough for the community to spot an anomalous upgrade before it takes effect</li>
+            <li><span class="article-verify-check">✓</span>Check the historical record of upgrade-authority changes — has it moved from a single EOA to a multisig, and further to DAO governance voting?</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether each new logic contract version gets an independent audit or at least a public code-diff disclosure after every upgrade, rather than relying solely on the audit from initial deployment</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "The Address Didn't Change" Doesn't Mean "The Code Didn't Change": The Trust Shift Behind Proxy Patterns</h2>
+<p>Once an ordinary smart contract is deployed, its bytecode is permanently fixed at that address, and anyone can confidently assume "the code the audit report covers is the code I'm interacting with." A proxy pattern breaks that assumption: the address a user actually sends a transaction to (the proxy contract) contains almost no business logic itself — its core job is to forward every call via `delegatecall` to another address (the logic/implementation contract) for execution, while keeping state in the proxy's own storage. The value of this design is that a team can deploy a new logic contract and have the proxy switch its forwarding target from the old address to the new one, with no user asset migration and no change to any contract address configured in a frontend — nearly invisible to users. But it also means the trust a user previously built based on an "audit report" really only applied to one specific piece of logic code the proxy pointed to during a particular time window; once the pointer switches, that trust basis shifts too, potentially onto entirely unaudited new code.</p>
+<p>A verifier must understand this isn't a theoretical flaw but the very intent behind the proxy pattern — most protocols adopt an upgradeable architecture precisely because they're worried about undiscovered bugs in early versions, or want to keep shipping features; without a proxy, every fix would require users to manually migrate to a new contract address, an enormously high-friction process. The core question was never "should a proxy pattern be used" — it's "who has the authority to decide when and where to switch, and does the community have any ability to review the switch before it takes effect."</p>
+<ul>
+<li>A proxy pattern separates "the address users interact with" from "the logic code that actually executes," letting whoever holds upgrade authority swap the logic contract at will without changing the address.</li>
+<li>This isn't a bug but the design intent: it lets a protocol keep patching bugs and shipping features post-deployment, avoiding the high friction of users manually migrating to a new contract address.</li>
+<li>The core verification question isn't "was a proxy pattern used" but "who holds upgrade authority, and can the switch be reviewed by the community."</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Determine the Proxy Standard and Who Actually Holds Upgrade Authority</h2>
+<p>Different proxy implementation standards vary significantly in authority management and risk exposure, and a verifier's first step should be confirming exactly which one is in use. Under a Transparent Proxy, the upgrade logic lives in the proxy contract itself, typically with a separate `ProxyAdmin` contract holding upgrade authority, and calls from regular users versus the admin are automatically routed differently to avoid function-selector collisions. Under UUPS (Universal Upgradeable Proxy Standard), the upgrade logic instead lives inside the logic contract itself, keeping the proxy extremely minimal — this means if an upgrade accidentally removes the upgrade function itself, the contract could be permanently locked at its current version, making this pattern more dependent on the audit quality of the logic contract's code. A Beacon Proxy uses a shared beacon contract so multiple proxy instances can all point to the same logic address at once; upgrading the beacon once switches all instances simultaneously, amplifying both the risk and the benefit to the scale of the entire proxy cluster. After confirming the standard, the next step is finding the actual address holding upgrade authority — typically by reading the proxy contract's admin storage slot via a block explorer (each standard has its own conventional slot location), and checking whether that address is currently a plain externally-owned account (EOA), a multisig wallet, or a DAO governance contract. This information tells you far more about the real degree of authority concentration than a protocol's homepage claim of being "decentralized."</p>
+<ul>
+<li>A Transparent Proxy has a separate ProxyAdmin holding upgrade authority with automatic admin/user call routing; UUPS builds upgrade logic into the implementation contract itself, relying more on its code quality.</li>
+<li>A Beacon Proxy lets multiple proxy instances share a single upgrade, amplifying both risk and benefit to the scale of the entire proxy cluster.</li>
+<li>Read the proxy contract's admin storage slot via a block explorer to check whether upgrade authority currently sits with an EOA, a multisig, or a DAO governance contract.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Is the Upgrade Protected by a Timelock, and Is the Delay Long Enough</h2>
+<p>Even if upgrade authority has already moved from a single EOA to a multisig or DAO governance, if an upgrade takes effect immediately after signatures or a vote pass, the community still has no real review window — a malicious or flawed upgrade could affect every user's funds before anyone notices. A timelock forces a waiting period between an upgrade proposal passing and it actually taking effect, giving researchers, auditors, and community members time to review the incoming logic code — and in theory, respond via public pressure, withdrawing funds, or coordinated action if a problem is found. Specific parameters a verifier should check include: how long the timelock delay actually is (a delay of a few hours is essentially no protection at all; a delay in the tens-of-hours-to-multi-day range is where it starts to matter); and whether this delay applies uniformly to all types of upgrades, or whether there's a special "emergency upgrade" channel that can bypass the timelock — if so, the trigger conditions and authority ownership of that emergency channel need separate scrutiny, because "emergency upgrade" paths are often exactly the high-risk entry point that gets abused.</p>
+<ul>
+<li>A timelock inserts a waiting period between an upgrade proposal passing and taking effect, giving the community a window to review incoming code.</li>
+<li>A timelock delay of a few hours is essentially no protection; tens of hours to multiple days is where it becomes meaningful for review.</li>
+<li>Check separately for an "emergency bypass" channel — its trigger conditions and authority ownership are often the high-risk entry point most prone to abuse.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Storage Slot Collisions and Initialization Re-entrancy</h2>
+<p>Beyond upgrade-authority ownership and timelock delay, proxy patterns carry several technical-layer hidden risks that fully decentralized upgrade authority alone cannot automatically avoid. Storage slot collisions: a proxy's and a logic contract's state variables are assigned to sequential storage slots in declaration order; if a new logic version's variable declaration order or types don't match the old version (for instance, inserting a new variable in the middle rather than appending it at the end), the new logic can end up reading misaligned old data — this kind of bug is often only discovered after an upgrade, and can cause serious consequences like incorrect fund calculations. Initialization re-entrancy and double-initialization: because a proxy's constructor doesn't execute correctly in a `delegatecall` context, most upgradeable contracts use an explicit `initialize` function to do what a constructor normally would; if that function lacks a proper "callable only once" guard, there's in theory a risk it could be called again to tamper with critical parameters like the admin address. Function selector collisions: if a function signature defined on the proxy itself happens to hash-collide with a function signature inside the logic contract, a call could be routed incorrectly — this class of bug usually needs specialized static-analysis tooling to catch and is hard for an ordinary verifier to spot by eye, but at minimum one should confirm whether the audit report explicitly mentions checking for these proxy-pattern-specific risk categories, rather than a generic audit report that gives no indication whether it specifically reviewed the proxy architecture at all.</p>
+<ul>
+<li>Storage slot collisions: mismatched variable declaration order or types between old and new logic versions cause misaligned data reads, often only discovered post-upgrade.</li>
+<li>An initialize function without a "callable only once" guard risks being called again to tamper with critical parameters like the admin address.</li>
+<li>Function selector collisions need specialized static-analysis tooling — check whether the audit report explicitly covers proxy-architecture-specific risk categories.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Protocol Comparison Framework: Verifying the Upgrade-Authority Evolution Path</h2>
+<p>When facing multiple candidate protocols, a verifier can use "upgrade-authority evolution stage" as a core comparison dimension. The first and highest-risk stage: upgrade authority is held entirely by a single EOA, meaning one leaked private key could replace the entire protocol's core logic. The second stage: upgrade authority moves to a multisig wallet, with risk varying by the multisig threshold (e.g., 3-of-5 vs. 5-of-9) and how distributed the signers' identities are — check whether signers include parties genuinely independent of the core team. The third stage: upgrade authority is further handed to a DAO governance contract, with token holders voting on whether to execute a given upgrade — this stage should be cross-checked against this site's earlier piece on governance vote snapshot manipulation risk, since "handing authority to a DAO" by itself is not a safety guarantee; it also depends on whether that DAO's own governance mechanism is robust. A verifier should check: which stage the protocol is currently at, whether it has published a clear roadmap and timeline for decentralizing authority further, and whether it has actually completed a real migration in the past — from EOA to multisig, or multisig to DAO — rather than being permanently stuck at "planned" on a roadmap. Combining this evolution stage with the proxy standard and timelock parameters from sections 2 and 3 produces a complete picture of a protocol's overall upgrade-mechanism risk level.</p>
+<ul>
+<li>Upgrade authority typically evolves through single EOA, multisig, and DAO governance stages, with risk decreasing at each stage but never automatically becoming safe.</li>
+<li>At the multisig stage, check the signature threshold and whether signers include parties independent of the core team; at the DAO stage, cross-check against governance-mechanism risks like snapshot manipulation.</li>
+<li>Key checks: which stage the protocol is currently at, whether it has a clear roadmap and timeline, and whether a real migration has actually happened rather than remaining "planned."</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has the specific proxy standard been identified, and is it known which address (EOA/multisig/DAO) currently holds upgrade authority? Second, is the upgrade protected by a timelock with a delay of tens of hours or more, and is there a bypass channel for emergencies? Third, has it been verified whether each new logic contract version after an upgrade gets an independent audit or a public code-diff disclosure, rather than relying solely on the initial deployment's audit? Fourth, is there an understanding of proxy-pattern-specific technical risks like storage slot collisions and initialization re-entrancy, and does the audit report specifically cover these checks? Fifth, has the protocol's upgrade-authority evolution stage (EOA/multisig/DAO) been combined with its timelock parameters and historical migration record into an overall judgment, rather than concluding from vague phrases like "audited" or "decentralized" alone? Working through these five questions gives a well-grounded judgment of an upgradeable contract's true risk level. The entire piece discusses abstract mechanism categories and verification methods only, names no real protocol, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Five-question checklist: is the proxy standard and authority ownership identified, is the timelock adequate, is each upgrade independently audited, are proxy-specific technical risks checked, is the upgrade-authority evolution stage judged holistically.</li>
+<li>"Audited" only covers the current version of logic for an upgradeable contract — upgrade-authority ownership and timelock parameters are the ongoing sources of security assurance.</li>
+<li>The entire piece is a discussion of verification methodology, names no real protocol, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Trust Shift Behind Proxy Patterns</a></li>
+          <li><a href="#sec-2">2. Determine the Proxy Standard and Upgrade Authority</a></li>
+          <li><a href="#sec-3">3. Is the Upgrade Protected by a Timelock</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Protocol Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://docs.openzeppelin.com/contracts/4.x/api/proxy" target="_blank" rel="noopener">OpenZeppelin Proxy Docs</a>: introduces the implementation principles and security considerations of Transparent, UUPS, and Beacon proxy standards</li>
+            <li><a href="https://eips.ethereum.org/EIPS/eip-1967" target="_blank" rel="noopener">EIP-1967</a>: standardizes proxy storage slot locations, useful for verifying admin and implementation addresses</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/market/staking-apy-net-yield-verification-guide.html">Staking APY Verification: Does the Advertised Rate Match What You Actually Earn</a></li>
+          <li><a href="/en/research/basics/virtual-card-fx-spread-hidden-fee-verification-guide.html">Virtual Card FX Spread Verification: The Advertised Rate vs. What Actually Lands</a></li>
+          <li><a href="/en/research/protocol/flashloan-attack-defense-defi-security.html">Flash Loan Attack Defense and DeFi On-Chain Security Verification</a></li>
+          <li><a href="/en/research/protocol/defi-token-approval-security-guide.html">Token Approval Security Verification: Unlimited Approvals and Revocation</a></li>
+          <li><a href="/en/research/protocol/account-abstraction-wallet-security.html">Account Abstraction Wallet Security: Session Key Scope Is Where the Real Risk Hides</a></li>
+          <li><a href="/en/research/protocol/restaking-avs-slashing-risk.html">Restaking AVS Slashing Risk: The Same ETH, Pledged to Multiple Protocols</a></li>
+          <li><a href="/en/research/protocol/zkml-onchain-model-verification.html">zkML and Trusted On-Chain Model Execution: Proving It Ran Isn't Proving It Ran Correctly</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification: Who Proves the Message Is Real</a></li>
+          <li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li>
+          <li><a href="/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">Bridge Guardian Set Verification: When Was the Threshold Cut</a></li>
+          <li><a href="/en/research/governance/dao-grant-milestone-release-verification-guide.html">DAO Grant Verification: Milestone-Based on Paper, One Lump Sum On-Chain</a></li>
+          <li><a href="/en/research/market/open-interest-concentration-verification-guide.html">Open Interest Verification: Is the Surge Real Demand or Stacked Leverage</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li>
+          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=00d40b59"></script>
+</body>
+</html>

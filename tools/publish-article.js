@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'governance-vote-snapshot-manipulation-verification-guide',
-  publishedISO: '2026-08-25T13:11:00+08:00',
-  tagColor: 'violet',
-  topic: 'governance',
+  slug: 'upgradeable-contract-proxy-admin-key-verification-guide',
+  publishedISO: '2026-08-25T15:37:00+08:00',
+  tagColor: 'cyan',
+  topic: 'protocol',
 
   zh: {
-    h1: '治理投票权快照操纵核验：为什么用来投票的代币数量，只在「那一个区块」作数',
-    tagLabel: '治理投票权快照核验',
-    cardDesc: 'DAO治理提案的投票权重通常由某一个特定区块高度的代币余额快照决定，这个防重复投票的设计也留下了临时拉高持仓的操纵窗口。本文拆解快照机制、闪电贷操纵可行性核验与跨协议反操纵机制对比框架。',
+    h1: '可升级合约代理模式核验：谁能一键换掉你正在用的合约逻辑',
+    tagLabel: '可升级合约代理核验',
+    cardDesc: '「合约已通过审计」对可升级合约只覆盖当下这一版逻辑，代理模式允许升级权限持有者随时把逻辑合约换成另一份完全不同的代码。本文给出代理标准、升级权限归属、时间锁延迟与存储槽冲突的核验方法。',
   },
   en: {
-    h1: 'Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block',
-    tagLabel: 'Governance Snapshot Verification',
-    cardDesc: 'A DAO proposal’s voting power is fixed at one block snapshot to prevent double-voting, but that design opens a window for temporarily inflating holdings right at the snapshot moment.',
+    h1: 'Upgradeable Contract Proxy Verification: Who Can Swap the Logic You’re Trusting With One Transaction',
+    tagLabel: 'Upgradeable Proxy Verification',
+    cardDesc: '"Audited" only covers the current logic for an upgradeable contract — a proxy pattern lets whoever holds upgrade authority swap the code at will. A method to verify proxy standard, timelock, and storage collision risk.',
   },
 
   existingSlugsNewestFirst: [
+    'governance-vote-snapshot-manipulation-verification-guide',
     'staking-apy-net-yield-verification-guide',
     'virtual-card-fx-spread-hidden-fee-verification-guide',
     'open-interest-concentration-verification-guide',
