@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'staking-apy-net-yield-verification-guide',
-  publishedISO: '2026-08-25T10:41:00+08:00',
-  tagColor: 'jade',
-  topic: 'market',
+  slug: 'governance-vote-snapshot-manipulation-verification-guide',
+  publishedISO: '2026-08-25T13:11:00+08:00',
+  tagColor: 'violet',
+  topic: 'governance',
 
   zh: {
-    h1: '质押年化收益率核验：官网写的APY，和你实际到手的收益率对不对得上',
-    tagLabel: '质押年化收益率核验',
-    cardDesc: '质押产品首页常展示一个醒目的APY数字，但协议抽成、验证者佣金、复利假设与代币价格波动会让实际到手收益率与宣传数字产生明显偏差。本文给出拆解毛/净收益、核实复利频率与跨协议横向对比的核验方法。',
+    h1: '治理投票权快照操纵核验：为什么用来投票的代币数量，只在「那一个区块」作数',
+    tagLabel: '治理投票权快照核验',
+    cardDesc: 'DAO治理提案的投票权重通常由某一个特定区块高度的代币余额快照决定，这个防重复投票的设计也留下了临时拉高持仓的操纵窗口。本文拆解快照机制、闪电贷操纵可行性核验与跨协议反操纵机制对比框架。',
   },
   en: {
-    h1: 'Staking APY Verification: Does the Advertised Rate Match What You Actually Earn',
-    tagLabel: 'Staking APY Verification',
-    cardDesc: 'The headline APY on a staking landing page rarely equals what you actually take home — a method to decompose gross vs. net yield, check compounding assumptions, and compare across protocols.',
+    h1: 'Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block',
+    tagLabel: 'Governance Snapshot Verification',
+    cardDesc: 'A DAO proposal’s voting power is fixed at one block snapshot to prevent double-voting, but that design opens a window for temporarily inflating holdings right at the snapshot moment.',
   },
 
   existingSlugsNewestFirst: [
+    'staking-apy-net-yield-verification-guide',
     'virtual-card-fx-spread-hidden-fee-verification-guide',
     'open-interest-concentration-verification-guide',
     'dao-grant-milestone-release-verification-guide',
