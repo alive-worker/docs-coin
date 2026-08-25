@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'upgradeable-contract-proxy-admin-key-verification-guide',
-  publishedISO: '2026-08-25T15:37:00+08:00',
-  tagColor: 'cyan',
-  topic: 'protocol',
+  slug: 'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
+  publishedISO: '2026-08-25T18:01:00+08:00',
+  tagColor: 'purple',
+  topic: 'governance',
 
   zh: {
-    h1: '可升级合约代理模式核验：谁能一键换掉你正在用的合约逻辑',
-    tagLabel: '可升级合约代理核验',
-    cardDesc: '「合约已通过审计」对可升级合约只覆盖当下这一版逻辑，代理模式允许升级权限持有者随时把逻辑合约换成另一份完全不同的代码。本文给出代理标准、升级权限归属、时间锁延迟与存储槽冲突的核验方法。',
+    h1: '跨链桥储备证明核验：包装资产的「1:1锚定」，多久被验证一次',
+    tagLabel: '跨链桥储备证明核验',
+    cardDesc: '「储备证明」和「1:1锚定」这两个词本身没有说明验证频率——是实时链上数据，还是每季度一次的快照审计。本文给出验证频率核验、托管方式核验与跨协议对比框架。',
   },
   en: {
-    h1: 'Upgradeable Contract Proxy Verification: Who Can Swap the Logic You’re Trusting With One Transaction',
-    tagLabel: 'Upgradeable Proxy Verification',
-    cardDesc: '"Audited" only covers the current logic for an upgradeable contract — a proxy pattern lets whoever holds upgrade authority swap the code at will. A method to verify proxy standard, timelock, and storage collision risk.',
+    h1: 'Bridge Reserve Proof Verification: How Often Is a Wrapped Asset\'s "1:1 Backing" Actually Checked',
+    tagLabel: 'Bridge Reserve Proof Verification',
+    cardDesc: '"Proof of reserves" and "fully backed 1:1" say nothing about verification frequency — real-time on-chain data or a quarterly snapshot audit. A method to verify frequency, custody structure, and compare across protocols.',
   },
 
   existingSlugsNewestFirst: [
+    'upgradeable-contract-proxy-admin-key-verification-guide',
     'governance-vote-snapshot-manipulation-verification-guide',
     'staking-apy-net-yield-verification-guide',
     'virtual-card-fx-spread-hidden-fee-verification-guide',
