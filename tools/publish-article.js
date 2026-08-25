@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'virtual-card-fx-spread-hidden-fee-verification-guide',
-  publishedISO: '2026-08-24T17:41:00+08:00',
-  tagColor: 'slate',
-  topic: 'basics',
+  slug: 'staking-apy-net-yield-verification-guide',
+  publishedISO: '2026-08-25T10:41:00+08:00',
+  tagColor: 'jade',
+  topic: 'market',
 
   zh: {
-    h1: '虚拟卡汇率加点核验：官网写的费率，和你实际到账的对不对得上',
-    tagLabel: '虚拟卡汇率加点核验',
-    cardDesc: '虚拟卡官网常写「零手续费」，但汇率加点、清算延迟和卡组织转换费往往藏在不同环节。本文给出一套三段式拆解方法：充值汇率、清算汇率、卡组织汇率分别对账，附带小额测试单实操核验清单。',
+    h1: '质押年化收益率核验：官网写的APY，和你实际到手的收益率对不对得上',
+    tagLabel: '质押年化收益率核验',
+    cardDesc: '质押产品首页常展示一个醒目的APY数字，但协议抽成、验证者佣金、复利假设与代币价格波动会让实际到手收益率与宣传数字产生明显偏差。本文给出拆解毛/净收益、核实复利频率与跨协议横向对比的核验方法。',
   },
   en: {
-    h1: 'Virtual Card FX Spread Verification: The Advertised Rate vs. What Actually Lands',
-    tagLabel: 'Virtual Card FX Spread Verification',
-    cardDesc: '"Zero fees" rarely means zero cost — FX spread hides across top-up, settlement, and card-network conversion. A three-stage reconciliation method plus a small test-transaction checklist.',
+    h1: 'Staking APY Verification: Does the Advertised Rate Match What You Actually Earn',
+    tagLabel: 'Staking APY Verification',
+    cardDesc: 'The headline APY on a staking landing page rarely equals what you actually take home — a method to decompose gross vs. net yield, check compounding assumptions, and compare across protocols.',
   },
 
   existingSlugsNewestFirst: [
+    'virtual-card-fx-spread-hidden-fee-verification-guide',
     'open-interest-concentration-verification-guide',
     'dao-grant-milestone-release-verification-guide',
     'orderbook-depth-verification-guide',
