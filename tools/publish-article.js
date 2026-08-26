@@ -443,10 +443,11 @@ ${hotpicksHtml}
       </aside>
       </div>`;
 
-  const gridCards = gridVisible.map(it => {
+  const gridCards = gridVisible.map((it, idx) => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
+    const imgPriorityAttrs = idx === 0 ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"';
     return `      <article class="post-card" id="${it.slug}">
-        <a class="post-card-cover-link" href="${it.href}" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${it.cover}" width="600" height="300" alt="${it.h1} ${coverAlt}" fetchpriority="high"></a>
+        <a class="post-card-cover-link" href="${it.href}" tabindex="-1" aria-hidden="true"><img class="post-card-cover" src="${it.cover}" width="600" height="300" alt="${it.h1} ${coverAlt}"${imgPriorityAttrs}></a>
         <div class="post-card-body">
           <div class="post-card-tags"><span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span></div>
           <h2 class="post-card-title"><a href="${it.href}">${it.h1}</a></h2>
