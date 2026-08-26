@@ -439,14 +439,19 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 .carousel-slide { flex: 0 0 100%; min-width: 0; }
 .featured-card.carousel-slide { border-radius: 0; border: none; box-shadow: none; }
 .featured-card.carousel-slide:hover { transform: none; box-shadow: none; }
-.carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+.carousel-dots { display: flex; justify-content: center; gap: 4px; margin-top: 14px; }
 .carousel-dot {
-  width: 8px; height: 8px; padding: 0; border-radius: 999px; border: none;
-  background: var(--line-strong); cursor: pointer;
+  width: 24px; height: 24px; padding: 0; border-radius: 999px; border: none;
+  background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.carousel-dot::before {
+  content: ""; display: block; width: 8px; height: 8px; border-radius: 999px;
+  background: var(--line-strong);
   transition: background-color .15s ease, width .15s ease;
 }
-.carousel-dot:hover { background: var(--accent-soft); }
-.carousel-dot.is-active { background: var(--accent); width: 22px; }
+.carousel-dot:hover::before { background: var(--accent-soft); }
+.carousel-dot.is-active::before { background: var(--accent); width: 22px; }
 /* While a homepage search is active, collapse the hero/featured sections so the
    filtered results grid sits right under the search box. */
 body.is-searching .hero-centered,
@@ -833,8 +838,8 @@ body.home .sidebar-search-input, body.archive .sidebar-search-input { padding: 1
   font-size: 13px; color: var(--muted); text-align: center; background: var(--soft);
 }
 .site-foot p { margin: 0 0 6px; }
-.site-foot a { color: var(--accent); text-decoration: none; }
-.site-foot a:hover { text-decoration: underline; }
+.site-foot a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.site-foot a:hover { text-decoration-color: var(--accent); }
 
 /* --- rich 3-column footer (homepage only) --- */
 .site-foot--rich {
