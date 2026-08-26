@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-withdrawal-whitelist-cooldown-verification-guide',
-  publishedISO: '2026-08-26T09:56:00+08:00',
-  tagColor: 'sky',
-  topic: 'basics',
+  slug: 'spot-futures-basis-trade-risk-guide',
+  publishedISO: '2026-08-26T13:55:00+08:00',
+  tagColor: 'gold',
+  topic: 'market',
 
   zh: {
-    h1: '交易所提现地址白名单核验：24小时冷却期，真的能防住谁',
-    tagLabel: '提现白名单核验',
-    cardDesc: '白名单冷却期只能防住攻击链条里很窄的一段——攻击者拿到密码却拿不到邮箱与2FA的场景。本文给出验证链路薄弱环节核验、客服绕过通道与API提现豁免等隐藏风险核验方法。',
+    h1: '现货与合约基差交易：年化20%的「无风险」套利，风险到底藏在哪',
+    tagLabel: '基差交易风险',
+    cardDesc: '买入现货、做空等值期货锁定基差常被包装成无风险套利，但这个前提只在两条腿能同时完整执行时才成立。本文拆解保证金强平不对称风险、跨交易所执行时间差与展期隐性成本。',
   },
   en: {
-    h1: 'Exchange Withdrawal Whitelist Verification: What Does the Cooldown Period Actually Protect Against',
-    tagLabel: 'Withdrawal Whitelist Verification',
-    cardDesc: 'A withdrawal whitelist cooldown only defends against a narrow slice of the attack chain — an attacker who has the password but not the email and 2FA. A method to verify the weak link and bypass channels.',
+    h1: 'Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY',
+    tagLabel: 'Basis Trade Risk',
+    cardDesc: 'A basis trade\'s "riskless" premise only holds if both legs execute in sync — a method to check liquidation asymmetry, cross-exchange timing gaps, and rollover cost.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-withdrawal-whitelist-cooldown-verification-guide',
     'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
     'upgradeable-contract-proxy-admin-key-verification-guide',
     'governance-vote-snapshot-manipulation-verification-guide',
