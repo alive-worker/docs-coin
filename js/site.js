@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/basics/exchange-withdrawal-whitelist-cooldown-verification-guide.html': '2026-08-26 09:56:00',
     '/research/governance/bridge-wrapped-asset-reserve-proof-frequency-verification-guide.html': '2026-08-25 18:01:00',
     '/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html': '2026-08-25 15:37:00',
     '/research/governance/governance-vote-snapshot-manipulation-verification-guide.html': '2026-08-25 13:11:00',
@@ -240,6 +241,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/basics/exchange-withdrawal-whitelist-cooldown-verification-guide.html': '2026-08-26 09:56:00',
 '/en/research/governance/bridge-wrapped-asset-reserve-proof-frequency-verification-guide.html': '2026-08-25 18:01:00',
 '/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html': '2026-08-25 15:37:00',
 '/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html': '2026-08-25 13:11:00',

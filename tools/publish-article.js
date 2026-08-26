@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
-  publishedISO: '2026-08-25T18:01:00+08:00',
-  tagColor: 'purple',
-  topic: 'governance',
+  slug: 'exchange-withdrawal-whitelist-cooldown-verification-guide',
+  publishedISO: '2026-08-26T09:56:00+08:00',
+  tagColor: 'sky',
+  topic: 'basics',
 
   zh: {
-    h1: '跨链桥储备证明核验：包装资产的「1:1锚定」，多久被验证一次',
-    tagLabel: '跨链桥储备证明核验',
-    cardDesc: '「储备证明」和「1:1锚定」这两个词本身没有说明验证频率——是实时链上数据，还是每季度一次的快照审计。本文给出验证频率核验、托管方式核验与跨协议对比框架。',
+    h1: '交易所提现地址白名单核验：24小时冷却期，真的能防住谁',
+    tagLabel: '提现白名单核验',
+    cardDesc: '白名单冷却期只能防住攻击链条里很窄的一段——攻击者拿到密码却拿不到邮箱与2FA的场景。本文给出验证链路薄弱环节核验、客服绕过通道与API提现豁免等隐藏风险核验方法。',
   },
   en: {
-    h1: 'Bridge Reserve Proof Verification: How Often Is a Wrapped Asset\'s "1:1 Backing" Actually Checked',
-    tagLabel: 'Bridge Reserve Proof Verification',
-    cardDesc: '"Proof of reserves" and "fully backed 1:1" say nothing about verification frequency — real-time on-chain data or a quarterly snapshot audit. A method to verify frequency, custody structure, and compare across protocols.',
+    h1: 'Exchange Withdrawal Whitelist Verification: What Does the Cooldown Period Actually Protect Against',
+    tagLabel: 'Withdrawal Whitelist Verification',
+    cardDesc: 'A withdrawal whitelist cooldown only defends against a narrow slice of the attack chain — an attacker who has the password but not the email and 2FA. A method to verify the weak link and bypass channels.',
   },
 
   existingSlugsNewestFirst: [
+    'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
     'upgradeable-contract-proxy-admin-key-verification-guide',
     'governance-vote-snapshot-manipulation-verification-guide',
     'staking-apy-net-yield-verification-guide',
