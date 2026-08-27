@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down - Crypto Research</title>
+  <meta name="description" content="When most of a DAO treasury's value sits in the protocol's own native token, \"diversification\" — selling some native token for stablecoins or other assets — sounds like obvious risk management common sense. Yet these proposals routinely stall in governance, or get executed in ways that diverge noticeably from what was actually voted on. This piece breaks down the specific approval chain a treasury diversification proposal has to pass through, the market-impact and information-asymmetry risks that surface during execution, and the hidden counterparty risk of OTC trades and market-maker intermediaries, plus a cross-DAO comparison framework. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-treasury-diversification-approval-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-treasury-diversification-approval-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down - Crypto Research">
+  <meta property="og:description" content="When most of a DAO treasury's value sits in the protocol's own native token, \"diversification\" — selling some native token for stablecoins or other assets — sounds like obvious risk management common sense. Yet these proposals routinely stall in governance, or get executed in ways that diverge noticeably from what was actually voted on. This piece breaks down the specific approval chain a treasury diversification proposal has to pass through, the market-impact and information-asymmetry risks that surface during execution, and the hidden counterparty risk of OTC trades and market-maker intermediaries, plus a cross-DAO comparison framework. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html">
+  <meta property="article:published_time" content="2026-08-27T13:46:00+08:00">
+  <meta property="article:modified_time" content="2026-08-27T13:46:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAO Treasury Diversification Approval Chain">
+  <meta name="twitter:description" content="Treasury diversification proposals routinely stall in governance or diverge from the vote at execution. A method to verify the approval chain and execution-stage hidden risks.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-treasury-diversification-approval-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DAO treasury diversification approval guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-treasury-diversification-approval-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-dao-treasury-diversification-approval-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","dao treasury diversification verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-treasury-diversification-approval-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html", "name": "DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DAO Treasury Diversification Approval Chain", "item": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#article", "headline": "DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down", "description": "Treasury diversification sounds like obvious risk management common sense, but often stalls in governance or diverges from the vote at execution. This piece breaks down the approval chain, execution-stage hidden risks, and a cross-DAO comparison framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["dao treasury diversification verification","treasury asset allocation governance","otc counterparty risk","market maker intermediary risk","treasury execution transparency"], "wordCount": 2100, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-27T13:46:00+08:00", "dateModified": "2026-08-27T13:46:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-treasury-diversification-approval-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/dao-treasury-diversification-approval-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down</h1>
+        <p class="article-summary">Many DAO treasuries have a highly concentrated asset structure: the vast majority of value comes from the protocol's own native token, with only a small slice held in stablecoins or other risk-resistant assets. That means if the native token's price drops sharply, the treasury's actual usable funds — particularly for stablecoin-denominated obligations like team compensation and ecosystem grants — shrink in lockstep, an obviously precarious risk-management setup. "Diversification" — selling some native token for stablecoins or a basket of other assets — sounds like a common-sense fix, but in practice these proposals frequently stall for a long time in governance, or, even after a vote passes, get executed with a timing, channel, or counterparty that diverges noticeably from the proposal text. This piece breaks down the specific approval chain a treasury diversification proposal has to pass through, the market-impact and information-asymmetry risks easily overlooked during execution, the hidden counterparty risk of OTC trades and market-maker intermediaries, and a cross-DAO comparison framework. The entire piece discusses abstract governance mechanism categories only, names no real DAO, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-27T13:46:00+08:00">2026-08-27 13:46:00</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dao-treasury-diversification-approval-guide-en.svg" alt="DAO treasury diversification approval guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether the treasury diversification proposal has actually passed a governance vote, or is still at the forum discussion or internal multisig-planning stage</li>
+            <li><span class="article-verify-check">✓</span>Verify whether the passed proposal text specifies the execution method (staged on-chain DEX selling / OTC block trades / market-maker partnership), or only grants a vague total amount with full discretion to the execution team</li>
+            <li><span class="article-verify-check">✓</span>Check whether actual execution records are publicly available, and whether the realized prices diverge noticeably from market prices during the execution period</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the counterparty identity for any OTC trade or market-maker partnership is disclosed, and whether there's a conflict of interest tied to the core team</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. The Structural Risk of a Concentrated Treasury: Why Diversification Is Common Sense but Hard to Execute</h2>
+<p>A DAO treasury's original funding typically comes from the protocol's own token allocation — the team and foundation retain a portion of tokens, and as the protocol grows and the token appreciates, that holding's book value can reach tens or even hundreds of millions of dollars, all concentrated in one highly volatile asset. The treasury's actual spending obligations — team and contributor compensation, ecosystem grant disbursements — are typically fixed obligations denominated in dollars or stablecoins, creating a classic asset-liability duration mismatch: the asset side is heavily concentrated in a volatile native token, while the liability side is relatively stable, ongoing dollar commitments. When the native token enters a prolonged downtrend, the treasury's stablecoin reserves can be passively depleted without any active decision being made, eventually forcing the protocol into selling native tokens at the worst possible price to fund operations — a vicious cycle.</p>
+<p>Proactively converting a portion of native token holdings into stablecoins or other assets, in theory, locks in purchasing power for operating funds ahead of time — the logic isn't complicated, and most community members can agree on it at the discussion level. The difficulty lies in execution: a diversification operation inherently involves selling the protocol's own token, an action easily read as a signal that "the team doesn't believe in its own project," especially when proposed during a period when the token price is already under pressure. Community opposition tends to focus on sentiment and signaling rather than the underlying asset-liability management logic — which is exactly why many diversification proposals that should be executed early get repeatedly delayed.</p>
+<ul>
+<li>A DAO treasury's asset side is typically heavily concentrated in a volatile native token, while the liability side is relatively stable dollar-denominated spending — a classic duration mismatch.</li>
+<li>Failing to diversify proactively risks passively depleting reserves, eventually forcing token sales at the worst possible price — a vicious cycle.</li>
+<li>The core obstacle to executing diversification is usually that "selling your own token" is read as a negative signal, not genuine disagreement over the asset-liability logic itself.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Where the Approval Chain Actually Stands</h2>
+<p>A verifier should first clarify exactly which governance stage a treasury diversification proposal is at, rather than assuming it's already in effect just because "someone proposed the idea." The typical approval chain includes: informal forum discussion (community members float the idea and gather early feedback — entirely non-binding at this stage), formal governance proposal (a concrete proposal text takes shape and enters an on-chain or off-chain voting process), passed vote (the proposal secures enough support and quorum, formally authorized), and execution (the multisig or a dedicated treasury management team actually carries out trades within the scope authorized by the proposal). A verifier should check exactly which stage the current progress is at — many hotly-discussed diversification proposals ultimately never leave the forum stage and never enter a genuinely binding vote; some proposals that do pass a vote see execution indefinitely stalled because the multisig executors take no action for a long time. That execution delay itself is a signal worth watching, potentially reflecting undisclosed concerns or obstacles on the execution team's side.</p>
+<ul>
+<li>Forum discussion, formal proposal, passed vote, and actual execution are the typical stages of a treasury diversification approval chain — verify exactly where the current progress stands.</li>
+<li>Many hotly-discussed proposals ultimately never leave the forum stage and never enter a genuinely binding vote.</li>
+<li>Execution being indefinitely stalled after a vote passes isn't rare, and the delay itself is a signal worth watching.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Does the Passed Text Actually Specify an Execution Method</h2>
+<p>Even after a proposal formally passes a vote, a verifier still needs to check the granularity of authorization in the vote text. Some proposals specify the execution method explicitly — for example, "sell in stages via on-chain DEXs, no more than 5% of daily volume per day, over X months, no OTC trading" — this kind of concrete execution constraint significantly reduces the risk of execution diverging from community intent during the later stage. But a considerable number of proposals only grant a total amount and a rough direction (say, "authorize the treasury committee to diversify up to $20 million of native token into stablecoins over the next six months"), leaving the specific pace, channel, and counterparty entirely to the execution team's discretion. The risk with the latter design is that the community votes to approve a vague overall direction without prior oversight of execution details — if the execution team's judgment goes astray (say, dumping a large amount concentrated at a price low, or choosing a higher-cost OTC channel), the community typically can only review it after the fact via on-chain records, with no ability to intervene beforehand. A verifier should treat "the granularity of the passed vote text" as a key focus — the coarser the granularity, the larger the risk exposure of execution diverging from expectations.</p>
+<ul>
+<li>Some proposals impose explicit constraints on execution channel, pace, and proportion, significantly reducing the risk of execution diverging from community intent.</li>
+<li>Other proposals authorize only a total amount and rough direction, leaving all execution details to the team's discretion.</li>
+<li>The coarser the passed text's granularity, the larger the risk exposure of execution diverging from expectations — usually only reviewable after the fact, not interventable beforehand.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Market Impact, Information Asymmetry, and Counterparty Risk at Execution</h2>
+<p>The actual execution phase of treasury diversification hides several easily overlooked risks. First, market impact cost: if diversification is carried out via large direct sells on an on-chain DEX, it puts direct downward pressure on the token price — pressure that in turn amplifies the very "selling your own token" negative signal the proposal was already fighting, creating a situation where execution itself undermines the proposal's original intent, which is why many protocols choose staged execution or OTC channels to reduce market impact. Second, information asymmetry and front-running: if the specific execution timeline of a diversification proposal is known internally ahead of time, there's in theory an opportunity to trade on that information and profit from the anticipated price decline — a verifier should check whether the execution team has publicly committed to not pre-disclosing specific execution windows, and whether there are relevant internal information-handling policies. Third, counterparty risk in OTC trades and market-maker intermediaries: to reduce market impact, many protocols choose to execute diversification via large OTC block trades or market-maker partnerships — the counterparty identity, deal terms, and any affiliation with the core team in these transactions are typically far less transparent than on-chain trades; a verifier should check whether the protocol has disclosed its specific standards and process for selecting a counterparty, rather than announcing only a vague "diversification complete" outcome.</p>
+<ul>
+<li>Large on-chain sells create direct downward price pressure, amplifying the "selling signal" negative effect and creating a situation where execution undermines the proposal's own intent.</li>
+<li>Insiders knowing the specific execution timeline ahead of time creates a theoretical information-asymmetry trading opportunity — check whether the execution team has committed to keeping the timing window confidential.</li>
+<li>OTC or market-maker counterparty identity and deal-term transparency is typically far lower than on-chain trades — check whether the protocol discloses its counterparty-selection standards.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-DAO Comparison Framework: Approval Granularity, Execution Transparency, and Counterparty Disclosure</h2>
+<p>When evaluating multiple candidate DAOs, a verifier can compare across the following dimensions. First, approval granularity: whether the vote text imposes concrete constraints on execution channel, pace, and proportion, or only authorizes a vague total amount. Second, execution transparency: whether actual execution records (on-chain transaction hashes or OTC trade summaries) are regularly reported to the community, and at what cadence — monthly, quarterly, or only a single disclosure once diversification is fully complete. Third, counterparty disclosure standard: for OTC or market-maker deals, whether the protocol publishes specific standards for counterparty selection (such as requiring multiple competing quotes, or disclosing the category of the final counterparty), or operates as a complete black box. Fourth, consistency between historical execution and commitments: if the protocol has previously carried out similar treasury operations, whether the actual execution method matched what the original vote text described can be checked retroactively — direct evidence for judging that DAO's governance execution credibility. Combining these four dimensions produces a well-grounded judgment of a DAO's treasury governance maturity, rather than relying on a vague statement like "has discussed diversification."</p>
+<ul>
+<li>Approval granularity, execution transparency, counterparty disclosure standard, and consistency between historical execution and commitments are the four key comparison dimensions.</li>
+<li>The key check for execution transparency is reporting cadence and level of detail, not just the binary question of "is it disclosed."</li>
+<li>Whether historical execution matches the original vote text is direct evidence for judging a DAO's governance execution credibility.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has it been determined whether this treasury diversification proposal is at the forum discussion, formal vote, or execution stage? Second, does the passed vote text impose concrete constraints on execution channel, pace, and proportion, or only authorize a vague total amount with full discretion? Third, has it been verified whether actual execution records are public, and whether realized prices diverge noticeably from market prices? Fourth, has the disclosure standard for any OTC or market-maker counterparty been checked, along with whether a conflict of interest exists with affiliated parties? Fifth, has the candidate DAO been compared across approval granularity, execution transparency, counterparty disclosure, and historical execution consistency? Working through these five questions gives a well-grounded judgment of a DAO's true treasury governance maturity, rather than being waved off by a vague phrase like "diversification has begun." The entire piece discusses abstract governance mechanism categories only, names no real DAO, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Five-question checklist: is the approval stage identified, is execution constraint granularity checked, are execution records publicly verifiable, is the counterparty disclosure standard verified, has a four-dimension comparison been completed.</li>
+<li>The necessity of treasury diversification is easy to agree on — it's the execution method, transparency, and counterparty selection during implementation that actually determine governance maturity.</li>
+<li>The entire piece is a discussion of governance mechanisms, names no real DAO, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Structural Risk of a Concentrated Treasury</a></li>
+          <li><a href="#sec-2">2. Where the Approval Chain Actually Stands</a></li>
+          <li><a href="#sec-3">3. Does the Passed Text Specify an Execution Method</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-DAO Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.tally.xyz/" target="_blank" rel="noopener">Tally Governance Platform</a>: useful for looking up proposal text, voting records, and execution progress across multiple DAOs</li>
+            <li><a href="https://etherscan.io/" target="_blank" rel="noopener">Etherscan</a>: useful for directly verifying on-chain transaction records and timing for a treasury multisig address</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/governance/dao-grant-milestone-release-verification-guide.html">DAO Grant Verification: Milestone-Based on Paper, One Lump Sum On-Chain</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Governance Vote Execution Verification Guide</a></li>
+          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>
+          <li><a href="/en/research/protocol/rollup-forced-exit-sequencer-censorship-guide.html">Rollup Forced Exit Mechanism: Can You Actually Get Your Funds Out If the Sequencer Goes Rogue</a></li>
+          <li><a href="/en/research/governance/bridge-wrapped-asset-reserve-proof-frequency-verification-guide.html">Bridge Reserve Proof Verification: How Often Is a Wrapped Asset's "1:1 Backing" Actually Checked</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/market/staking-apy-net-yield-verification-guide.html">Staking APY Verification: Does the Advertised Rate Match What You Actually Earn</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-whitelist-cooldown-verification-guide.html">Exchange Withdrawal Whitelist Verification: What Does the Cooldown Period Actually Protect Against</a></li>
+          <li><a href="/en/research/governance/rwa-redemption-legal-claim-verification.html">After You Burn the Token, What Legal Claim Is Left?</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">Bridge Guardian Set Verification: When Was the Threshold Cut</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/basics/virtual-card-fx-spread-hidden-fee-verification-guide.html">Virtual Card FX Spread Verification: The Advertised Rate vs. What Actually Lands</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=94a351e3"></script>
+</body>
+</html>

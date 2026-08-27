@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'rollup-forced-exit-sequencer-censorship-guide',
-  publishedISO: '2026-08-27T10:36:00+08:00',
-  tagColor: 'teal',
-  topic: 'protocol',
+  slug: 'dao-treasury-diversification-approval-guide',
+  publishedISO: '2026-08-27T13:46:00+08:00',
+  tagColor: 'azure',
+  topic: 'governance',
 
   zh: {
-    h1: 'Rollup强制退出机制：排序器作恶或宕机时，资产真的能拿回来吗',
-    tagLabel: 'Rollup强制退出核验',
-    cardDesc: '强制退出是Rollup资产安全的最后一道安全阀，但它的实际有效性取决于强制包含延迟窗口、退出证明周期与L1拥堵时的可执行性。本文拆解核验方法与隐藏风险，并给出跨Rollup对比框架。',
+    h1: 'DAO国库多元化提案：把单一代币换成稳定币，审批链条卡在哪一步',
+    tagLabel: '国库多元化核验',
+    cardDesc: '国库多元化听起来是显而易见的风险管理常识，但常在治理流程里卡住，或执行方式与投票通过的内容存在明显偏差。本文拆解审批链条、执行阶段隐藏风险与跨DAO对比框架。',
   },
   en: {
-    h1: 'Rollup Forced Exit Mechanism: Can You Actually Get Your Funds Out If the Sequencer Goes Rogue',
-    tagLabel: 'Rollup Forced Exit Verification',
-    cardDesc: 'The forced exit safety valve\'s real effectiveness depends on the force-inclusion delay window, the exit proof period, and whether it\'s economically viable when L1 is congested.',
+    h1: 'DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down',
+    tagLabel: 'Treasury Diversification Verification',
+    cardDesc: 'Treasury diversification sounds like obvious risk management, but often stalls in governance or diverges from the vote at execution — a method to verify the approval chain and hidden execution risks.',
   },
 
   existingSlugsNewestFirst: [
+    'rollup-forced-exit-sequencer-censorship-guide',
     'spot-futures-basis-trade-risk-guide',
     'exchange-withdrawal-whitelist-cooldown-verification-guide',
     'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
