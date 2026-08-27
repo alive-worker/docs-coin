@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'spot-futures-basis-trade-risk-guide',
-  publishedISO: '2026-08-26T13:55:00+08:00',
-  tagColor: 'gold',
-  topic: 'market',
+  slug: 'rollup-forced-exit-sequencer-censorship-guide',
+  publishedISO: '2026-08-27T10:36:00+08:00',
+  tagColor: 'teal',
+  topic: 'protocol',
 
   zh: {
-    h1: '现货与合约基差交易：年化20%的「无风险」套利，风险到底藏在哪',
-    tagLabel: '基差交易风险',
-    cardDesc: '买入现货、做空等值期货锁定基差常被包装成无风险套利，但这个前提只在两条腿能同时完整执行时才成立。本文拆解保证金强平不对称风险、跨交易所执行时间差与展期隐性成本。',
+    h1: 'Rollup强制退出机制：排序器作恶或宕机时，资产真的能拿回来吗',
+    tagLabel: 'Rollup强制退出核验',
+    cardDesc: '强制退出是Rollup资产安全的最后一道安全阀，但它的实际有效性取决于强制包含延迟窗口、退出证明周期与L1拥堵时的可执行性。本文拆解核验方法与隐藏风险，并给出跨Rollup对比框架。',
   },
   en: {
-    h1: 'Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY',
-    tagLabel: 'Basis Trade Risk',
-    cardDesc: 'A basis trade\'s "riskless" premise only holds if both legs execute in sync — a method to check liquidation asymmetry, cross-exchange timing gaps, and rollover cost.',
+    h1: 'Rollup Forced Exit Mechanism: Can You Actually Get Your Funds Out If the Sequencer Goes Rogue',
+    tagLabel: 'Rollup Forced Exit Verification',
+    cardDesc: 'The forced exit safety valve\'s real effectiveness depends on the force-inclusion delay window, the exit proof period, and whether it\'s economically viable when L1 is congested.',
   },
 
   existingSlugsNewestFirst: [
+    'spot-futures-basis-trade-risk-guide',
     'exchange-withdrawal-whitelist-cooldown-verification-guide',
     'bridge-wrapped-asset-reserve-proof-frequency-verification-guide',
     'upgradeable-contract-proxy-admin-key-verification-guide',
