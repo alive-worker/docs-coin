@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-asset-rehypothecation-risk-guide',
-  publishedISO: '2026-08-27T15:50:00+08:00',
-  tagColor: 'coral',
-  topic: 'basics',
+  slug: 'exchange-insurance-fund-coverage-verification-guide',
+  publishedISO: '2026-08-28T11:12:48+08:00',
+  tagColor: 'steel',
+  topic: 'market',
 
   zh: {
-    h1: '交易所资产再抵押风险：你存的币，可能正被借给别人用',
-    tagLabel: '再抵押风险核验',
-    cardDesc: '很多交易所服务条款里都写着「平台有权将用户资产用于借贷、做市」，这意味着账户余额背后对应的资产可能已经被出借。本文拆解条款措辞、储备证明的局限性与核验方法。',
+    h1: '交易所保险基金覆盖率核验：出现坏账时，那笔钱真的够赔吗',
+    tagLabel: '保险基金覆盖率核验',
+    cardDesc: '保险基金余额数字常被一笔带过，但资金来源、覆盖比例与耗尽后的应对机制才决定它在极端行情下到底够不够用。本文拆解运作原理与跨交易所核验框架。',
   },
   en: {
-    h1: 'Exchange Asset Rehypothecation Risk: Your Coins on Deposit May Already Be Lent Out',
-    tagLabel: 'Rehypothecation Risk Verification',
-    cardDesc: 'Many exchange terms authorize the platform to use user assets for lending or market-making — a method to verify clause wording, proof-of-reserves limits, and actual rehypothecation practice.',
+    h1: 'Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits',
+    tagLabel: 'Insurance Fund Coverage Verification',
+    cardDesc: 'An insurance fund balance is often glossed over, but funding source, coverage ratio, and exhaustion response determine whether it holds up in an extreme move. A verification framework across exchanges.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-asset-rehypothecation-risk-guide',
     'dao-treasury-diversification-approval-guide',
     'rollup-forced-exit-sequencer-censorship-guide',
     'spot-futures-basis-trade-risk-guide',
