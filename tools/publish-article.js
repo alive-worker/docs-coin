@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-insurance-fund-coverage-verification-guide',
-  publishedISO: '2026-08-28T11:12:48+08:00',
-  tagColor: 'steel',
-  topic: 'market',
+  slug: 'oracle-circuit-breaker-price-deviation-verification-guide',
+  publishedISO: '2026-08-28T13:54:43+08:00',
+  tagColor: 'cobalt',
+  topic: 'protocol',
 
   zh: {
-    h1: '交易所保险基金覆盖率核验：出现坏账时，那笔钱真的够赔吗',
-    tagLabel: '保险基金覆盖率核验',
-    cardDesc: '保险基金余额数字常被一笔带过，但资金来源、覆盖比例与耗尽后的应对机制才决定它在极端行情下到底够不够用。本文拆解运作原理与跨交易所核验框架。',
+    h1: '预言机断路器核验：价格剧烈偏离时，喂价真的会暂停吗',
+    tagLabel: '断路器机制核验',
+    cardDesc: '断路器触发阈值、暂停后处理逻辑常被一笔带过，但阈值设置的松紧直接决定它是真实防线还是形同虚设。本文拆解设计原理与跨协议核验框架。',
   },
   en: {
-    h1: 'Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits',
-    tagLabel: 'Insurance Fund Coverage Verification',
-    cardDesc: 'An insurance fund balance is often glossed over, but funding source, coverage ratio, and exhaustion response determine whether it holds up in an extreme move. A verification framework across exchanges.',
+    h1: 'Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation',
+    tagLabel: 'Circuit Breaker Verification',
+    cardDesc: 'Circuit breaker trigger thresholds and post-pause handling are often glossed over, but threshold sizing decides whether the defense is real or decorative. A verification framework across protocols.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-insurance-fund-coverage-verification-guide',
     'exchange-asset-rehypothecation-risk-guide',
     'dao-treasury-diversification-approval-guide',
     'rollup-forced-exit-sequencer-censorship-guide',

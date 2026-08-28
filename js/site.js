@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html': '2026-08-28 13:54:43',
     '/research/market/exchange-insurance-fund-coverage-verification-guide.html': '2026-08-28 11:12:48',
     '/research/basics/exchange-asset-rehypothecation-risk-guide.html': '2026-08-27 15:50:00',
     '/research/governance/dao-treasury-diversification-approval-guide.html': '2026-08-27 13:46:00',
@@ -246,6 +247,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html': '2026-08-28 13:54:43',
 '/en/research/market/exchange-insurance-fund-coverage-verification-guide.html': '2026-08-28 11:12:48',
 '/en/research/basics/exchange-asset-rehypothecation-risk-guide.html': '2026-08-27 15:50:00',
 '/en/research/governance/dao-treasury-diversification-approval-guide.html': '2026-08-27 13:46:00',
