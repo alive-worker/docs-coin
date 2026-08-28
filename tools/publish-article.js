@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'oracle-circuit-breaker-price-deviation-verification-guide',
-  publishedISO: '2026-08-28T13:54:43+08:00',
-  tagColor: 'cobalt',
-  topic: 'protocol',
+  slug: 'dao-emergency-proposal-timelock-bypass-verification-guide',
+  publishedISO: '2026-08-28T16:46:50+08:00',
+  tagColor: 'wine',
+  topic: 'governance',
 
   zh: {
-    h1: '预言机断路器核验：价格剧烈偏离时，喂价真的会暂停吗',
-    tagLabel: '断路器机制核验',
-    cardDesc: '断路器触发阈值、暂停后处理逻辑常被一笔带过，但阈值设置的松紧直接决定它是真实防线还是形同虚设。本文拆解设计原理与跨协议核验框架。',
+    h1: 'DAO紧急提案通道核验：跳过时间锁的「紧急执行」，到底多容易被启用',
+    tagLabel: '紧急通道机制核验',
+    cardDesc: '紧急提案触发门槛与权限设置常被一笔带过，但这些细节决定了它是止损工具还是绕开社区审议的捷径。本文拆解设计原理与跨DAO核验框架。',
   },
   en: {
-    h1: 'Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation',
-    tagLabel: 'Circuit Breaker Verification',
-    cardDesc: 'Circuit breaker trigger thresholds and post-pause handling are often glossed over, but threshold sizing decides whether the defense is real or decorative. A verification framework across protocols.',
+    h1: 'DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered',
+    tagLabel: 'Emergency Channel Verification',
+    cardDesc: 'Emergency proposal trigger thresholds and privilege scope are often glossed over, but these details decide whether it is a genuine stop-loss tool or a shortcut around community review. A framework across DAOs.',
   },
 
   existingSlugsNewestFirst: [
+    'oracle-circuit-breaker-price-deviation-verification-guide',
     'exchange-insurance-fund-coverage-verification-guide',
     'exchange-asset-rehypothecation-risk-guide',
     'dao-treasury-diversification-approval-guide',
