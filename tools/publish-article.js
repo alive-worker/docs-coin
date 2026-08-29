@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-internal-access-control-verification-guide',
-  publishedISO: '2026-08-29T11:11:35+08:00',
-  tagColor: 'bronze',
-  topic: 'basics',
+  slug: 'bridge-validator-slashing-enforcement-verification-guide',
+  publishedISO: '2026-08-29T13:49:08+08:00',
+  tagColor: 'rust',
+  topic: 'protocol',
 
   zh: {
-    h1: '交易所内部权限核验：员工到底能看到、动到你账户里的多少东西',
-    tagLabel: '内部权限核验',
-    cardDesc: '外部安全措施防的是黑客，内部权限设计的漏洞防的是完全不同的一类风险。本文拆解最小权限原则、多人审批设计与跨交易所核验框架。',
+    h1: '跨链桥验证者惩罚机制核验：签了错误消息，罚金真的会被扣吗',
+    tagLabel: '验证者惩罚机制核验',
+    cardDesc: '「作恶将被罚没」听起来是自动执行的经济安全约束，但判定流程、覆盖范围与质押比例的具体设计，决定了这是真实机制还是营销话术。本文拆解设计模式与跨桥核验框架。',
   },
   en: {
-    h1: 'Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch',
-    tagLabel: 'Internal Access Control Verification',
-    cardDesc: 'External security measures defend against hackers; internal privilege design defends against an entirely different risk. A method to verify least privilege, multi-person approval, and cross-exchange comparison.',
+    h1: 'Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut',
+    tagLabel: 'Validator Slashing Verification',
+    cardDesc: '"Misbehavior gets slashed" sounds automatic, but the adjudication process, coverage, and stake ratio determine whether it is real enforcement or marketing. A framework across bridges.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-internal-access-control-verification-guide',
     'dao-emergency-proposal-timelock-bypass-verification-guide',
     'oracle-circuit-breaker-price-deviation-verification-guide',
     'exchange-insurance-fund-coverage-verification-guide',
