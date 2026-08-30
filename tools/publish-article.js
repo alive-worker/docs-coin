@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'cross-exchange-arbitrage-execution-slippage-verification-guide',
-  publishedISO: '2026-08-30T13:05:09+08:00',
-  tagColor: 'canary',
-  topic: 'market',
+  slug: 'airdrop-snapshot-block-selection-manipulation-verification-guide',
+  publishedISO: '2026-08-30T16:07:42+08:00',
+  tagColor: 'plum',
+  topic: 'governance',
 
   zh: {
-    h1: '跨交易所搬砖套利核验：报价和实际成交之间，滑点吃掉了多少利润',
-    tagLabel: '搬砖套利核验',
-    cardDesc: '「价差百分比减去手续费」假设了订单簿深度无限，但滑点、执行时间差和跨所转账成本才决定真实净利润。本文拆解执行链条与核验框架。',
+    h1: '空投快照区块选择核验：项目方挑一个「合适」的区块高度，能操纵多少分配结果',
+    tagLabel: '空投快照核验',
+    cardDesc: '快照数据本身不可篡改，但「选择哪个区块作为快照」这个决策层面完全可能被操纵。本文拆解规则公开时点、精确度与跨项目核验框架。',
   },
   en: {
-    h1: 'Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread',
-    tagLabel: 'Cross-Exchange Arbitrage Verification',
-    cardDesc: '"Spread minus fees" assumes infinite order book depth, but slippage, execution delay, and cross-exchange transfer cost decide the real net profit. A method to verify the execution chain.',
+    h1: 'Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation',
+    tagLabel: 'Airdrop Snapshot Verification',
+    cardDesc: 'Snapshot data itself is immutable, but the decision of which block to use as the snapshot can absolutely be manipulated. A method to verify disclosure timing, rule precision, and cross-project comparison.',
   },
 
   existingSlugsNewestFirst: [
+    'cross-exchange-arbitrage-execution-slippage-verification-guide',
     'bridge-validator-slashing-enforcement-verification-guide',
     'exchange-internal-access-control-verification-guide',
     'dao-emergency-proposal-timelock-bypass-verification-guide',

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation - Crypto Research</title>
+  <meta name="description" content="Nearly every airdrop announcement names a specific snapshot block height or timestamp used to decide which addresses qualify and for how much. That snapshot is usually treated as an objective, immutable on-chain fact, but a verifier rarely asks: how was this specific block height decided, was the decision process disclosed in advance, and could the project retroactively pick whichever block turns out more favorable to itself or affiliated addresses once outcomes are already known. This piece breaks down how airdrop snapshot mechanisms are designed, concrete paths for the block-selection privilege to be abused, common timeline manipulation patterns, and a framework for verifying an airdrop snapshot's fairness. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Airdrop Snapshot Block Selection Verification: How Much a &quot;Convenient&quot; Block Can Skew Allocation - Crypto Research">
+  <meta property="og:description" content="Nearly every airdrop announcement names a specific snapshot block height or timestamp used to decide which addresses qualify and for how much. That snapshot is usually treated as an objective, immutable on-chain fact, but a verifier rarely asks: how was this specific block height decided, was the decision process disclosed in advance, and could the project retroactively pick whichever block turns out more favorable to itself or affiliated addresses once outcomes are already known. This piece breaks down how airdrop snapshot mechanisms are designed, concrete paths for the block-selection privilege to be abused, common timeline manipulation patterns, and a framework for verifying an airdrop snapshot's fairness. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-30T16:07:42+08:00">
+  <meta property="article:modified_time" content="2026-08-30T16:07:42+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Airdrop Snapshot Block Selection Verification">
+  <meta name="twitter:description" content="How the snapshot block gets decided is often glossed over. A method to verify design and timeline manipulation risk.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-airdrop-snapshot-block-selection-manipulation-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Airdrop snapshot block selection verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-airdrop-snapshot-block-selection-manipulation-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-airdrop-snapshot-block-selection-manipulation-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","airdrop snapshot verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-airdrop-snapshot-block-selection-manipulation-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html", "name": "Airdrop Snapshot Block Selection Verification: How Much a Convenient Block Can Skew Allocation - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Airdrop Snapshot Block Selection Verification", "item": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#article", "headline": "Airdrop Snapshot Block Selection Verification: How Much a Convenient Block Can Skew Allocation", "description": "How the snapshot block gets decided is often glossed over. This piece breaks down design mechanics, manipulation patterns, and a verification framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["airdrop snapshot verification","block height selection manipulation","snapshot announcement timeline verification","allocation fairness verification","token airdrop rule verification"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-30T16:07:42+08:00", "dateModified": "2026-08-30T16:07:42+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation</h1>
+        <p class="article-summary">Nearly every token airdrop announcement clearly states a specific snapshot block height or timestamp, used to determine which on-chain addresses qualify and for how much based on their holdings or interaction history. That snapshot number itself is an immutable on-chain fact — once a block is confirmed, every address's balance and history on that block is objectively verifiable by anyone. But a verifier easily overlooks a more upstream question: at what point in time, and by what rule, was that specific block height decided? If a project can observe the allocation outcomes for several candidate blocks and then retroactively pick whichever one is more favorable to itself or an affiliated address as the "official snapshot," the selection process still has room for manipulation even though the final published snapshot itself can't be altered — this manipulation doesn't happen at the on-chain data layer, but at the decision layer of "which piece of on-chain data to reference." This piece breaks down how airdrop snapshot mechanisms are designed, concrete paths for the block-selection privilege to be abused, several common timeline manipulation patterns and how to spot them, and a practical framework for verifying an airdrop snapshot's fairness. The entire piece discusses abstract mechanism categories only, names no real project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-30T16:07:42+08:00">2026-08-30 16:07:42</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-airdrop-snapshot-block-selection-manipulation-verification-guide-en.svg" alt="Airdrop snapshot block selection verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether the snapshot block-selection rule was publicly disclosed before that block was actually reached, rather than announced after the fact</li>
+            <li><span class="article-verify-check">✓</span>Verify whether the published rule specifies a concrete block height or a precise future point, rather than vague language like "sometime soon"</li>
+            <li><span class="article-verify-check">✓</span>Confirm the time gap between the announcement and the actual snapshot block — the shorter it is, the smaller the window for last-minute intervention</li>
+            <li><span class="article-verify-check">✓</span>Check whether allocation outcomes differ significantly between blocks adjacent to the snapshot, and if so, whether the block ultimately chosen happens to favor the project or an affiliated address</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Two Layers of a Snapshot: Immutable On-Chain Data vs. Manipulable Data Selection</h2>
+<p>The key to verifying airdrop snapshot fairness is decomposing the question into two entirely separate layers. The first layer is the objectivity of the snapshot data itself: once a block is confirmed by the network, every address's balance, holding duration, and interaction count recorded at that block is a cryptographically immutable fact that any third party can independently reproduce and verify. The second layer is entirely different: the fairness of the decision to "use this particular block's data as the official snapshot" — this decision is a subjective choice made by the project (or its designated multisig or oracle), and that choice process itself could very well be opaque and unfair. The mistake a verifier most easily makes is equating the first layer's "on-chain data is immutable" with the second layer's "the snapshot outcome must therefore be fair," overlooking the enormous logical gap between the two — immutable data can absolutely be maliciously, selectively referenced.</p>
+<ul>
+<li>Snapshot data itself (balances, holding records at a given block) is cryptographically immutable and independently reproducible by any third party.</li>
+<li>"Which block's data to use as the official snapshot" is an entirely separate decision layer, and that choice process could itself be opaque and unfair.</li>
+<li>"On-chain data is immutable" cannot be directly equated with "the snapshot outcome must be fair" — there is an enormous logical gap between the two.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Was the Snapshot Rule Publicly Fixed Before Reaching That Block</h2>
+<p>The single most critical step in verifying airdrop snapshot fairness is checking the sequence between the rule's public disclosure and the actual snapshot block. A fair snapshot mechanism should publicly announce the specific snapshot block height (or a sufficiently precise, unadjustable-after-the-fact future-block determination rule, such as "the Xth future block on a given chain") before that block is reached on-chain — so any user knows exactly what actions they need to complete by what point to qualify, before the snapshot actually happens, and no one can retroactively influence the rule once outcomes are known. Conversely, if a project only announces "we chose block such-and-such, dated such-and-such, as the snapshot" retrospectively, after that block has already been produced, a verifier should be highly cautious — this after-the-fact disclosure pattern means the project could well have already observed and compared allocation outcomes across several candidate blocks before announcing, and then picked whichever version was most favorable to itself.</p>
+<ul>
+<li>A fair snapshot mechanism should publicly announce a specific block height or an unadjustable determination rule before that block is reached on-chain.</li>
+<li>Users should know exactly what actions qualify them before the snapshot happens, and no one should be able to retroactively influence the rule once outcomes are known.</li>
+<li>Announcing the snapshot block "retrospectively" after it has already been produced suggests the project may have compared multiple candidate outcomes and picked the most favorable one — warrants high caution.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: The Precision of the Published Rule — "A Specific Block" vs. "Sometime Soon"</h2>
+<p>Even if a project discloses its snapshot rule in advance, a verifier still needs to check how precise that rule actually is. Language like "based on the on-chain state at block 20,000,000" carries extremely high precision and immutability, since once a block height is fixed, every network participant can independently verify the same result, and no party can unilaterally change it. But if the published rule uses vague language like "we will take a snapshot at some point soon" or "sometime next week," the discretion over exactly which block gets used at execution time still rests entirely with the project — the act of "disclosing the rule in advance" is substantially weakened as a constraint, barely different from not disclosing anything in advance at all. A verifier should require both conditions — "the rule was disclosed in advance" AND "the rule itself is precise enough to eliminate discretion" — to be satisfied before concluding a snapshot mechanism carries genuine fairness assurance.</p>
+<ul>
+<li>"Based on the state at block X" carries extremely high precision and immutability — every network participant can independently verify the same result, unchangeable by any single party.</li>
+<li>Vague language like "sometime soon" leaves the discretion over exactly which block gets used at execution time entirely with the project.</li>
+<li>Both "the rule was disclosed in advance" AND "the rule is precise enough to eliminate discretion" must be satisfied before a snapshot mechanism can be judged to have genuine fairness assurance.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: The Announcement-to-Snapshot Time Window, and Post-Hoc Data Comparison</h2>
+<p>A verifier should also check two specific verification methods. First, the time gap between the public announcement and the actual snapshot block: the shorter this gap, the smaller the window any party has to intervene or coordinate affiliated position adjustments after observing preliminary allocation outcomes — if the gap is compressed to nearly zero (e.g., the block is reached within minutes of the announcement), fairness credibility rises significantly; conversely, if there are days or longer between the announcement and the actual snapshot, a verifier should check for anomalous on-chain activity during that window. Second, and the most direct post-hoc verification method: comparing whether allocation outcomes differ significantly across the blocks immediately adjacent to the snapshot block — if the difference is small, which specific block gets chosen has limited impact on the outcome and manipulation incentive is weak; but if the difference is significant (e.g., a specific address's holdings fluctuate sharply between adjacent blocks), a verifier should further check whether the block ultimately chosen happens to favor that address (if it can be linked to the project or an affiliate) — even without conclusive proof of manipulation, this constitutes a reasonable basis for public questioning.</p>
+<ul>
+<li>The shorter the gap between announcement and actual snapshot block, the smaller the window for last-minute intervention, and the higher the fairness credibility.</li>
+<li>A long gap between announcement and snapshot warrants checking for anomalous on-chain activity during that window.</li>
+<li>A significant allocation difference between adjacent blocks that happens to favor a specific affiliated address constitutes a reasonable basis for public questioning, even without conclusive proof.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Project Comparison Framework: Disclosure Timing, Rule Precision, and Window Length</h2>
+<p>When evaluating multiple candidate airdrop projects, a verifier can compare across these dimensions. First, disclosure timing sequence: was the snapshot rule confirmed to be publicly disclosed before the actual snapshot block was produced, or announced retrospectively. Second, rule precision: is the published rule specific to a concrete block height or equivalent precision, or only a vague time-range description. Third, window length: is the gap between announcement and actual snapshot short enough to compress the room for last-minute intervention. Fourth, post-hoc data comparability: are the allocation outcomes for blocks adjacent to the snapshot publicly available for independent third-party comparison. Combining these four dimensions produces a well-grounded judgment of an airdrop snapshot mechanism's fairness, rather than treating "there's a specific block number" as equivalent to "this snapshot is absolutely fair and couldn't possibly be manipulated."</p>
+<ul>
+<li>Disclosure timing sequence, rule precision, window length, and post-hoc data comparability are the four key comparison dimensions.</li>
+<li>"There's a specific block number" is not equivalent to "the snapshot is absolutely fair" — the timing and precision of rule disclosure are what matters.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of a snapshot mechanism's fairness, rather than concluding from the mere existence of a block height.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has it been checked whether the snapshot rule was disclosed before the actual snapshot block was produced? Second, has it been confirmed whether the published rule's precision is sufficient to eliminate any after-the-fact discretion by the project? Third, has the time window between announcement and actual snapshot been verified? Fourth, has the allocation outcome for blocks adjacent to the snapshot been compared for a significant difference favoring a specific affiliated party? Working through these four questions gives a well-grounded judgment of an airdrop snapshot mechanism's fairness, rather than treating "the snapshot data itself is immutable" as equivalent to "the entire allocation process must be fair." The entire piece discusses abstract mechanism categories only, names no real project, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is disclosure timing ahead of the snapshot block, does rule precision eliminate discretion, is the time window short enough, is the allocation difference between adjacent blocks checked.</li>
+<li>Snapshot data itself is immutable, but the decision layer of "which data to reference" can absolutely be manipulated — the two need to be verified separately.</li>
+<li>The entire piece is a discussion of verification methodology, names no real project, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Two Layers of a Snapshot</a></li>
+          <li><a href="#sec-2">2. Was the Rule Fixed Before the Block</a></li>
+          <li><a href="#sec-3">3. Precision of the Published Rule</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Project Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/blocks/" target="_blank" rel="noopener">Ethereum.org: Blocks and Block Height</a>: introduces the basics of blockchain block confirmation, useful for understanding the technical meaning of a snapshot block</li>
+            <li><a href="https://www.sec.gov/" target="_blank" rel="noopener">U.S. Securities and Exchange Commission (SEC)</a>: useful for looking up regulatory thinking on the fairness design of "record dates" in traditional financial markets, as a point of comparison</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread</a></li>
+          <li><a href="/en/research/governance/airdrop-sybil-detection-research-guide.html">Airdrop Sybil Detection Research Guide</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits</a></li>
+          <li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li>
+          <li><a href="/en/research/governance/vote-escrow-lock-verification.html">Vote-Escrow Lock Verification</a></li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY</a></li>
+          <li><a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">Exchange Asset Rehypothecation Risk: Your Coins on Deposit May Already Be Lent Out</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/governance/dao-governance-research-guide.html">DAO Governance Research Methodology</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9e37a643"></script>
+</body>
+</html>
