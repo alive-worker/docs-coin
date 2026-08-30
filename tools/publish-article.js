@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'bridge-validator-slashing-enforcement-verification-guide',
-  publishedISO: '2026-08-29T13:49:08+08:00',
-  tagColor: 'rust',
-  topic: 'protocol',
+  slug: 'cross-exchange-arbitrage-execution-slippage-verification-guide',
+  publishedISO: '2026-08-30T13:05:09+08:00',
+  tagColor: 'canary',
+  topic: 'market',
 
   zh: {
-    h1: '跨链桥验证者惩罚机制核验：签了错误消息，罚金真的会被扣吗',
-    tagLabel: '验证者惩罚机制核验',
-    cardDesc: '「作恶将被罚没」听起来是自动执行的经济安全约束，但判定流程、覆盖范围与质押比例的具体设计，决定了这是真实机制还是营销话术。本文拆解设计模式与跨桥核验框架。',
+    h1: '跨交易所搬砖套利核验：报价和实际成交之间，滑点吃掉了多少利润',
+    tagLabel: '搬砖套利核验',
+    cardDesc: '「价差百分比减去手续费」假设了订单簿深度无限，但滑点、执行时间差和跨所转账成本才决定真实净利润。本文拆解执行链条与核验框架。',
   },
   en: {
-    h1: 'Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut',
-    tagLabel: 'Validator Slashing Verification',
-    cardDesc: '"Misbehavior gets slashed" sounds automatic, but the adjudication process, coverage, and stake ratio determine whether it is real enforcement or marketing. A framework across bridges.',
+    h1: 'Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread',
+    tagLabel: 'Cross-Exchange Arbitrage Verification',
+    cardDesc: '"Spread minus fees" assumes infinite order book depth, but slippage, execution delay, and cross-exchange transfer cost decide the real net profit. A method to verify the execution chain.',
   },
 
   existingSlugsNewestFirst: [
+    'bridge-validator-slashing-enforcement-verification-guide',
     'exchange-internal-access-control-verification-guide',
     'dao-emergency-proposal-timelock-bypass-verification-guide',
     'oracle-circuit-breaker-price-deviation-verification-guide',

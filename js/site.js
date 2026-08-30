@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html': '2026-08-30 13:05:09',
     '/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html': '2026-08-29 13:49:08',
     '/research/basics/exchange-internal-access-control-verification-guide.html': '2026-08-29 11:11:35',
     '/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html': '2026-08-28 16:46:50',
@@ -250,6 +251,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html': '2026-08-30 13:05:09',
 '/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html': '2026-08-29 13:49:08',
 '/en/research/basics/exchange-internal-access-control-verification-guide.html': '2026-08-29 11:11:35',
 '/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html': '2026-08-28 16:46:50',

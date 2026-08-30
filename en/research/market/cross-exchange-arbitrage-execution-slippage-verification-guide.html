@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread - Crypto Research</title>
+  <meta name="description" content="Cross-exchange price-spread arbitrage is often described as a low-risk, almost 'no-brainer' strategy: whenever a spread exists between two exchanges, buy low and sell high to lock in a profit. This narrative assumes the quoted price is the execution price — but in reality, the delay between spotting a spread and completing both legs of the trade introduces slippage, price drift, and withdrawal/transfer time that can erode most or all of the theoretical profit. This piece breaks down the full execution chain of cross-exchange arbitrage, where the gap between quoted and net profit actually comes from, several hidden costs beginners overlook, and a framework for verifying whether an arbitrage opportunity is genuinely viable. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread - Crypto Research">
+  <meta property="og:description" content="Cross-exchange price-spread arbitrage is often described as a low-risk, almost 'no-brainer' strategy: whenever a spread exists between two exchanges, buy low and sell high to lock in a profit. This narrative assumes the quoted price is the execution price — but in reality, the delay between spotting a spread and completing both legs of the trade introduces slippage, price drift, and withdrawal/transfer time that can erode most or all of the theoretical profit. This piece breaks down the full execution chain of cross-exchange arbitrage, where the gap between quoted and net profit actually comes from, several hidden costs beginners overlook, and a framework for verifying whether an arbitrage opportunity is genuinely viable. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-30T13:05:09+08:00">
+  <meta property="article:modified_time" content="2026-08-30T13:05:09+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Exchange Arbitrage Verification">
+  <meta name="twitter:description" content="The gap between quoted spread and net profit is often glossed over. A method to verify the execution chain and hidden costs.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-cross-exchange-arbitrage-execution-slippage-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-exchange arbitrage verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-cross-exchange-arbitrage-execution-slippage-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-cross-exchange-arbitrage-execution-slippage-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","cross-exchange arbitrage verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-cross-exchange-arbitrage-execution-slippage-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html", "name": "Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Cross-Exchange Arbitrage Verification", "item": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#article", "headline": "Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread", "description": "The gap between quoted spread and net profit is often glossed over. This piece breaks down the execution chain, hidden cost sources, and a verification framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["cross-exchange arbitrage verification","execution slippage","order book depth verification","withdrawal transfer time cost","arbitrage net profit measurement method"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-30T13:05:09+08:00", "dateModified": "2026-08-30T13:05:09+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread</h1>
+        <p class="article-summary">Cross-exchange price-spread arbitrage is one of the most widely circulated strategy narratives in crypto trading: observe a price spread for the same asset between two exchanges, buy on the cheaper one, sell on the more expensive one, and theoretically lock in a risk-free profit. This narrative gets simplified in much beginner content into a simple arithmetic problem — spread percentage minus trading fees equals profit. But this simplification assumes something that almost never holds in reality: that the quoted price you observe is the price you'll actually execute at. Between the moment you spot a spread opportunity and the moment both legs of the trade — the buy and the sell — actually complete on their respective exchanges, a series of factors can make the final net profit significantly lower than the theoretical spread: slippage from insufficient order book depth, price movement during the execution time gap between the two legs, and if rebalancing positions requires moving assets across exchanges, the on-chain or internal transfer delay and fees involved. This piece breaks down the complete execution chain of cross-exchange arbitrage from spotting a spread to final settlement, where the gap between quoted profit and actual net profit specifically comes from, several hidden costs beginners most commonly overlook, and a practical framework for verifying whether an arbitrage strategy is genuinely viable. The entire piece discusses abstract methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-30T13:05:09+08:00">2026-08-30 13:05:09</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-cross-exchange-arbitrage-execution-slippage-verification-guide-en.svg" alt="Cross-exchange arbitrage verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Calculate the actual usable order book depth on both exchanges at the target trade size, and estimate the slippage percentage that trade size would incur</li>
+            <li><span class="article-verify-check">✓</span>Check whether rebalancing positions requires transferring assets across exchanges, and if so, verify the specific transfer time and fee amount</li>
+            <li><span class="article-verify-check">✓</span>Backtest the strategy's net profit under real execution delay using actual historical tick-by-tick trade data — not quote snapshots — rather than the theoretical spread</li>
+            <li><span class="article-verify-check">✓</span>Confirm each exchange's maker/taker fee rate, and whether a volume-based fee discount is actually applicable to your trading volume</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Quoted Profit vs. Net Profit: Why "Spread Minus Fees" Is a Dangerous Simplification</h2>
+<p>The starting point for understanding cross-exchange arbitrage's real profitability is recognizing a key distinction: the quote you see on a trading interface only represents how much quantity is available to trade at the current best bid/ask, not that your entire intended trade size can execute at that price. If the size you plan to trade exceeds the quantity resting at the best price level, your order will continue consuming progressively worse-priced levels further down the book, causing your actual average execution price to diverge from the quote you initially saw — this is slippage. The "spread minus fees" simplification completely ignores slippage, essentially assuming infinite order book depth — an assumption that's roughly fine on liquid mainstream pairs but can badly fail on thinner secondary pairs or non-top-tier exchanges, where slippage can erode far more profit than trading fees themselves. A verifier should strictly separate "quoted spread" from "net profit" — the quoted spread is only a preliminary signal for whether an opportunity deserves further verification, not a conclusion ready to act on.</p>
+<ul>
+<li>The quote on a trading interface only represents quantity available at the best price level; size beyond that executes at progressively worse prices, producing slippage.</li>
+<li>The "spread minus fees" simplification ignores slippage entirely, effectively assuming infinite order book depth — an assumption that easily fails on thin pairs.</li>
+<li>The quoted spread should be treated as a preliminary signal for further verification, not a net-profit conclusion ready to act on.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Calculate Real Order Book Depth at the Target Trade Size</h2>
+<p>Before placing an order, a verifier should directly examine the full order book depth data for the target pair on both exchanges, rather than relying only on the best bid/ask — calculate how many price levels a trade of the planned size would need to consume to fully fill, and use that to estimate the percentage deviation of the actual average execution price from the best quote — this deviation is the slippage cost. A key detail: this calculation needs to be done separately for both legs of the trade (the buy leg and the sell leg), since order book depth between two exchanges is often asymmetric — one side having ample liquidity while the other is thin is a common scenario. A verifier should also recognize that order book depth fluctuates significantly over time, so a slippage estimate calculated at one moment can't be directly applied to future execution windows — for a strategy intended to run repeatedly over the long term, a mechanism for continuously monitoring order book depth changes should be built, rather than relying on a one-time static calculation.</p>
+<ul>
+<li>Calculate how many order book levels a trade of the planned size would actually need to consume, and estimate the slippage deviation of the real execution price from the best quote accordingly.</li>
+<li>Order book depth between two exchanges is often asymmetric — the buy leg and sell leg need separate calculations rather than assuming both sides have equal depth.</li>
+<li>Order book depth fluctuates significantly over time; a strategy run repeatedly long-term needs continuous monitoring rather than a one-time static estimate.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: The Time Cost and Fees of Cross-Exchange Asset Transfers</h2>
+<p>If an arbitrage strategy requires repeatedly moving assets between exchanges to rebalance positions (e.g., continuously accumulating a long-side asset on one exchange, needing periodic transfers to another exchange to replenish short-side inventory), a verifier must factor this transfer time and fee cost into the complete net profit calculation. On-chain transfers have network confirmation times that vary enormously across different blockchain networks — from seconds to tens of minutes — and some exchanges add their own internal risk-review delay on top; transfer fees may look small per transaction, but accumulate linearly with trade frequency in a high-frequency strategy, potentially becoming a non-trivial fixed cost over time. A verifier should check the historical average transfer time and fee amount for the specific asset between the two exchanges, and factor both costs into the per-trade net profit model based on the strategy's expected execution frequency, rather than treating "asset transfer" as a negligible background operation.</p>
+<ul>
+<li>The time and fees for cross-exchange asset transfers to rebalance positions must be factored into the complete net profit model, not treated as a negligible background operation.</li>
+<li>Confirmation times vary enormously across blockchain networks, and some exchanges add their own internal risk-review delay on top — both are real execution costs.</li>
+<li>Transfer fees accumulate linearly with trade frequency in high-frequency strategies, potentially becoming a non-trivial fixed cost over time.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Cost Checklist: Fee-Discount Thresholds and Price Drift During Execution Delay</h2>
+<p>A verifier should also check two commonly underestimated hidden costs. First, fee-discount thresholds: most exchanges use tiered maker/taker fee structures where higher trading volume gets lower rates, and many "professional arbitrageur" strategy analyses default to using the lowest fee tier — but if a verifier's own trading volume hasn't reached that tier's threshold, the actual applicable fee rate could be significantly higher, directly eating into the theoretical profit margin. Second, price drift during the time gap between the two order executions: cross-exchange arbitrage requires placing orders on two exchanges separately, and even if both orders are submitted nearly simultaneously, there's still a delay from submission to final execution confirmation ranging from milliseconds to seconds — during this delay window, the underlying asset's price may have already moved, especially during sharp, news-driven volatility, and this price drift can completely wipe out the original spread or even turn it into a loss. A verifier should backtest strategy performance under real execution delay using actual historical tick-by-tick trade data — not quote snapshots — rather than calculating based on an idealized "simultaneous execution" assumption.</p>
+<ul>
+<li>Fee rates are typically tiered — if a verifier's trading volume hasn't reached the lowest tier's threshold, actual costs could be significantly higher than theoretical estimates.</li>
+<li>The execution delay between order submission and fill confirmation lets the underlying price drift during that window, potentially wiping out the original spread or turning it into a loss.</li>
+<li>Backtest strategy performance under real execution delay using actual historical tick-by-tick trade data, rather than an idealized "simultaneous execution" assumption.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Strategy Comparison Framework: Depth Sufficiency, Capital Efficiency, and Execution Stability</h2>
+<p>When evaluating multiple candidate arbitrage opportunities, a verifier can compare across these dimensions. First, depth sufficiency: is the slippage cost at the target trade size on both sides' order books within an acceptable range, and does depth stay relatively stable over time. Second, capital efficiency: does the strategy require frequent cross-exchange asset transfers, and what proportion of theoretical profit do the transfer time cost and fees consume. Third, execution stability: does this spread opportunity appear frequently and persist long enough to support scaled, repeated execution, or is it merely an occasional, brief window. Fourth, real historical backtest results: how large is the gap between the real net profit margin backtested from tick-by-tick trade data and the theoretical quoted spread — this gap itself is a direct indicator of how much a strategy is "theoretically appealing but practically hollow." Combining these four dimensions produces a well-grounded judgment of an arbitrage opportunity's real viability, rather than concluding from a single percentage number on a quote page.</p>
+<ul>
+<li>Depth sufficiency, capital efficiency, execution stability, and real historical backtest results are the four key comparison dimensions.</li>
+<li>The gap between theoretical quoted spread and real backtested net profit margin is a direct indicator of how "theoretically appealing but practically hollow" a strategy is.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of an arbitrage opportunity's real viability, rather than concluding from a quoted percentage alone.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has the real slippage cost at the target trade size on both order books been calculated? Second, has it been checked whether cross-exchange asset transfers are needed, and the specific transfer time and fee amount verified? Third, has the strategy's net profit under real execution delay been backtested using actual historical tick-by-tick trade data? Fourth, has the actual applicable fee tier for one's own trading volume been confirmed, rather than defaulting to the best-case rate? Fifth, has the frequency and duration of this spread opportunity been assessed for whether it supports scaled, repeated execution? Working through these five questions gives a well-grounded judgment of an arbitrage strategy's real profitability, rather than treating an isolated spread percentage on a quote page as if it were realized profit. The entire piece discusses abstract methodology only and is not investment advice.</p>
+<ul>
+<li>Five-question checklist: is slippage cost calculated, is cross-exchange transfer cost verified, is a real backtest completed, is the fee tier confirmed, is opportunity persistence assessed.</li>
+<li>An arbitrage strategy's real net profit depends on the specific cost at every step of the execution chain, not an isolated spread percentage on a quote page.</li>
+<li>The entire piece is a discussion of verification methodology and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Quoted Profit vs. Net Profit</a></li>
+          <li><a href="#sec-2">2. Calculating Real Order Book Depth</a></li>
+          <li><a href="#sec-3">3. Cross-Exchange Transfer Time and Fees</a></li>
+          <li><a href="#sec-4">4. Hidden Cost Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Strategy Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.investopedia.com/terms/a/arbitrage.asp" target="_blank" rel="noopener">Investopedia: Arbitrage</a>: introduces the basic economics and common risks of cross-market arbitrage</li>
+            <li><a href="https://www.cmegroup.com/education/courses/introduction-to-futures/understanding-order-book-depth.html" target="_blank" rel="noopener">CME Group: Order Book Depth Education</a>: introduces the basics of how order book depth affects execution price, a useful analogy for understanding crypto exchange slippage cost</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY</a></li>
+          <li><a href="/en/research/market/orderbook-depth-verification-guide.html">Order Book Depth Verification: Does the Advertised Depth Match What You Can Actually Trade</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits</a></li>
+          <li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+          <li><a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">Exchange Asset Rehypothecation Risk: Your Coins on Deposit May Already Be Lent Out</a></li>
+          <li><a href="/en/research/market/staking-apy-net-yield-verification-guide.html">Staking APY Verification: Does the Advertised Rate Match What You Actually Earn</a></li>
+          <li><a href="/en/research/market/otc-fiat-offramp-counterparty-verification-guide.html">OTC Fiat Off-Ramp: Verify Your Counterparty Before You Wire</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/basics/virtual-card-fx-spread-hidden-fee-verification-guide.html">Virtual Card FX Spread Verification: The Advertised Rate vs. What Actually Lands</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c01e14f0"></script>
+</body>
+</html>
