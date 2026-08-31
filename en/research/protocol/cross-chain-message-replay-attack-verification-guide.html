@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice - Crypto Research</title>
+  <meta name="description" content="A cross-chain protocol's core job is to deliver a message from a source chain to a destination chain and execute it exactly once — but 'exactly once' is not an automatic default; it requires a purpose-built anti-replay mechanism. If the destination contract doesn't correctly track which message identifiers it has already processed, the same cross-chain message can in theory be resubmitted and re-executed, minting or transferring assets more than once. This piece breaks down how anti-replay mechanisms are designed, common implementation flaw patterns, key details in message identifier construction, and a framework for verifying a bridge's anti-replay reliability. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/cross-chain-message-replay-attack-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/cross-chain-message-replay-attack-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice - Crypto Research">
+  <meta property="og:description" content="A cross-chain protocol's core job is to deliver a message from a source chain to a destination chain and execute it exactly once — but 'exactly once' is not an automatic default; it requires a purpose-built anti-replay mechanism. If the destination contract doesn't correctly track which message identifiers it has already processed, the same cross-chain message can in theory be resubmitted and re-executed, minting or transferring assets more than once. This piece breaks down how anti-replay mechanisms are designed, common implementation flaw patterns, key details in message identifier construction, and a framework for verifying a bridge's anti-replay reliability. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-31T13:57:50+08:00">
+  <meta property="article:modified_time" content="2026-08-31T13:57:50+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Chain Message Replay Verification">
+  <meta name="twitter:description" content="Anti-replay design details are often glossed over. A method to verify implementation flaw patterns and compare across bridges.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-cross-chain-message-replay-attack-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Cross-chain message replay verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-cross-chain-message-replay-attack-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-cross-chain-message-replay-attack-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","cross-chain message replay verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-cross-chain-message-replay-attack-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html", "name": "Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Cross-Chain Message Replay Verification", "item": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#article", "headline": "Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice", "description": "Anti-replay design details are often glossed over. This piece breaks down design mechanics, implementation flaw patterns, and a cross-bridge verification framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["cross-chain message replay verification","message unique identifier design","bridge anti-replay mechanism","multi-chain deployment replay risk","cross-chain protocol security verification"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-31T13:57:50+08:00", "dateModified": "2026-08-31T13:57:50+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/cross-chain-message-replay-attack-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice</h1>
+        <p class="article-summary">A cross-chain protocol's most basic job is to reliably deliver a message — for example, "a user locked 100 tokens on the source chain, mint an equivalent wrapped asset on the destination chain" — from the source chain to the destination chain and execute it exactly once. "Exactly once" sounds like an obvious default, but in distributed systems, a message can be submitted to a destination contract more than once due to network retransmission, validator nodes resubmitting, or a malicious attacker deliberately rebroadcasting an already-verified message. If the destination contract doesn't correctly track a unique identifier for every message it has already processed and check whether that identifier has appeared before, the same cross-chain message can in theory be re-executed — letting an attacker get wrapped assets minted on the destination chain multiple times while only a single unit of the original asset was ever locked on the source chain. That's the core logic of a cross-chain message replay attack. This piece breaks down how anti-replay mechanisms are designed, several easily overlooked key details in constructing a message's unique identifier, concrete paths for replay risk to be reintroduced during bridge upgrades or multi-chain deployment, and a practical framework for verifying a bridge's anti-replay reliability. The entire piece discusses abstract mechanism categories only, names no real bridge, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-31T13:57:50+08:00">2026-08-31 13:57:50</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-cross-chain-message-replay-attack-verification-guide-en.svg" alt="Cross-chain message replay verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether the destination contract records a unique identifier for every processed message and checks it before execution</li>
+            <li><span class="article-verify-check">✓</span>Verify whether the message identifier's construction includes the source chain ID, not just a message sequence number or transaction hash</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the bridge has a clear process during contract upgrades or new-chain deployments to avoid losing prior processed-message records</li>
+            <li><span class="article-verify-check">✓</span>Check whether this bridge has ever had a replay-related security incident or audit finding, and how it was subsequently fixed</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Why "Exactly Once" Isn't a Default — It's a Guarantee That Must Be Purpose-Built</h2>
+<p>The starting point for understanding replay attack risk is recognizing that message delivery in distributed systems inherently offers three different semantic guarantees — "at least once," "at most once," and "exactly once" — and cross-chain message delivery defaults into the weaker "at least once" category: network jitter, validators rebroadcasting, or relay-node retry logic can all cause the same message to be submitted to the destination chain's entry point more than once. If a destination contract naively assumes "a validly signed message means execute it once" with no additional deduplication mechanism, then regardless of whether that duplicate submission was an unintentional network glitch or a deliberate attacker, the result is the same operation executing more than once. The core recognition a verifier needs to build is: "exactly once" is not a property that comes automatically with the message delivery protocol — it's a guarantee that must be actively constructed at the destination contract layer via explicit state tracking and check logic. Any implementation that skips this explicit check, relying on the implicit assumption that "a valid signature implies the message will only be processed once," carries replay risk.</p>
+<ul>
+<li>Distributed message delivery defaults to an "at least once" semantic — the same message may be submitted to the destination chain multiple times due to network issues or deliberate replay.</li>
+<li>A destination contract that only verifies signature validity before executing, with no additional deduplication mechanism, will execute duplicate submissions more than once.</li>
+<li>"Exactly once" is a guarantee that must be explicitly constructed at the contract layer, not a property that automatically comes with the message delivery protocol.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Is the Message Identifier Correctly Recorded and Checked Beforehand</h2>
+<p>A verifier should directly review the destination contract code to confirm it maintains a record set of used identifiers for every processed cross-chain message (a common implementation is a mapping structure linking a message's unique identifier to a "processed" boolean state), and checks whether that identifier already exists in the record set before actually executing a mint, transfer, or other operation — only proceeding if it's confirmed unprocessed, and immediately writing that identifier into the record set once execution completes. The order between this check and this write matters critically — a verifier should specifically watch for an implementation that "executes the operation first, then writes the record" — without additional reentrancy-guard protection, this ordering could theoretically be exploited via a reentrancy attack to trigger processing of the same message again before the record gets written, forming a subtler replay variant.</p>
+<ul>
+<li>A destination contract should maintain a record set of unique identifiers for every processed message, checking before execution and writing immediately after.</li>
+<li>An "execute first, then write the record" implementation order carries risk of being exploited via reentrancy to form a subtler replay variant.</li>
+<li>The key check is the specific ordering of the check and write actions, not merely confirming "a deduplication mechanism exists" as a vague conclusion.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Does the Message Identifier's Construction Include Source Chain Identity</h2>
+<p>An easily overlooked but consequential implementation detail is exactly how the message unique identifier is constructed. If the identifier is built purely from the message's sequence number or transaction hash on the source chain, without incorporating the source chain's identifier (chain ID) as part of the identifier's composition, then when this cross-chain protocol connects multiple structurally similar chains, or later expands to a new source chain, there's a risk of identifier collision across chains — two different chains happening to produce messages with the same sequence number or similar hash could be mistakenly judged by the destination contract as the same already-processed message (causing a legitimate message to be wrongly rejected), or conversely mistaken for two distinct messages (if the construction logic is flawed, this could even be exploited to fabricate a duplicate message that "appears never to have been processed"). A verifier should check the specific formula used to construct the message unique identifier, confirming whether it explicitly incorporates the source chain identifier, rather than relying solely on the uniqueness a message inherently has within a single-chain context.</p>
+<ul>
+<li>A message identifier built purely from sequence number or transaction hash, without incorporating the source chain identifier, carries a risk of identifier collision across chains.</li>
+<li>Identifier collision could cause a legitimate message to be wrongly rejected as a duplicate, or be exploited to construct a replay message that "appears never to have been processed."</li>
+<li>The key check is whether the identifier construction formula explicitly incorporates the source chain identifier, rather than relying solely on a message's native uniqueness within a single-chain context.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Record Loss During Contract Upgrades and Multi-Chain Deployment</h2>
+<p>A verifier should also check two easily overlooked related risks. First, contract upgrade scenarios: if a bridge's destination contract uses an upgradeable proxy pattern, a careless upgrade could cause the new version's storage layout to be incompatible with the old one, losing the historical record of processed message identifiers — once this record is wiped or corrupted, every message that was previously legitimately executed could in theory be resubmitted and re-executed. This is a replay risk indirectly introduced by the upgrade operation, not a flaw in the anti-replay logic itself. Second, multi-chain deployment scenarios: if this cross-chain protocol later expands to support a new destination chain, a verifier should check whether the newly deployed contract independently maintains its own processed-message record, or shares the same record logic with other chains without proper chain-context isolation — improper isolation could cause a message identifier that should only be valid on Chain A to also erroneously take effect or conflict within Chain B's record set.</p>
+<ul>
+<li>An upgradeable proxy contract with an incompatible storage layout after an upgrade could lose the record of processed messages, letting historical messages be resubmitted and re-executed.</li>
+<li>This upgrade-introduced replay risk stems from upgrade-process rigor, not a design flaw in the anti-replay logic itself.</li>
+<li>Multi-chain deployment needs checking for whether each chain independently maintains its own record, or whether improper chain-context isolation causes cross-chain identifier conflicts.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Bridge Comparison Framework: Record Mechanism, Identifier Construction, Upgrade Process, Historical Incidents</h2>
+<p>When evaluating multiple candidate bridges, a verifier can compare across these dimensions. First, record mechanism completeness: does it maintain a clear processed-identifier record for every message, and is the check-and-write order correct. Second, identifier construction rigor: does it explicitly incorporate the source chain identifier, and has it been audited to confirm no collision risk in multi-chain scenarios. Third, upgrade process caution: is there a clear storage-layout compatibility check process to avoid an upgrade accidentally wiping historical records. Fourth, historical incident record: has this bridge ever had a replay-related security incident or audit finding, and is the subsequent fix publicly documented. Combining these four dimensions produces a well-grounded judgment of a bridge's anti-replay mechanism's real reliability, rather than treating "it's a bridge" as itself a security guarantee.</p>
+<ul>
+<li>Record mechanism completeness, identifier construction rigor, upgrade process caution, and historical incident record are the four key comparison dimensions.</li>
+<li>"It's a bridge" is not itself a security guarantee — the specific implementation details of the anti-replay mechanism are what matter.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of the anti-replay mechanism's real reliability, rather than concluding from the mechanism's mere existence.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has it been checked whether the destination contract maintains a processed-identifier record for every message, with the check completed before execution? Second, has it been verified whether the identifier construction explicitly incorporates the source chain identifier? Third, has it been confirmed whether this bridge has a storage-layout compatibility check process during upgrades to avoid losing historical records? Fourth, has it been checked whether, in a multi-chain deployment, each chain independently maintains its own record, ruling out cross-chain identifier conflict risk? Fifth, has that bridge's history been checked for a replay-related security incident? Working through these five questions gives a well-grounded judgment of a bridge's anti-replay reliability, rather than treating "cross-chain messages use signature verification" as equivalent to "won't be re-executed." The entire piece discusses abstract mechanism categories only, names no real bridge, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Five-question checklist: is the record mechanism complete, does the identifier include source chain identity, is the upgrade process cautious, is multi-chain isolation correct, is the historical incident record checked.</li>
+<li>"Messages are signature-verified" is not equivalent to "won't be re-executed" — the two verify entirely different security properties.</li>
+<li>The entire piece is a discussion of verification methodology, names no real bridge, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why Exactly Once Needs Purpose-Built Design</a></li>
+          <li><a href="#sec-2">2. Identifier Record and Pre-Execution Check</a></li>
+          <li><a href="#sec-3">3. Does the Identifier Include Source Chain Identity</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Bridge Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://eips.ethereum.org/EIPS/eip-155" target="_blank" rel="noopener">EIP-155: Chain ID and Replay Protection</a>: introduces the classic Ethereum ecosystem design of using chain ID to prevent cross-chain replay</li>
+            <li><a href="https://owasp.org/www-community/attacks/Replay_attack" target="_blank" rel="noopener">OWASP: Replay Attack</a>: introduces the general definition and defense approach for replay attacks in traditional information security</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation</a></li>
+          <li><a href="/en/research/protocol/cross-chain-messaging-protocol-verification.html">Cross-Chain Messaging Protocol Verification</a></li>
+          <li><a href="/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">Bridge Guardian Set Threshold Change Verification: Was the Multisig Quietly Lowered</a></li>
+          <li><a href="/en/research/governance/bridge-wrapped-asset-reserve-proof-frequency-verification-guide.html">Bridge Reserve Proof Verification: How Often Is a Wrapped Asset's "1:1 Backing" Actually Checked</a></li>
+          <li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+          <li><a href="/en/research/protocol/bridge-security-research-guide.html">Bridge Security Verification: Asset Lock and Mint Risk</a></li>
+          <li><a href="/en/research/protocol/flashloan-attack-defense-defi-security.html">Flash Loan Attack Defense: DeFi Security in Practice</a></li>
+          <li><a href="/en/research/protocol/defi-smart-contract-audit-checklist.html">DeFi Smart Contract Audit Checklist</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9e37a643"></script>
+</body>
+</html>

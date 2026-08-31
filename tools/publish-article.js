@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'rollup-sequencer-mev-extraction-transparency-verification-guide',
-  publishedISO: '2026-08-31T09:48:56+08:00',
-  tagColor: 'sage',
+  slug: 'cross-chain-message-replay-attack-verification-guide',
+  publishedISO: '2026-08-31T13:57:50+08:00',
+  tagColor: 'olive',
   topic: 'protocol',
 
   zh: {
-    h1: 'Rollup排序器MEV提取核验：交易排序权到底能被用来拿走用户多少价值',
-    tagLabel: '排序器MEV核验',
-    cardDesc: 'MEV提取的规模、去向与技术约束常被一笔带过，但这些细节决定了排序权是否被滥用。本文拆解机制原理与跨Rollup核验框架。',
+    h1: '跨链消息重放攻击核验：同一笔消息在多链间被重复执行，谁来兜底',
+    tagLabel: '防重放机制核验',
+    cardDesc: '「恰好执行一次」不是消息传递协议自动附带的属性，而是需要合约层显式构建的保证。本文拆解标识符设计细节与跨桥核验框架。',
   },
   en: {
-    h1: 'Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract',
-    tagLabel: 'Sequencer MEV Verification',
-    cardDesc: 'MEV extraction scale, destination, and technical constraints are often glossed over, but these details decide whether ordering power is being abused. A method to verify mechanics across rollups.',
+    h1: "Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice",
+    tagLabel: 'Anti-Replay Verification',
+    cardDesc: '"Exactly once" is not automatic in message delivery — it must be explicitly built at the contract layer. A method to verify identifier design and compare across bridges.',
   },
 
   existingSlugsNewestFirst: [
+    'rollup-sequencer-mev-extraction-transparency-verification-guide',
     'airdrop-snapshot-block-selection-manipulation-verification-guide',
     'cross-exchange-arbitrage-execution-slippage-verification-guide',
     'bridge-validator-slashing-enforcement-verification-guide',
