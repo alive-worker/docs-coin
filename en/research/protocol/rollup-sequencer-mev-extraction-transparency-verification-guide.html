@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract - Crypto Research</title>
+  <meta name="description" content="Most rollup sequencers hold complete authority over the order in which user transactions land within a block — a power that is directly monetizable. By inserting, reordering, or delaying specific transactions, the sequencer operator can extract sandwich attacks, frontrunning arbitrage, and other forms of maximal extractable value (MEV), yet where this revenue goes, how large it is, and how it's allocated are rarely verified by users. This piece breaks down the specific mechanics of sequencer MEV extraction, common revenue-allocation and disclosure patterns, several methods for detecting selective extraction, and a cross-rollup verification framework. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract - Crypto Research">
+  <meta property="og:description" content="Most rollup sequencers hold complete authority over the order in which user transactions land within a block — a power that is directly monetizable. By inserting, reordering, or delaying specific transactions, the sequencer operator can extract sandwich attacks, frontrunning arbitrage, and other forms of maximal extractable value (MEV), yet where this revenue goes, how large it is, and how it's allocated are rarely verified by users. This piece breaks down the specific mechanics of sequencer MEV extraction, common revenue-allocation and disclosure patterns, several methods for detecting selective extraction, and a cross-rollup verification framework. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html">
+  <meta property="article:published_time" content="2026-08-31T09:48:56+08:00">
+  <meta property="article:modified_time" content="2026-08-31T09:48:56+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rollup Sequencer MEV Verification">
+  <meta name="twitter:description" content="Sequencer MEV extraction scale and allocation are often glossed over. A method to verify mechanics and compare across rollups.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-rollup-sequencer-mev-extraction-transparency-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Rollup sequencer MEV verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-rollup-sequencer-mev-extraction-transparency-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-rollup-sequencer-mev-extraction-transparency-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","rollup sequencer MEV verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-rollup-sequencer-mev-extraction-transparency-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html", "name": "Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Rollup Sequencer MEV Verification", "item": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#article", "headline": "Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract", "description": "Sequencer MEV extraction scale and allocation are often glossed over. This piece breaks down the mechanics, verification methods, and a cross-rollup comparison framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["sequencer MEV verification","sandwich attack detection method","ordering-power revenue allocation verification","decentralized sequencer verification","rollup transaction ordering transparency"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-08-31T09:48:56+08:00", "dateModified": "2026-08-31T09:48:56+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/rollup-sequencer-mev-extraction-transparency-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract</h1>
+        <p class="article-summary">Most Layer 2 networks built on a rollup architecture rely on a centralized or semi-centralized sequencer to receive user transactions, decide their final order within a block, and submit them to the underlying settlement chain. This "deciding the order" power looks like a purely technical operational duty on the surface, but it carries direct economic value — the sequencer operator (or an affiliated third party) can insert its own transactions after observing user transaction content to run a sandwich attack, front-run an arbitrage opportunity ahead of a user's trade, or delay execution of transactions unfavorable to itself, extracting value that would otherwise belong to the transacting user — collectively known as maximal extractable value (MEV). A question verifiers commonly overlook: how large is this MEV revenue in practice, how frequently does extraction occur and how can it be detected, where does the revenue ultimately go, and does this rollup have any mechanism to constrain or at least publicly disclose this extraction activity. This piece breaks down the specific technical paths of sequencer MEV extraction, common revenue-allocation and disclosure patterns, several methods for detecting whether a sequencer engages in selective MEV extraction, and a cross-rollup verification framework. The entire piece discusses abstract mechanism categories only, names no real rollup project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-08-31T09:48:56+08:00">2026-08-31 09:48:56</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-rollup-sequencer-mev-extraction-transparency-verification-guide-en.svg" alt="Rollup sequencer MEV verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether this rollup has publicly disclosed cumulative sequencer MEV extraction figures, or doesn't mention this revenue's existence at all</li>
+            <li><span class="article-verify-check">✓</span>Verify where extracted MEV revenue goes — entirely retained by the sequencer operator, or returned to users or the protocol treasury under a defined ratio</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether this rollup uses a fair sequencing protocol or an encrypted mempool to limit the sequencer's early visibility into transaction content</li>
+            <li><span class="article-verify-check">✓</span>Sample and compare actual in-block transaction order against submission-time order on this rollup, checking for a systematic insertion or reordering pattern</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. The Economic Value of Ordering Power: From "Operational Duty" to "Monetizable Asset"</h2>
+<p>Understanding the sequencer MEV problem starts with recognizing that "deciding transaction order" — a seemingly purely technical duty — is in fact a power with direct economic value. When a user submits a transaction to a sequencer's mempool, the sequencer can already see the transaction's complete content — trading pair, amount, slippage tolerance, and other key information — before finally packaging it. If the sequencer operator (or an affiliated third party) chooses to insert its own transactions before and after a user's transaction — for example, front-running a large buy order and immediately selling right after — it can extract a portion of value from that user's trade at extremely low risk. This is the classic sandwich attack. A verifier needs to recognize that as long as a system has this structural condition — "transaction content is visible in advance to a centralized party that also holds the power to decide final execution order" — the economic incentive for MEV extraction necessarily exists; the only variable is whether the operator chooses to exploit this power, and at what scale.</p>
+<ul>
+<li>The sequencer can see a transaction's complete content before packaging it — this "deciding the order" duty carries direct economic value.</li>
+<li>The classic sandwich attack pattern: the sequencer or an affiliate inserts its own transactions before and after a user's trade, extracting value at extremely low risk.</li>
+<li>As long as the structural condition "transaction content visible in advance + concentrated ordering power" exists, the economic incentive for MEV extraction necessarily exists, regardless of whether it's actually exploited or at what scale.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Is MEV Revenue Scale and Destination Publicly Disclosed</h2>
+<p>A verifier should directly check whether this rollup's operator has published any form of MEV extraction scale statistics or revenue-destination disclosure. Ideally, a sequencer operator accountable to users should disclose: total MEV extracted through ordering power over a given period, the specific composition of that revenue (e.g., proportion from sandwich attacks vs. pure frontrunning arbitrage), and how that revenue is ultimately allocated — entirely retained privately by the sequencer operator, or returned to affected users, injected into the protocol treasury, or used to subsidize other network operating costs under some defined rule. A verifier should stay cautious of a rollup that doesn't mention this revenue's existence at all — "not proactively disclosing" cannot be interpreted as "not extracting MEV"; it's more likely that this revenue is substantial but the operator lacks any incentive to disclose it externally. Independent third-party MEV monitoring tools (such as open dashboards tracking on-chain sandwich-attack patterns) can also serve as a cross-verification source independent of a project's official statements.</p>
+<ul>
+<li>Ideal disclosure includes total MEV extracted, a breakdown of revenue composition (sandwich attacks vs. frontrunning arbitrage), and the specific revenue-allocation method.</li>
+<li>"Not proactively disclosing MEV revenue" cannot be interpreted as "not extracting MEV" — it more likely means the revenue is substantial but there's no incentive to disclose it.</li>
+<li>Independent third-party on-chain MEV monitoring tools can serve as a cross-verification source for a project's official statements.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Is There a Technical Design Limiting the Sequencer's Early Visibility</h2>
+<p>Beyond disclosure transparency, a verifier should also check whether this rollup's protocol design incorporates any technical measure limiting the sequencer's MEV-extraction capability. Common designs include: an encrypted mempool, which requires user transactions to be encrypted upon submission so the sequencer can only see ciphertext and can't know the specific transaction content, with decryption and execution happening only after ordering is finalized — structurally eliminating the premise of "peek at transaction content, then insert your own transaction"; and a fair sequencing service, which uses multi-party coordination or trusted execution environments to keep final transaction order as close as possible to submission-time order, reducing room for manual reordering. A verifier should recognize that implementing these technical designs usually comes with additional complexity, latency, or performance overhead — so whether a rollup adopts such a design, and how mature that design actually is, directly reflects the project's priority on the issue of "constraining sequencer power."</p>
+<ul>
+<li>Encrypted mempool technology requires transactions to be submitted encrypted so the sequencer can't see content in advance, structurally eliminating the sandwich-attack premise.</li>
+<li>A fair sequencing service uses multi-party coordination or trusted execution environments to keep final order close to submission order, reducing manual reordering room.</li>
+<li>These technical designs usually add complexity or performance overhead — whether one is adopted directly reflects a project's priority on constraining sequencer power.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Single-Sequencer Concentration and Actual Decentralization Roadmap Progress</h2>
+<p>A verifier should also check several easily overlooked related risks. First, sequencer concentration: the vast majority of rollups today still run only a single sequencer instance controlled by the project itself, meaning MEV-extraction decision power is entirely concentrated in one entity with no external check — a verifier should check whether this project has published a "decentralized sequencer" roadmap and how far it has actually progressed, rather than remaining at the level of a long-term vision in a white paper. Second, whether an emergency exit mechanism exists: even if a sequencer engages in malicious ordering or censorship, do users still have a channel independent of the sequencer to submit transactions directly to the underlying settlement chain — whether this mechanism exists determines whether a single sequencer's MEV-extraction power has any real ceiling. Third, historical incident review: has this rollup previously been publicly flagged by third-party researchers or community members for a specific case of systematic MEV extraction or selective censorship, and how did the project respond and what remediation followed — this is equally worth verifying.</p>
+<ul>
+<li>The vast majority of rollups still run a single sequencer instance with fully concentrated MEV-extraction decision power — check the actual progress of a decentralization roadmap, not just white-paper vision.</li>
+<li>Whether an emergency exit channel independent of the sequencer exists determines whether a single sequencer's MEV-extraction power has any real ceiling.</li>
+<li>Check whether this rollup has ever been publicly flagged for a systematic MEV-extraction case, and the project's response and remediation.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Rollup Comparison Framework: Disclosure Transparency, Technical Constraints, and Decentralization Progress</h2>
+<p>When evaluating multiple candidate rollups, a verifier can compare across these dimensions. First, disclosure transparency: has MEV-extraction scale and revenue-allocation data been made public, or is it not mentioned at all. Second, technical constraint design: is an encrypted mempool, fair sequencing service, or similar technique used to limit the sequencer's early visibility, and how mature is that design. Third, sequencer decentralization progress: is it still controlled by a single entity, or has a multi-party decentralized sequencing mechanism already been introduced, and what's the actual roadmap execution status. Fourth, emergency exit mechanism: do users have an on-chain withdrawal channel independent of the sequencer as a real ceiling on sequencer power. Combining these four dimensions produces a well-grounded judgment of a rollup's user protection level on the MEV issue, rather than treating "it uses a rollup architecture" as equivalent to "transaction ordering is fair."</p>
+<ul>
+<li>Disclosure transparency, technical constraint design, sequencer decentralization progress, and emergency exit mechanism are the four key comparison dimensions.</li>
+<li>"It uses a rollup architecture" is not equivalent to "transaction ordering is fair" — sequencer MEV is a separate risk layer independent of the underlying scaling technology.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of a rollup's MEV user protection level, rather than concluding from architecture type alone.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has it been checked whether this rollup publicly discloses MEV-extraction scale and revenue destination? Second, has it been verified whether an encrypted mempool or fair sequencing service or similar technical constraint is used? Third, has it been confirmed whether the sequencer is currently controlled by a single entity or has a decentralization mechanism already been introduced, and what's the roadmap progress? Fourth, has it been checked whether users have an emergency exit channel independent of the sequencer? Fifth, has this rollup's history been checked for a previously flagged systematic MEV-extraction case? Working through these five questions gives a well-grounded judgment of a rollup sequencer's MEV-extraction behavior, rather than treating "the transaction eventually got included on-chain" as equivalent to "the transaction order was never manipulated." The entire piece discusses abstract mechanism categories only, names no real rollup project, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Five-question checklist: is MEV disclosure verified, does a technical constraint design exist, what's the sequencer decentralization progress, does an emergency exit channel exist, is a historical case checked.</li>
+<li>The structural root of MEV-extraction risk is a sequencer's early visibility into transaction content combined with concentrated final ordering power — unrelated to the underlying scaling technology itself.</li>
+<li>The entire piece is a discussion of verification methodology, names no real rollup project, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Economic Value of Ordering Power</a></li>
+          <li><a href="#sec-2">2. Is MEV Revenue Disclosed</a></li>
+          <li><a href="#sec-3">3. Technical Designs Limiting Visibility</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Rollup Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://ethereum.org/en/developers/docs/mev/" target="_blank" rel="noopener">Ethereum.org: MEV Basics</a>: introduces the basic definition of maximal extractable value and common extraction techniques</li>
+            <li><a href="https://www.flashbots.net/" target="_blank" rel="noopener">Flashbots: MEV Research and Fair Sequencing</a>: useful for looking up research progress on fair sequencing services and encrypted mempools, as a point of comparison</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation</a></li>
+          <li><a href="/en/research/protocol/rollup-forced-exit-sequencer-censorship-guide.html">Rollup Forced Exit Mechanism: Can You Actually Get Your Funds Out If the Sequencer Goes Rogue</a></li>
+          <li><a href="/en/research/market/mev-private-order-flow.html">MEV and Private Order Flow Research</a></li>
+          <li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread</a></li>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits</a></li>
+          <li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY</a></li>
+          <li><a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">Exchange Asset Rehypothecation Risk: Your Coins on Deposit May Already Be Lent Out</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/protocol/layer2-rollup-research-guide.html">Layer 2 Rollup Research Methodology</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=b7475b52"></script>
+</body>
+</html>

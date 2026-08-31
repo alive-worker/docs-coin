@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'airdrop-snapshot-block-selection-manipulation-verification-guide',
-  publishedISO: '2026-08-30T16:07:42+08:00',
-  tagColor: 'plum',
-  topic: 'governance',
+  slug: 'rollup-sequencer-mev-extraction-transparency-verification-guide',
+  publishedISO: '2026-08-31T09:48:56+08:00',
+  tagColor: 'sage',
+  topic: 'protocol',
 
   zh: {
-    h1: '空投快照区块选择核验：项目方挑一个「合适」的区块高度，能操纵多少分配结果',
-    tagLabel: '空投快照核验',
-    cardDesc: '快照数据本身不可篡改，但「选择哪个区块作为快照」这个决策层面完全可能被操纵。本文拆解规则公开时点、精确度与跨项目核验框架。',
+    h1: 'Rollup排序器MEV提取核验：交易排序权到底能被用来拿走用户多少价值',
+    tagLabel: '排序器MEV核验',
+    cardDesc: 'MEV提取的规模、去向与技术约束常被一笔带过，但这些细节决定了排序权是否被滥用。本文拆解机制原理与跨Rollup核验框架。',
   },
   en: {
-    h1: 'Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation',
-    tagLabel: 'Airdrop Snapshot Verification',
-    cardDesc: 'Snapshot data itself is immutable, but the decision of which block to use as the snapshot can absolutely be manipulated. A method to verify disclosure timing, rule precision, and cross-project comparison.',
+    h1: 'Rollup Sequencer MEV Verification: How Much Value Can Ordering Power Extract',
+    tagLabel: 'Sequencer MEV Verification',
+    cardDesc: 'MEV extraction scale, destination, and technical constraints are often glossed over, but these details decide whether ordering power is being abused. A method to verify mechanics across rollups.',
   },
 
   existingSlugsNewestFirst: [
+    'airdrop-snapshot-block-selection-manipulation-verification-guide',
     'cross-exchange-arbitrage-execution-slippage-verification-guide',
     'bridge-validator-slashing-enforcement-verification-guide',
     'exchange-internal-access-control-verification-guide',
