@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
-  publishedISO: '2026-09-01T10:31:15+08:00',
-  tagColor: 'cocoa',
-  topic: 'basics',
+  slug: 'isolated-cross-margin-contagion-risk-verification-guide',
+  publishedISO: '2026-09-01T13:48:12+08:00',
+  tagColor: 'mint',
+  topic: 'market',
 
   zh: {
-    h1: '交易所提现手续费核验：官网收的固定费用，比链上真实Gas贵了多少倍',
-    tagLabel: '提现手续费核验',
-    cardDesc: '手续费是交易所设定的价格，不是Gas成本的自动转嫁，两者不存在自动对齐机制。本文拆解链上核算方法与跨交易所核验框架。',
+    h1: '逐仓与全仓保证金核验：一个仓位爆仓，会不会传染到你账户里的其他仓位',
+    tagLabel: '保证金隔离核验',
+    cardDesc: '「逐仓不会影响其他仓位」的官方概述，在追加保证金、手续费扣除与极端行情强平顺序等细节上可能存在落差。本文拆解隔离边界与跨交易所核验框架。',
   },
   en: {
-    h1: 'Exchange Withdrawal Fee Verification: How Many Times the Real Gas Cost Are You Actually Paying',
-    tagLabel: 'Withdrawal Fee Verification',
-    cardDesc: 'A withdrawal fee is a price the exchange sets, not an automatic pass-through of gas cost — the two are never guaranteed to stay aligned. A method to verify using on-chain data and compare across exchanges.',
+    h1: 'Isolated vs. Cross Margin Verification: Can One Liquidation Bleed Into Your Other Positions',
+    tagLabel: 'Margin Isolation Verification',
+    cardDesc: 'The official summary "isolated margin does not affect other positions" can develop gaps around margin top-ups, fee deduction, and liquidation order during extreme volatility. A method to verify the isolation boundary across exchanges.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
     'cross-chain-message-replay-attack-verification-guide',
     'rollup-sequencer-mev-extraction-transparency-verification-guide',
     'airdrop-snapshot-block-selection-manipulation-verification-guide',
