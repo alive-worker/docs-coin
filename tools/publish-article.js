@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'cross-chain-message-replay-attack-verification-guide',
-  publishedISO: '2026-08-31T13:57:50+08:00',
-  tagColor: 'olive',
-  topic: 'protocol',
+  slug: 'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
+  publishedISO: '2026-09-01T10:31:15+08:00',
+  tagColor: 'cocoa',
+  topic: 'basics',
 
   zh: {
-    h1: '跨链消息重放攻击核验：同一笔消息在多链间被重复执行，谁来兜底',
-    tagLabel: '防重放机制核验',
-    cardDesc: '「恰好执行一次」不是消息传递协议自动附带的属性，而是需要合约层显式构建的保证。本文拆解标识符设计细节与跨桥核验框架。',
+    h1: '交易所提现手续费核验：官网收的固定费用，比链上真实Gas贵了多少倍',
+    tagLabel: '提现手续费核验',
+    cardDesc: '手续费是交易所设定的价格，不是Gas成本的自动转嫁，两者不存在自动对齐机制。本文拆解链上核算方法与跨交易所核验框架。',
   },
   en: {
-    h1: "Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice",
-    tagLabel: 'Anti-Replay Verification',
-    cardDesc: '"Exactly once" is not automatic in message delivery — it must be explicitly built at the contract layer. A method to verify identifier design and compare across bridges.',
+    h1: 'Exchange Withdrawal Fee Verification: How Many Times the Real Gas Cost Are You Actually Paying',
+    tagLabel: 'Withdrawal Fee Verification',
+    cardDesc: 'A withdrawal fee is a price the exchange sets, not an automatic pass-through of gas cost — the two are never guaranteed to stay aligned. A method to verify using on-chain data and compare across exchanges.',
   },
 
   existingSlugsNewestFirst: [
+    'cross-chain-message-replay-attack-verification-guide',
     'rollup-sequencer-mev-extraction-transparency-verification-guide',
     'airdrop-snapshot-block-selection-manipulation-verification-guide',
     'cross-exchange-arbitrage-execution-slippage-verification-guide',
