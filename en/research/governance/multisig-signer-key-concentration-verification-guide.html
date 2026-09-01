@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve - Crypto Research</title>
+  <meta name="description" content="DAO treasuries, bridge validator sets, and protocol admin privileges widely rely on multisig wallets, and official descriptions usually emphasize that 'N out of M signers must approve' — a number combination that sounds like it delivers clear decentralized security. But a verifier rarely asks the more fundamental question: do those signer addresses actually correspond to genuinely independent individuals or entities who can't be controlled by a single party at once. If five nominally different addresses are in practice all held by the same team, stored at the same physical location, on the same infrastructure, the multisig security model has effectively degraded into a single point of control. This piece breaks down the specific preconditions a multisig's security assumption requires, practical methods for verifying signer independence, several easily overlooked hidden concentration risks, and a framework for assessing a multisig configuration's real degree of decentralization. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/multisig-signer-key-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/multisig-signer-key-concentration-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve - Crypto Research">
+  <meta property="og:description" content="DAO treasuries, bridge validator sets, and protocol admin privileges widely rely on multisig wallets, and official descriptions usually emphasize that 'N out of M signers must approve' — a number combination that sounds like it delivers clear decentralized security. But a verifier rarely asks the more fundamental question: do those signer addresses actually correspond to genuinely independent individuals or entities who can't be controlled by a single party at once. If five nominally different addresses are in practice all held by the same team, stored at the same physical location, on the same infrastructure, the multisig security model has effectively degraded into a single point of control. This piece breaks down the specific preconditions a multisig's security assumption requires, practical methods for verifying signer independence, several easily overlooked hidden concentration risks, and a framework for assessing a multisig configuration's real degree of decentralization. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-01T19:51:45+08:00">
+  <meta property="article:modified_time" content="2026-09-01T19:51:45+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Multisig Signer Concentration Verification">
+  <meta name="twitter:description" content="Signer independence is often glossed over. A method to verify it, hidden concentration risks, and a comparison framework.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-multisig-signer-key-concentration-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Multisig signer concentration verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-multisig-signer-key-concentration-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-multisig-signer-key-concentration-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","multisig signer independence verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-multisig-signer-key-concentration-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html", "name": "Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Multisig Signer Concentration Verification", "item": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#article", "headline": "Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve", "description": "Signer independence is often glossed over. This piece breaks down verification methods, hidden concentration risks, and a comparison framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["multisig signer verification","key concentration risk","signer independence verification","DAO treasury security verification","multisig decentralization assessment"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-09-01T19:51:45+08:00", "dateModified": "2026-09-01T19:51:45+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/multisig-signer-key-concentration-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/multisig-signer-key-concentration-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve</h1>
+        <p class="article-summary">Multisig wallets have become the standard security configuration for DAO treasuries, bridge validator sets, and protocol admin privileges, and official documentation usually describes the mechanism with a concise number combination — for example, "5-of-3," meaning at least 3 of 5 signer addresses must approve before a transaction executes. This description sounds like it delivers clear decentralized security: even if one or two signers' keys are stolen or that person turns malicious, as long as it doesn't exceed the signing threshold, overall assets remain safe. But the precondition for this security model to actually hold is that these signer addresses genuinely correspond to independent individuals or entities who can't be simultaneously coerced or bribed by a single party — and this precondition itself is rarely proactively verified by users. If the so-called five signers are actually all employees of the same team, with keys stored in the same safe in the same office, or even operated by a single person running the signing process end to end, then no matter how "decentralized" the signing threshold number looks, the actual security boundary has degraded to a single point of failure. This piece breaks down the specific preconditions a multisig's security assumption genuinely requires, practical methods for verifying signer independence, several easily overlooked hidden concentration risks, and a framework for assessing a multisig configuration's real degree of decentralization. The entire piece discusses abstract methodology only, names no real project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-01T19:51:45+08:00">2026-09-01 19:51:45</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-multisig-signer-key-concentration-verification-guide-en.svg" alt="Multisig signer concentration verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether every signer's identity has been publicly disclosed, or whether they exist only as anonymous addresses untraceable to a specific individual or entity</li>
+            <li><span class="article-verify-check">✓</span>Verify whether disclosed signers belong to the same company, the same team, or have an obvious employment, investment, or other affiliated relationship with each other</li>
+            <li><span class="article-verify-check">✓</span>Review historical on-chain signature records to check whether multiple transactions' signature timestamps are highly clustered within a very short window, which may suggest a single operator executing the signing process</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the signing threshold's ratio to total signer count (e.g., 5-of-3) is reasonable — a threshold set too low significantly reduces the multisig's security margin</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. A Multisig's Security Model Rests on the Assumption That Signers Are Independent</h2>
+<p>The starting point for verifying multisig security is clarifying exactly what security guarantee this mechanism actually provides. At the cryptographic level, a multisig does reliably guarantee that "a transaction can only be broadcast and executed once enough valid signatures reach the threshold" — this technical guarantee is itself solid and independently verifiable. But the reason a multisig is considered more secure than a single signature rests entirely on a further sociological assumption — that these different addresses holding signing keys represent independent individuals or entities who can't be simultaneously controlled or coerced by the same party. If this assumption doesn't hold — for instance, if all signers are actually employed by the same company, keys are stored centrally, and decisions are made unilaterally by one person — then while the cryptographic-level technical guarantee of "3 signatures required" still holds, the risk scenario it's meant to guard against (a single point of compromise, a single decision-maker turning malicious) is no longer genuinely constrained by truly independent, distributed parties. The multisig degrades into "one person unlocking a lock with three keys," with the security benefit approaching zero.</p>
+<ul>
+<li>At the cryptographic level, a multisig does reliably guarantee "a transaction requires enough valid signatures to reach the threshold" — a solid, independently verifiable technical guarantee.</li>
+<li>A multisig's security benefit over a single signature rests on the sociological assumption that signers are independent and can't be simultaneously controlled by the same party.</li>
+<li>If that assumption doesn't hold, the cryptographic threshold still applies, but the single-point risk it's meant to guard against is no longer constrained by genuinely independent parties — the security benefit approaches zero.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Signer Identity Disclosure Level and Affiliation Screening</h2>
+<p>The first specific question a verifier should check is whether every signer of this multisig has had their identity disclosed to a verifiable degree — ideally, a mature multisig configuration publicly discloses each signer's real name or at least a verifiable public identity (such as a known industry figure or a representative of an independent third-party auditor), rather than presenting only a string of anonymous addresses that leaves outside observers with no way to judge whether they represent genuinely independent parties. Once identity information is available, a verifier next needs to screen for obvious affiliated relationships among these signers — do they belong to the same company or team, do they share common investors or an employment relationship, have they worked at the same institution together. If multiple signers are actually accountable to the same employer, even if they're physically different individuals, this multisig doesn't substantively offer more protection than a single signature against the risk scenario of "that employer unilaterally deciding to act maliciously," since every signer could be instructed to sign under the same order.</p>
+<ul>
+<li>A mature multisig configuration should publicly disclose each signer's verifiable identity, rather than presenting only anonymous addresses with no way to judge whether they're independent parties.</li>
+<li>A verifier further needs to screen for obvious affiliated relationships among signers — the same employer, the same team, or common investors.</li>
+<li>If multiple signers answer to the same employer, even as distinct individuals, the multisig offers no more protection than a single signature against that employer unilaterally acting maliciously.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Inferring Whether Operations Are Unified from On-Chain Signature Timestamps</h2>
+<p>Even when signer identities appear independent, a verifier can still do further behavioral-level verification using public on-chain data: reviewing the signature timestamps each signer produced across that multisig address's historical transactions, and checking whether these timestamps show a pattern of high clustering, nearly simultaneous signing. In a genuinely independently operated multisig scenario, different signers' signing times typically show some degree of spread due to differences in time zone, personal schedule, and approval process — for example, the three signatures on a given transaction might complete over several hours or even a day or two. But if a verifier observes that the vast majority of a multisig's historical transactions had all their signatures completed densely within minutes or even seconds, this pattern highly matches the behavioral signature of "one person, or one automated script, sequentially operating multiple private keys" — even if these keys are nominally split across different addresses, or even different "signers," the actual operational authority is very likely concentrated in a single operator's hands.</p>
+<ul>
+<li>In a genuinely independent multisig, different signers' timing typically shows some spread due to time zone and schedule differences.</li>
+<li>If historical transactions show all signatures completing densely within an extremely short window, this matches the behavioral signature of "one operator sequentially operating multiple private keys."</li>
+<li>This pattern means actual operational authority is very likely concentrated in a single operator's hands, even if the keys are nominally split across different signers.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Threshold-to-Signer Ratio and Physical Concentration of Key Custody Infrastructure</h2>
+<p>A verifier should also check two easily overlooked related risks. First, the signing threshold's ratio to total signer count: a "10-of-2" multisig configuration, even with 10 fully independent signers, requires a much lower collusion threshold in practice than a high-ratio configuration like "5-of-4" — a verifier should judge whether this ratio is reasonable given the specific use case, rather than focusing only on the isolated total signer count. Second, the physical and technical concentration of key custody infrastructure: even if signers are different individuals, if their private keys or hardware signing devices are all custodied with the same third-party custody provider, stored in the same physical vault, or running on the same cloud infrastructure, this infrastructure-level concentration is itself a single point of failure risk — a breach of the custody provider, a physical disaster, or legal compulsion could simultaneously affect multiple nominally distributed signers. A verifier should check whether this multisig's key custody arrangement is distributed across different infrastructure providers and different geographic locations.</p>
+<ul>
+<li>A signing threshold's ratio to total signer count (e.g., "10-of-2" vs. "5-of-4") directly determines the collusion difficulty in practice, and needs to be judged against the specific use case.</li>
+<li>Even with different individual signers, centralized custody of keys or hardware devices at the same provider or physical location constitutes an infrastructure-level single point of failure risk.</li>
+<li>Verifying whether key custody is distributed across different infrastructure providers and geographic locations is an important part of screening for hidden concentration.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Project Comparison Framework: Identity Disclosure, Affiliation, Signature Behavior, Infrastructure Distribution</h2>
+<p>When evaluating multiple candidate projects' multisig configurations, a verifier can compare across these dimensions. First, identity disclosure level: have signers publicly disclosed a verifiable real identity, or do they exist only as anonymous addresses. Second, affiliation screening: do disclosed signers have an obvious shared employer, team, or other affiliated relationship. Third, signature behavior pattern: does the historical on-chain signature timestamp record show an independent, spread-out pattern, or a highly clustered, unified operation pattern. Fourth, infrastructure distribution: is key custody spread across different providers and geographic locations, or concentrated in a single infrastructure provider. Combining these four dimensions produces a well-grounded judgment of a multisig configuration's real degree of decentralization, rather than treating the "N-of-M" number combination as itself equivalent to "sufficient decentralized security has already been achieved."</p>
+<ul>
+<li>Identity disclosure level, affiliation screening, signature behavior pattern, and infrastructure distribution are the four key comparison dimensions.</li>
+<li>The "N-of-M" number combination is not equivalent to "sufficient decentralization achieved" — signers' genuine independence is what matters.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of a multisig's real decentralization, rather than concluding from signer count alone.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has it been checked whether every signer of this multisig has had their identity disclosed to a verifiable degree? Second, has it been screened whether disclosed signers have an obvious shared employer or team affiliation? Third, has the on-chain historical signature timestamp record been reviewed for an independent, spread-out pattern versus a highly clustered one? Fourth, has it been verified whether the signing threshold's ratio to total signer count is reasonable? Fifth, has it been checked whether key custody infrastructure is distributed across different providers and geographic locations? Working through these five questions gives a well-grounded judgment of a multisig configuration's real security, rather than treating "there are multiple signer addresses" as equivalent to "decentralized security has already been achieved." The entire piece discusses abstract methodology only, names no real project, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Five-question checklist: is identity disclosure verifiable, is affiliation screened, is signature behavior pattern analyzed, is the threshold ratio reasonable, is infrastructure distributed.</li>
+<li>"There are multiple signer addresses" is not equivalent to "decentralized security has been achieved" — signers' genuine independence is the key determinant of a multisig's real security boundary.</li>
+<li>The entire piece is a discussion of verification methodology, names no real project, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Independence Assumption Behind Multisig Security</a></li>
+          <li><a href="#sec-2">2. Identity Disclosure and Affiliation Screening</a></li>
+          <li><a href="#sec-3">3. Inferring Unified Operation from Timestamps</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Project Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://safe.global/" target="_blank" rel="noopener">Safe (formerly Gnosis Safe)</a>: a leading Ethereum multisig wallet infrastructure — check its technical documentation on signer management</li>
+            <li><a href="https://www.coincenter.org/" target="_blank" rel="noopener">Coin Center: Crypto Governance Research</a>: public research resources on assessing decentralization in crypto project governance, as a point of comparison</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/isolated-cross-margin-contagion-risk-verification-guide.html">Isolated vs. Cross Margin Verification: Can One Liquidation Bleed Into Your Other Positions</a></li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Risk: Signer Drift and Timelock Bypass</a></li>
+          <li><a href="/en/research/governance/bridge-guardian-set-threshold-change-verification-guide.html">Bridge Guardian Set Threshold Change Verification: Was the Multisig Quietly Lowered</a></li>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+          <li><a href="/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">Exchange Withdrawal Fee Verification: How Many Times the Real Gas Cost Are You Actually Paying</a></li>
+          <li><a href="/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Snapshot Manipulation Verification: Why Voting Power Only Counts at One Specific Block</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/governance/dao-treasury-diversification-approval-guide.html">DAO Treasury Diversification: Where the Approval Chain Actually Breaks Down</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=d2c7f01b"></script>
+</body>
+</html>

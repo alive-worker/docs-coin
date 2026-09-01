@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'isolated-cross-margin-contagion-risk-verification-guide',
-  publishedISO: '2026-09-01T13:48:12+08:00',
-  tagColor: 'mint',
-  topic: 'market',
+  slug: 'multisig-signer-key-concentration-verification-guide',
+  publishedISO: '2026-09-01T19:51:45+08:00',
+  tagColor: 'copper',
+  topic: 'governance',
 
   zh: {
-    h1: '逐仓与全仓保证金核验：一个仓位爆仓，会不会传染到你账户里的其他仓位',
-    tagLabel: '保证金隔离核验',
-    cardDesc: '「逐仓不会影响其他仓位」的官方概述，在追加保证金、手续费扣除与极端行情强平顺序等细节上可能存在落差。本文拆解隔离边界与跨交易所核验框架。',
+    h1: '多签钱包签名者集中度核验：5个签名地址，背后是不是同一个人在按按钮',
+    tagLabel: '签名者独立性核验',
+    cardDesc: '「N取M」的数字组合建立在签名者相互独立这一假设之上，但这个假设本身很少被主动核验。本文拆解核验方法、隐性集中度风险与跨项目核验框架。',
   },
   en: {
-    h1: 'Isolated vs. Cross Margin Verification: Can One Liquidation Bleed Into Your Other Positions',
-    tagLabel: 'Margin Isolation Verification',
-    cardDesc: 'The official summary "isolated margin does not affect other positions" can develop gaps around margin top-ups, fee deduction, and liquidation order during extreme volatility. A method to verify the isolation boundary across exchanges.',
+    h1: 'Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve',
+    tagLabel: 'Signer Independence Verification',
+    cardDesc: 'An "N-of-M" number combination rests on the assumption that signers are independent, but that assumption itself is rarely actively verified. A method to verify it and hidden concentration risks across projects.',
   },
 
   existingSlugsNewestFirst: [
+    'isolated-cross-margin-contagion-risk-verification-guide',
     'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
     'cross-chain-message-replay-attack-verification-guide',
     'rollup-sequencer-mev-extraction-transparency-verification-guide',
