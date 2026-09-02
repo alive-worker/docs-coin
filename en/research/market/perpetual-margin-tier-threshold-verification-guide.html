@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump - Crypto Research Notes</title>
+  <meta name="description" content="Exchange perpetual futures pages advertise a single 'max leverage' figure, but the actual usable leverage and maintenance margin rate (MMR) step up and down through tiers as position notional value grows — cross one tier threshold and max leverage drops while MMR rises instantly. Many traders only discover this after a partial liquidation. This guide uses a real tier table to build a verification method: reading the tier structure, computing the margin gap at a tier crossing, and checking whether the exchange reserves the right to adjust tiers. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/perpetual-margin-tier-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/perpetual-margin-tier-threshold-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump - Crypto Research Notes">
+  <meta property="og:description" content="Exchange perpetual futures pages advertise a single 'max leverage' figure, but the actual usable leverage and maintenance margin rate (MMR) step up and down through tiers as position notional value grows — cross one tier threshold and max leverage drops while MMR rises instantly. Many traders only discover this after a partial liquidation. This guide uses a real tier table to build a verification method: reading the tier structure, computing the margin gap at a tier crossing, and checking whether the exchange reserves the right to adjust tiers. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-02T16:47:58+08:00">
+  <meta property="article:modified_time" content="2026-09-02T16:47:58+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump - Crypto Research Notes">
+  <meta name="twitter:description" content="Cross a single tier threshold and both max leverage and maintenance margin rate jump instantly. A real tier table breakdown of the margin gap at each crossing.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-perpetual-margin-tier-threshold-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-perpetual-margin-tier-threshold-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-perpetual-margin-tier-threshold-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Perpetual margin verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-perpetual-margin-tier-threshold-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html", "name": "Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump", "item": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#article", "headline": "Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump", "description": "Exchange perpetual pages advertise one 'max leverage' figure, but real usable leverage and maintenance margin rate step through tiers as notional value grows — the margin gap at a tier crossing is the real cause behind many partial liquidations. A real tier table breakdown and verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["maintenance margin tier verification","MMR verification","perpetual leverage tiers","tier crossing margin gap","partial liquidation verification"], "wordCount": 2400, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-02T16:47:58+08:00", "dateModified": "2026-09-02T16:47:58+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/perpetual-margin-tier-threshold-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/perpetual-margin-tier-threshold-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</h1>
+        <p class="article-summary">Exchange perpetual futures pages almost always advertise a single eye-catching figure like "up to 125x" or "up to 150x", but that number only applies within a small position-value range — once a position's notional value crosses a threshold in the margin tier table, the exchange automatically lowers the usable max leverage and raises the maintenance margin rate (MMR), instantly and without any user action. Many traders only see the "max leverage" figure once, at the moment they open a position, and have no idea the rules have changed by the time they've scaled into the second or third tier — until a recalculated maintenance margin rate triggers a partial liquidation, which is often the first time they actually read the tier table. This guide uses a real, publicly published tier table to break down the tier structure, compute the margin gap created at a tier crossing, and build a verification method so researchers can see exactly where the rules change before scaling a position, instead of discovering the tier table only after a liquidation. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-02T16:47:58+08:00">2026-09-02 16:47:58</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-perpetual-margin-tier-threshold-verification-guide-en.svg" alt="Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Find the full maintenance margin tier table for the trading pair, not just the single "max leverage" figure shown on the homepage</li>
+            <li><span class="article-verify-check">✓</span>Calculate how much room remains before your current position's notional value crosses the next tier threshold, and by how much the MMR jumps at that crossing</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether scaling a position or mark-price movement that pushes notional value across a tier triggers an immediate maintenance-margin recalculation, potentially causing a partial liquidation</li>
+            <li><span class="article-verify-check">✓</span>Check whether the exchange reserves the right to temporarily adjust tier thresholds, max leverage, or margin rates during extreme volatility, and whether it has done so historically</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. What "up to 150x" Actually Means: the Tier Table Matters More Than the Headline Number</h2>
+<p>The "up to 125x" or "up to 150x" figure shown at the top of an exchange's perpetual trading page refers to the max leverage of the first tier — the smallest position-value bracket in the margin tier table — not a leverage available at any position size. The real rule is a step table: notional position value is divided into brackets (Position Brackets), and each bracket carries its own max leverage and maintenance margin rate (MMR); the larger the position value, the lower the allowed max leverage and the higher the required MMR. The design intent is to cap the exchange's own risk exposure and pressure on its insurance fund from large positions — an account holding $100 million in notional value still being allowed 150x leverage could, on even a modest price move, produce losses far beyond what any insurance fund could absorb, so tier tables force large positions into progressively lower-leverage brackets.</p>
+<p>For traders, this means the "max leverage" headline number is only meaningful at very small position sizes. Take a real BTCUSDT perpetual tier table captured during this research: Tier 1 covers $0-300,000 notional, max leverage 150x, MMR 0.40%; simply crossing the $300,000 threshold into Tier 2 ($300,000-$800,000) immediately drops max leverage to 100x while MMR jumps from 0.40% to 0.50% at the same instant. In other words, an account repeatedly scaling in and out around the $300,000 line has its liquidation-price calculation basis switching between two entirely different parameter sets — something the homepage never mentions.</p>
+<ul>
+<li>The advertised max leverage figure only applies to Tier 1; it steps down as position value grows.</li>
+<li>Tier tables cap large-position risk exposure to the exchange's insurance fund via lower leverage and higher MMR.</li>
+<li>Crossing any tier threshold changes both max leverage and MMR simultaneously, and instantly.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: What an Actual Tier Table Looks Like, and Where the Thresholds Sit</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Binance BTCUSDT perpetual maintenance margin tier table, captured during verification in September 2026 (the rules page marks a last-update date of 2025/08/19; exchanges can adjust these figures at any time, so always re-check the live page): Tier 1, $0-300,000 notional, max leverage 150x, MMR 0.40%, maintenance amount $0. Tier 2, $300,000-$800,000, max leverage 100x, MMR 0.50%, maintenance amount $300. Tier 3, $800,000-$3,000,000, max leverage 75x, MMR 0.65%, maintenance amount $1,500. Tier 4, $3,000,000-$12,000,000, max leverage 50x, MMR 1.00%, maintenance amount $12,000. The same table can be re-checked on Binance's "Futures Trading Rules → Leverage and Margin" page to confirm whether these values have since changed.</p>
+</div>
+<p>Breaking this table down reveals two things worth verifying at every crossing. First, the maintenance amount (the "quick-calculation deduction" in the maintenance margin formula) itself jumps between tiers, not just the MMR percentage — from Tier 3 to Tier 4, MMR only rises from 0.65% to 1.00%, but the maintenance amount jumps from $1,500 to $12,000 in one step. This is the part most people miss: Maintenance Margin = Position Value × MMR − Maintenance Amount. Tracking only the percentage change in MMR without recomputing the maintenance-amount jump produces a noticeably wrong maintenance margin figure. Second, going from Tier 1 to Tier 2 only requires crossing the single $300,000 mark, and max leverage is instantly halved (150x to 100x) — meaning that an account using close to 150x leverage near the $300,000 mark can, upon a scale-in that crosses the tier, have its effective margin ratio recalculated under the new 100x cap and new maintenance parameters, potentially swinging from a safe zone to near the liquidation line instantly — a change triggered not by price movement, but purely by the position size crossing a tier.</p>
+<ul>
+<li>Maintenance Margin = Position Value × MMR − Maintenance Amount; both parameters jump simultaneously at a crossing.</li>
+<li>In this example table, $300,000 is the first key threshold, where max leverage drops from 150x straight to 100x.</li>
+<li>At higher tiers, the absolute jump in maintenance amount is often more consequential — and more easily underestimated — than the percentage change in MMR.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Calculate How Much Room Remains Before the Next Threshold</h2>
+<p>The first verification step is to precisely locate which tier the current position's notional value falls into, and how much room remains before both the lower and upper threshold of that tier. In practice: find the trading pair's full tier table on the exchange's "Trading Rules" or "Leverage and Margin" page (note that USDT-margined and coin-margined contracts on the same underlying asset can have different tier tables), and record the current tier's value range, max leverage, MMR, and maintenance amount. Then calculate the exact notional value using position size × mark price — not the last traded price, since the exchange's tier-crossing determination is also based on real-time notional value computed from the mark price, meaning a price increase alone can "automatically" push a position toward a threshold without any active scaling.</p>
+<p>The second step is to pre-simulate the account state after a hypothetical crossing: assume the position value has just crossed the next threshold, recompute the maintenance margin requirement using the new tier's MMR and maintenance amount, and compare that against the current margin balance to see what margin ratio would result post-crossing. If the simulation shows the post-crossing margin ratio would sit uncomfortably close to the liquidation line, that indicates the current position size already sits in a fragile zone near a threshold — even without actively scaling, a modest mark-price increase alone could push notional value across the line and abruptly change the account's risk state. In that case, proactively trimming the position back below the threshold to build a buffer is a more prudent response than waiting to react after an automatic tier crossing.</p>
+<ul>
+<li>Use mark price × position size for true notional value, not last traded price, since crossings are determined by mark price.</li>
+<li>Pre-simulate the post-crossing margin ratio using the next tier's parameters to judge whether the current position size sits in a fragile zone near a threshold.</li>
+<li>A mark-price increase alone can passively push a position across a tier without any active scaling.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Is the Margin Gap at a Crossing Being Underestimated?</h2>
+<p>The real risk of a tier crossing isn't simply "leverage got lower" — it's that the absolute maintenance margin requirement can jump sharply in an instant, and if the account's margin balance doesn't already carry a corresponding buffer, the account can go directly from safe to near-liquidation, or trigger a partial liquidation outright. The verification method: compute the maintenance margin requirement on both sides of a threshold using each tier's own parameters (MMR and maintenance amount); the difference is the new margin requirement created at that crossing. Using the Section 2 example: a position moving from $299,999 (just under the Tier 1 ceiling, MMR 0.40%, maintenance amount $0) to $300,001 (just into Tier 2, MMR 0.50%, maintenance amount $300) sees its maintenance margin requirement shift from roughly $1,200 to roughly $1,200.50 — a small jump. But the same crossing logic applied near a higher-value threshold, such as the $3,000,000 mark, can produce a jump of several thousand to tens of thousands of dollars in maintenance margin requirement; if the account's margin buffer was only sized against the pre-crossing parameters, it can fall short the instant the crossing occurs.</p>
+<p>Researchers should run this calculation for every tier boundary within their typical position-size range, rather than focusing only on the percentage change in MMR, because the maintenance-amount jump is usually the variable that actually determines the size of the shock at mid-to-high tiers — sometimes by an order of magnitude more than the MMR percentage change alone would suggest. It's also worth checking whether the exchange calculates maintenance margin on a real-time, tick-by-tick mark-price basis rather than some smoothed window — a brief mark-price wick that momentarily pushes notional value across a threshold and back could, under tick-by-tick evaluation, still trigger a liquidation determination during that brief crossing.</p>
+<ul>
+<li>Margin gap at a crossing = new-tier maintenance requirement − old-tier maintenance requirement; compute this for every threshold within your typical position range.</li>
+<li>The jump in maintenance amount usually drives the shock size more than the MMR percentage change, especially at mid-to-high tiers.</li>
+<li>A mark-price wick can briefly push notional value across a threshold; confirm whether the exchange evaluates this tick-by-tick rather than on a smoothed window.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Tier Tables Themselves Can Change: Verify the Exchange's Right to Adjust and Its Track Record</h2>
+<p>A tier table is not a fixed, static rule. Most exchanges state in their contract rules that during extreme market conditions (sharp volatility or significant deviation from an index price), they reserve the right to adjust maximum leverage values, adjust the position brackets within each tier, and adjust the maintenance margin rate at each tier — and such adjustments can often take effect without a lengthy advance notice period. Researchers should verify two things: first, the "rules last updated" timestamp posted alongside the tier table, to judge how recently the currently visible version was changed, and whether there's a documented precedent of the exchange temporarily lowering max leverage or tightening tier thresholds during a period of extreme volatility; second, if the exchange maintains a historical changelog or announcement archive for rule changes, check the magnitude of past adjustments and how much advance notice was given, to assess whether your typical position-size range has ever been tightened before.</p>
+<p>The point of this layer of verification is that even if the tier-crossing risk looks manageable under the currently published table, that table isn't guaranteed to hold during the next period of extreme volatility. If an exchange has a documented history of adjusting tier parameters under similar conditions, researchers holding larger positions should build in an extra margin buffer for the possibility that the rules themselves change, rather than relying solely on a static calculation against the current table version.</p>
+<ul>
+<li>Exchanges typically reserve the right to temporarily adjust tier thresholds, max leverage, and MMR during extreme volatility, often without lengthy advance notice.</li>
+<li>Check the rules page's "last updated" timestamp to gauge how recent the current tier table version is.</li>
+<li>If the exchange has a history of temporary adjustments, build in an extra margin buffer for the rules themselves changing, rather than relying on a static calculation alone.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you located the full maintenance margin tier table for the trading pair, rather than just remembering the single "max leverage" figure from the homepage? Second, have you used mark price to calculate exactly how much room your current position's notional value has before it crosses the tier thresholds above and below it? Third, have you simulated, tier by tier within your typical position-size range, the absolute jump in maintenance margin requirement at each crossing — rather than looking only at the percentage change in MMR? Fourth, have you checked the exchange's track record of adjusting tier parameters during extreme volatility, along with the "rules last updated" timestamp? Only after verifying these four points can you judge whether your current position size sits in a fragile zone near a tier threshold — rather than discovering the tier table for the first time after a partial liquidation. This article discusses verification methodology only, does not evaluate any specific exchange's tier settings as superior or inferior, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: tier table located, crossing room calculated, margin jumps simulated tier by tier, rule-adjustment history checked.</li>
+<li>Maintenance Margin = Position Value × MMR − Maintenance Amount; both parameters change at a crossing, and the gap is frequently underestimated.</li>
+<li>This article discusses verification methodology only, does not rank any specific exchange, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. What "up to 150x" Actually Means: the Tier Table Matters More Than the Headline Number</a></li>
+          <li><a href="#sec-2">2. Real Data: What an Actual Tier Table Looks Like, and Where the Thresholds Sit</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Calculate How Much Room Remains Before the Next Threshold</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Is the Margin Gap at a Crossing Being Underestimated?</a></li>
+          <li><a href="#sec-5">5. Tier Tables Themselves Can Change: Verify the Exchange's Right to Adjust and Its Track Record</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.binance.com/en/futures/trading-rules/perpetual/leverage-margin" target="_blank" rel="noopener">Binance Futures Leverage and Margin Rules</a>: source of this article's example tier table, can be used to check current tier parameters for any pair</li>
+            <li><a href="https://www.binance.com/en/support/faq" target="_blank" rel="noopener">Binance Support Center FAQ</a>: maintenance margin formula and historical rule-change announcements</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/isolated-cross-margin-contagion-risk-verification-guide.html">Isolated vs. Cross Margin Verification: Does One Position's Liquidation Spread to Your Others</a></li>
+          <li><a href="/en/research/market/open-interest-concentration-verification-guide.html">Perpetual Open Interest Verification: Is a Spiking OI Real Demand or Stacked Leverage</a></li>
+          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Is the Funding Rate Being Skewed: Verifying Snapshot Arbitrage Traces</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage Verification: Is That Fund Actually Enough to Cover Bad Debt</a></li>
+          <li><a href="/en/research/market/auto-deleveraging-insurance-fund.html">Auto-Deleveraging and Insurance Funds: Who Backstops First, Who Gets Cut First</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a 20% "Risk-Free" Arbitrage</a></li>
+          <li><a href="/en/research/market/staking-apy-net-yield-verification-guide.html">Staking APY Net Yield Verification: Does the Advertised APY Match What You Actually Receive</a></li>
+          <li><a href="/en/research/market/orderbook-depth-verification-guide.html">Order Book Depth Verification: Why Displayed Liquidity Vanishes Right Before It Fills</a></li>
+          <li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Execution Verification: How Much Slippage Eats Into the Quoted Profit</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">Exchange Withdrawal Fee Verification: How Much Markup Over Real On-Chain Gas</a></li>
+          <li><a href="/en/research/basics/exchange-soc2-audit-scope-verification-guide.html">Exchange SOC 2 Audit Verification: What Does That "Passed Security Audit" Report Actually Cover</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch in Your Account</a></li>
+          <li><a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">Exchange Asset Rehypothecation Risk: Your Deposited Coins May Already Be Lent Out</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-whitelist-cooldown-verification-guide.html">Exchange Withdrawal Whitelist Verification: Does a 24-Hour Cooldown Actually Stop Anyone</a></li>
+          <li><a href="/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">Oracle Median Aggregation Verification: Is the Median Really Safe When Only a Few Feeds Are Manipulated</a></li>
+          <li><a href="/en/research/governance/multisig-signer-key-concentration-verification-guide.html">Multisig Signer Concentration Verification: Are 5 Signing Addresses Really Controlled by One Person</a></li>
+          <li><a href="/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">Cross-Chain Message Replay Attack Verification: Who Backstops a Message Executed Twice Across Chains</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=1ef608c7"></script>
+</body>
+</html>

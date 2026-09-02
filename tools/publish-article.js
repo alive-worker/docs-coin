@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-soc2-audit-scope-verification-guide',
-  publishedISO: '2026-09-02T14:10:58+08:00',
-  tagColor: 'orange',
-  topic: 'basics',
+  slug: 'perpetual-margin-tier-threshold-verification-guide',
+  publishedISO: '2026-09-02T16:47:58+08:00',
+  tagColor: 'sky',
+  topic: 'market',
 
   zh: {
-    h1: '交易所SOC 2审计核验：那份「已通过安全审计」的报告，到底审计了什么',
-    tagLabel: 'SOC 2审计核验',
-    cardDesc: 'SOC 2最初为传统SaaS和云服务商设计，并非加密货币专属标准，审计范围的具体细节远比「通过了SOC 2」这句话本身重要。本文拆解Type I/II区别与核验框架。',
+    h1: '永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了',
+    tagLabel: '保证金分级核验',
+    cardDesc: '首页展示的「最高150x」只对应分级表第一档，仓位名义价值跨过门槛后最大杠杆和维持保证金率会瞬间跳变。本文用真实分级表拆解跨档保证金缺口核验方法。',
   },
   en: {
-    h1: 'Exchange SOC 2 Audit Verification: What Does That "Passed Security Audit" Report Actually Cover',
-    tagLabel: 'SOC 2 Audit Verification',
-    cardDesc: 'SOC 2 was originally built for traditional SaaS and cloud providers, not a crypto-specific standard — the specific audit scope matters far more than the phrase "SOC 2 audited." A method to verify Type I vs. II and compare across exchanges.',
+    h1: 'Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump',
+    tagLabel: 'Margin Tier Verification',
+    cardDesc: 'The advertised "up to 150x" only applies to the first tier — cross a notional value threshold and max leverage drops while the maintenance margin rate rises instantly. A real tier table breakdown of the margin gap at each crossing.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-soc2-audit-scope-verification-guide',
     'oracle-median-aggregation-manipulation-verification-guide',
     'multisig-signer-key-concentration-verification-guide',
     'isolated-cross-margin-contagion-risk-verification-guide',
