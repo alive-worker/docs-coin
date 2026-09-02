@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated - Crypto Research</title>
+  <meta name="description" content="Many oracle networks advertise using a 'median' rather than an 'average' to aggregate quotes from multiple independent nodes, because a median is statistically insensitive to extreme outliers — in theory, a single manipulated node shouldn't significantly skew the final feed. That statistical property is genuinely correct, but a verifier rarely asks the specific preconditions it depends on: how many total nodes there actually are, whether this property still holds given the real node count and distribution, and whether those 'multiple nodes' are genuinely independent at the off-chain infrastructure level. This piece breaks down the statistical principle and boundary conditions of median aggregation, several concrete scenarios that can render the 'median defense' hollow, the relationship between node count and manipulation cost, and a framework for verifying an oracle's real manipulation resistance. Not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated - Crypto Research">
+  <meta property="og:description" content="Many oracle networks advertise using a 'median' rather than an 'average' to aggregate quotes from multiple independent nodes, because a median is statistically insensitive to extreme outliers — in theory, a single manipulated node shouldn't significantly skew the final feed. That statistical property is genuinely correct, but a verifier rarely asks the specific preconditions it depends on: how many total nodes there actually are, whether this property still holds given the real node count and distribution, and whether those 'multiple nodes' are genuinely independent at the off-chain infrastructure level. This piece breaks down the statistical principle and boundary conditions of median aggregation, several concrete scenarios that can render the 'median defense' hollow, the relationship between node count and manipulation cost, and a framework for verifying an oracle's real manipulation resistance. Not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-02T10:21:07+08:00">
+  <meta property="article:modified_time" content="2026-09-02T10:21:07+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Oracle Median Aggregation Verification">
+  <meta name="twitter:description" content="The preconditions behind median aggregation are often glossed over. A method to verify the statistical boundary, failure scenarios, and comparison framework.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-oracle-median-aggregation-manipulation-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Oracle median aggregation verification guide cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-oracle-median-aggregation-manipulation-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-oracle-median-aggregation-manipulation-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=4a6fab36">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","proof of reserves","oracle median aggregation verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-oracle-median-aggregation-manipulation-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html", "name": "Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Oracle Median Aggregation Verification", "item": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#article", "headline": "Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated", "description": "The preconditions behind median aggregation are often glossed over. This piece breaks down the statistical boundary, failure scenarios, and a verification framework. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["oracle median aggregation verification","feed manipulation cost","node independence verification","oracle manipulation resistance assessment","decentralized oracle security framework"], "wordCount": 2000, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-09-02T10:21:07+08:00", "dateModified": "2026-09-02T10:21:07+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated</h1>
+        <p class="article-summary">When describing their price aggregation mechanism, nearly every mainstream decentralized oracle network emphasizes a key design choice: taking the "median" of quotes from multiple independent nodes, rather than a simple "average." The statistical basis behind this choice is genuine and sound — an average gets significantly pulled by any single extreme outlier, while a median only takes the value sitting in the middle after sorting; a single manipulated outlier quote, or even a small number of them, can't in theory drag the median off the real value, as long as they don't make up more than half the total node count. This statistical property is itself sound. The problem is that a verifier can easily generalize "the median has statistical outlier resistance" into "this oracle can't possibly be manipulated," overlooking the specific preconditions that property depends on: how many total nodes actually participate in aggregation, whether these nodes are genuinely independent at the off-chain infrastructure and operator level, and how many nodes an attacker would actually need to manipulate or bribe to break through the defense. This piece breaks down the statistical principle and boundary conditions of median aggregation, several concrete scenarios that can render the "median defense" hollow in practice, the quantitative relationship between node count and manipulation cost, and a practical framework for verifying an oracle's real manipulation resistance. The entire piece discusses abstract mechanism categories only, names no real oracle project, and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-02T10:21:07+08:00">2026-09-02 10:21:07</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-oracle-median-aggregation-manipulation-verification-guide-en.svg" alt="Oracle median aggregation verification guide theme illustration" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check the actual number of independent nodes that participate in the aggregation calculation, not just the larger "total validator count" advertised in whitepapers or on the website</li>
+            <li><span class="article-verify-check">✓</span>Verify whether these nodes' quote data sources have obvious overlap — whether multiple "independent" nodes actually pull from the same upstream exchange API or the same data provider</li>
+            <li><span class="article-verify-check">✓</span>Calculate how many nodes an attacker would need to simultaneously manipulate or bribe to skew the median, and assess whether that manipulation cost is worthwhile relative to the asset scale this oracle protects</li>
+            <li><span class="article-verify-check">✓</span>Check whether this oracle publicly discloses the specific number of nodes that participated in a given price update, or only provides a blanket "aggregated" result with no verifiable node-level data</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. The Statistical Principle of Median Outlier Resistance — and Why It's Not Equivalent to "Unmanipulable"</h2>
+<p>Understanding the value of median aggregation requires first precisely understanding what it protects against in a statistical sense. Suppose an oracle has N nodes each independently submitting a quote; sorting these N values and taking the one in the middle as the final feed has this core advantage: as long as the number of manipulated outlier quotes doesn't exceed half the total node count, no matter how extreme these outliers are pushed, they won't affect the specific value at the sorted middle position — because a median only cares about "who's in the middle," not how far the outliers actually deviate. This statistical property is a strictly true mathematical fact. But the mistake a verifier easily makes is simplifying this conditional mathematical conclusion — "given N nodes, and manipulated node count not exceeding N/2, the median is unaffected" — into the unconditional security claim "this oracle can't possibly be manipulated." The real verification question is never "is the median algorithm itself reliable," but rather "in this specific oracle's actual deployment, how difficult and costly is it to actually meet the manipulation condition — controlling more than half the nodes."</p>
+<ul>
+<li>Median aggregation's core advantage: as long as manipulated node count doesn't exceed half the total, outliers don't affect the final median result no matter how far they deviate.</li>
+<li>This is a conditionally true mathematical fact that a verifier easily oversimplifies into the unconditional claim "this oracle can't be manipulated."</li>
+<li>The real verification question is "how difficult and costly is it to control over half the nodes in this specific deployment," not whether the algorithm itself is reliable.</li>
+</ul>
+</section>
+<section id="sec-2">
+<h2>2. Verification Method One: Actual Nodes Participating in Aggregation, Not the Advertised "Total Validator Count"</h2>
+<p>The first specific number a verifier should check is, for each actual price update, how many independent nodes actually submitted a quote and participated in that median calculation — not simply taking the website or whitepaper's larger, more general claim of "this network has over X validators" at face value. This distinction matters critically: an oracle network overall might genuinely have dozens or even hundreds of registered validator nodes, but for a specific trading pair's price feed, the number of nodes actually actively submitting quotes and participating in aggregation might be in the single digits — meaning the node count threshold an attacker needs to manipulate is far lower than what the advertised number implies. A verifier should check whether this oracle provides on-chain verifiable, per-update node participation records, rather than only a blanket final aggregated result.</p>
+<ul>
+<li>Check the actual number of nodes submitting quotes and participating in the median calculation for each specific price update, not the "total validator count" advertised on the website.</li>
+<li>Overall validator count might be dozens or hundreds, but nodes actually actively participating in aggregation for a specific pair could be far fewer.</li>
+<li>The key check is whether this oracle provides on-chain verifiable, per-update node participation records, rather than only a blanket aggregated result.</li>
+</ul>
+</section>
+<section id="sec-3">
+<h2>3. Verification Method Two: Whether Node Data Sources Have Hidden Overlap, Making "Independence" Nominal</h2>
+<p>Even after confirming a sufficiently large number of nodes participate in aggregation, a verifier still needs to further check whether these nodes are genuinely independent at the data-source level. Median aggregation's defense assumes each node's quote comes from a mutually independent, unrelated information source — if multiple nominally independent nodes actually all pull price data from the same upstream centralized exchange's same public API endpoint, these nodes aren't genuinely independent samples in a statistical sense. Once that shared upstream data source itself has a problem — whether manipulated or a technical fault — it simultaneously contaminates every "independent" node relying on it, effectively amplifying a single-point attack into what looks like a compound attack requiring multiple nodes to be breached, when the attacker in fact only needs to breach that one shared upstream source. A verifier should check whether this oracle has publicly disclosed the specific composition of each node's data source, and whether multiple nodes share the same upstream data provider.</p>
+<ul>
+<li>Median aggregation's defense assumes each node's quote comes from mutually independent information sources, not just node count itself.</li>
+<li>If multiple "independent" nodes actually share the same upstream centralized exchange API, they aren't genuinely independent samples in a statistical sense.</li>
+<li>Once a shared upstream data source has a problem, it simultaneously contaminates every dependent node — the attacker in fact only needs to breach that one shared source.</li>
+</ul>
+</section>
+<section id="sec-4">
+<h2>4. Hidden Risk Checklist: Quantifying Manipulation Cost and Node Participation Record Transparency</h2>
+<p>A verifier should also check two specific quantitative verification methods. First, quantitative assessment of manipulation cost: a verifier should calculate, based on specific node counts, how many nodes an attacker would need to simultaneously manipulate or bribe to break through the median defense (typically more than half the total node count), then assess the actual cost of bribing or breaching those nodes (e.g., node operators' economic incentives, potential reputational loss, technical breach difficulty), and compare that manipulation cost against the scale of on-chain assets this oracle protects — if the manipulation cost is far lower than the potential profit, this oracle can't genuinely be considered secure in the economic game-theory sense, even if the median mechanism remains mathematically "valid." Second, node participation record transparency: a verifier should check whether this oracle retains third-party independently verifiable node-level records for every price update (e.g., each node's raw submitted quote and timestamp) — if only the final aggregated result is queryable with no way to trace back to each node's specific contribution, a verifier effectively can't independently verify whether the aggregation process was correctly executed, nor trace problematic nodes after the fact.</p>
+<ul>
+<li>Calculate the number of nodes needed to break through the median defense based on node count, and assess whether bribery or breach cost is worthwhile relative to the asset scale this oracle protects.</li>
+<li>If manipulation cost is far below potential profit, this oracle isn't genuinely secure in the economic sense, even if the algorithm remains mathematically valid.</li>
+<li>Node participation record transparency determines whether a verifier can independently verify the aggregation process and trace problematic nodes after the fact, rather than just trusting the final result.</li>
+</ul>
+</section>
+<section id="sec-5">
+<h2>5. Cross-Oracle Comparison Framework: Actual Node Count, Data Source Independence, Manipulation Cost, Record Transparency</h2>
+<p>When evaluating multiple candidate oracle solutions, a verifier can compare across these dimensions. First, actual participating node count: for each price update on a specific pair, how many nodes actually actively participate in aggregation, versus the advertised total validator count. Second, data source independence: do nodes' upstream data sources have obvious overlap, and has the data source composition been publicly disclosed. Third, quantified manipulation cost: does the node count and economic cost needed to break through the median defense form a sufficient safety margin relative to the asset scale this oracle protects. Fourth, record transparency: are third-party verifiable node-level records retained for every price update. Combining these four dimensions produces a well-grounded judgment of an oracle's median aggregation mechanism's real manipulation resistance, rather than treating "uses median aggregation" as a design choice itself equivalent to "already sufficiently secure."</p>
+<ul>
+<li>Actual participating node count, data source independence, quantified manipulation cost, and record transparency are the four key comparison dimensions.</li>
+<li>"Uses median aggregation" as a design choice is not itself equivalent to "already sufficiently secure" — the specific deployment details are what matter.</li>
+<li>Combining all four dimensions produces a well-grounded judgment of an oracle's real manipulation resistance, rather than concluding from the algorithm's name alone.</li>
+</ul>
+</section>
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Distilling the sections above into a reusable checklist: first, has the actual number of active nodes for each specific pair's price update been checked, rather than the advertised total validator count? Second, has it been verified whether nodes' data sources have obvious overlap? Third, has the manipulation cost needed to break through the median defense been calculated and compared against the asset scale this oracle protects? Fourth, has it been checked whether this oracle retains third-party verifiable node-level records for every update? Working through these four questions gives a well-grounded judgment of an oracle median aggregation mechanism's real reliability, rather than treating "a median is statistically outlier-resistant" as equivalent to the unconditional claim "this specific oracle can't be manipulated." The entire piece discusses abstract mechanism categories only, names no real oracle project, and is for learning and research purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is actual node count verified, is data source independence checked, is manipulation cost quantified, is record transparency verified.</li>
+<li>"A median is statistically outlier-resistant" is a conditionally true mathematical fact, not equivalent to the unconditional claim "this specific oracle can't be manipulated."</li>
+<li>The entire piece is a discussion of verification methodology, names no real oracle project, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Median Outlier Resistance vs. Unmanipulable</a></li>
+          <li><a href="#sec-2">2. Actual Nodes Participating in Aggregation</a></li>
+          <li><a href="#sec-3">3. Whether Data Sources Have Hidden Overlap</a></li>
+          <li><a href="#sec-4">4. Hidden Risk Checklist</a></li>
+          <li><a href="#sec-5">5. Cross-Oracle Comparison Framework</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.investopedia.com/terms/m/median.asp" target="_blank" rel="noopener">Investopedia: Median</a>: introduces the basic principle of a median's statistical outlier resistance relative to an average</li>
+            <li><a href="https://chain.link/education-hub/oracle-manipulation" target="_blank" rel="noopener">Chainlink: Oracle Manipulation Risk</a>: introduces common manipulation paths and defense design thinking for decentralized oracle networks</li>
+          </ul>
+          <p class="ref-note">Tools, data sources and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. This article is for learning and research purposes only and is not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li>
+          <li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Oracle Price Feed Verification: A Few Blocks of Delay Is a Manipulator's Window</a></li>
+          <li><a href="/en/research/governance/multisig-signer-key-concentration-verification-guide.html">Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve</a></li>
+          <li><a href="/en/research/market/isolated-cross-margin-contagion-risk-verification-guide.html">Isolated vs. Cross Margin Verification: Can One Liquidation Bleed Into Your Other Positions</a></li>
+          <li><a href="/en/research/protocol/bridge-validator-slashing-enforcement-verification-guide.html">Bridge Validator Slashing Verification: Sign a Bad Message, Does the Stake Actually Get Cut</a></li>
+          <li><a href="/en/research/protocol/cross-chain-message-replay-attack-verification-guide.html">Cross-Chain Message Replay Verification: Who's on the Hook If the Same Message Executes Twice</a></li>
+          <li><a href="/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">Airdrop Snapshot Block Selection Verification: How Much a "Convenient" Block Can Skew Allocation</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">Exchange Withdrawal Fee Verification: How Many Times the Real Gas Cost Are You Actually Paying</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage: Is There Actually Enough There When Bad Debt Hits</a></li>
+          <li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable Contract Proxy Verification: Who Can Swap the Logic You're Trusting</a></li>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund-Tracing Methodology: Where Did Stolen Funds Go</a></li>
+          <li><a href="/en/research/protocol/contract-security-audit-guide.html">"Audited" Says the Report — But What Was Actually Audited</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Research Methodology: Why a Single Source Is Never Enough</a></li>
+          <li><a href="/en/research/protocol/ai-oracle-data-verification.html">AI Oracle Data Verification</a></li>
+          <li><a href="/en/research/protocol/flashloan-attack-defense-defi-security.html">Flash Loan Attack Defense: DeFi Security in Practice</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methods, on-chain metrics and fund-flow observation, aiming to help readers understand a crypto project more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Method Basics</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infra Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Specialized Checks</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">AllSwap Cross-Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">RDVCC Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">CHAINDU</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">On-Chain Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for learning and research purposes only and does not constitute investment advice; crypto asset prices are highly volatile and carry risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=d1ed558c"></script>
+</body>
+</html>

@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'multisig-signer-key-concentration-verification-guide',
-  publishedISO: '2026-09-01T19:51:45+08:00',
-  tagColor: 'copper',
-  topic: 'governance',
+  slug: 'oracle-median-aggregation-manipulation-verification-guide',
+  publishedISO: '2026-09-02T10:21:07+08:00',
+  tagColor: 'lime',
+  topic: 'protocol',
 
   zh: {
-    h1: '多签钱包签名者集中度核验：5个签名地址，背后是不是同一个人在按按钮',
-    tagLabel: '签名者独立性核验',
-    cardDesc: '「N取M」的数字组合建立在签名者相互独立这一假设之上，但这个假设本身很少被主动核验。本文拆解核验方法、隐性集中度风险与跨项目核验框架。',
+    h1: '预言机中位数聚合核验：少数几个喂价源被操纵，中位数真的稳如泰山吗',
+    tagLabel: '中位数聚合核验',
+    cardDesc: '中位数抗离群值是有条件成立的数学事实，不等于「不可操纵」的无条件断言。本文拆解实际节点数、数据源独立性与跨预言机核验框架。',
   },
   en: {
-    h1: 'Multisig Signer Concentration Verification: Are 5 Addresses Actually One Person Clicking Approve',
-    tagLabel: 'Signer Independence Verification',
-    cardDesc: 'An "N-of-M" number combination rests on the assumption that signers are independent, but that assumption itself is rarely actively verified. A method to verify it and hidden concentration risks across projects.',
+    h1: 'Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated',
+    tagLabel: 'Median Aggregation Verification',
+    cardDesc: 'A median\'s outlier resistance is a conditionally true mathematical fact, not an unconditional claim of being unmanipulable. A method to verify actual node count, data source independence, and compare across oracles.',
   },
 
   existingSlugsNewestFirst: [
+    'multisig-signer-key-concentration-verification-guide',
     'isolated-cross-margin-contagion-risk-verification-guide',
     'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
     'cross-chain-message-replay-attack-verification-guide',

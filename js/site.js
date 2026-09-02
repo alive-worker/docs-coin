@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html': '2026-09-02 10:21:07',
     '/research/governance/multisig-signer-key-concentration-verification-guide.html': '2026-09-01 19:51:45',
     '/research/market/isolated-cross-margin-contagion-risk-verification-guide.html': '2026-09-01 13:48:12',
     '/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html': '2026-09-01 10:31:15',
@@ -257,6 +258,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html': '2026-09-02 10:21:07',
 '/en/research/governance/multisig-signer-key-concentration-verification-guide.html': '2026-09-01 19:51:45',
 '/en/research/market/isolated-cross-margin-contagion-risk-verification-guide.html': '2026-09-01 13:48:12',
 '/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html': '2026-09-01 10:31:15',
