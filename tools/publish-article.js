@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'oracle-median-aggregation-manipulation-verification-guide',
-  publishedISO: '2026-09-02T10:21:07+08:00',
-  tagColor: 'lime',
-  topic: 'protocol',
+  slug: 'exchange-soc2-audit-scope-verification-guide',
+  publishedISO: '2026-09-02T14:10:58+08:00',
+  tagColor: 'orange',
+  topic: 'basics',
 
   zh: {
-    h1: '预言机中位数聚合核验：少数几个喂价源被操纵，中位数真的稳如泰山吗',
-    tagLabel: '中位数聚合核验',
-    cardDesc: '中位数抗离群值是有条件成立的数学事实，不等于「不可操纵」的无条件断言。本文拆解实际节点数、数据源独立性与跨预言机核验框架。',
+    h1: '交易所SOC 2审计核验：那份「已通过安全审计」的报告，到底审计了什么',
+    tagLabel: 'SOC 2审计核验',
+    cardDesc: 'SOC 2最初为传统SaaS和云服务商设计，并非加密货币专属标准，审计范围的具体细节远比「通过了SOC 2」这句话本身重要。本文拆解Type I/II区别与核验框架。',
   },
   en: {
-    h1: 'Oracle Median Aggregation Verification: Is the Median Really Bulletproof If a Few Feeds Get Manipulated',
-    tagLabel: 'Median Aggregation Verification',
-    cardDesc: 'A median\'s outlier resistance is a conditionally true mathematical fact, not an unconditional claim of being unmanipulable. A method to verify actual node count, data source independence, and compare across oracles.',
+    h1: 'Exchange SOC 2 Audit Verification: What Does That "Passed Security Audit" Report Actually Cover',
+    tagLabel: 'SOC 2 Audit Verification',
+    cardDesc: 'SOC 2 was originally built for traditional SaaS and cloud providers, not a crypto-specific standard — the specific audit scope matters far more than the phrase "SOC 2 audited." A method to verify Type I vs. II and compare across exchanges.',
   },
 
   existingSlugsNewestFirst: [
+    'oracle-median-aggregation-manipulation-verification-guide',
     'multisig-signer-key-concentration-verification-guide',
     'isolated-cross-margin-contagion-risk-verification-guide',
     'exchange-withdrawal-fee-onchain-gas-markup-verification-guide',
