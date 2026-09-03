@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'exchange-trust-score-reported-volume-verification-guide',
-  publishedISO: '2026-09-03T09:47:54+08:00',
-  tagColor: 'indigo',
+  slug: 'chain-tvl-concentration-verification-guide',
+  publishedISO: '2026-09-03T13:53:43+08:00',
+  tagColor: 'violet',
   topic: 'governance',
 
   zh: {
-    h1: '交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性',
-    tagLabel: '信任评分核验',
-    cardDesc: '交易所自报成交量可合法包含做市商互刷与机器人自成交，第三方信任评分用归一化数据剔除虚假流动性。本文用真实公开评分数据拆解核验方法。',
+    h1: '公链TVL集中度核验：所谓多链生态，资金实际集中在几条链',
+    tagLabel: 'TVL集中度核验',
+    cardDesc: '行业叙事强调多链时代，但真实TVL数据显示资金高度集中在极少数头部链。本文用DefiLlama公开数据拆解核验方法。',
   },
   en: {
-    h1: 'Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity',
-    tagLabel: 'Trust Score Verification',
-    cardDesc: 'Self-reported exchange volume can legally include wash trading and incentivized self-trades; third-party Trust Scores normalize the data to strip this out. A real-data breakdown of the verification method.',
+    h1: 'Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated',
+    tagLabel: 'TVL Concentration Verification',
+    cardDesc: 'The industry narrative pushes a multi-chain era, but real TVL data shows capital heavily concentrated on a handful of top chains. A real-data breakdown using DefiLlama\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'exchange-trust-score-reported-volume-verification-guide',
     'perpetual-margin-tier-threshold-verification-guide',
     'exchange-soc2-audit-scope-verification-guide',
     'oracle-median-aggregation-manipulation-verification-guide',
