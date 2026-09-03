@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'perpetual-margin-tier-threshold-verification-guide',
-  publishedISO: '2026-09-02T16:47:58+08:00',
-  tagColor: 'sky',
-  topic: 'market',
+  slug: 'exchange-trust-score-reported-volume-verification-guide',
+  publishedISO: '2026-09-03T09:47:54+08:00',
+  tagColor: 'indigo',
+  topic: 'governance',
 
   zh: {
-    h1: '永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了',
-    tagLabel: '保证金分级核验',
-    cardDesc: '首页展示的「最高150x」只对应分级表第一档，仓位名义价值跨过门槛后最大杠杆和维持保证金率会瞬间跳变。本文用真实分级表拆解跨档保证金缺口核验方法。',
+    h1: '交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性',
+    tagLabel: '信任评分核验',
+    cardDesc: '交易所自报成交量可合法包含做市商互刷与机器人自成交，第三方信任评分用归一化数据剔除虚假流动性。本文用真实公开评分数据拆解核验方法。',
   },
   en: {
-    h1: 'Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump',
-    tagLabel: 'Margin Tier Verification',
-    cardDesc: 'The advertised "up to 150x" only applies to the first tier — cross a notional value threshold and max leverage drops while the maintenance margin rate rises instantly. A real tier table breakdown of the margin gap at each crossing.',
+    h1: 'Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity',
+    tagLabel: 'Trust Score Verification',
+    cardDesc: 'Self-reported exchange volume can legally include wash trading and incentivized self-trades; third-party Trust Scores normalize the data to strip this out. A real-data breakdown of the verification method.',
   },
 
   existingSlugsNewestFirst: [
+    'perpetual-margin-tier-threshold-verification-guide',
     'exchange-soc2-audit-scope-verification-guide',
     'oracle-median-aggregation-manipulation-verification-guide',
     'multisig-signer-key-concentration-verification-guide',

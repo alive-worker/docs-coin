@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/governance/exchange-trust-score-reported-volume-verification-guide.html': '2026-09-03 09:47:54',
     '/research/market/perpetual-margin-tier-threshold-verification-guide.html': '2026-09-02 16:47:58',
     '/research/basics/exchange-soc2-audit-scope-verification-guide.html': '2026-09-02 14:10:58',
     '/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html': '2026-09-02 10:21:07',
@@ -260,6 +261,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html': '2026-09-03 09:47:54',
 '/en/research/market/perpetual-margin-tier-threshold-verification-guide.html': '2026-09-02 16:47:58',
 '/en/research/basics/exchange-soc2-audit-scope-verification-guide.html': '2026-09-02 14:10:58',
 '/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html': '2026-09-02 10:21:07',

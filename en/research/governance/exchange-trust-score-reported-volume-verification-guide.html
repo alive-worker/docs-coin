@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity - Crypto Research Notes</title>
+  <meta name="description" content="An exchange's self-reported 24-hour trading volume can legally include market-maker wash trades between related accounts and bot self-trading incentivized by zero fees. Third-party data platforms apply a Trust Score to normalize volume and strip out this fake liquidity. Using real, publicly captured CoinGecko data, this guide breaks down what a Trust Score actually measures, how large the gap between reported and normalized volume can be, and how to verify whether an exchange's score genuinely reflects its real liquidity. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/exchange-trust-score-reported-volume-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/exchange-trust-score-reported-volume-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity - Crypto Research Notes">
+  <meta property="og:description" content="An exchange's self-reported 24-hour trading volume can legally include market-maker wash trades between related accounts and bot self-trading incentivized by zero fees. Third-party data platforms apply a Trust Score to normalize volume and strip out this fake liquidity. Using real, publicly captured CoinGecko data, this guide breaks down what a Trust Score actually measures, how large the gap between reported and normalized volume can be, and how to verify whether an exchange's score genuinely reflects its real liquidity. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-03T09:47:54+08:00">
+  <meta property="article:modified_time" content="2026-09-03T09:47:54+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity - Crypto Research Notes">
+  <meta name="twitter:description" content="Trust Score normalizes volume to strip out wash trading. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-exchange-trust-score-reported-volume-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Exchange Trust Score vs. Reported Volume Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-exchange-trust-score-reported-volume-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-exchange-trust-score-reported-volume-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Exchange trust score verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-exchange-trust-score-reported-volume-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html", "name": "Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity", "item": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#article", "headline": "Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity", "description": "Self-reported exchange volume can be inflated by wash trading between related accounts and incentivized bot self-trading; third-party Trust Scores normalize volume to strip this out. A real-data breakdown and verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["exchange trust score verification","normalized trading volume","wash trading detection","exchange proof of reserves","fake liquidity verification"], "wordCount": 2300, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-03T09:47:54+08:00", "dateModified": "2026-09-03T09:47:54+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</h1>
+        <p class="article-summary">The "24-hour trading volume" shown on an exchange's homepage is a self-reported figure that can legally include wash trades between a market maker and its own affiliated accounts, or bot self-trading incentivized by zero fees or trading-mining rewards — trades that are fully legitimate at the matching-engine level but reflect no genuine buy or sell demand from real users. Third-party data platforms such as CoinGecko apply a Trust Score to normalize each exchange's volume and strip out this fake liquidity, and the resulting "normalized volume" often diverges noticeably from the officially reported number. Using real, publicly captured scoring data, this guide breaks down what a Trust Score actually measures, how the normalized-volume calculation works, and how to verify whether an exchange's score and proof-of-reserves disclosures hold up under scrutiny. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-03T09:47:54+08:00">2026-09-03 09:47:54</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-exchange-trust-score-reported-volume-verification-guide-en.svg" alt="Exchange Trust Score vs. Reported Volume Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Distinguish between an exchange's self-reported volume and a third-party platform's normalized volume — the larger the gap, the more caution is warranted</li>
+            <li><span class="article-verify-check">✓</span>Check which specific dimensions make up a Trust Score (order book depth, API availability, compliance history, etc.), not just the single overall number</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the exchange has published independent proof-of-reserves data, and whether the report date and coverage ratio are recent rather than a stale snapshot</li>
+            <li><span class="article-verify-check">✓</span>Cross-reference score rankings against reported volume data captured at the same point in time to spot exchanges where the two are notably out of proportion</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Why "24-Hour Volume" Can Be a Manipulable Number</h2>
+<p>The trading volume displayed on an exchange's homepage is a figure the exchange itself compiles and publishes, with no mandatory external audit requirement. It can be legally inflated in two common ways. First, wash trading between the exchange's own market-maker accounts and their affiliated counterparts: both the buy and sell orders are placed by the same effective controller, the trade record genuinely exists in the matching engine, yet it represents no real market demand. Second, exchanges attract users or bots to repeatedly self-trade through zero-fee structures or trading-mining incentives, where the cost to the wash trader is minimal or even negative, but every trade still counts toward the published "24-hour volume." Neither case is fraud in the traditional sense — the orders and fills genuinely occurred on-chain or in the matching engine — but both fail to reflect real two-sided buy and sell pressure or true market depth.</p>
+<p>For researchers, simply comparing homepage volume rankings across exchanges has limited value, because exchanges vary widely in how much market-maker incentive and self-trading they tolerate, and how aggressively they detect it. An exchange with genuinely far weaker liquidity than its competitors could still push its self-reported volume higher through more aggressive market-maker incentives, manufacturing an illusion of "better liquidity here" that attracts more real users — precisely the problem Trust Score tools are designed to address.</p>
+<ul>
+<li>Self-reported exchange volume has no mandatory external audit and can be legally inflated via related-account wash trading or fee-incentivized self-trading.</li>
+<li>Self-trading is a genuine matching-engine record but reflects no real two-sided market demand.</li>
+<li>Simply comparing self-reported volume rankings across exchanges has limited value; normalized data is needed for a fair comparison.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: An Actual Captured Set of Trust Scores and Volumes</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real data captured via CoinGecko's public API (api.coingecko.com/api/v3/exchanges) during verification in September 2026: Coinbase Exchange, trust score 10, rank #1, 24h volume approximately 16,844 BTC. Binance, trust score 10, rank #2, 24h volume approximately 100,449 BTC. Kraken, trust score 10, rank #3, 24h volume approximately 16,661 BTC. OKX, trust score 10, rank #4, 24h volume approximately 21,084 BTC. In the same dataset, Gate exchange disclosed an independent zero-knowledge proof of reserves: as of June 22, 2026, its reported total reserves were approximately $8.182 billion, with a reserve coverage ratio of 115%, covering nearly 500 user asset types. All of these figures can be re-verified via CoinGecko's public API or the exchange's own proof-of-reserves page, and the values will change over time.</p>
+</div>
+<p>This dataset reveals two points worth verifying. First, Trust Score rank and 24-hour volume rank don't fully align — Coinbase ranks #1 by score but has only about one-sixth of Binance's volume, showing that Trust Score isn't simply a volume ranking but a weighted result across order book depth, API stability, compliance record, and volume-authenticity detection; an exchange with smaller volume but better transparency and depth can rank higher. Second, an exchange like Gate that proactively discloses specific proof-of-reserves figures (total amount, coverage ratio, number of covered asset types, report date) provides more granular, verifiable information than a Trust Score alone — a 115% coverage ratio means that, at the report's snapshot date, the value of custodied assets exceeded 115% of what users could withdraw. Figures like this, if updated consistently over time and independently re-checkable, carry more weight than a bare score number.</p>
+<ul>
+<li>Trust Score rank and volume rank can diverge, showing the score is a multi-dimensional weighted result rather than a pure volume ranking.</li>
+<li>A proof of reserves that discloses specific figures (total, coverage ratio, report date) is more granular and verifiable than a score alone.</li>
+<li>All figures above come from publicly accessible APIs and exchanges' own disclosure pages — any researcher can independently re-verify them.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Determine Exactly What Dimensions Make Up a Trust Score</h2>
+<p>The first step in verifying whether a Trust Score is credible is not to take the overall number at face value, but to check what dimensions the scoring methodology actually considers. Based on mainstream data platforms' published methodologies, this typically includes: order book liquidity metrics (how much actual fill volume the bid and ask sides can absorb within a given slippage tolerance, not the surface-level depth of resting orders); API availability and response stability (whether the exchange can be reliably verified by third-party data-scraping tools — exchanges that block scraping or have frequently failing APIs get penalized); how long the platform has operated and whether it has had major security incidents or regulatory penalties; and whether abnormal volume patterns have been detected (such as volume spikes in an unnaturally short window that don't match normal market behavior). Researchers should find the actual scoring methodology document and verify an exchange's performance on each dimension individually, rather than treating the total score as an unopenable black box.</p>
+<p>It's also worth noting that the methodology itself evolves — if multiple exchanges' scores shift noticeably at the same time following a methodology update, that usually indicates a change in scoring weights or calculation logic, not that those exchanges collectively got better or worse at that exact moment. When comparing scores across time, researchers should confirm whether the scores being compared are based on the same methodology version, to avoid mistaking a methodology change for an actual shift in exchange quality.</p>
+<ul>
+<li>Scoring methodology typically combines order book liquidity, API availability, platform track record and security history, and abnormal-volume detection.</li>
+<li>Find the actual methodology document and verify each dimension individually rather than treating the total score as an unopenable black box.</li>
+<li>A methodology update can shift scores across the board; confirm scores being compared use the same methodology version.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Estimating the Gap Between Reported and Normalized Volume</h2>
+<p>Most data platforms that provide a Trust Score also publish both an exchange's "reported volume" and an algorithmically adjusted "normalized volume," and the ratio between the two is itself a worthwhile verification metric. The method: record both figures for the same exchange at the same point in time, calculate normalized volume as a percentage of reported volume, and compare that ratio against other exchanges in the same score tier. If an exchange's ratio is significantly lower than its tier's average (meaning normalized volume is only a small fraction of the reported figure), that indicates the platform detected a substantial proportion of suspected wash trading — even if the overall score still looks reasonable, it's worth further investigating that exchange's market-maker incentive policy and history of self-trading detection.</p>
+<p>Researchers can also cross-verify with an order book snapshot: before actually placing a moderate-sized market order, observe the displayed bid-ask spread and book depth first; if the displayed depth is far greater than the real slippage-absorption capacity observed after actually testing a small market order, the displayed depth figure likely includes a large amount of "ghost liquidity" — resting orders that can be cancelled instantly, which inflate the on-paper liquidity metric but vanish the moment they're actually needed to fill. This small-scale, real-world testing approach was mentioned in this site's earlier articles on perpetual margin tiers and cross-exchange arbitrage slippage, and applies equally well to verifying an exchange's overall liquidity quality.</p>
+<ul>
+<li>Compare the ratio of normalized to reported volume; a significantly low ratio indicates a substantial proportion of suspected wash trading.</li>
+<li>Test slippage absorption with a small market order and cross-check against displayed order book depth to spot ghost liquidity that cancels before it fills.</li>
+<li>Cross-exchange comparisons should be made within the same score tier to avoid distortion from comparing exchanges of very different scale.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Proof of Reserves as a Complementary Signal: Does the Number Hold Up Under Questioning</h2>
+<p>Trust Score mainly measures volume authenticity and platform operating quality; Proof of Reserves is a separate dimension, measuring whether an exchange has the ability to cover user-withdrawable assets. When verifying a proof of reserves, don't stop at the fact that "this exchange disclosed a proof of reserves" — keep asking specific follow-up questions: what point-in-time snapshot the reported coverage ratio is based on, and how stale that snapshot now is; whether the coverage calculation includes user liabilities (such as amounts users owe the exchange from lending products) on the asset side, artificially inflating the ratio; and what the reserve assets themselves are composed of — mainstream assets, or the exchange's own platform token. If a significant share is denominated in the exchange's own token, even a headline coverage ratio above 100% can shrink sharply in real terms the moment that token's price drops. Using the 115% coverage ratio Gate disclosed in Section 2 as an example, researchers should keep investigating whether that report is updated regularly and independently audited by a third party, rather than stopping at the single conclusory figure of "coverage above 100%."</p>
+<p>Combining Trust Score and Proof of Reserves gives a more complete picture of an exchange's credibility: Trust Score answers "how much of this exchange's displayed volume and liquidity is real," while Proof of Reserves answers "can this exchange actually pay out user assets." A clear gap in either dimension is worth factoring into any decision about how much custody risk to take on with that exchange.</p>
+<ul>
+<li>Verifying a proof of reserves requires checking whether the snapshot is stale, whether user liabilities are folded into the asset side, and whether reserves depend heavily on the exchange's own token.</li>
+<li>A coverage ratio above 100% is not sufficient on its own; keep checking update frequency and whether an independent third-party audit is involved.</li>
+<li>Trust Score and Proof of Reserves are independent dimensions answering two different questions: liquidity authenticity and asset payout capability.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you distinguished the exchange's homepage self-reported volume from a third-party platform's normalized volume, and calculated the ratio between the two? Second, have you checked the specific dimensions and methodology version behind the Trust Score, rather than looking only at the overall number? Third, have you cross-verified the displayed liquidity depth via a small real-world test order or an order book snapshot? Fourth, have you checked the snapshot date, calculation basis, and reserve asset composition behind a disclosed proof of reserves, rather than remembering only a single coverage percentage? Only after verifying these four points can you form a relatively complete judgment of an exchange's real liquidity and asset credibility, rather than being swayed by an isolated volume figure or score on the homepage. This article discusses verification methodology only, does not evaluate any specific exchange as superior or inferior, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: reported vs. normalized volume compared, score composition checked, liquidity depth cross-verified with real tests, proof-of-reserves details questioned to the end.</li>
+<li>Trust Score answers the question of liquidity authenticity; Proof of Reserves answers the question of asset payout capability — the two are complementary, not substitutes.</li>
+<li>This article discusses verification methodology only, does not rank any specific exchange, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why "24-Hour Volume" Can Be a Manipulable Number</a></li>
+          <li><a href="#sec-2">2. Real Data: An Actual Captured Set of Trust Scores and Volumes</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Determine Exactly What Dimensions Make Up a Trust Score</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Estimating the Gap Between Reported and Normalized Volume</a></li>
+          <li><a href="#sec-5">5. Proof of Reserves as a Complementary Signal: Does the Number Hold Up Under Questioning</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/exchanges" target="_blank" rel="noopener">CoinGecko Exchange Rankings</a>: source of this article's example trust score and volume data, can be used to check current scores and normalized volume for any exchange</li>
+            <li><a href="https://www.coingecko.com/en/methodology" target="_blank" rel="noopener">CoinGecko Trust Score Methodology</a>: public documentation of the scoring dimensions and calculation method</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/exchange-reserves-research-guide.html">Exchange Proof of Reserves Research Method: Merkle Tree Verification and Common Pitfalls</a></li>
+          <li><a href="/en/research/basics/exchange-soc2-audit-scope-verification-guide.html">Exchange SOC 2 Audit Verification: What Does That "Passed Security Audit" Report Actually Cover</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage Verification: Is That Fund Actually Enough to Cover Bad Debt</a></li>
+          <li><a href="/en/research/basics/exchange-internal-access-control-verification-guide.html">Exchange Internal Access Control Verification: How Much Can Staff Actually See and Touch in Your Account</a></li>
+          <li><a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">Exchange Asset Rehypothecation Risk: Your Deposited Coins May Already Be Lent Out</a></li>
+          <li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</a></li>
+          <li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Execution Verification: How Much Slippage Eats Into the Quoted Profit</a></li>
+          <li><a href="/en/research/market/orderbook-depth-verification-guide.html">Order Book Depth Verification: Why Displayed Liquidity Vanishes Right Before It Fills</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">Exchange Withdrawal Fee Verification: How Much Markup Over Real On-Chain Gas</a></li>
+          <li><a href="/en/research/basics/exchange-withdrawal-whitelist-cooldown-verification-guide.html">Exchange Withdrawal Whitelist Verification: Does a 24-Hour Cooldown Actually Stop Anyone</a></li>
+          <li><a href="/en/research/governance/multisig-signer-key-concentration-verification-guide.html">Multisig Signer Concentration Verification: Are 5 Signing Addresses Really Controlled by One Person</a></li>
+          <li><a href="/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">Oracle Median Aggregation Verification: Is the Median Really Safe When Only a Few Feeds Are Manipulated</a></li>
+          <li><a href="/en/research/basics/usdt-issuance-reserve-basics.html">USDT Issuance and Reserve Transparency: How to Verify the "1:1 Peg" Claim</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c68d869e"></script>
+</body>
+</html>
