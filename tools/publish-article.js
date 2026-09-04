@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'usdc-usdt-trading-pair-spread-verification-guide',
-  publishedISO: '2026-09-04T11:47:32+08:00',
-  tagColor: 'cyan',
-  topic: 'basics',
+  slug: 'btc-options-put-call-ratio-verification-guide',
+  publishedISO: '2026-09-04T13:49:22+08:00',
+  tagColor: 'gold',
+  topic: 'market',
 
   zh: {
-    h1: 'USDC/USDT点差核验：所谓的1:1兑换，点差和滑点吃掉了多少',
-    tagLabel: '稳定币点差核验',
-    cardDesc: 'USDC与USDT并非零成本兑换，不同交易所点差可相差数倍，频繁小额兑换会被持续侵蚀。本文用CoinGecko真实数据拆解核验方法。',
+    h1: '比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗',
+    tagLabel: '期权情绪核验',
+    cardDesc: 'Put/Call比率的计算口径和头寸性质常被媒体简化处理，本文用Deribit真实公开数据拆解核验方法与常见误读陷阱。',
   },
   en: {
-    h1: 'USDC/USDT Spread Verification: How Much the "1:1" Swap Really Costs in Spread and Slippage',
-    tagLabel: 'Stablecoin Spread Verification',
-    cardDesc: 'USDC and USDT are not a zero-cost swap; real spreads differ by several multiples across exchanges and erode frequent small round-trips. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real',
+    tagLabel: 'Options Sentiment Verification',
+    cardDesc: 'A Put/Call ratio\'s calculation basis and position type are often oversimplified by media coverage. A real-data breakdown using Deribit\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'usdc-usdt-trading-pair-spread-verification-guide',
     'chain-tvl-concentration-verification-guide',
     'exchange-trust-score-reported-volume-verification-guide',
     'perpetual-margin-tier-threshold-verification-guide',

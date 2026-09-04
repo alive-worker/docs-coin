@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 - 加密货币研究</title>
+  <meta name="description" content="Put/Call比率是加密媒体最常引用的期权市场情绪指标，一个数字被简化成「市场看涨」或「市场看跌」的结论，但这个比率的计算口径（未平仓量还是成交量、按份数还是按名义价值）会显著影响解读，且大量看跌期权头寸实际上是备兑或对冲仓位而非方向性押注。本文用Deribit公开抓取的真实BTC期权数据，拆解Put/Call比率的核验方法与常见误读陷阱。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 - 加密货币研究">
+  <meta property="og:description" content="Put/Call比率是加密媒体最常引用的期权市场情绪指标，一个数字被简化成「市场看涨」或「市场看跌」的结论，但这个比率的计算口径（未平仓量还是成交量、按份数还是按名义价值）会显著影响解读，且大量看跌期权头寸实际上是备兑或对冲仓位而非方向性押注。本文用Deribit公开抓取的真实BTC期权数据，拆解Put/Call比率的核验方法与常见误读陷阱。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-04T13:49:22+08:00">
+  <meta property="article:modified_time" content="2026-09-04T13:49:22+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 - 加密货币研究">
+  <meta name="twitter:description" content="Put/Call比率的计算口径和头寸性质常被忽略，本文用真实Deribit数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-btc-options-put-call-ratio-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","期权市场情绪核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html", "name": "比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗", "item": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#article", "headline": "比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗", "description": "Put/Call比率的计算口径和期权头寸的真实用途（方向性押注还是对冲）常被媒体简化处理，本文用Deribit真实公开数据拆解核验方法，还原一个更准确的市场情绪画像。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["Put Call比率核验","期权市场情绪核验","未平仓量核验","备兑期权核验","期权数据解读方法"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-04T13:49:22+08:00", "dateModified": "2026-09-04T13:49:22+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/btc-options-put-call-ratio-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗</h1>
+        <p class="article-summary">「Put/Call比率突破0.7，市场恐慌情绪升温」——这类标题在加密媒体上很常见，把一个单一的比率数字直接等同于市场看多或看空的整体情绪。但Put/Call比率的实际计算方式远比这句结论复杂：它可以按未平仓量(open interest)计算，也可以按成交量(volume)计算，两者反映的时间维度完全不同；更关键的是，持有看跌期权(Put)的仓位不一定是在押注价格下跌——大量Put头寸来自现货持有者购买保护性看跌期权对冲下行风险，或做市商为备兑策略卖出/买入的配对仓位，这些都不构成方向性的"看跌"判断。本文用Deribit公开API实测抓取的真实BTC期权数据，拆解Put/Call比率的核验方法、常见误读陷阱，以及如何结合其他指标还原更准确的市场情绪画像。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-04T13:49:22+08:00">2026-09-04 13:49:22</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-btc-options-put-call-ratio-verification-guide.svg" alt="比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>明确媒体引用的Put/Call比率是按未平仓量还是按成交量计算，两者含义完全不同，不能混用比较</li>
+            <li><span class="article-verify-check">✓</span>核实统计口径是按合约份数还是按名义价值加总，不同标的价格区间的合约份数不能直接相加</li>
+            <li><span class="article-verify-check">✓</span>意识到大量Put头寸可能来自保护性对冲或备兑策略，而非方向性看跌押注，不能简单等同于"看空情绪"</li>
+            <li><span class="article-verify-check">✓</span>结合到期日分布、行权价集中区间等维度交叉验证，而不是只看一个孤立的比率数字下结论</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. 「Put/Call比率」标题党的常见套路</h2>
+<p>Put/Call比率是期权市场里最容易被简化传播的一个指标：媒体标题里出现"比率突破某个数值，恐慌情绪升温"或"比率创新低，市场极度乐观"这类表述时，本质上是把一个复合了多重信息的统计数字，压缩成一句非黑即白的情绪判断。这种简化传播之所以有市场，是因为单一数字确实比复杂的期权持仓结构更容易被非专业读者理解和转发，但代价是丢失了大量关键上下文——比如这个比率是瞬时的还是某个时间窗口的平均值、样本覆盖的是全市场还是单一交易所、比率的历史正常波动区间是多少（脱离历史基准的绝对数值本身没有意义）。</p>
+<p>核验者面对这类标题时，第一反应不应该是接受或反驳这个情绪结论，而应该先去查证这个比率数字本身是怎么算出来的、数据来源是哪里、以及这个数值相对其自身历史区间处于什么位置。脱离这些上下文，单独一个"0.7"或"1.2"的数字既不能说明市场看涨还是看跌，也无法判断这是不是一个异常值。</p>
+<ul>
+<li>媒体常把复合的期权持仓数据简化为单一比率数字，再压缩成非黑即白的情绪结论，丢失关键上下文。</li>
+<li>核验时应先查证比率的计算口径、数据来源、样本范围，而非直接接受或反驳情绪结论。</li>
+<li>脱离历史正常波动区间的绝对数值本身没有意义，无法单独判断市场是否处于异常状态。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：Deribit真实BTC期权Put/Call比率是多少</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过Deribit公开API（www.deribit.com/api/v2/public/get_book_summary_by_currency，currency=BTC，kind=option）实测抓取的真实数据：全市场共1,008个有效BTC期权合约，其中Call期权未平仓量合计约279,186.4张BTC，Put期权未平仓量合计约155,611.2张BTC，按未平仓量计算的Put/Call比率约为0.557；同一时点的24小时成交量口径下，Call期权成交量约33,088.2张BTC，Put期权成交量约15,499.8张BTC，按成交量计算的Put/Call比率约为0.468。以上数字可通过Deribit公开API实时复核，数值会随市场状况持续变化。</p>
+</div>
+<p>这份数据揭示了两个值得深挖的关键点。第一，同一时点、同一底层资产的Put/Call比率，按未平仓量计算（0.557）和按成交量计算（0.468）得出的数字并不相同——未平仓量反映的是当前存量持仓结构，是过去一段时间内所有未平仓合约的累积状态；成交量反映的是最近24小时的增量交易活跃度，更接近"当下"的情绪变化。如果一篇报道没有说明用的是哪种口径，读者引用的具体数字本身就已经存在歧义，更不用说进一步的情绪解读。第二，两个比率都低于1，意味着无论按哪种口径，Call期权的存量或成交都超过Put期权，如果不假思索地套用"比率低于1即为看涨情绪"的简化规则，会得出"市场整体偏乐观"的初步印象——但这仍然只是核验的第一步，第3、4节会说明为什么不能止步于此。</p>
+<ul>
+<li>同一时点的Put/Call比率，按未平仓量与按成交量计算的结果不同，反映的是存量结构与增量活跃度两种不同信息。</li>
+<li>未说明具体计算口径的报道，引用的比率数字本身就存在歧义，进一步情绪解读风险更大。</li>
+<li>2026年9月数据显示两种口径下比率均低于1（未平仓量口径0.557，成交量口径0.468），Call规模均超过Put。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：搞清楚统计口径，未平仓量 vs 成交量、份数 vs 名义价值</h2>
+<p>核验一个Put/Call比率数字之前，第一步是确认它的统计口径。未平仓量(Open Interest)口径反映的是当前所有尚未平仓的合约存量，能看出市场参与者已经建立的持仓结构，但这个结构可能是几周甚至几个月前建仓、至今未平仓的旧头寸，不能代表最新的市场情绪变化；成交量(Volume)口径反映的是某个时间窗口（通常是24小时）内的新增交易活动，更能捕捉"最近发生了什么"，但容易被单笔大额交易或到期日集中的批量平仓/建仓行为干扰，波动性远大于未平仓量口径。核验者应当同时查证这两个数字（如本文第2节的示例），而不是只引用其中一个，两者出现明显背离时（例如未平仓量口径显示看涨、成交量口径显示看跌）本身就是一个值得进一步研究的信号，说明市场情绪可能正在发生转折。</p>
+<p>另一个容易被忽略的统计口径差异是按合约份数加总还是按名义价值(notional value)加总。期权合约通常以标的资产的固定数量为一份（例如1张BTC期权对应1个BTC），如果不同行权价、不同到期日的合约直接按份数相加，会隐含一个假设——每份合约的"重要性"相同，但实际上深度虚值期权和深度实值期权对市场的影响权重并不对等。更严谨的核验方法是按名义价值（份数乘以标的资产当前价格）或按期权的Delta敞口加权后再计算比率，这样得到的比率更能反映真实的方向性风险敞口分布，而非简单的合约张数堆叠。</p>
+<ul>
+<li>未平仓量反映存量持仓结构（可能是旧头寸），成交量反映最新增量活动，两者应同时查证而非只引用一个。</li>
+<li>两种口径出现明显背离，本身是值得关注的信号，可能预示市场情绪正在转折。</li>
+<li>按合约份数简单加总隐含"每份权重相同"的假设，按名义价值或Delta敞口加权计算更能反映真实方向性风险分布。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：区分方向性押注与对冲/备兑仓位</h2>
+<p>Put/Call比率解读中最容易被忽视、也最关键的一层，是期权头寸的真实用途。持有一份看跌期权(Put)，直觉上会被理解为"押注价格下跌"，但至少还有两类常见场景与方向性看跌无关：第一类是保护性看跌期权(Protective Put)——现货或期货多头持有者为对冲下行风险而买入的Put，这类交易者本身持有看涨的底层仓位，买Put只是为组合买一份保险，整体立场依然是看涨或中性，而非看跌；第二类是备兑看涨期权(Covered Call)策略下，做市商或机构为了对冲自己卖出的Call期权敞口，会在标的资产或其他期权上建立相应的对冲头寸，这类因做市商风险管理而产生的期权仓位，同样不代表任何方向性的市场判断。如果Put/Call比率的上升主要由这两类非方向性头寸贡献，把它简单解读为"看跌情绪升温"就会得出与实际情况相反的结论。</p>
+<p>核验者可以尝试的进一步验证方法是，观察比率变化与现货/期货持仓量变化是否同步——如果Put头寸的增加恰好与现货多头持仓量的增加同步发生，更可能是保护性对冲行为，而非独立的看跌押注；此外，还可以关注行权价的集中区间，如果新增的Put头寸大量集中在远低于当前价格的深度虚值行权价（尾部风险对冲的典型特征），这更像是一种"黑天鹅保险"而非对短期下跌的方向性判断，与集中在平值附近、意图博取短期方向性收益的Put头寸在市场含义上完全不同。</p>
+<ul>
+<li>保护性看跌期权(现货多头买入Put对冲)和备兑策略下的做市商对冲仓位，都不构成方向性看跌押注。</li>
+<li>Put/Call比率上升如果主要由非方向性对冲头寸贡献，简单解读为"看跌情绪升温"会得出错误结论。</li>
+<li>可交叉验证比率变化是否与现货/期货持仓量变化同步，以及新增Put头寸的行权价是否集中在深度虚值区间（尾部风险对冲特征）。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：结合到期日分布与历史基准做横向对比</h2>
+<p>一个孤立的、当前时点的Put/Call比率数字，即便统计口径和头寸性质都核实清楚，仍然缺少一个重要维度——这个数字相对其自身历史正常波动区间处于什么位置。核验者应当尽量获取该比率过去一段时间（例如过去3个月或6个月）的时间序列数据，计算其历史均值和标准差，把当前数值放入这个区间里评估，才能判断当前读数是否真的处于历史罕见的极端水平，还是仍在正常波动范围内。脱离历史基准，单独判断"0.557算高还是算低"是没有意义的。</p>
+<p>此外，期权到期日的分布也是重要的核验维度：临近到期（例如一周内到期）的期权，其Put/Call比率变化更多反映短期事件驱动的对冲或投机需求（例如即将公布的宏观数据、监管消息），而远期到期（例如三个月以上）的比率变化更能反映市场对中长期趋势的判断。如果一篇报道笼统地引用"全部到期日合并计算"的比率，而没有拆分近月与远月合约分别观察，会掩盖掉短期噪音和中长期趋势之间的差异，核验者应当尽可能按到期日分桶后再做解读，而不是只看一个合并后的总数。</p>
+<ul>
+<li>应获取比率的历史时间序列，计算历史均值与标准差，判断当前数值是否真正处于历史极端水平。</li>
+<li>近月到期合约的比率变化更多反映短期事件驱动需求，远期到期合约更能反映中长期趋势判断。</li>
+<li>应按到期日分桶后分别观察比率，避免合并计算掩盖短期噪音与中长期趋势之间的差异。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否已经明确媒体引用的Put/Call比率具体是按未平仓量还是按成交量计算，两者是否同时查证？其二，是否核实过统计口径是按合约份数简单加总，还是按名义价值或Delta敞口加权？其三，是否意识到比率变化可能主要由保护性对冲或备兑策略仓位贡献，而非纯粹的方向性押注？其四，是否把当前数值放入历史时间序列区间做横向对比，并按到期日分桶分别观察，而不是只看一个孤立的合并数字？把这四个问题逐一核实之后，才能对期权市场传递的真实情绪信号形成相对客观的判断，而不是被一句"比率突破某个数值"的标题带偏。全文仅讨论核验方法论，不针对任何具体时点的市场情绪做方向性结论，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：计算口径是否明确、份数与名义价值口径是否区分、头寸性质是否核实、历史基准与到期日分布是否交叉对比。</li>
+<li>2026年9月Deribit真实数据显示未平仓量口径Put/Call比率约0.557，成交量口径约0.468，两者不可混用。</li>
+<li>全文为核验方法论讨论，不对任何具体时点的市场情绪做方向性结论，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 「Put/Call比率」标题党的常见套路</a></li>
+          <li><a href="#sec-2">2. 实测数据：Deribit真实BTC期权Put/Call比率是多少</a></li>
+          <li><a href="#sec-3">3. 核验方法一：搞清楚统计口径，未平仓量 vs 成交量、份数 vs 名义价值</a></li>
+          <li><a href="#sec-4">4. 核验方法二：区分方向性押注与对冲/备兑仓位</a></li>
+          <li><a href="#sec-5">5. 核验方法三：结合到期日分布与历史基准做横向对比</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.deribit.com/statistics/BTC/open-interest" target="_blank" rel="noopener">Deribit BTC期权统计页面</a>：本文示例Put/Call比率数据来源，可查询实时未平仓量与成交量分布</li>
+            <li><a href="https://docs.deribit.com/" target="_blank" rel="noopener">Deribit 公开API文档</a>：可用于自行抓取期权book summary数据进行核验计算</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/options-vault-tail-risk.html">期权金库尾部风险核验：卖方策略的隐藏敞口</a></li>
+          <li><a href="/research/market/perpetual-margin-tier-threshold-verification-guide.html">永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了</a></li>
+          <li><a href="/research/market/perpetual-funding-manipulation-verification.html">资金费率被做偏了吗：快照套利痕迹核验</a></li>
+          <li><a href="/research/market/open-interest-concentration-verification-guide.html">永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性</a></li>
+          <li><a href="/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT点差核验：所谓的1:1兑换，点差和滑点吃掉了多少</a></li>
+          <li><a href="/research/market/spot-futures-basis-trade-risk-guide.html">现货与合约基差交易：年化20%的「无风险」套利，风险到底藏在哪</a></li>
+          <li><a href="/research/market/exchange-insurance-fund-coverage-verification-guide.html">交易所保险基金覆盖率核验：出现坏账时，那笔钱真的够赔吗</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：所谓多链生态，资金实际集中在几条链</a></li>
+          <li><a href="/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">预言机中位数聚合核验：少数几个喂价源被操纵，中位数真的稳如泰山吗</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=18b45309"></script>
+</body>
+</html>

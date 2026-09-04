@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real - Crypto Research Notes</title>
+  <meta name="description" content="The Put/Call ratio is one of the most frequently cited options-market sentiment indicators in crypto media, often reduced to a single 'bullish' or 'bearish' verdict. But the ratio's calculation basis (open interest vs. volume, contract count vs. notional value) materially changes its meaning, and a large share of put positions are actually hedges or covered-strategy legs rather than directional bets. Using real BTC options data pulled from Deribit's public API, this guide breaks down how to verify a Put/Call ratio and the common misreading traps. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="BTC Options Put/Call Ratio Verification: Is the &quot;Bearish Sentiment&quot; Number Real - Crypto Research Notes">
+  <meta property="og:description" content="The Put/Call ratio is one of the most frequently cited options-market sentiment indicators in crypto media, often reduced to a single 'bullish' or 'bearish' verdict. But the ratio's calculation basis (open interest vs. volume, contract count vs. notional value) materially changes its meaning, and a large share of put positions are actually hedges or covered-strategy legs rather than directional bets. Using real BTC options data pulled from Deribit's public API, this guide breaks down how to verify a Put/Call ratio and the common misreading traps. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-04T13:49:22+08:00">
+  <meta property="article:modified_time" content="2026-09-04T13:49:22+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BTC Options Put/Call Ratio Verification: Is the &quot;Bearish Sentiment&quot; Number Real - Crypto Research Notes">
+  <meta name="twitter:description" content="Put/Call ratio's calculation basis and position type are often overlooked. A real Deribit data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="BTC Options Put/Call Ratio Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-btc-options-put-call-ratio-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Options market sentiment verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-btc-options-put-call-ratio-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html", "name": "BTC Options Put/Call Ratio Verification: Is the 'Bearish Sentiment' Number Real - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "BTC Options Put/Call Ratio Verification: Is the 'Bearish Sentiment' Number Real", "item": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#article", "headline": "BTC Options Put/Call Ratio Verification: Is the 'Bearish Sentiment' Number Real", "description": "The Put/Call ratio's calculation basis and the real purpose of put positions (directional bet vs. hedge) are frequently oversimplified by media coverage. A real Deribit data breakdown and verification method for a more accurate sentiment picture. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["put call ratio verification","options market sentiment verification","open interest verification","covered call verification","options data interpretation method"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-04T13:49:22+08:00", "dateModified": "2026-09-04T13:49:22+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/btc-options-put-call-ratio-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/btc-options-put-call-ratio-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real</h1>
+        <p class="article-summary">"Put/Call ratio breaks 0.7, fear rises" — headlines like this are common in crypto media, reducing a single ratio number directly to an overall bullish-or-bearish market verdict. But how a Put/Call ratio is actually calculated is far more nuanced than that conclusion suggests: it can be computed by open interest or by volume, reflecting entirely different time dimensions; more importantly, holding a put option doesn't necessarily mean betting on a price decline — a large share of put positions come from spot holders buying protective puts to hedge downside risk, or from market makers' paired positions under covered-call strategies, neither of which constitutes a directional "bearish" call. Using real BTC options data pulled from Deribit's public API, this guide breaks down how to verify a Put/Call ratio, the common misreading traps, and how to combine it with other metrics for a more accurate sentiment picture. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-04T13:49:22+08:00">2026-09-04 13:49:22</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-btc-options-put-call-ratio-verification-guide-en.svg" alt="BTC Options Put/Call Ratio Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Confirm whether a cited Put/Call ratio is calculated by open interest or by volume — the two mean entirely different things and shouldn't be compared interchangeably</li>
+            <li><span class="article-verify-check">✓</span>Check whether the ratio sums contracts by count or by notional value — contract counts across different strike/price ranges can't simply be added together</li>
+            <li><span class="article-verify-check">✓</span>Recognize that a large share of put positions may come from protective hedging or covered-call strategies rather than directional bearish bets</li>
+            <li><span class="article-verify-check">✓</span>Cross-verify against expiry distribution and strike concentration rather than drawing a conclusion from one isolated ratio number</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. The Common Playbook Behind Put/Call Ratio Clickbait</h2>
+<p>The Put/Call ratio is one of the options market's most easily oversimplified metrics for media distribution: headlines like "ratio breaks above X, fear is rising" or "ratio hits a new low, market extremely bullish" essentially compress a statistic loaded with multiple layers of information into a binary sentiment verdict. This kind of simplification spreads well precisely because a single number is far easier for a non-specialist reader to understand and share than the actual structure of options positioning — but the cost is losing a huge amount of critical context: is this ratio an instantaneous snapshot or an average over some window, does the sample cover the whole market or a single exchange, and what is this ratio's normal historical range (an absolute number detached from a historical baseline is meaningless on its own)?</p>
+<p>When a researcher encounters this kind of headline, the first instinct shouldn't be to accept or reject the sentiment conclusion, but to first verify how the ratio number itself was calculated, where the data came from, and where this value sits relative to its own historical range. Without that context, a standalone number like "0.7" or "1.2" tells you neither whether the market is bullish or bearish, nor whether it's an unusual reading at all.</p>
+<ul>
+<li>Media coverage often compresses complex options positioning data into a single ratio, then further compresses that into a binary sentiment verdict, losing critical context.</li>
+<li>Verification should start by checking the ratio's calculation basis, data source, and sample scope, rather than directly accepting or rejecting the sentiment conclusion.</li>
+<li>An absolute number detached from its historical normal range is meaningless on its own and can't determine whether the market is in an unusual state.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: What Is Deribit's Actual BTC Options Put/Call Ratio</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real data captured via Deribit's public API (www.deribit.com/api/v2/public/get_book_summary_by_currency, currency=BTC, kind=option) during verification in September 2026: 1,008 valid BTC option contracts market-wide, with total call open interest of approximately 279,186.4 BTC and total put open interest of approximately 155,611.2 BTC — a Put/Call ratio by open interest of approximately 0.557. At the same point in time, 24-hour volume showed approximately 33,088.2 BTC in call volume and 15,499.8 BTC in put volume — a Put/Call ratio by volume of approximately 0.468. These figures can be re-verified in real time via Deribit's public API, and will continue to change with market conditions.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, at the same point in time and for the same underlying asset, the Put/Call ratio calculated by open interest (0.557) and by volume (0.468) come out different — open interest reflects the accumulated state of all currently open contracts built up over some period, while volume reflects the most recent 24 hours of incremental trading activity, closer to a "right now" sentiment reading. If a report doesn't specify which basis it's using, the specific number being cited is already ambiguous before any further sentiment interpretation even begins. Second, both ratios sit below 1, meaning that under either basis, call open interest or volume exceeds put — applying the simplified rule "ratio below 1 means bullish sentiment" without further thought would suggest "the market is broadly optimistic." But that's still only the first step of verification; Sections 3 and 4 explain why you can't stop there.</p>
+<ul>
+<li>At the same point in time, the Put/Call ratio by open interest and by volume come out differently, reflecting stock positioning versus incremental activity respectively.</li>
+<li>A report that doesn't specify its calculation basis is already citing an ambiguous number, before any further sentiment interpretation is even attempted.</li>
+<li>September 2026 data shows both ratios below 1 (0.557 by open interest, 0.468 by volume), with call size exceeding put under both measures.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Nail Down the Calculation Basis — Open Interest vs. Volume, Contract Count vs. Notional Value</h2>
+<p>Before verifying a Put/Call ratio, the first step is confirming its calculation basis. Open interest reflects the current stock of all still-open contracts, revealing the positioning structure market participants have already built — but that structure could include positions opened weeks or even months ago that remain open, and doesn't necessarily represent the latest shift in market sentiment. Volume reflects new trading activity within a given window (typically 24 hours), better capturing "what just happened," but it's more easily distorted by a single large trade or a batch of expiry-driven closes/opens, making it far more volatile than the open-interest basis. Researchers should check both numbers (as in Section 2's example) rather than citing only one — and when the two diverge noticeably (e.g., the open-interest basis reads bullish while the volume basis reads bearish), that divergence itself is a signal worth investigating further, potentially indicating a shift in market sentiment underway.</p>
+<p>Another easily overlooked distinction is whether contracts are summed by count or by notional value. Options contracts typically represent a fixed quantity of the underlying asset per contract (e.g., one BTC option representing 1 BTC); if contracts across different strikes and expiries are simply added by count, that implicitly assumes every contract carries equal "importance" — but deep out-of-the-money and deep in-the-money options don't carry equal weight in terms of actual market impact. A more rigorous verification approach is to calculate the ratio weighted by notional value (contract count × current underlying price) or by delta exposure, which better reflects the real distribution of directional risk exposure rather than a simple stack of contract counts.</p>
+<ul>
+<li>Open interest reflects stock positioning (possibly old positions); volume reflects the latest incremental activity — both should be checked rather than citing only one.</li>
+<li>A noticeable divergence between the two bases is itself a signal worth investigating, possibly indicating a sentiment shift underway.</li>
+<li>Simply summing by contract count implicitly assumes equal weight per contract; weighting by notional value or delta exposure better reflects real directional risk distribution.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Distinguish Directional Bets From Hedging/Covered Positions</h2>
+<p>The most easily overlooked — and most critical — layer in interpreting a Put/Call ratio is the actual purpose behind a put position. Holding a put option is intuitively read as "betting on a price decline," but at least two common scenarios have nothing to do with directional bearishness. First, protective puts: spot or futures long holders buy puts to hedge downside risk, while their overall position remains bullish or neutral on the underlying — the put purchase is simply insurance on an existing bullish position, not a bearish stance. Second, under covered-call strategies, market makers or institutions hedging the exposure from calls they've sold will build corresponding hedge positions in the underlying asset or other options — these positions, arising from market-maker risk management, likewise represent no directional market view at all. If an increase in the Put/Call ratio is mostly driven by these two non-directional position types, reading it simply as "bearish sentiment rising" would produce a conclusion opposite to reality.</p>
+<p>A further verification step researchers can try is observing whether the ratio's movement is synchronized with changes in spot/futures open interest — if an increase in put positions coincides closely with an increase in spot long positioning, it's more likely protective hedging rather than an independent bearish bet. It's also worth checking the concentration of strike prices: if newly added put positions are heavily concentrated at strikes far below the current price (a typical characteristic of tail-risk hedging), that looks more like "black swan insurance" than a directional call on a near-term decline — a very different market implication from put positions concentrated near the money, which are more likely aimed at capturing short-term directional gains.</p>
+<ul>
+<li>Protective puts (spot longs hedging with puts) and market-maker hedge positions under covered-call strategies don't constitute directional bearish bets.</li>
+<li>If a rise in the Put/Call ratio is mostly driven by non-directional hedging positions, reading it simply as "rising bearish sentiment" leads to an incorrect conclusion.</li>
+<li>Cross-check whether ratio movements sync with spot/futures open interest changes, and whether new put positions concentrate at deep out-of-the-money strikes (a tail-risk hedging signature).</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Cross-Reference Against Expiry Distribution and Historical Baselines</h2>
+<p>Even after the calculation basis and position nature have both been verified, an isolated, current Put/Call ratio number is still missing an important dimension — where that number sits relative to its own normal historical range. Researchers should try to obtain the ratio's time series over some past period (say, the last 3 or 6 months), calculate its historical mean and standard deviation, and place the current reading within that range — only then can you judge whether the current reading is genuinely a historically rare extreme, or still within normal fluctuation. Judging in isolation whether "0.557 is high or low," detached from a historical baseline, is meaningless.</p>
+<p>Additionally, the distribution of options expiries is an important verification dimension: ratio changes in near-dated contracts (expiring within a week, say) more often reflect short-term, event-driven hedging or speculative demand (an upcoming macro data release, regulatory news), while changes in longer-dated contracts (three months or more out) better reflect the market's view on medium-to-long-term trends. If a report cites a ratio calculated across "all expiries combined" without separating near-month from far-month contracts, it obscures the difference between short-term noise and medium-to-long-term trend. Researchers should, where possible, bucket the ratio by expiry and interpret it separately, rather than looking only at a single combined total.</p>
+<ul>
+<li>Obtain the ratio's historical time series, calculate its historical mean and standard deviation, and judge whether the current reading is genuinely a historical extreme.</li>
+<li>Near-dated contract ratio changes more often reflect short-term, event-driven demand; far-dated contracts better reflect medium-to-long-term trend views.</li>
+<li>Bucket the ratio by expiry and interpret separately, to avoid a combined total obscuring the difference between short-term noise and longer-term trend.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you confirmed whether a cited Put/Call ratio is calculated by open interest or by volume, and checked both? Second, have you verified whether the calculation sums contracts by simple count or weights by notional value or delta exposure? Third, have you recognized that a ratio's movement may be mostly driven by protective hedging or covered-call positions rather than pure directional bets? Fourth, have you placed the current reading within a historical time-series range for comparison, and examined it bucketed by expiry, rather than looking only at one isolated combined number? Only after verifying these four points can you form a relatively objective judgment of the real sentiment signal an options market is sending, rather than being swayed by a headline like "ratio breaks above X." This article discusses verification methodology only, does not draw a directional conclusion about market sentiment at any specific point in time, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: calculation basis confirmed, contract-count vs. notional-value basis distinguished, position nature verified, historical baseline and expiry distribution cross-checked.</li>
+<li>September 2026 real Deribit data shows a Put/Call ratio of approximately 0.557 by open interest and 0.468 by volume — the two should not be used interchangeably.</li>
+<li>This article discusses verification methodology only, does not draw a directional conclusion about market sentiment at any specific point in time, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. The Common Playbook Behind Put/Call Ratio Clickbait</a></li>
+          <li><a href="#sec-2">2. Real Data: What Is Deribit's Actual BTC Options Put/Call Ratio</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Nail Down the Calculation Basis — Open Interest vs. Volume, Contract Count vs. Notional Value</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Distinguish Directional Bets From Hedging/Covered Positions</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Cross-Reference Against Expiry Distribution and Historical Baselines</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.deribit.com/statistics/BTC/open-interest" target="_blank" rel="noopener">Deribit BTC Options Statistics Page</a>: source of this article's example Put/Call ratio data, can be used to check real-time open interest and volume distribution</li>
+            <li><a href="https://docs.deribit.com/" target="_blank" rel="noopener">Deribit Public API Documentation</a>: usable to independently pull options book summary data for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/options-vault-tail-risk.html">Options Vault Tail Risk Verification: The Hidden Exposure Behind Seller Strategies</a></li>
+          <li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</a></li>
+          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Is the Funding Rate Being Skewed: Verifying Snapshot Arbitrage Traces</a></li>
+          <li><a href="/en/research/market/open-interest-concentration-verification-guide.html">Perpetual Open Interest Verification: Is a Spiking OI Real Demand or Stacked Leverage</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</a></li>
+          <li><a href="/en/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT Spread Verification: How Much the "1:1" Swap Really Costs in Spread and Slippage</a></li>
+          <li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a 20% "Risk-Free" Arbitrage</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage Verification: Is That Fund Actually Enough to Cover Bad Debt</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/protocol/oracle-median-aggregation-manipulation-verification-guide.html">Oracle Median Aggregation Verification: Is the Median Really Safe When Only a Few Feeds Are Manipulated</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=18b45309"></script>
+</body>
+</html>
