@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'chain-tvl-concentration-verification-guide',
-  publishedISO: '2026-09-03T13:53:43+08:00',
-  tagColor: 'violet',
-  topic: 'governance',
+  slug: 'usdc-usdt-trading-pair-spread-verification-guide',
+  publishedISO: '2026-09-04T11:47:32+08:00',
+  tagColor: 'cyan',
+  topic: 'basics',
 
   zh: {
-    h1: '公链TVL集中度核验：所谓多链生态，资金实际集中在几条链',
-    tagLabel: 'TVL集中度核验',
-    cardDesc: '行业叙事强调多链时代，但真实TVL数据显示资金高度集中在极少数头部链。本文用DefiLlama公开数据拆解核验方法。',
+    h1: 'USDC/USDT点差核验：所谓的1:1兑换，点差和滑点吃掉了多少',
+    tagLabel: '稳定币点差核验',
+    cardDesc: 'USDC与USDT并非零成本兑换，不同交易所点差可相差数倍，频繁小额兑换会被持续侵蚀。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated',
-    tagLabel: 'TVL Concentration Verification',
-    cardDesc: 'The industry narrative pushes a multi-chain era, but real TVL data shows capital heavily concentrated on a handful of top chains. A real-data breakdown using DefiLlama\'s public API.',
+    h1: 'USDC/USDT Spread Verification: How Much the "1:1" Swap Really Costs in Spread and Slippage',
+    tagLabel: 'Stablecoin Spread Verification',
+    cardDesc: 'USDC and USDT are not a zero-cost swap; real spreads differ by several multiples across exchanges and erode frequent small round-trips. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'chain-tvl-concentration-verification-guide',
     'exchange-trust-score-reported-volume-verification-guide',
     'perpetual-margin-tier-threshold-verification-guide',
     'exchange-soc2-audit-scope-verification-guide',
