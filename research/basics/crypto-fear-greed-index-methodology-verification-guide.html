@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 - 加密货币研究</title>
+  <meta name="description" content="恐惧贪婪指数(Fear&Greed Index)几乎是加密媒体引用率最高的单一数字，一个0-100的分数被简化成「市场恐慌」或「市场贪婪」的结论，但极少有报道说明这个分数由哪些维度加权合成、各维度权重是多少、以及为什么同一个数字在不同数据源之间可能不一致。本文用Alternative.me公开抓取的真实历史数据，拆解指数的构成方法论、核验陷阱与横向对比方法。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 - 加密货币研究">
+  <meta property="og:description" content="恐惧贪婪指数几乎是加密媒体引用率最高的单一数字，一个0-100的分数被简化成「市场恐慌」或「市场贪婪」的结论，但极少有报道说明这个分数由哪些维度加权合成、各维度权重是多少、以及为什么同一个数字在不同数据源之间可能不一致。本文用Alternative.me公开抓取的真实历史数据，拆解指数的构成方法论、核验陷阱与横向对比方法。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-04T16:42:06+08:00">
+  <meta property="article:modified_time" content="2026-09-04T16:42:06+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 - 加密货币研究">
+  <meta name="twitter:description" content="恐惧贪婪指数的构成维度和权重常被忽略，本文用真实历史数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-crypto-fear-greed-index-methodology-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","市场情绪指数核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html", "name": "加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的", "item": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#article", "headline": "加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的", "description": "恐惧贪婪指数的构成维度、权重分配与数据源差异常被媒体简化处理，本文用真实历史数据拆解核验方法与横向对比技巧。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["恐惧贪婪指数核验","市场情绪指标方法论","指数权重核验","多数据源对比","情绪指标滞后性核验"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-04T16:42:06+08:00", "dateModified": "2026-09-04T16:42:06+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</h1>
+        <p class="article-summary">「恐惧贪婪指数跌破20，市场进入极度恐慌」——这类表述在加密媒体标题中反复出现，把一个0到100的合成分数直接等同于整个市场的情绪状态。但这个指数从来不是某种直接测量出的"情绪"，而是若干个独立维度（波动率、动量与成交量、社交媒体热度、市场调查、比特币市值占比、搜索趋势等）按预设权重加权合成的复合分数，各维度权重、数据来源与更新频率都是可以查证的具体方法论，而不是一个黑箱。本文用Alternative.me公开API实测抓取的真实历史数据，拆解指数的构成方法论、核验时容易踩的陷阱，以及如何在多个数据源之间做横向对比，避免被一个孤立的合成数字带偏判断。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-04T16:42:06+08:00">2026-09-04 16:42:06</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crypto-fear-greed-index-methodology-verification-guide.svg" alt="加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>查证该指数具体由哪些维度构成、各维度权重是多少，而不是只看最终的0-100分数</li>
+            <li><span class="article-verify-check">✓</span>核实数据来源与更新频率，判断当前读数是实时数据还是存在滞后的历史快照</li>
+            <li><span class="article-verify-check">✓</span>把当前读数放入近期历史时间序列中横向对比，判断是否真的处于极端区间</li>
+            <li><span class="article-verify-check">✓</span>核对不同数据平台发布的同类型指数是否存在明显差异，并查证差异是否来自方法论区别</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. 一个0-100的合成分数，不是直接测量出来的「情绪」</h2>
+<p>恐惧贪婪指数给人的直觉印象，是某种类似温度计一样直接测量市场情绪的仪器，但它实际上是一个人为设计的复合指标：设计者预先选定几个被认为能反映市场情绪的维度（例如波动率是否异常放大、成交量与动量是否偏离均值、社交媒体上讨论的正负面情绪比例、市场调查问卷结果、比特币在整体加密市值中的占比变化、以及相关搜索词的热度趋势），给每个维度分配一个预设的权重百分比，再把各维度的原始数据归一化后按权重加总，得到最终0到100的分数。这个过程中的每一步——选哪些维度、权重怎么分、怎么归一化——都是设计者的主观决策，不同的数据平台完全可能得出不同的最终分数，即便它们声称测量的是同一个"市场情绪"。</p>
+<p>核验者面对这个指数时，应当把它当作一个"设计出来的复合统计工具"而非"直接测量的客观事实"来对待。这不意味着这个指数毫无价值——恰恰相反，如果核验者理解了它的具体构成，就能更准确地判断分数变化背后是哪个具体维度在驱动，而不是把一个笼统的"贪婪"或"恐惧"标签当作分析的终点。</p>
+<ul>
+<li>恐惧贪婪指数是若干维度加权合成的复合统计指标，不是直接测量出的客观情绪数据。</li>
+<li>维度选择、权重分配、归一化方法都是设计者的主观决策，不同平台可能得出不同分数。</li>
+<li>理解具体构成后，才能判断分数变化是由哪个维度驱动，而非止步于"贪婪/恐惧"的笼统标签。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：真实的恐惧贪婪指数历史读数长什么样</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过Alternative.me公开API（api.alternative.me/fng）实测抓取的真实历史数据：最新读数74，分类为"Greed"(贪婪)；往前推算的连续10个交易日读数依次为65、63、69、62、69、68、73、71、65（均为当日读数，按时间倒序排列），全部落在62-74这个区间，分类同样全部为"Greed"。也就是说，这10天里指数没有出现向"Fear"(恐惧)区间的明显回落，情绪读数整体保持在中等偏强的贪婪水平，波动幅度不超过12个点。以上数字可通过Alternative.me公开API实时复核，数值会随每日更新持续变化。</p>
+</div>
+<p>这份数据揭示了两个值得关注的核验点。第一，连续10天的读数区间相对稳定（62-74），说明短期内驱动指数的底层维度（波动率、动量、社交热度等）没有发生剧烈变化，如果这时候某篇报道突然用"市场情绪剧烈转向"这类措辞描述某一天的读数，值得回头核对该读数是否真的显著偏离了近期区间，还是只是区间内的正常波动被过度解读。第二，全部10天读数都落在"Greed"这一个分类区间内，说明该指数的分类阈值（通常0-24为极度恐惧、25-49为恐惧、50为中性、51-74为贪婪、75-100为极度贪婪）在实际使用中，同一个文字标签可能覆盖相当宽的数值区间——"Greed"标签本身横跨51到74，同样贴着"贪婪"标签的62和74在指数强度上仍有明显差异，核验者不应只看文字分类，而应关注具体数值本身。</p>
+<ul>
+<li>示例10天数据显示指数读数稳定在62-74区间，均为"Greed"分类，未出现向"Fear"区间的剧烈转向。</li>
+<li>报道用"情绪剧烈转向"描述单日读数变化时，应核对该读数是否真的显著偏离近期历史区间。</li>
+<li>同一文字分类标签（如"Greed"）可能横跨较宽的数值区间，核验时应关注具体数值而非只看分类文字。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：查证具体的维度构成与权重分配</h2>
+<p>核验一个恐惧贪婪指数是否可信，第一步是找到该指数发布方公开的方法论说明，逐一核实其声称的构成维度和权重比例。以业内较早、被广泛引用的一套方法论为例，其历史上采用过的维度包括：波动率(Volatility)，通常占比在20%-25%区间，衡量当前价格波动是否显著偏离过去一段时间的历史平均水平；市场动量与成交量(Market Momentum/Volume)，占比通常也在20%-25%区间，衡量近期成交量和价格动量相对历史基准的偏离程度；社交媒体(Social Media)，衡量特定标签在社交平台上的讨论热度与互动速率变化；比特币市值占比(Dominance)，反映资金是否从比特币轮动到山寨币（山寨币占比上升有时被解读为投机情绪升温）；以及搜索趋势(Trends)，衡量与恐慌相关的搜索词汇热度变化。核验者应当查证自己引用的这个具体版本，是否仍在使用这些维度，权重比例是否与早期版本一致，因为这类方法论并非一成不变，历史上曾经过多次调整（例如原本包含的市场调查问卷维度，后来因为响应率过低被移除）。</p>
+<p>如果发布方没有公开具体的权重比例，或者只给出一个模糊的维度列表而不说明加权方式，核验者应当对这个指数的可信度打一个问号——一个愿意公开完整方法论、接受第三方复核的指数，通常比一个只公布最终分数、拒绝说明计算过程的指数更值得信赖。</p>
+<ul>
+<li>核验指数可信度的第一步是找到发布方公开的方法论文档，逐一核实构成维度和权重比例。</li>
+<li>常见维度包括波动率、动量与成交量、社交媒体热度、市值占比轮动、搜索趋势等，各占权重通常在10%-25%区间。</li>
+<li>方法论历史上可能经过调整（如移除响应率过低的调查问卷维度），应查证当前引用版本是否与早期版本一致。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：核实数据滞后性与横向历史对比</h2>
+<p>恐惧贪婪指数的更新频率因数据源而异，多数平台按日更新，部分维度（例如社交媒体热度）的原始数据抓取本身可能存在数小时到一天的滞后。核验者在引用一个"当前"读数时，应当核实这个数字对应的具体统计时点，而不是想当然地认为它反映的是"此刻"的市场状态——如果一篇报道在描述某次价格剧烈波动后的"市场反应"时引用的指数读数，其统计时点实际上早于价格波动发生的时刻，那么这个引用在逻辑上就是站不住脚的，指数不可能"预见"尚未发生的价格波动。</p>
+<p>更进一步的核验方法是，获取该指数近3到6个月的时间序列数据，计算其历史均值和分布区间，把当前读数放入这个区间里做横向对比，而不是孤立地评价一个单日数字。如果当前读数确实处于历史分布的极端两端（例如历史上只有5%的交易日读数低于20），才能相对有把握地判断这确实是一个值得关注的极端信号；如果当前读数只是落在历史正常波动区间的中段，即便媒体标题用了"恐慌"或"贪婪"这类强烈措辞，核验者也应当保持审慎，不必然认为市场正处于异常状态。</p>
+<ul>
+<li>指数更新存在数据源和维度层面的滞后，核验时应查证具体统计时点，避免"事后归因"式的逻辑错误。</li>
+<li>获取近3-6个月历史时间序列，计算均值与分布区间，判断当前读数是否真正处于历史极端水平。</li>
+<li>只有当前读数确实处于历史分布极端两端时，才值得视为值得关注的信号；处于正常区间中段时应保持审慎。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：跨数据源横向对比，识别方法论差异</h2>
+<p>市面上不止一家机构发布类似的"恐惧贪婪"类情绪指数，不同平台由于选取的维度、权重、数据来源不同，同一时间点给出的分数可能存在明显差异——一个平台显示"中性"，另一个平台可能显示"贪婪"。核验者如果只依赖单一数据源，容易把方法论差异误判为市场情绪本身的矛盾信号。更稳妥的做法是，在做重要判断前，交叉查证至少两到三个不同来源的同类指数，观察它们的方向是否一致（即便具体数值不同，只要涨跌方向一致，说明底层市场动态的变化是真实的；如果方向都出现分歧，则说明任何单一指数的读数都不宜单独作为判断依据）。</p>
+<p>此外，核验者还应当留意指数发布方是否存在潜在的利益动机——部分交易平台或产品自建的情绪指数，可能在维度选取上无意或有意地偏向能配合自身产品叙事的方向（例如更强调对自身平台交易量有利的维度）。相较于产品自带的情绪指数，独立第三方且公开完整方法论、允许历史数据免费复核的数据源，通常在核验环节更值得信赖。</p>
+<ul>
+<li>不同平台的同类情绪指数因方法论差异，同一时点分数可能明显不同，不应只依赖单一数据源。</li>
+<li>交叉查证多个来源指数的方向一致性，比纠结具体数值差异更有核验价值。</li>
+<li>应留意指数发布方是否存在利益动机，优先信赖独立第三方且公开完整方法论的数据源。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否已经查证过该指数具体的构成维度和权重分配，而非只接受一个笼统的0-100分数？其二，是否核实过数据的具体统计时点，排除了"事后归因"式的逻辑错误？其三，是否把当前读数放入近3-6个月的历史时间序列中做横向对比，判断是否真正处于极端区间？其四，是否交叉查证过至少一个其他数据源的同类指数，观察方向是否一致，并留意发布方是否存在潜在利益动机？把这四个问题逐一核实之后，才能对一个"情绪指数"传递的信息形成相对客观的判断，而不是被一句"指数跌破20"或"指数突破80"的标题带偏。全文仅讨论核验方法论，不针对任何具体时点的指数读数做方向性结论，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：构成维度与权重是否查证、数据时点是否核实、历史区间是否横向对比、跨数据源方向是否交叉验证。</li>
+<li>2026年9月Alternative.me真实数据显示指数连续10天稳定在62-74（Greed）区间，未出现剧烈转向。</li>
+<li>全文为核验方法论讨论，不对任何具体时点的市场情绪做方向性结论，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 一个0-100的合成分数，不是直接测量出来的「情绪」</a></li>
+          <li><a href="#sec-2">2. 实测数据：真实的恐惧贪婪指数历史读数长什么样</a></li>
+          <li><a href="#sec-3">3. 核验方法一：查证具体的维度构成与权重分配</a></li>
+          <li><a href="#sec-4">4. 核验方法二：核实数据滞后性与横向历史对比</a></li>
+          <li><a href="#sec-5">5. 核验方法三：跨数据源横向对比，识别方法论差异</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://alternative.me/crypto/fear-and-greed-index/" target="_blank" rel="noopener">Alternative.me 恐惧贪婪指数页面</a>：本文示例历史数据来源，可查询实时读数与历史走势图</li>
+            <li><a href="https://coinmarketcap.com/charts/fear-and-greed-index/" target="_blank" rel="noopener">CoinMarketCap 恐惧贪婪指数</a>：可用于交叉对比不同数据源的同类型指数读数是否一致</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/btc-options-put-call-ratio-verification-guide.html">比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性</a></li>
+          <li><a href="/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT点差核验：所谓的1:1兑换，点差和滑点吃掉了多少</a></li>
+          <li><a href="/research/market/open-interest-concentration-verification-guide.html">永续合约持仓量核验：暴涨的OI，是真实需求还是杠杆堆叠</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：所谓多链生态，资金实际集中在几条链</a></li>
+          <li><a href="/research/market/perpetual-margin-tier-threshold-verification-guide.html">永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了</a></li>
+          <li><a href="/research/market/perpetual-funding-manipulation-verification.html">资金费率被做偏了吗：快照套利痕迹核验</a></li>
+          <li><a href="/research/basics/exchange-soc2-audit-scope-verification-guide.html">交易所SOC 2审计核验：那份「已通过安全审计」的报告，到底审计了什么</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=afac08d9"></script>
+</body>
+</html>

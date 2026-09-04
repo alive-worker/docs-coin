@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/basics/crypto-fear-greed-index-methodology-verification-guide.html': '2026-09-04 16:42:06',
     '/research/market/btc-options-put-call-ratio-verification-guide.html': '2026-09-04 13:49:22',
     '/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html': '2026-09-04 11:47:32',
     '/research/governance/chain-tvl-concentration-verification-guide.html': '2026-09-03 13:53:43',
@@ -264,6 +265,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html': '2026-09-04 16:42:06',
 '/en/research/market/btc-options-put-call-ratio-verification-guide.html': '2026-09-04 13:49:22',
 '/en/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html': '2026-09-04 11:47:32',
 '/en/research/governance/chain-tvl-concentration-verification-guide.html': '2026-09-03 13:53:43',

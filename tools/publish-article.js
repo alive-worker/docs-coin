@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'btc-options-put-call-ratio-verification-guide',
-  publishedISO: '2026-09-04T13:49:22+08:00',
-  tagColor: 'gold',
-  topic: 'market',
+  slug: 'crypto-fear-greed-index-methodology-verification-guide',
+  publishedISO: '2026-09-04T16:42:06+08:00',
+  tagColor: 'sky',
+  topic: 'basics',
 
   zh: {
-    h1: '比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗',
-    tagLabel: '期权情绪核验',
-    cardDesc: 'Put/Call比率的计算口径和头寸性质常被媒体简化处理，本文用Deribit真实公开数据拆解核验方法与常见误读陷阱。',
+    h1: '加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的',
+    tagLabel: '情绪指数核验',
+    cardDesc: '恐惧贪婪指数的构成维度、权重分配与数据源差异常被媒体简化处理，本文用Alternative.me真实历史数据拆解核验方法。',
   },
   en: {
-    h1: 'BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real',
-    tagLabel: 'Options Sentiment Verification',
-    cardDesc: 'A Put/Call ratio\'s calculation basis and position type are often oversimplified by media coverage. A real-data breakdown using Deribit\'s public API.',
+    h1: 'Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted',
+    tagLabel: 'Sentiment Index Verification',
+    cardDesc: 'The index\'s dimensions, weighting, and cross-source differences are often oversimplified by media coverage. A real-data breakdown using Alternative.me\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'btc-options-put-call-ratio-verification-guide',
     'usdc-usdt-trading-pair-spread-verification-guide',
     'chain-tvl-concentration-verification-guide',
     'exchange-trust-score-reported-volume-verification-guide',

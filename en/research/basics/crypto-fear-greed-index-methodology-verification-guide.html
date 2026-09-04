@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted - Crypto Research Notes</title>
+  <meta name="description" content="The Fear and Greed Index is one of the single most frequently cited numbers in crypto media, a 0-100 score reduced to a single verdict of 'market panic' or 'market greed.' Yet few reports explain which dimensions are weighted together to produce that score, what each weight is, or why the same day's number can differ across data sources. Using real historical data pulled from Alternative.me's public API, this guide breaks down the index's methodology, common verification pitfalls, and how to cross-compare sources. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Crypto Fear and Greed Index Verification: How This &quot;Sentiment&quot; Number Is Actually Weighted - Crypto Research Notes">
+  <meta property="og:description" content="The Fear and Greed Index is one of the single most frequently cited numbers in crypto media, a 0-100 score reduced to a single verdict of 'market panic' or 'market greed.' Yet few reports explain which dimensions are weighted together to produce that score, what each weight is, or why the same day's number can differ across data sources. Using real historical data pulled from Alternative.me's public API, this guide breaks down the index's methodology, common verification pitfalls, and how to cross-compare sources. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-04T16:42:06+08:00">
+  <meta property="article:modified_time" content="2026-09-04T16:42:06+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Crypto Fear and Greed Index Verification: How This &quot;Sentiment&quot; Number Is Actually Weighted - Crypto Research Notes">
+  <meta name="twitter:description" content="The index's dimensions and weighting are often overlooked. A real historical-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Crypto Fear and Greed Index Methodology Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-crypto-fear-greed-index-methodology-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Market sentiment index verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-crypto-fear-greed-index-methodology-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html", "name": "Crypto Fear and Greed Index Verification: How This 'Sentiment' Number Is Actually Weighted - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Crypto Fear and Greed Index Verification: How This 'Sentiment' Number Is Actually Weighted", "item": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#article", "headline": "Crypto Fear and Greed Index Verification: How This 'Sentiment' Number Is Actually Weighted", "description": "The Fear and Greed Index's dimensions, weighting, and cross-source differences are often oversimplified by media coverage. A real historical-data breakdown of the verification method and cross-comparison technique. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["fear and greed index verification","market sentiment index methodology","index weighting verification","multi-source comparison","sentiment index lag verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-04T16:42:06+08:00", "dateModified": "2026-09-04T16:42:06+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted</h1>
+        <p class="article-summary">"Fear and Greed Index drops below 20, market enters extreme panic" — headlines like this recur constantly in crypto media, directly equating a synthesized 0-to-100 score with the entire market's emotional state. But this index was never something directly measured as "sentiment" — it's a composite score built from several independent dimensions (volatility, momentum and volume, social media buzz, market surveys, Bitcoin's share of total market cap, search trends, and similar factors), each assigned a predetermined weight, normalized, and summed. The weight for each dimension, the data sources, and the update frequency are all specific, checkable methodology — not a black box. Using real historical data pulled live from Alternative.me's public API, this guide breaks down the index's methodology, the common pitfalls in verifying it, and how to cross-compare multiple data sources to avoid being misled by a single isolated composite number. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-04T16:42:06+08:00">2026-09-04 16:42:06</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-crypto-fear-greed-index-methodology-verification-guide-en.svg" alt="Crypto Fear and Greed Index Methodology Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check exactly which dimensions the index is built from and each one's weight, rather than looking only at the final 0-100 score</li>
+            <li><span class="article-verify-check">✓</span>Confirm the data sources and update frequency, to judge whether the current reading is real-time or a lagging historical snapshot</li>
+            <li><span class="article-verify-check">✓</span>Place the current reading into its recent historical time series to judge whether it's genuinely in an extreme range</li>
+            <li><span class="article-verify-check">✓</span>Cross-check whether similar indices from other data platforms show a noticeably different reading, and verify whether that gap comes from a methodology difference</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. A 0-100 Composite Score Is Not Directly Measured "Sentiment"</h2>
+<p>The intuitive impression the Fear and Greed Index gives is that of an instrument directly measuring market sentiment, like a thermometer. In reality, it's a deliberately designed composite metric: its designer preselects several dimensions believed to reflect market sentiment (for example, whether volatility is unusually elevated, whether volume and momentum deviate from their averages, the ratio of positive to negative sentiment in social media discussion, market survey results, changes in Bitcoin's share of total crypto market cap, and search-term trend heat), assigns each a predetermined weight percentage, normalizes each dimension's raw data, and sums them by weight to produce a final score between 0 and 100. Every step in this process — which dimensions to include, how to weight them, how to normalize them — is a subjective design decision, and different data platforms can absolutely arrive at different final scores even while claiming to measure the same "market sentiment."</p>
+<p>Researchers should treat this index as a "deliberately engineered composite statistical tool" rather than "a directly measured objective fact." That doesn't mean the index is worthless — quite the opposite: once a researcher understands its actual composition, they can pinpoint which specific dimension is driving a change in the score, rather than stopping at a blanket "greed" or "fear" label as the endpoint of analysis.</p>
+<ul>
+<li>The Fear and Greed Index is a composite statistical metric built from weighted dimensions, not directly measured objective sentiment data.</li>
+<li>Dimension selection, weighting, and normalization are all subjective design decisions — different platforms can produce different scores.</li>
+<li>Understanding the actual composition lets you identify which dimension drives a score change, rather than stopping at a blanket "greed/fear" label.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: What Do Actual Fear and Greed Index Readings Look Like</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real historical data captured via Alternative.me's public API (api.alternative.me/fng) during verification in September 2026: the latest reading was 74, classified "Greed." The preceding 9 consecutive daily readings, in reverse chronological order, were 65, 63, 69, 62, 69, 68, 73, 71, 65 — all falling within the 62-74 range, and all likewise classified "Greed." In other words, over this 10-day window the index showed no meaningful pullback into the "Fear" range; the sentiment reading stayed consistently in a moderately-strong greed level, with a swing of no more than 12 points. These figures can be re-verified in real time via Alternative.me's public API, and update daily.</p>
+</div>
+<p>This dataset reveals two points worth noting. First, the relatively stable 10-day range (62-74) indicates the underlying dimensions driving the index (volatility, momentum, social buzz, etc.) didn't shift dramatically over this short window. If a report suddenly used language like "market sentiment shifted sharply" to describe a single day's reading during this period, it's worth checking whether that reading actually deviated meaningfully from the recent range, or whether normal in-range fluctuation was simply being over-interpreted. Second, all 10 days' readings fell within the single "Greed" classification bucket, showing that in practice a single text label can span a fairly wide numeric range for this index (typically 0-24 Extreme Fear, 25-49 Fear, 50 Neutral, 51-74 Greed, 75-100 Extreme Greed) — the "Greed" label alone spans 51 to 74, and a reading of 62 versus 74 still represents a meaningfully different intensity despite sharing the same label. Researchers shouldn't look only at the text classification, but at the specific number itself.</p>
+<ul>
+<li>The example 10-day dataset shows the index stable in the 62-74 range, all classified "Greed," with no sharp shift into the "Fear" range.</li>
+<li>When a report describes a single day's reading as a "dramatic sentiment shift," check whether it actually deviated meaningfully from the recent historical range.</li>
+<li>A single text classification (like "Greed") can span a fairly wide numeric range — verification should focus on the specific number, not just the label.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Check the Specific Dimensions and Weight Allocation</h2>
+<p>The first step in verifying whether a Fear and Greed Index is credible is finding the publisher's publicly documented methodology and checking each claimed dimension and weight percentage. Using one of the industry's earlier, widely-cited methodologies as an example, the dimensions it has historically used include: Volatility, typically weighted 20%-25%, measuring whether current price volatility deviates significantly from its recent historical average; Market Momentum/Volume, typically also weighted 20%-25%, measuring how far recent volume and price momentum deviate from a historical baseline; Social Media, measuring the change in discussion volume and engagement rate for specific hashtags on social platforms; Dominance (Bitcoin's share of total market cap), reflecting whether capital is rotating from Bitcoin into altcoins (a rising altcoin share is sometimes read as rising speculative sentiment); and Trends, measuring changes in search-term volume related to panic. Researchers should check whether the specific version they're citing still uses these dimensions, and whether the weight percentages match earlier versions, because this kind of methodology isn't static — it has been adjusted multiple times historically (for example, a market survey dimension that was originally included was later removed due to low response rates).</p>
+<p>If a publisher doesn't disclose specific weight percentages, or only gives a vague list of dimensions without explaining how they're weighted, researchers should treat that index's credibility with some skepticism — an index willing to publish its full methodology and open itself to third-party scrutiny is generally more trustworthy than one that publishes only the final score while refusing to explain the calculation.</p>
+<ul>
+<li>The first step in verifying an index's credibility is finding the publisher's documented methodology and checking each dimension and weight individually.</li>
+<li>Common dimensions include volatility, momentum and volume, social media buzz, dominance rotation, and search trends, each typically weighted 10%-25%.</li>
+<li>Methodology can be adjusted over time (e.g., removing a low-response survey dimension); check whether the currently cited version matches earlier versions.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Check for Data Lag and Compare Against Historical Range</h2>
+<p>The Fear and Greed Index's update frequency varies by data source; most platforms update daily, and the raw data collection for some dimensions (social media buzz, for example) can itself lag by hours to a full day. When citing a "current" reading, researchers should verify the specific point in time that number corresponds to, rather than assuming it reflects "right now" — if a report cites this index's reading to describe the "market reaction" following a sharp price move, but that reading's statistical timestamp actually predates the price move itself, the citation is logically unsound: the index can't have "foreseen" a price move that hadn't happened yet.</p>
+<p>A further verification step is to pull the index's time series over the past 3 to 6 months, calculate its historical mean and distribution range, and place the current reading within that range rather than evaluating a single day's number in isolation. Only if the current reading genuinely sits at an extreme end of the historical distribution (say, historically only 5% of trading days had a reading below 20) can you reasonably conclude it's a signal worth paying attention to; if the current reading merely falls in the middle of the normal historical range, researchers should stay cautious even if media headlines use strong language like "panic" or "greed" — it doesn't necessarily mean the market is in an unusual state.</p>
+<ul>
+<li>The index's update carries lag at both the data-source and dimension level; verify the specific statistical timestamp to avoid a "reasoning backward from the outcome" logical error.</li>
+<li>Pull a 3-6 month historical time series, calculate the mean and distribution range, and judge whether the current reading is genuinely at a historical extreme.</li>
+<li>Only a reading genuinely at an extreme end of the historical distribution is worth treating as a notable signal; a mid-range reading warrants caution regardless of headline language.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Cross-Compare Data Sources to Spot Methodology Differences</h2>
+<p>More than one organization publishes a "fear and greed"-style sentiment index, and because different platforms select different dimensions, weights, and data sources, the score given at the same point in time can differ noticeably — one platform might show "neutral" while another shows "greed." Researchers relying on a single data source risk mistaking a methodology difference for a genuine conflicting signal about market sentiment itself. A more reliable approach is to cross-check at least two or three similar indices from different sources before making an important judgment, and observe whether their direction agrees (even if the specific numbers differ, agreement on the direction of movement suggests the underlying market dynamic shift is real; if the directions themselves diverge, that suggests no single index's reading should be relied on alone as a basis for judgment).</p>
+<p>Researchers should also stay alert to whether an index's publisher has a potential conflict of interest — a sentiment index built in-house by a trading platform or product may, intentionally or not, skew its dimension selection toward a direction that supports its own product narrative (for example, overweighting a dimension that favors its own trading volume). Compared to a product's in-house sentiment index, an independent third-party source that publishes its full methodology and allows free historical re-verification is generally more trustworthy during verification.</p>
+<ul>
+<li>Similar sentiment indices from different platforms can show noticeably different scores at the same time due to methodology differences; don't rely on a single data source.</li>
+<li>Cross-checking directional agreement across multiple sources is more useful for verification than fixating on numeric differences.</li>
+<li>Stay alert to a publisher's potential conflict of interest; prefer independent third-party sources that publish full methodology.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you checked the specific dimensions and weight allocation behind the index, rather than accepting only a blanket 0-100 score? Second, have you verified the specific statistical timestamp of the data, ruling out a "reasoning backward from the outcome" logical error? Third, have you placed the current reading into a 3-6 month historical time series to judge whether it's genuinely at an extreme? Fourth, have you cross-checked at least one other data source's similar index to see whether the direction agrees, and considered whether the publisher has a potential conflict of interest? Only after verifying these four points can you form a relatively objective judgment of what a "sentiment index" is actually telling you, rather than being swayed by a headline like "index drops below 20" or "index breaks above 80." This article discusses verification methodology only, does not draw a directional conclusion about market sentiment at any specific point in time, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: dimensions and weights checked, data timestamp verified, historical range compared, cross-source direction cross-checked.</li>
+<li>Real September 2026 Alternative.me data shows the index stable at 62-74 (Greed) for 10 consecutive days, with no sharp shift.</li>
+<li>This article discusses verification methodology only, does not draw a directional conclusion about market sentiment at any specific point in time, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. A 0-100 Composite Score Is Not Directly Measured "Sentiment"</a></li>
+          <li><a href="#sec-2">2. Real Data: What Do Actual Fear and Greed Index Readings Look Like</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Check the Specific Dimensions and Weight Allocation</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Check for Data Lag and Compare Against Historical Range</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Cross-Compare Data Sources to Spot Methodology Differences</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://alternative.me/crypto/fear-and-greed-index/" target="_blank" rel="noopener">Alternative.me Fear and Greed Index Page</a>: source of this article's example historical data, can be used to check real-time readings and historical trends</li>
+            <li><a href="https://coinmarketcap.com/charts/fear-and-greed-index/" target="_blank" rel="noopener">CoinMarketCap Fear and Greed Index</a>: usable to cross-compare whether a similar index from another source shows an agreeing reading</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/btc-options-put-call-ratio-verification-guide.html">BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</a></li>
+          <li><a href="/en/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT Spread Verification: How Much the "1:1" Swap Really Costs in Spread and Slippage</a></li>
+          <li><a href="/en/research/market/open-interest-concentration-verification-guide.html">Perpetual Open Interest Verification: Is a Spiking OI Real Demand or Stacked Leverage</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</a></li>
+          <li><a href="/en/research/market/perpetual-funding-manipulation-verification.html">Is the Funding Rate Being Skewed: Verifying Snapshot Arbitrage Traces</a></li>
+          <li><a href="/en/research/basics/exchange-soc2-audit-scope-verification-guide.html">Exchange SOC 2 Audit Verification: What Does That "Passed Security Audit" Report Actually Cover</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=afac08d9"></script>
+</body>
+</html>
