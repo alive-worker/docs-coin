@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched - Crypto Research Notes</title>
+  <meta name="description" content="When a DAO governance proposal passes, media coverage often uses phrasing like 'approved by community vote,' but real voting data typically shows only a few dozen unique addresses participated, while their token-weighted voting power can total millions of tokens. Using real ENS DAO proposal data pulled live from Snapshot's public GraphQL API, this guide breaks down how to verify the gap between voter count and voting power, and what a quorum threshold of zero actually means. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-voter-count-voting-power-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-voter-count-voting-power-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched - Crypto Research Notes">
+  <meta property="og:description" content="When a DAO governance proposal passes, media coverage often uses phrasing like 'approved by community vote,' but real voting data typically shows only a few dozen unique addresses participated, while their token-weighted voting power can total millions of tokens. Using real ENS DAO proposal data pulled live from Snapshot's public GraphQL API, this guide breaks down how to verify the gap between voter count and voting power, and what a quorum threshold of zero actually means. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-05T14:20:32+08:00">
+  <meta property="article:modified_time" content="2026-09-05T14:20:32+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched - Crypto Research Notes">
+  <meta name="twitter:description" content="Real DAO voting data shows voter count and voting power badly mismatched. A real Snapshot data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-voter-count-voting-power-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DAO Voter Count vs Voting Power Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-voter-count-voting-power-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-dao-voter-count-voting-power-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","DAO voting power verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-voter-count-voting-power-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html", "name": "DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched", "item": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#article", "headline": "DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched", "description": "Real DAO voting data typically shows only a few dozen unique addresses participating, while their token-weighted voting power can total millions of tokens. A real Snapshot data breakdown of voting power concentration and quorum settings. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["DAO voting power verification","governance participation verification","quorum verification","token-weighted vote concentration","off-chain vote verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-05T14:20:32+08:00", "dateModified": "2026-09-05T14:20:32+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-voter-count-voting-power-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/dao-voter-count-voting-power-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched</h1>
+        <p class="article-summary">After a DAO governance proposal passes, media and project announcements often use phrasing like "approved by an overwhelming community vote," creating an impression that a large number of token holders participated in the decision. But laying out real off-chain voting data (governance votes hosted on platforms like Snapshot, for example) tells a different story: the number of unique wallet addresses that actually voted is typically only a few dozen, and the token-weighted "voting power" produced by aggregating those few dozen addresses can total millions or even tens of millions of tokens. The "community vote" described in media coverage may, in substance, just be the combined opinion of a few dozen large holder addresses. Using real ENS DAO proposal data pulled live from Snapshot's public GraphQL API, this guide breaks down how to verify the gap between voter count and voting power, what a quorum threshold of zero means, and how to assess a governance vote's real representativeness. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-05T14:20:32+08:00">2026-09-05 14:20:32</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dao-voter-count-voting-power-verification-guide-en.svg" alt="DAO Voter Count vs Voting Power Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check the number of unique addresses (votes) that participated in a governance vote, rather than accepting a conclusory phrase like "approved" or "overwhelmingly approved"</li>
+            <li><span class="article-verify-check">✓</span>Compare the voter count against the total weighted voting power (scores_total) to assess whether the two are badly mismatched</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the DAO has set a quorum (minimum participation threshold), and what a zero or extremely low threshold implies</li>
+            <li><span class="article-verify-check">✓</span>Check each top address's share of total voting weight to judge whether a handful of whales could unilaterally decide the proposal's outcome</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "Approved by Community Vote" Might Represent Only a Few Dozen Addresses</h2>
+<p>The idealized narrative of DAO governance is "token holders jointly participating in decisions," but the vast majority of DAOs use token-weighted voting: each address's voting power is proportional to how much governance token it holds, not one-address-one-vote. There's nothing inherently wrong with this design — it reflects a logic of "stakeholders participating in proportion to their stake" — but it produces a consequence that's easy to overlook: even if only a few dozen addresses participate in a vote, as long as a handful of them hold extremely large token balances (early investors, the team treasury, a large market maker, or a fund), that vote can still present the appearance of "overwhelmingly approved" or "passed by a landslide" in aggregate-weight terms, while the number of independent entities actually involved in the decision could be surprisingly small.</p>
+<p>When researchers encounter phrasing like "approved by community vote," their first instinct should be to verify two independent numbers: the number of unique addresses that voted, and the total weighted voting power those addresses represent. If there's a stark gap between these two (a few dozen addresses corresponding to millions of tokens in weight, for example), it indicates the vote's "community" representativeness comes mainly from the capital scale of a very small number of whales, rather than broad-based participation from token holders — and the actual meaning of the word "community" in a report deserves a question mark.</p>
+<ul>
+<li>The vast majority of DAOs use token-weighted voting rather than one-address-one-vote, with weight proportional to token holdings.</li>
+<li>Even with very few participating addresses, if a handful hold extremely large balances, the aggregate voting power can still present the appearance of "overwhelming approval."</li>
+<li>When verifying phrasing like "approved by community vote," check both the number of unique addresses and the total weighted voting power separately, rather than accepting the conclusion alone.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: What Were the Actual Voter Count and Voting Power for Real ENS DAO Proposals</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real data for the ENS DAO's (ens.eth space) 5 most recently closed proposals, captured via Snapshot's public GraphQL API (hub.snapshot.org/graphql) during verification in September 2026: proposal "[7.1] [Social] SPP3: Marketplace RFP" — 67 addresses voted, total weighted voting power approximately 1.415 million. Proposal "[6.47] [Social] Election of the New ENS DAO Security Council" — 50 addresses voted, total weighted power approximately 1.757 million. Proposal "Term 7 Meta-Governance Working Group Election" — 60 addresses voted, total weighted power approximately 1.445 million. Proposal "[6.46] [Social] 2026 Endowment Investment Policy Update" — 63 addresses voted, total weighted power approximately 1.194 million. Proposal "[6.45][Social] Renewal of the Security Council" — 73 addresses voted, total weighted power approximately 4.746 million. Across all 5 proposals, the quorum field returned by Snapshot showed 0. These figures can be re-verified in real time via Snapshot's public API, and specific values will continue to change as new proposals are created.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, the number of unique voting addresses stayed within a narrow 50-to-73 range throughout — even for a proposal as core to DAO governance structure as "Security Council renewal," only 73 unique entities actually voted, far below what most people would intuitively picture as the scale of a "community vote." Second, the ratio of total voting power to address count varied widely — the "Security Council renewal" proposal saw 73 addresses corresponding to about 4.746 million in power, an average of roughly 65,000 per address, while the "Investment policy update" proposal saw 63 addresses corresponding to about 1.194 million, an average of roughly 19,000 — a difference of more than 3x. This shows that the token holdings of participants attracted to different proposals vary enormously, and no single metric — either "participant count" or "total voting power" alone — can fully capture a vote's real representativeness.</p>
+<ul>
+<li>Across 5 consecutive September 2026 ENS DAO proposals, the number of unique voting addresses stayed in a narrow 50-73 range.</li>
+<li>Total voting power ranged from roughly 1.19 million to 4.75 million — over a 3x difference within a similar address-count range.</li>
+<li>All 5 proposals showed a quorum field of 0, meaning no minimum participant count or voting-power threshold was set.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: What Does a Quorum of Zero or Extremely Low Actually Mean</h2>
+<p>Quorum (a minimum participant count or voting-power threshold) is a common governance design meant to prevent a tiny minority from unilaterally manipulating an outcome — a vote's result is only considered valid once total participating weight reaches some predetermined threshold. If a researcher finds that a proposal on a DAO governance platform shows a quorum field of 0, it means no minimum participation threshold was set for that vote at all: even if only a single address participates, as long as a result is computed under the weighting rule, that vote is treated as a system-level "valid pass" or "valid rejection." This isn't necessarily malicious design — some DAOs leave quorum blank at the proposal-template level, or don't enforce a threshold for "Social" proposals (typically soft consensus-gauging votes that don't control funds or upgrade contracts), reserving a dedicated quorum only for "on-chain execution" proposals that involve treasury spending or contract upgrades.</p>
+<p>Researchers should verify exactly which type of proposal has a quorum of 0. If it's a Social proposal that doesn't control actual funds and merely gauges community sentiment, a zero quorum has relatively limited impact. But if a proposal that directly decides treasury spending, contract parameter changes, or even permission changes — high-risk decisions — also lacks a quorum, it means that, in theory, a small cluster of whale addresses could unilaterally push through a major decision while most of the community is unaware or not participating. This is a risk point worth focusing on when verifying a DAO's governance health.</p>
+<ul>
+<li>A quorum of 0 means no minimum participation threshold was set for that vote; participation of any scale could be treated as a "valid" result.</li>
+<li>Distinguish proposal types: for Social proposals that don't control actual funds, a zero quorum has relatively limited impact.</li>
+<li>If high-risk proposals involving fund spending or contract upgrades also lack a quorum, that's a key risk signal in verifying DAO governance health.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Check the Voting-Power Share of Top Addresses</h2>
+<p>Once total voting power and the number of participating addresses are known, the next verification step is checking the distribution of that power — how much of the total each of the top few addresses contributed. Most governance voting platforms' public data interfaces support querying a detailed list of individual votes for a proposal, including each address's specific voting power (vp). Researchers can sort this list by weight descending and calculate what percentage of total weight the top 1, top 3, and top 5 addresses represent. If the single top address alone accounts for more than 30% of total weight, or the top 3 addresses combined exceed 50%, it means that vote's final outcome is substantively driven by a very small number of whale addresses — the remaining several dozen participating addresses, even if they all voted the opposite way, would struggle to change the result. In this scenario, the governance legitimacy of "the vote passed" is worth further scrutiny.</p>
+<p>Going further, researchers can also trace the top addresses' historical voting record and on-chain labels to determine whether they're team/foundation-affiliated addresses, early investment funds, or genuinely independent community whales. If the top weight pushing a proposal through happens to come from addresses with a financial relationship to the proposal's sponsor, then even if the voting process itself is fully transparent and compliant, that decision's independence and fairness deserve a question mark — and researchers should disclose this relationship clearly before citing or reporting a conclusion like "approved by community vote."</p>
+<ul>
+<li>Query the detailed address list for a specific vote and calculate the top 1-5 addresses' respective weight shares to judge whether the result is dominated by a very small number of addresses.</li>
+<li>A high combined top-address share (e.g., top 3 exceeding 50%) means most participants' votes couldn't substantively affect the final outcome.</li>
+<li>Trace whether top addresses have a financial relationship with the proposal's sponsor — this affects the independence of the decision and should be disclosed clearly during verification.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: The Permission Gap Between Off-Chain Voting (Snapshot-Style) and On-Chain Execution</h2>
+<p>Another layer of DAO governance verification that's easily overlooked is a potential permission gap between where a vote happens and the final execution action. Off-chain voting platforms like Snapshot don't have vote records that directly trigger any on-chain action by themselves — votes are simply recorded in Snapshot's own data store, and the "execution" step typically depends on a separate multisig wallet or timelock contract, with an authorized address manually initiating an on-chain transaction to implement the result after seeing the outcome. This means there's, in theory, a gap: even if the voting process itself is fully public and transparent, the multisig signers responsible for execution could choose not to execute, delay execution, or even refuse to execute an already "approved" proposal for other reasons — and that decision-making power doesn't rest with everyone who voted, but is concentrated in the hands of a small number of multisig signers.</p>
+<p>Researchers should verify exactly which mechanism a DAO's governance process relies on to connect a vote's result to actual execution — a fully automated on-chain governance contract (where the vote result directly triggers execution with no manual intervention), or manual multisig execution (which carries the possibility of signers refusing or delaying execution). For the latter model, even if all the voting-data verification in Sections 2-4 checks out, that alone can't fully guarantee that "the voting result" equals "the result that will actually be executed" — this is a separate, independently verifiable risk point in the DAO governance chain.</p>
+<ul>
+<li>Off-chain voting platforms (like Snapshot) don't have vote records that directly trigger on-chain action; execution depends on a separate multisig or timelock mechanism.</li>
+<li>Multisig signers responsible for execution can, in theory, decline or delay executing an already "approved" proposal, concentrating execution power in a small group.</li>
+<li>Verify whether a governance process is fully automated on-chain execution or relies on manual multisig — the latter carries the risk of a disconnect between the vote result and actual execution.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you verified the number of unique addresses that participated in a governance vote, rather than accepting a conclusory phrase like "approved by community vote"? Second, have you compared voter count against total weighted voting power to judge whether the two are badly mismatched? Third, have you confirmed the proposal's quorum setting, and what a zero or extremely low quorum means given that proposal's type and risk level? Fourth, have you checked each top voting address's share of total weight, and whether the vote's outcome relies on automated on-chain execution or manual multisig execution? Only after verifying these four points can you form a relatively objective judgment of a DAO governance vote's real representativeness and decision-making independence, rather than being swayed directly by phrasing like "approved by an overwhelming vote." This article discusses verification methodology only, does not draw a conclusory evaluation of any specific DAO's governance health, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: unique address count verified, address count compared against total voting power, quorum setting confirmed, execution mechanism checked for automated on-chain execution.</li>
+<li>Real September 2026 Snapshot data shows 5 consecutive ENS DAO proposals with voter counts stable at 50-73 addresses, all with quorum of 0.</li>
+<li>This article discusses verification methodology only, does not evaluate any specific DAO's governance quality, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. "Approved by Community Vote" Might Represent Only a Few Dozen Addresses</a></li>
+          <li><a href="#sec-2">2. Real Data: What Were the Actual Voter Count and Voting Power for Real ENS DAO Proposals</a></li>
+          <li><a href="#sec-3">3. Verification Method One: What Does a Quorum of Zero or Extremely Low Actually Mean</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Check the Voting-Power Share of Top Addresses</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: The Permission Gap Between Off-Chain Voting (Snapshot-Style) and On-Chain Execution</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://snapshot.box/#/s:ens.eth" target="_blank" rel="noopener">Snapshot ENS DAO Governance Space</a>: source of this article's example voting data, can be used to check real-time proposal voter counts, weight distribution, and quorum settings</li>
+            <li><a href="https://docs.snapshot.box/tools/api" target="_blank" rel="noopener">Snapshot Public GraphQL API Documentation</a>: usable to independently pull proposal and vote data for any DAO governance space for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/multisig-signer-key-concentration-verification-guide.html">Multisig Signer Concentration Verification: Are 5 Signing Addresses Really Controlled by One Person</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Vote Snapshot Manipulation Verification: Why the Token Count Used for Voting Only Counts at "That One" Block</a></li>
+          <li><a href="/en/research/governance/snapshot-offchain-vote-execution-verification-guide.html">Off-Chain Vote Verification: Who Executes a Snapshot Result</a></li>
+          <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Verification: Signers Change, Timelock Gets Bypassed</a></li>
+          <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Channel Verification: How Easily Can a Timelock-Skipping "Emergency Execution" Be Triggered</a></li>
+          <li><a href="/en/research/governance/dao-grant-milestone-release-verification-guide.html">DAO Grant Milestone Verification: The Contract Says "Phased Release," But It Landed On-Chain All at Once</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=aa6c6cae"></script>
+</body>
+</html>

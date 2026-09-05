@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'crypto-fear-greed-index-methodology-verification-guide',
-  publishedISO: '2026-09-04T16:42:06+08:00',
-  tagColor: 'sky',
-  topic: 'basics',
+  slug: 'dao-voter-count-voting-power-verification-guide',
+  publishedISO: '2026-09-05T14:20:32+08:00',
+  tagColor: 'plum',
+  topic: 'governance',
 
   zh: {
-    h1: '加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的',
-    tagLabel: '情绪指数核验',
-    cardDesc: '恐惧贪婪指数的构成维度、权重分配与数据源差异常被媒体简化处理，本文用Alternative.me真实历史数据拆解核验方法。',
+    h1: 'DAO治理投票核验：投票人数与投票权重严重不成比例，这算「去中心化决策」吗',
+    tagLabel: 'DAO投票核验',
+    cardDesc: '真实DAO投票数据显示参与地址数往往只有几十个，加权投票权重却可能达数百万代币，本文用Snapshot真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted',
-    tagLabel: 'Sentiment Index Verification',
-    cardDesc: 'The index\'s dimensions, weighting, and cross-source differences are often oversimplified by media coverage. A real-data breakdown using Alternative.me\'s public API.',
+    h1: 'DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched',
+    tagLabel: 'DAO Vote Verification',
+    cardDesc: 'Real DAO voting data typically shows only a few dozen unique addresses participating, while token-weighted voting power can total millions. A real-data breakdown using Snapshot\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'crypto-fear-greed-index-methodology-verification-guide',
     'btc-options-put-call-ratio-verification-guide',
     'usdc-usdt-trading-pair-spread-verification-guide',
     'chain-tvl-concentration-verification-guide',
