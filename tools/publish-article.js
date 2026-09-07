@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dao-voter-count-voting-power-verification-guide',
-  publishedISO: '2026-09-05T14:20:32+08:00',
-  tagColor: 'plum',
-  topic: 'governance',
+  slug: 'cross-exchange-perpetual-funding-rate-divergence-verification-guide',
+  publishedISO: '2026-09-07T15:25:23+08:00',
+  tagColor: 'coral',
+  topic: 'market',
 
   zh: {
-    h1: 'DAO治理投票核验：投票人数与投票权重严重不成比例，这算「去中心化决策」吗',
-    tagLabel: 'DAO投票核验',
-    cardDesc: '真实DAO投票数据显示参与地址数往往只有几十个，加权投票权重却可能达数百万代币，本文用Snapshot真实数据拆解核验方法。',
+    h1: '跨交易所永续合约资金费率差异核验：同一份BTC合约，费率能差多少',
+    tagLabel: '资金费率套利核验',
+    cardDesc: '同一底层资产的永续合约资金费率理论上应趋同，但真实数据显示可相差超过200倍。本文用CoinGecko真实数据拆解核验方法与套利执行风险。',
   },
   en: {
-    h1: 'DAO Governance Vote Verification: Voter Count and Voting Power Are Badly Mismatched',
-    tagLabel: 'DAO Vote Verification',
-    cardDesc: 'Real DAO voting data typically shows only a few dozen unique addresses participating, while token-weighted voting power can total millions. A real-data breakdown using Snapshot\'s public API.',
+    h1: 'Cross-Exchange Perpetual Funding Rate Divergence Verification: How Much Can the Same BTC Contract\'s Rate Really Differ',
+    tagLabel: 'Funding Rate Arbitrage Verification',
+    cardDesc: 'Funding rates on the same underlying should theoretically converge across exchanges, but real data shows over 200x divergence. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'dao-voter-count-voting-power-verification-guide',
     'crypto-fear-greed-index-methodology-verification-guide',
     'btc-options-put-call-ratio-verification-guide',
     'usdc-usdt-trading-pair-spread-verification-guide',
