@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'cross-exchange-perpetual-funding-rate-divergence-verification-guide',
-  publishedISO: '2026-09-07T15:25:23+08:00',
-  tagColor: 'coral',
-  topic: 'market',
+  slug: 'stablecoin-market-cap-dominance-verification-guide',
+  publishedISO: '2026-09-08T09:17:58+08:00',
+  tagColor: 'jade',
+  topic: 'basics',
 
   zh: {
-    h1: '跨交易所永续合约资金费率差异核验：同一份BTC合约，费率能差多少',
-    tagLabel: '资金费率套利核验',
-    cardDesc: '同一底层资产的永续合约资金费率理论上应趋同，但真实数据显示可相差超过200倍。本文用CoinGecko真实数据拆解核验方法与套利执行风险。',
+    h1: '稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱',
+    tagLabel: '市值占比核验',
+    cardDesc: '稳定币占比常被当作场外待入场资金信号，但受分母效应和抵押机制差异影响。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Cross-Exchange Perpetual Funding Rate Divergence Verification: How Much Can the Same BTC Contract\'s Rate Really Differ',
-    tagLabel: 'Funding Rate Arbitrage Verification',
-    cardDesc: 'Funding rates on the same underlying should theoretically converge across exchanges, but real data shows over 200x divergence. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'Stablecoin Market Cap Dominance Verification: What the "Sidelined Capital" Signal Actually Measures',
+    tagLabel: 'Dominance Verification',
+    cardDesc: 'Stablecoin dominance is often read as a sidelined-capital signal, but it\'s shaped by denominator effects and collateral-mechanism differences. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'cross-exchange-perpetual-funding-rate-divergence-verification-guide',
     'dao-voter-count-voting-power-verification-guide',
     'crypto-fear-greed-index-methodology-verification-guide',
     'btc-options-put-call-ratio-verification-guide',

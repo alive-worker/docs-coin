@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 - 加密货币研究</title>
+  <meta name="description" content="稳定币占加密货币总市值的比例，经常被媒体和分析师当作「场外待入场资金」规模的代理指标——占比上升被解读为看涨信号，占比下降被解读为资金离场。但这个指标的计算口径本身存在多个容易被忽略的陷阱。本文用CoinGecko公开抓取的真实市值数据，拆解稳定币占比指标的构成、算法稳定币与法币抵押稳定币的口径差异，以及如何核验这个数字是否真的代表可入场资金。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 - 加密货币研究">
+  <meta property="og:description" content="稳定币占加密货币总市值的比例，经常被媒体和分析师当作「场外待入场资金」规模的代理指标——占比上升被解读为看涨信号，占比下降被解读为资金离场。但这个指标的计算口径本身存在多个容易被忽略的陷阱。本文用CoinGecko公开抓取的真实市值数据，拆解稳定币占比指标的构成、算法稳定币与法币抵押稳定币的口径差异，以及如何核验这个数字是否真的代表可入场资金。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-08T09:17:58+08:00">
+  <meta property="article:modified_time" content="2026-09-08T09:17:58+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 - 加密货币研究">
+  <meta name="twitter:description" content="稳定币占比常被当作场外资金信号，本文用真实数据拆解计算口径的陷阱与核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-stablecoin-market-cap-dominance-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-stablecoin-market-cap-dominance-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-stablecoin-market-cap-dominance-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","稳定币市值占比核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-stablecoin-market-cap-dominance-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html", "name": "稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱", "item": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#article", "headline": "稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱", "description": "稳定币占加密总市值的比例常被当作场外待入场资金规模的代理指标，但计算口径本身存在多个容易被忽略的陷阱。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["稳定币市值占比核验","场外资金信号核验","算法稳定币口径差异","流通供给核验","市场情绪代理指标核验"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-08T09:17:58+08:00", "dateModified": "2026-09-08T09:17:58+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/basics/stablecoin-market-cap-dominance-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱</h1>
+        <p class="article-summary">「稳定币市值占比升至10%，场外待入场资金充裕」——这类分析在加密媒体和研究报告中经常出现，把稳定币占加密货币总市值的比例当作一个可以直接解读市场情绪的代理指标：占比上升，意味着有资金从波动性资产撤出、暂时停泊在稳定币里等待时机；占比下降，意味着这部分资金已经重新流入比特币或其他代币。这个叙事听起来很直观，但稳定币市值占比这个指标的计算口径本身有若干容易被忽略的问题，会显著影响这个"入场资金"解读是否成立。本文用CoinGecko公开抓取的真实市值数据，拆解稳定币占比指标的具体计算方式、算法稳定币与法币抵押稳定币在这个指标里应当被如何区别对待，以及核验这个数字是否真的能代表"待入场资金"的具体方法。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-08T09:17:58+08:00">2026-09-08 09:17:58</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-stablecoin-market-cap-dominance-verification-guide.svg" alt="稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>用公开数据平台核实稳定币市值占比的真实数值与计算口径，而非只采信一个孤立的百分比数字</li>
+            <li><span class="article-verify-check">✓</span>区分不同稳定币的抵押机制（法币抵押、加密资产超额抵押、算法稳定），判断其市值是否真正代表"随时可动用的场外资金"</li>
+            <li><span class="article-verify-check">✓</span>核实统计口径是否包含交易所内部账户余额与已被协议锁定、无法自由调用的稳定币供给</li>
+            <li><span class="article-verify-check">✓</span>把稳定币占比的变化趋势与其他独立指标（交易所净流入流出、链上活跃地址）交叉验证，而非单独依赖这一个数字</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "稳定币占比=待入场资金"这个叙事，隐含了什么假设</h2>
+<p>稳定币市值占比被当作场外资金指标的叙事，隐含一个核心假设：稳定币的持有者是"正在观望、随时准备买入波动性资产"的潜在买家，稳定币市值的增减直接反映这部分潜在买盘的规模变化。这个假设在稳定币刚诞生、主要用途确实局限于"法币与加密资产之间的过渡工具"的早期阶段可能更成立；但随着稳定币被广泛用于DeFi借贷抵押品、跨境支付结算、企业司库资产配置、交易所做市商保证金等多种非"待入场"用途，稳定币市值增长的原因早已不再单一。</p>
+<p>更准确地说，稳定币市值占比更接近于"加密生态系统内以美元计价的资产占比"，而非专门衡量"准备买入波动性资产的资金池"。这个区别看似细微，但直接决定了这个指标能否被用作一个可靠的市场情绪信号——如果稳定币市值增长主要来自DeFi协议内部的抵押品扩张或跨境支付需求增加，而非投机者主动把比特币卖出换成稳定币观望，那么占比上升就不应当被简单解读为"看跌情绪升温"或"资金正在等待抄底"。</p>
+<ul>
+<li>"稳定币占比=待入场资金"的叙事，假设持有者是随时准备买入波动性资产的潜在买家。</li>
+<li>稳定币现今被广泛用于DeFi抵押品、跨境支付、企业司库等非"待入场"用途，单一叙事已不完整。</li>
+<li>更准确的理解是"加密生态内以美元计价的资产占比"，而非专门衡量待入场资金池的指标。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：真实的加密总市值与稳定币占比构成</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过CoinGecko公开API（api.coingecko.com/api/v3/global）实测抓取的真实全球市场数据：加密货币总市值约2.685万亿美元，覆盖19,671种活跃加密货币、1,499个市场。其中比特币市值占比约59.12%，以太坊市值占比约11.30%，USDT市值占比约6.81%，USDC市值占比约2.76%——仅这两种主要稳定币合计占总市值约9.57%，24小时全网成交量约730亿美元。以上数字可通过CoinGecko公开API实时复核，数值会随市场持续波动。</p>
+</div>
+<p>这份数据揭示了两个值得深挖的关键点。第一，稳定币占比这个指标本身是分母敏感的——总市值2.685万亿美元里，比特币一家就占了近六成，这意味着稳定币占比的涨跌，既可能来自稳定币市值本身的变化，也可能来自比特币或其他主流资产价格波动导致的分母变化，即便稳定币的实际流通量完全没变，只要比特币价格大幅下跌，稳定币占比也会被动上升，这种"分母效应"如果不加区分，很容易被误读为"资金正在流入稳定币"。第二，USDT和USDC两者的占比构成也有区别，USDT规模是USDC的两倍以上，两者在储备构成、赎回机制、监管合规程度上均有差异，把它们简单加总成一个"稳定币占比"数字，会掩盖掉不同稳定币背后不同的信用风险画像。</p>
+<ul>
+<li>2026年9月数据显示稳定币（USDT+USDC）合计占加密总市值约9.57%，比特币占比高达59.12%。</li>
+<li>稳定币占比存在"分母效应"：比特币等主流资产价格下跌会被动推高稳定币占比，即便稳定币流通量未变。</li>
+<li>不同稳定币（USDT vs USDC）在储备构成、赎回机制上有实质差异，简单加总的占比数字会掩盖各自的信用风险画像。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：排除"分母效应"，单独核实稳定币流通量的绝对变化</h2>
+<p>核验稳定币占比变化是否真的反映资金流向之前，第一步是把这个百分比拆解为分子（稳定币市值）和分母（加密总市值）两部分单独观察，而不是只看合并后的比例。具体做法是：分别记录同一时间段内稳定币总市值的绝对值变化（例如USDT+USDC的市值从多少美元变化到多少美元）和加密总市值的绝对值变化，如果稳定币市值绝对值本身没有明显增长，只是因为总市值分母因主流币价格下跌而缩水，导致占比被动上升，这种情况下不应解读为"有新增资金进入稳定币观望"，而应理解为"存量稳定币在总盘子缩水后占比自然放大"，两者对市场情绪的含义完全不同。</p>
+<p>只有当稳定币市值的绝对值本身出现明显、持续的净增长（意味着确实有新的法币资金通过铸造渠道换成了稳定币，或有资金从波动性资产实际兑换为稳定币），才更接近传统叙事里"资金入场稳定币观望"的原始含义。核验者应当查询主流稳定币发行方公布的历史流通供给数据（多数稳定币的链上合约都可以直接查询historical supply），把这条绝对值曲线与总市值曲线分开画出来对比，才能判断占比变化的真实驱动力是分子还是分母。</p>
+<ul>
+<li>应把稳定币占比拆解为分子（稳定币市值绝对值）和分母（加密总市值）分别观察，而非只看合并比例。</li>
+<li>分母因主流币价格下跌而缩水导致的占比上升，不应解读为"新增资金流入观望"。</li>
+<li>只有稳定币市值绝对值本身持续净增长，才更接近"资金入场稳定币观望"的原始叙事含义。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：区分抵押机制，判断市值是否代表"随时可动用"的资金</h2>
+<p>并非所有计入"稳定币市值"统计口径的代币，都具备完全相同的"随时可赎回、可自由动用"属性。法币抵押型稳定币（如USDT、USDC）理论上1:1锚定银行账户里的法币或等价资产，赎回路径相对直接；加密资产超额抵押型稳定币（如DAI）的市值背后是锁定在智能合约里的加密资产抵押品，其稳定性依赖抵押品价格与清算机制的正常运作，在极端行情下可能面临抵押品价值缩水、清算拥堵等风险，赎回体验和法币抵押型有本质区别；算法稳定币或部分抵押的混合模型稳定币，历史上已经出现过多次脱锚甚至清零的案例，其市值在统计意义上被计入"稳定币"分类，但risk特征与前两类完全不同。</p>
+<p>核验者在解读"稳定币占比"这个合并数字时，应当查证其具体的稳定币构成明细，区分不同抵押机制各自占的比例。如果一份分析报告笼统地引用"稳定币总市值"而不区分构成，且这个总量里包含了相当比例的算法稳定币或历史上出现过脱锚事件的品种，这个数字作为"安全等待资金"的代理指标的可信度就应该打折扣——因为这部分资金的持有者可能正承受着比波动性资产更复杂的尾部风险，而非单纯地在场边观望。</p>
+<ul>
+<li>法币抵押、加密资产超额抵押、算法稳定币三类稳定币的赎回路径和风险特征本质不同，不应笼统合并看待。</li>
+<li>算法稳定币或历史上出现过脱锚事件的品种，其市值计入"稳定币占比"会掩盖真实的尾部风险。</li>
+<li>核验时应查证稳定币占比的具体构成明细，而非只引用一个合并后的总量数字。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：与独立指标交叉验证，而非单独依赖占比数字</h2>
+<p>即便完成了前两节的核验，稳定币占比本身依然只是一个间接的代理指标，最稳妥的核验方式是把它和几个相对独立的数据源做交叉验证。可交叉参考的指标包括：交易所稳定币净流入流出数据（部分链上数据平台会统计交易所地址的稳定币净转入/转出量，这比"总市值占比"更直接地反映资金是否真的在向交易所方向移动，为潜在买入做准备）；DeFi借贷协议里稳定币的存款与借款利率变化（如果稳定币借贷利率大幅飙升，说明市场对稳定币的即时需求在上升，可能与"观望买入"的叙事相符）；以及稳定币在中心化交易所内的账户余额占比变化（区别于链上钱包持有的稳定币，交易所内账户余额的稳定币更接近可以立即用于交易的"待入场"资金）。</p>
+<p>如果这几个独立指标与稳定币总市值占比的变化方向一致，说明"入场资金"这个解读有更强的交叉验证支撑；如果稳定币总市值占比上升，但交易所净流入、借贷利率等指标并未同步上升，说明占比的变化更可能来自本文第3节讨论的分母效应或非投机性用途扩张，而非真实的待入场资金增加。核验者不应该把稳定币占比当作可以独立使用的情绪指标，而应把它作为多个交叉验证信号中的一个输入。</p>
+<ul>
+<li>应把稳定币占比与交易所净流入流出、DeFi借贷利率、交易所内账户余额占比等独立指标交叉验证。</li>
+<li>多个独立指标方向一致，才能为"入场资金"这一解读提供更强的支撑证据。</li>
+<li>稳定币占比不应作为独立使用的情绪指标，而应作为交叉验证体系中的一个输入维度。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否已经把稳定币占比拆解为分子（稳定币市值绝对值）和分母（加密总市值）分别观察，排除单纯的分母效应？其二，是否查证过占比数字里稳定币的具体构成明细，区分法币抵押、加密资产抵押与算法稳定币各自的风险特征？其三，是否核实过统计口径是否包含被DeFi协议锁定、无法自由动用的稳定币供给？其四，是否用交易所净流入流出、借贷利率等独立指标交叉验证过占比变化的方向，而非单独依赖这一个数字？把这四个问题逐一核实之后，才能对"稳定币占比"这个常见的场外资金代理指标形成相对客观的判断，而不是把一个受分母效应和构成差异影响的百分比，直接等同于市场情绪的方向性信号。全文仅讨论核验方法论，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：分子分母是否拆解、稳定币构成明细是否查证、锁定供给是否排除、独立指标是否交叉验证。</li>
+<li>2026年9月真实数据显示USDT+USDC合计占加密总市值约9.57%，比特币占比约59.12%，分母效应显著。</li>
+<li>全文为核验方法论讨论，不构成投资建议，稳定币占比不应作为独立使用的市场情绪信号。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. "稳定币占比=待入场资金"这个叙事，隐含了什么假设</a></li>
+          <li><a href="#sec-2">2. 实测数据：真实的加密总市值与稳定币占比构成</a></li>
+          <li><a href="#sec-3">3. 核验方法一：排除"分母效应"，单独核实稳定币流通量的绝对变化</a></li>
+          <li><a href="#sec-4">4. 核验方法二：区分抵押机制，判断市值是否代表"随时可动用"的资金</a></li>
+          <li><a href="#sec-5">5. 核验方法三：与独立指标交叉验证，而非单独依赖占比数字</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/global-charts" target="_blank" rel="noopener">CoinGecko 全球市场数据页面</a>：本文示例市值占比数据来源，可实时查询稳定币占比与加密总市值构成</li>
+            <li><a href="https://www.coingecko.com/en/api/documentation" target="_blank" rel="noopener">CoinGecko 公开API文档</a>：可用于自行抓取全球市场数据进行核验计算</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/basics/usdt-issuance-reserve-basics.html">USDT发行与储备透明度：如何核实「1:1锚定」的真实性</a></li>
+          <li><a href="/research/governance/stablecoin-peg-mechanism-research-guide.html">稳定币锚定机制研究方法：算法稳定币与抵押型稳定币</a></li>
+          <li><a href="/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT点差核验：所谓的1:1兑换，点差和滑点吃掉了多少</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：所谓多链生态，资金实际集中在几条链</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/market/btc-options-put-call-ratio-verification-guide.html">比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性</a></li>
+          <li><a href="/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html">跨交易所永续合约资金费率差异核验：同一份BTC合约，费率能差多少</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=537e800e"></script>
+</body>
+</html>
