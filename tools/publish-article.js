@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'defi-apy-base-reward-composition-verification-guide',
-  publishedISO: '2026-09-08T14:05:35+08:00',
-  tagColor: 'amber',
-  topic: 'market',
+  slug: 'defi-hack-fund-recovery-rate-verification-guide',
+  publishedISO: '2026-09-08T18:43:42+08:00',
+  tagColor: 'indigo',
+  topic: 'governance',
 
   zh: {
-    h1: 'DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少',
-    tagLabel: 'APY构成核验',
-    cardDesc: 'DeFi协议展示的总APY通常是基础利息与代币奖励两部分加总，可持续性天差地别。本文用DefiLlama真实数据拆解核验方法。',
+    h1: 'DeFi黑客攻击资金追回率核验：「资金已归还」的报道，真实追回比例是多少',
+    tagLabel: '资金追回率核验',
+    cardDesc: '高调追回案例容易造成整体乐观印象，但真实统计数据显示追回率远低于这种叙事暗示的水平。本文用DefiLlama真实数据库拆解核验方法。',
   },
   en: {
-    h1: 'DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards',
-    tagLabel: 'APY Composition Verification',
-    cardDesc: 'A DeFi protocol\'s total APY is usually base interest plus token rewards summed together, with wildly different sustainability. A real-data breakdown using DefiLlama\'s public API.',
+    h1: 'DeFi Hack Fund Recovery Rate Verification: What "Funds Returned" Headlines Actually Mean',
+    tagLabel: 'Fund Recovery Verification',
+    cardDesc: 'High-profile recovery cases create an overly optimistic impression, but real statistics show the overall recovery rate is far lower. A real-data breakdown using DefiLlama\'s public hack database.',
   },
 
   existingSlugsNewestFirst: [
+    'defi-apy-base-reward-composition-verification-guide',
     'stablecoin-market-cap-dominance-verification-guide',
     'cross-exchange-perpetual-funding-rate-divergence-verification-guide',
     'dao-voter-count-voting-power-verification-guide',

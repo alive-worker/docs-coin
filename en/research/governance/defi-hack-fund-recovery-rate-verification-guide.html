@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Hack Fund Recovery Rate Verification: What "Funds Returned" Headlines Actually Mean - Crypto Research Notes</title>
+  <meta name="description" content="Whenever a large DeFi hack occurs, media coverage often follows up with stories like &quot;the hacker agreed to return part of the funds&quot; or &quot;white hats stepped in to help recover the loss,&quot; leaving an impression that most losses eventually get clawed back. But laying out the real recovery data across every recorded hack tells a very different story — the overall recovery rate is far lower than that narrative suggests. Using DefiLlama's public hack-tracking database, this guide breaks down how to verify a specific incident's recovery status, and why isolated high-profile cases shouldn't be used to infer the industry-wide recovery rate. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/defi-hack-fund-recovery-rate-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/defi-hack-fund-recovery-rate-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi Hack Fund Recovery Rate Verification: What &quot;Funds Returned&quot; Headlines Actually Mean - Crypto Research Notes">
+  <meta property="og:description" content="Whenever a large DeFi hack occurs, media coverage often follows up with stories like &quot;the hacker agreed to return part of the funds&quot; or &quot;white hats stepped in to help recover the loss,&quot; leaving an impression that most losses eventually get clawed back. But laying out the real recovery data across every recorded hack tells a very different story — the overall recovery rate is far lower than that narrative suggests. Using DefiLlama's public hack-tracking database, this guide breaks down how to verify a specific incident's recovery status, and why isolated high-profile cases shouldn't be used to infer the industry-wide recovery rate. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-08T18:43:42+08:00">
+  <meta property="article:modified_time" content="2026-09-08T18:43:42+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Hack Fund Recovery Rate Verification: What &quot;Funds Returned&quot; Headlines Actually Mean - Crypto Research Notes">
+  <meta name="twitter:description" content="High-profile recovery cases create an overly optimistic impression. A real hack-database breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-hack-fund-recovery-rate-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Hack Fund Recovery Rate Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-hack-fund-recovery-rate-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-defi-hack-fund-recovery-rate-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Hack fund recovery rate verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-hack-fund-recovery-rate-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html", "name": "DeFi Hack Fund Recovery Rate Verification: What 'Funds Returned' Headlines Actually Mean - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Hack Fund Recovery Rate Verification: What 'Funds Returned' Headlines Actually Mean", "item": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#article", "headline": "DeFi Hack Fund Recovery Rate Verification: What 'Funds Returned' Headlines Actually Mean", "description": "High-profile white-hat recovery or hacker-returns-funds cases create an overly optimistic impression, but real statistics show the overall recovery rate is far lower than that narrative implies. A real public-database breakdown of the verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["hack fund recovery rate verification","DeFi security incident statistics","white-hat intervention case verification","fund loss classification verification","protocol security risk assessment method"], "wordCount": 2300, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-08T18:43:42+08:00", "dateModified": "2026-09-08T18:43:42+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/defi-hack-fund-recovery-rate-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Hack Fund Recovery Rate Verification: What "Funds Returned" Headlines Actually Mean</h1>
+        <p class="article-summary">Whenever a large DeFi hack occurs, media and social platforms often follow up with stories like "the hacker agreed to return part of the funds," "white hats stepped in to help recover the loss," or "a security firm is negotiating with the attacker." These follow-up stories often spread even further than the initial breach news, because they deliver a reassuring narrative that the loss will ultimately be clawed back. But if you place these high-profile cases within the full statistical sample of all hacks, they turn out to be a rare exception, not the norm — the vast majority of incidents' stolen funds have never been recovered. Using DefiLlama's publicly maintained real hack database, this guide statistically tabulates the true historical recovery rate, breaks down how to verify whether a specific incident's recovery claim is real, and explains why isolated high-profile cases shouldn't be used to infer the industry's overall recovery level. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-08T18:43:42+08:00">2026-09-08 18:43:42</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-hack-fund-recovery-rate-verification-guide-en.svg" alt="DeFi Hack Fund Recovery Rate Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Verify the overall historical recovery rate using a publicly maintained hack database, rather than forming an impression from a few high-profile recovery cases</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether a specific incident's "funds returned" claim means full return, partial return, or is still only at the negotiation or bounty-agreement stage</li>
+            <li><span class="article-verify-check">✓</span>Break down recovery rates by attack type (key compromise, social engineering, access control exploit, cross-chain bridge attack, etc.), rather than looking only at a broad overall figure</li>
+            <li><span class="article-verify-check">✓</span>Confirm the actual arrival timing and recipient of recovered funds, distinguishing between "deposited into the protocol treasury" and "directly refunded to affected users" — two very different outcomes</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Why High-Profile Recovery Cases Distort the Overall Impression</h2>
+<p>Media coverage naturally favors stories with a plot twist: "hackers steal over $100 million" is one news item, but "hacker suddenly develops a conscience and agrees to return 90% of the funds" is a follow-up story that may spread even more widely, because it reverses the initial pessimistic narrative. These follow-up stories do genuinely happen — historically, some attackers, facing pressure from law enforcement pursuit or being identified by security firms, have chosen to return most of the funds while keeping a small portion as a "white-hat bounty." But precisely because these cases are widely reported, they're the exception, not the norm — under normal circumstances, once an attacker has successfully moved and laundered the funds, there's almost no economic incentive to return them.</p>
+<p>If a researcher forms an optimistic impression of the industry's overall hack-fund recovery level based only on the handful of "funds returned" cases they've seen in the news, they're making a classic availability-bias error — cases that are easier to recall get mistakenly treated as more representative, but these high-profile cases may account for less than 2% of the full historical sample of incidents. Forming an objective judgment requires relying on a database covering the complete population of events, not a few repeatedly reported individual cases.</p>
+<ul>
+<li>Media naturally favors "hacker develops a conscience and returns funds" reversal narratives, which can spread even more widely than the original breach news.</li>
+<li>Fund-return cases genuinely happen but are the exception; most attackers have no economic incentive to return funds once moved and laundered.</li>
+<li>Forming an overall impression from a few memorable high-profile cases is a classic availability bias — verification requires a database covering the full population.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual Historical Hack Recovery Rate Statistics</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real hack database data captured via DefiLlama's public API (api.llama.fi/hacks) during verification in September 2026: the database records 1,257 historical hack incidents in total, of which only 24 have explicitly recorded returnedFunds data. Total cumulative losses across all incidents were approximately $20.59 billion, with explicitly recorded total recovered funds of approximately $2.36 billion — an overall recovery rate of approximately 11.47%. Looking only at the most recent 12 months (302 incidents), cumulative losses were approximately $2.098 billion, with only about $1.887 million recovered — a recovery rate below 0.1%. Broken down by attack type, the three categories with the highest historical losses were Key Compromise (approximately $8.55 billion), Social Engineering (approximately $3.11 billion), and Access Control (approximately $1.96 billion). These figures can be re-verified in real time via DefiLlama's public API, and the database continues to be updated as new incidents occur.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, the 11.47% overall recovery rate is already far lower than the impression media coverage creates, and even this figure is inflated by a handful of large recovery cases — only 24 of 1,257 incidents have any recorded recovery data at all, meaning more than 98% of incidents have no explicit recovery record. The distribution of the recovery rate is extremely uneven, with a small number of cases contributing the vast majority of the "recovered" total. Second, the recovery rate for the most recent 12 months has collapsed to below 0.1%, showing the historical average recovery rate isn't a stable figure — it's more like a number pushed up in certain years by a handful of special cases (such as ones involving centralized-exchange assistance in tracing funds, or law enforcement intervention), while the vast majority of newly occurring attacks show no recovery progress at all.</p>
+<ul>
+<li>September 2026 data shows the historical overall recovery rate at approximately 11.47%, but this figure is inflated by a tiny number of large recovery cases, with over 98% of incidents having no recovery record.</li>
+<li>The most recent 12 months' recovery rate has collapsed to below 0.1%, showing the historical average can't simply be applied to recently occurring incidents.</li>
+<li>Key compromise, social engineering, and access control exploits are the three highest-loss attack categories historically, and all are types that are difficult to recover after the fact.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Confirm the Specific Stage and Proportion Behind a "Funds Returned" Report</h2>
+<p>When verifying a specific hack incident's recovery progress, the first step is to pin down the specific stage the reporting is describing, rather than treating a statement like "the hacker agreed to return funds" as equivalent to "the funds have already arrived." A real recovery process typically involves several distinct stages: the attacker's identity gets flagged by a security firm or on-chain analytics outfit; the protocol negotiates with the attacker via an on-chain message or a bounty agreement; the attacker verbally or on-chain states agreement to return part of the funds; the attacker actually executes a transfer returning the funds; and the protocol confirms receipt and announces a disposition plan. These stages can be separated by anywhere from days to months, and the process can stall at any stage — history has plenty of cases where an attacker verbally agreed to return funds and then reneged, or simply never executed the transfer. Researchers should verify which specific stage a report is describing, especially distinguishing between "stated agreement" and "funds actually confirmed received" — two fundamentally different kinds of progress.</p>
+<p>Even when funds have genuinely arrived, researchers should verify the specific proportion returned: was it a full return, a negotiated partial return (with the attacker keeping a portion as a "white-hat bounty"), or just a token small amount returned as a show of good faith? Check the specific returned amount against the original loss amount, rather than being misled by the vague phrase "funds returned" into assuming the loss has been fully recovered.</p>
+<ul>
+<li>The recovery process typically involves identity flagging, negotiation, verbal/on-chain agreement, actual transfer, and protocol confirmation — any stage can stall.</li>
+<li>Distinguish "attacker stated agreement to return" from "funds actually confirmed received" — two fundamentally different kinds of progress that shouldn't be conflated.</li>
+<li>Even after funds arrive, verify the specific return proportion (full, negotiated partial, or token amount), rather than being misled by the vague phrase "returned."</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Break Down Recovery Rate Differences by Attack Type</h2>
+<p>Different attack techniques carry systematically different likelihoods of fund recovery, and a broad overall recovery rate obscures this difference. For example, funds stolen via a cross-chain bridge attack or a smart contract exploit have a relatively higher recovery likelihood if the attacker's on-chain address gets monitored in real time by security firms and frozen at a centralized exchange's deposit gate (most exchanges cooperate with monitoring organizations to freeze funds clearly originating from known hacker addresses). Key compromise or social engineering attacks, on the other hand, often involve the attacker directly gaining control over a victim's asset custody permissions, making the fund-transfer path far harder to trace in real time — and this category of attack is often carried out by more professional, organized criminal groups (some major historical incidents have been linked by security researchers to state-sponsored hacking organizations from specific countries), making both the difficulty and the willingness of recovery significantly lower.</p>
+<p>When assessing the security risk of a specific protocol or asset type, researchers should check what specific attack types it has historically faced, and combine that with the historical recovery-rate-by-category data from Section 2 to form a more granular risk judgment, rather than simply applying one broad "average recovery rate." For example, a centralized product whose primary custody risk comes from private key management shows, according to historical data, a significantly lower recovery probability once funds are stolen compared to a DeFi protocol exploited at the smart contract layer — this kind of difference should be factored into researchers' cross-comparison of different products' security risk.</p>
+<ul>
+<li>Different attack types carry systematically different fund-recovery likelihoods; cross-chain bridge or contract-exploit attacks typically show higher recovery rates than key-compromise attacks.</li>
+<li>Key compromise and social engineering attacks often involve more professional criminal groups, making both recovery difficulty and willingness significantly lower.</li>
+<li>When assessing a specific protocol or asset's risk, combine it with the recovery rate data for its historically faced attack types, rather than applying a broad average.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Confirm Where Recovered Funds Actually End Up</h2>
+<p>Even when an incident genuinely has funds recovered, researchers should further verify who ultimately received that money — was it directly refunded proportionally to each affected user, or deposited into the protocol's own treasury or insurance fund, with the distribution plan left to the protocol's subsequent decision-making? These two outcomes carry entirely different practical meaning for affected users: a direct refund means the individual user's loss has been substantively recovered; a treasury deposit means the funds are theoretically available to compensate users, but the specific distribution plan, ratio, and timeline all depend on subsequent governance decisions — and history has plenty of cases where funds sat in a treasury for a long time without actual user compensation being completed, due to a drawn-out governance process or community disagreement, with the eventual distribution ratio ending up far below the original loss amount.</p>
+<p>Researchers should keep tracking the complete chain from "funds recovered" to "users actually compensated," rather than treating "recovery" itself as the endpoint of verification. An incident widely reported as a "successful recovery" can easily still have a substantial share of affected users who haven't received any actual compensation months or even years later.</p>
+<ul>
+<li>Recovered funds may go directly to users, or be deposited into a protocol treasury for the governance process to decide on distribution later — the two carry very different practical meaning.</li>
+<li>Once funds enter a treasury, the specific distribution ratio and timeline depend on subsequent governance; history has cases of long-delayed or incomplete actual compensation.</li>
+<li>Verification should track the complete chain from "funds recovered" to "users actually compensated," rather than treating recovery itself as the verification endpoint.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you checked the overall historical recovery rate using a full hack database, rather than forming an impression from a few high-profile cases? Second, have you confirmed exactly what stage a specific incident's "funds returned" report describes, whether the funds have actually arrived, and the specific proportion returned? Third, have you broken down recovery rates by attack type, rather than applying one broad overall average? Fourth, have you tracked whether recovered funds have actually been paid out to affected users, rather than treating the recovery itself as the verification endpoint? Only after verifying these four points can you form an objective judgment of a specific hack incident's real recovery progress, and of the industry's overall recovery level, rather than being misled by the optimistic impression created by isolated reversal narratives. This article discusses verification methodology only, does not draw a conclusive judgment about any specific incident, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: overall historical recovery rate checked, specific return stage and proportion confirmed, attack-type differences broken down, actual compensation chain tracked to completion.</li>
+<li>Real September 2026 data shows the historical overall recovery rate at approximately 11.47%, collapsing to below 0.1% for the most recent 12 months, with over 98% of incidents showing no recovery record.</li>
+<li>This article discusses verification methodology only, does not draw a conclusive judgment about any specific incident, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why High-Profile Recovery Cases Distort the Overall Impression</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual Historical Hack Recovery Rate Statistics</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Confirm the Specific Stage and Proportion Behind a "Funds Returned" Report</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Break Down Recovery Rate Differences by Attack Type</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Confirm Where Recovered Funds Actually End Up</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://defillama.com/hacks" target="_blank" rel="noopener">DefiLlama Hack Database</a>: source of this article's example recovery rate data, can be used to check the detailed classification and recovery record for any individual incident</li>
+            <li><a href="https://defillama.com/docs/api" target="_blank" rel="noopener">DefiLlama Public API Documentation</a>: usable to independently pull the full hack incident dataset for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/protocol/onchain-forensics.html">On-Chain Forensics and Fund Tracing Methodology: Where Stolen Funds Go, and How to Check</a></li>
+          <li><a href="/en/research/market/exchange-insurance-fund-coverage-verification-guide.html">Exchange Insurance Fund Coverage Verification: Is That Fund Actually Enough to Cover Bad Debt</a></li>
+          <li><a href="/en/research/governance/onchain-insurance-research-guide.html">On-Chain Insurance Protocol Research Method: Coverage Scope and Claim Conditions</a></li>
+          <li><a href="/en/research/protocol/defi-smart-contract-audit-checklist.html">DeFi Smart Contract Audit Verification Checklist: From Conclusion to On-Chain Re-Verification</a></li>
+          <li><a href="/en/research/governance/multisig-signer-key-concentration-verification-guide.html">Multisig Signer Concentration Verification: Are 5 Signing Addresses Really Controlled by One Person</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</a></li>
+          <li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=7a0ba3fe"></script>
+</body>
+</html>

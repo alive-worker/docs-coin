@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/governance/defi-hack-fund-recovery-rate-verification-guide.html': '2026-09-08 18:43:42',
     '/research/market/defi-apy-base-reward-composition-verification-guide.html': '2026-09-08 14:05:35',
     '/research/basics/stablecoin-market-cap-dominance-verification-guide.html': '2026-09-08 09:17:58',
     '/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html': '2026-09-07 15:25:23',
@@ -269,6 +270,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/governance/defi-hack-fund-recovery-rate-verification-guide.html': '2026-09-08 18:43:42',
 '/en/research/market/defi-apy-base-reward-composition-verification-guide.html': '2026-09-08 14:05:35',
 '/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html': '2026-09-08 09:17:58',
 '/en/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html': '2026-09-07 15:25:23',
