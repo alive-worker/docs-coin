@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'stablecoin-market-cap-dominance-verification-guide',
-  publishedISO: '2026-09-08T09:17:58+08:00',
-  tagColor: 'jade',
-  topic: 'basics',
+  slug: 'defi-apy-base-reward-composition-verification-guide',
+  publishedISO: '2026-09-08T14:05:35+08:00',
+  tagColor: 'amber',
+  topic: 'market',
 
   zh: {
-    h1: '稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱',
-    tagLabel: '市值占比核验',
-    cardDesc: '稳定币占比常被当作场外待入场资金信号，但受分母效应和抵押机制差异影响。本文用CoinGecko真实数据拆解核验方法。',
+    h1: 'DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少',
+    tagLabel: 'APY构成核验',
+    cardDesc: 'DeFi协议展示的总APY通常是基础利息与代币奖励两部分加总，可持续性天差地别。本文用DefiLlama真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Stablecoin Market Cap Dominance Verification: What the "Sidelined Capital" Signal Actually Measures',
-    tagLabel: 'Dominance Verification',
-    cardDesc: 'Stablecoin dominance is often read as a sidelined-capital signal, but it\'s shaped by denominator effects and collateral-mechanism differences. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards',
+    tagLabel: 'APY Composition Verification',
+    cardDesc: 'A DeFi protocol\'s total APY is usually base interest plus token rewards summed together, with wildly different sustainability. A real-data breakdown using DefiLlama\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'stablecoin-market-cap-dominance-verification-guide',
     'cross-exchange-perpetual-funding-rate-divergence-verification-guide',
     'dao-voter-count-voting-power-verification-guide',
     'crypto-fear-greed-index-methodology-verification-guide',

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards - Crypto Research Notes</title>
+  <meta name="description" content="The single APY number a DeFi protocol displays is usually the sum of a 'base interest rate' and a 'token reward rate,' but the two differ enormously in sustainability and real value — base interest comes from borrowers actually paying interest, while token rewards' real value depends on whether that token can hold its current market price going forward. Using real protocol yield data pulled from DefiLlama's public API, this guide breaks down how to verify each component's share of a displayed APY, and the hidden risk in the token-reward portion. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/defi-apy-base-reward-composition-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/defi-apy-base-reward-composition-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards - Crypto Research Notes">
+  <meta property="og:description" content="The single APY number a DeFi protocol displays is usually the sum of a 'base interest rate' and a 'token reward rate,' but the two differ enormously in sustainability and real value — base interest comes from borrowers actually paying interest, while token rewards' real value depends on whether that token can hold its current market price going forward. Using real protocol yield data pulled from DefiLlama's public API, this guide breaks down how to verify each component's share of a displayed APY, and the hidden risk in the token-reward portion. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-08T14:05:35+08:00">
+  <meta property="article:modified_time" content="2026-09-08T14:05:35+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards - Crypto Research Notes">
+  <meta name="twitter:description" content="DeFi APY is usually base interest plus token rewards summed together. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-apy-base-reward-composition-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi APY Composition Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-apy-base-reward-composition-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-defi-apy-base-reward-composition-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","DeFi yield verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-apy-base-reward-composition-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html", "name": "DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards", "item": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#article", "headline": "DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards", "description": "A DeFi protocol's displayed total APY is usually base interest plus token rewards, and the two differ enormously in sustainability. A real-data breakdown of the verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["DeFi APY verification","base interest vs token reward breakdown","liquidity mining yield verification","token reward depreciation risk","yield sustainability verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-08T14:05:35+08:00", "dateModified": "2026-09-08T14:05:35+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/defi-apy-base-reward-composition-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/defi-apy-base-reward-composition-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards</h1>
+        <p class="article-summary">A DeFi lending or liquidity pool interface usually displays one eye-catching total APY number, say "7.26%," but that number is almost never a single source — it's typically the sum of a "base APY" (interest actually paid by borrowers, or a share of trading fees) and a "reward APY" (governance or incentive tokens the protocol distributes on top, converted to an annualized percentage at the current market price). The two are fundamentally different in nature: base interest is a relatively stable income stream from real capital demand, while the real value of token rewards depends heavily on whether that token can hold its current market price going forward — if the token's price drops, the displayed APY number stays the same, but the depositor's actually realizable return shrinks significantly. Using real protocol yield data pulled from DefiLlama's public API, this guide breaks down how to verify each component's specific share of a displayed APY, and the hidden depreciation risk in the token-reward portion. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-08T14:05:35+08:00">2026-09-08 14:05:35</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-apy-base-reward-composition-verification-guide-en.svg" alt="DeFi APY Composition Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Verify a displayed total APY's specific breakdown into base interest (apyBase) and token rewards (apyReward) via a public data platform, rather than looking only at the combined total</li>
+            <li><span class="article-verify-check">✓</span>Confirm the specific reward token being distributed, its historical price volatility, and whether the protocol imposes a lockup or linear vesting schedule</li>
+            <li><span class="article-verify-check">✓</span>Calculate the reward token's real liquidation depth on secondary markets, judging whether the displayed reward APY can actually be converted to other assets without significant loss</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the base interest component itself is stable, or fluctuates sharply with pool utilization, rather than assuming it's fixed</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Why a Single Total APY Number Must Be Broken Apart</h2>
+<p>DeFi protocols display a single total APY number to make it easy for users to quickly compare yield levels across different products, but this presentation obscures a fundamental difference in the nature of the yield sources. Base interest comes from genuine demand for capital — the interest borrowers pay in a lending protocol, or a share of the trading fees paid by traders in a liquidity pool. The counterparty for this income is real capital demand, and its sustainability depends on the protocol's actual borrowing or trading activity. Token reward yield is entirely different — it's the protocol distributing its own native token as an extra incentive to attract more depositors, boost TVL, or direct liquidity. This "yield" is converted to an annualized percentage at the token's market price at the moment of distribution when counted toward APY, and is essentially the protocol buying user deposits with its own issued token, rather than real yield generated by the capital itself.</p>
+<p>Displaying the two blended together as a single total systematically overstates the stability of the yield. A product with a total APY of 7%, where 5 percentage points come from token rewards and only 2 points are base interest, would see the depositor's actually realizable annualized return fall well below the 7% originally shown — potentially even negative — the moment that token's price drops 30% during the deposit period. But the APY number shown in the protocol interface typically doesn't adjust in real time as the token depreciates, and users can easily be misled by this "seemingly unchanged" number.</p>
+<ul>
+<li>Base interest comes from real capital demand (borrowers, traders); token rewards are the protocol distributing its own token as an incentive — the two are fundamentally different in nature.</li>
+<li>Displaying a blended total APY obscures a huge difference in yield stability; the token-reward portion's real value fluctuates with the token's price.</li>
+<li>A token price decline isn't reflected in real time in the displayed APY number, so users are easily misled by a "seemingly unchanged" yield figure.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual APY Composition Breakdown of Real DeFi Protocols</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real yield data captured via DefiLlama's public API (yields.llama.fi/pools) during verification in September 2026 (sample of pools with TVL over $50 million): Morpho Blue's STEAKUSDG pool (Robinhood Chain) shows base interest of 3.84% and token reward of 3.42%, totaling approximately 7.26% APY, with token rewards making up about 47%. Aave v3's USDE pool (Ethereum) shows base interest of 1.66% and token reward of 3.05%, totaling approximately 4.71% APY, with token rewards making up about 65%. ether.fi's staked weETH pool shows base interest of 2.30% and token reward of only 0.001%, totaling approximately 2.30% APY, with token rewards accounting for less than 1%. Sky Lending's SKY pool has an empty base interest field and a token reward of 4.17% — its total APY is composed entirely of token rewards. These figures can be re-verified in real time via DefiLlama's public API, and will continue to change with protocol parameters and market conditions.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, even among top-tier protocol products with TVL exceeding several hundred million dollars — seemingly "mature and stable" — the share of token rewards in total APY can vary enormously: ether.fi's staking product is almost entirely base yield (corresponding to genuine Ethereum staking rewards), while Aave v3's USDE pool has token rewards making up as much as 65% of the total. Even if the two products' total APY numbers look similar, their yield stability is not remotely in the same league. Second, products like Sky Lending's pool have a completely empty base interest field, meaning the displayed APY is 100% token rewards — this kind of product's yield sustainability depends entirely on whether the protocol can keep distributing reward tokens and whether that token can hold its market value; the moment the protocol stops the incentive or the token depreciates sharply, the displayed APY can collapse to near zero instantly.</p>
+<ul>
+<li>September 2026 data shows token rewards' share of total APY varies enormously across top protocols — real examples range from less than 1% to 100%.</li>
+<li>Products with a higher share of base yield (like Ethereum staking) have meaningfully more sustainable returns than products relying entirely on token rewards.</li>
+<li>Products with an empty base interest field and APY composed entirely of token rewards have yield sustainability that depends heavily on the protocol's ability to keep incentivizing.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Break Down Base Interest vs. Token Reward Share via a Public Data Platform</h2>
+<p>The first step in verifying a DeFi product's APY is finding a data source that separately reports the apyBase (base interest) and apyReward (token reward) fields, rather than relying only on the single combined number shown in the protocol's own interface. Most mainstream DeFi data aggregators' public APIs record these two fields separately, and researchers can directly query the target protocol and pool's specific breakdown to calculate token rewards' percentage of total APY. If that share exceeds 50%, it means more than half of this product's "yield" is actually the protocol exchanging its own issued token for user deposits, and its yield stability should be discounted significantly, rather than being treated the same as a product whose yield comes entirely from real interest.</p>
+<p>Researchers should also note that some protocols' interface design deliberately emphasizes the total APY as one large number, while pushing the base-interest/token-reward breakdown to a secondary page requiring an extra click, or not disclosing the breakdown at all. If a protocol's official interface makes the breakdown inconvenient or impossible to see, researchers should prioritize cross-checking via an independent third-party data platform, rather than relying entirely on the combined number the protocol itself unilaterally provides.</p>
+<ul>
+<li>Query the apyBase and apyReward fields separately via an independent data platform's public API, rather than looking only at the combined APY shown in the protocol interface.</li>
+<li>A token reward share above 50% means more than half the yield is essentially the protocol trading its own token for user deposits — stability should be discounted significantly.</li>
+<li>If a protocol's interface makes the breakdown hard to see, prioritize cross-checking via an independent third-party data platform.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Confirm the Reward Token's Vesting Restrictions and Real Liquidation Depth</h2>
+<p>Even after pinning down token rewards' specific share of the APY, that doesn't mean this portion can be converted without loss. Researchers should further verify two things: first, whether the protocol imposes a lockup period or linear vesting schedule on distributed reward tokens — some protocols, to prevent users from immediately dumping rewards and crashing the token's price, lock reward tokens for weeks to months before they can be withdrawn. During that waiting period, the token's market price may have shifted significantly, and the value actually received can be entirely different from the market price at the moment the APY was displayed. Second, the reward token's real liquidation depth on secondary markets — if it's a smaller-cap, thinner-liquidity governance token, even an impressive headline annualized yield figure may face far-worse-than-normal slippage when a depositor tries to convert a large reward-token position into a mainstream asset, with the actual proceeds falling significantly short of what the APY number implies.</p>
+<p>Researchers can estimate the slippage cost of liquidating a specific size of reward tokens by querying that token's historical volume and order book depth on major exchanges or DEXs, and deduct that cost from the displayed token-reward APY to arrive at an estimate closer to a genuinely realizable yield. This verification step is especially important for products with a high token-reward share where the reward token itself has thin liquidity.</p>
+<ul>
+<li>Verify whether reward tokens have a lockup or linear vesting schedule — the token's market price may have shifted significantly by the time the waiting period ends compared to when the APY was displayed.</li>
+<li>Check the reward token's real liquidation depth on secondary markets; a smaller-cap governance token can incur significant slippage when converted.</li>
+<li>Estimate liquidation slippage cost from historical volume and order book depth, and deduct it from the displayed APY to get a more realistic realizable-yield estimate.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Confirm the Base Interest Rate's Own Volatility — Don't Assume It's Fixed</h2>
+<p>After breaking out the base interest component, researchers shouldn't assume this portion of yield is fully stable either. A lending protocol's base interest rate is typically determined dynamically by the pool's utilization rate — the higher the utilization (the larger the share of deposited funds that's actually been lent out), the higher the base rate typically climbs, incentivizing more deposits to flow in and balance supply and demand; as utilization falls, the base rate falls correspondingly. This means even the "pure interest" component's value fluctuates in real time with market supply and demand, and the apyBase figure a researcher queries at any given moment is likewise just a cross-sectional snapshot, not something that can be directly treated as a long-term stable yield expectation.</p>
+<p>Researchers should obtain the target pool's historical time series for its base interest rate (most DeFi data platforms provide a historical APY chart), observe its fluctuation range and frequency, and judge whether the currently queried base rate sits within a normal historical range or happens to be at an unusual high or low caused by a short-term capital mismatch. Only by understanding the current base-rate reading in the context of its historical fluctuation range can a researcher form an accurate judgment of this portion's real stability.</p>
+<ul>
+<li>A lending protocol's base interest rate is determined dynamically by pool utilization, not a fixed value — it fluctuates in real time with market supply and demand.</li>
+<li>An apyBase figure queried at a given moment is likewise a cross-sectional snapshot, not something to treat directly as a long-term stable yield expectation.</li>
+<li>Obtain the base rate's historical time series to judge whether the current reading is within a normal range or a short-term anomaly.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you verified via an independent data platform the specific breakdown between base interest and token rewards in the target product's APY, rather than looking only at the combined total? Second, have you confirmed the reward token's vesting restrictions and how much the token's price might change during the waiting period? Third, have you checked the reward token's real liquidation depth on secondary markets and estimated the slippage cost of a large-scale liquidation? Fourth, have you recognized that base interest itself fluctuates with pool utilization, and checked its historical range, rather than assuming it's fixed? Only after verifying these four points can you form a relatively accurate real-yield expectation for a DeFi product's displayed APY, rather than treating a high number stacked up from a volatile token reward as a stable, reliable yield. This article discusses verification methodology only, does not evaluate any specific protocol as superior or inferior, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: base interest vs. token reward share broken down, reward-token vesting restrictions confirmed, liquidation depth calculated, base-rate volatility checked.</li>
+<li>Real September 2026 data shows token rewards' share of total APY across different protocols ranges from less than 1% to 100%, with enormous differences in yield stability.</li>
+<li>This article discusses verification methodology only, does not rank any specific protocol, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Why a Single Total APY Number Must Be Broken Apart</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual APY Composition Breakdown of Real DeFi Protocols</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Break Down Base Interest vs. Token Reward Share via a Public Data Platform</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Confirm the Reward Token's Vesting Restrictions and Real Liquidation Depth</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Confirm the Base Interest Rate's Own Volatility — Don't Assume It's Fixed</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://defillama.com/yields" target="_blank" rel="noopener">DefiLlama Yields Rankings Page</a>: source of this article's example APY breakdown data, can be used to check base interest vs. token reward share for any protocol pool in real time</li>
+            <li><a href="https://defillama.com/docs/api" target="_blank" rel="noopener">DefiLlama Public API Documentation</a>: usable to independently pull full protocol yield data for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/staking-apy-net-yield-verification-guide.html">Staking APY Net Yield Verification: Does the Advertised APY Match What You Actually Receive</a></li>
+          <li><a href="/en/research/market/liquidity-mining-research-guide.html">Liquidity Mining Research Method: The Real Cost Behind APY</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/market/lending-liquidation-research-guide.html">Lending Liquidation Research Methodology: Health Factor and Liquidation Thresholds</a></li>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What the "Sidelined Capital" Signal Actually Measures</a></li>
+          <li><a href="/en/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html">Cross-Exchange Perpetual Funding Rate Divergence Verification: How Much Can the Same BTC Contract's Rate Really Differ</a></li>
+          <li><a href="/en/research/market/btc-options-put-call-ratio-verification-guide.html">BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real</a></li>
+          <li><a href="/en/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT Spread Verification: How Much the "1:1" Swap Really Costs in Spread and Slippage</a></li>
+          <li><a href="/en/research/protocol/restaking-research-guide.html">Restaking Ecosystem Research Method: Stacked Risk vs. Real Yield</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4864e349"></script>
+</body>
+</html>
