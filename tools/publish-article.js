@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'nft-floor-price-market-cap-verification-guide',
-  publishedISO: '2026-09-09T09:31:33+08:00',
-  tagColor: 'azure',
-  topic: 'basics',
+  slug: 'bitcoin-historical-implied-volatility-verification-guide',
+  publishedISO: '2026-09-09T12:37:20+08:00',
+  tagColor: 'teal',
+  topic: 'market',
 
   zh: {
-    h1: 'NFT地板价与市值核验：展示的floor price，和真实成交价差多少',
-    tagLabel: 'NFT估值核验',
-    cardDesc: '地板价只反映最急于出手卖家的报价，市值假设全部持仓能同时以地板价卖出，两者都存在系统性陷阱。本文用CoinGecko真实数据拆解核验方法。',
+    h1: '比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种',
+    tagLabel: '波动率指标核验',
+    cardDesc: '历史波动率与隐含波动率可能在同一时刻朝相反方向变化，媒体报道常不加区分地混用。本文用Deribit真实数据拆解核验方法。',
   },
   en: {
-    h1: 'NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices',
-    tagLabel: 'NFT Valuation Verification',
-    cardDesc: 'Floor price reflects only the most eager seller\'s offer, and market cap assumes the entire supply could sell at once — both carry systematic traps. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing',
+    tagLabel: 'Volatility Metrics Verification',
+    cardDesc: 'Historical and implied volatility can move in opposite directions at the same moment, yet media coverage often conflates them. A real-data breakdown using Deribit\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'nft-floor-price-market-cap-verification-guide',
     'defi-hack-fund-recovery-rate-verification-guide',
     'defi-apy-base-reward-composition-verification-guide',
     'stablecoin-market-cap-dominance-verification-guide',

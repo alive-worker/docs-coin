@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports &quot;Bitcoin volatility spikes,&quot; it rarely specifies which kind of volatility it means. Historical volatility (HV) is a backward-looking statistic calculated from actual price changes over a past window, while implied volatility (IV) is backed out of current option prices and reflects the market's forward-looking expectation of future movement — the two can move in opposite directions at the same moment. Using real historical volatility data pulled from Deribit's public API, this guide breaks down how to verify which type of volatility a report is actually citing, and what it means when the two diverge. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Bitcoin Historical vs. Implied Volatility Verification: Which &quot;Volatility Spike&quot; Headlines Are Actually Citing - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports &quot;Bitcoin volatility spikes,&quot; it rarely specifies which kind of volatility it means. Historical volatility (HV) is a backward-looking statistic calculated from actual price changes over a past window, while implied volatility (IV) is backed out of current option prices and reflects the market's forward-looking expectation of future movement — the two can move in opposite directions at the same moment. Using real historical volatility data pulled from Deribit's public API, this guide breaks down how to verify which type of volatility a report is actually citing, and what it means when the two diverge. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-09T12:37:20+08:00">
+  <meta property="article:modified_time" content="2026-09-09T12:37:20+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bitcoin Historical vs. Implied Volatility Verification: Which &quot;Volatility Spike&quot; Headlines Are Actually Citing - Crypto Research Notes">
+  <meta name="twitter:description" content="Historical and implied volatility are often conflated by media coverage. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Bitcoin Historical vs Implied Volatility Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-bitcoin-historical-implied-volatility-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Volatility metrics verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html", "name": "Bitcoin Historical vs. Implied Volatility Verification: Which 'Volatility Spike' Headlines Are Actually Citing - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Bitcoin Historical vs. Implied Volatility Verification: Which 'Volatility Spike' Headlines Are Actually Citing", "item": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#article", "headline": "Bitcoin Historical vs. Implied Volatility Verification: Which 'Volatility Spike' Headlines Are Actually Citing", "description": "Historical and implied volatility are two fundamentally different metrics that can move in opposite directions at the same time, yet media coverage frequently conflates them. A real-data breakdown of the verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["historical volatility verification","implied volatility verification","options pricing metrics","volatility divergence verification","market sentiment index methodology"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-09T12:37:20+08:00", "dateModified": "2026-09-09T12:37:20+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/bitcoin-historical-implied-volatility-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing</h1>
+        <p class="article-summary">"Bitcoin volatility spikes, market enters turbulent period" — headlines like this appear frequently in crypto media, yet almost never specify which kind of "volatility" they're actually referring to. There are at least two fundamentally different ways to measure volatility: Historical Volatility (HV) is a backward-looking statistic calculated from actual price changes over a fixed past time window, reflecting "what has already happened." Implied Volatility (IV) is backed out of current option prices trading in the market, reflecting "what the market expects to happen" over some future period. These two metrics aren't just calculated completely differently — they can even move in opposite directions at the exact same moment: historical volatility might be declining because recent prices have been stabilizing, while implied volatility rises simultaneously because the market expects a major upcoming event (a known regulatory decision, a macro data release). Using real historical volatility data pulled from Deribit's public API, this guide breaks down how to verify which type of volatility a specific report is actually citing, and what each type of divergence between the two reveals. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-09T12:37:20+08:00">2026-09-09 12:37:20</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-bitcoin-historical-implied-volatility-verification-guide-en.svg" alt="Bitcoin Historical vs Implied Volatility Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Confirm whether a report's cited "volatility" specifically means historical volatility (HV) or implied volatility (IV) — the two can't be substituted for each other</li>
+            <li><span class="article-verify-check">✓</span>Check the specific calculation window used for historical volatility (e.g., 7-day, 30-day) via a public data platform, and place the current reading within its historical range</li>
+            <li><span class="article-verify-check">✓</span>Confirm which specific expiry date an implied volatility figure corresponds to — implied volatility for different expiries can differ noticeably</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether the two metrics move in the same direction at a given moment, and understand what a divergence itself signals, rather than looking only at one metric's absolute level</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Two Kinds of "Volatility" Answer Completely Different Questions</h2>
+<p>Historical volatility's calculation logic is purely retrospective: take price data over a fixed window (say, the past 7 or 30 days), calculate the standard deviation of price returns over that period, and annualize it into a percentage. This metric answers the question "how much did the price actually move over this past period" — it's based entirely on data that has already occurred, with no forward-looking component whatsoever. Implied volatility is the opposite: it isn't calculated from historical price data at all, but is backed out of currently trading option prices in the market — option pricing models (like Black-Scholes or the variants commonly used for crypto options) require volatility as an input parameter to compute a theoretical price. If you plug the current real transaction price into the model and solve backward, the resulting volatility figure represents "the market's currently implied expectation of future price movement, based on what it's willing to pay for this price right now."</p>
+<p>This fundamental difference means historical volatility is a lagging indicator, while implied volatility carries forward-looking market consensus information. If a researcher doesn't distinguish between the two, it's easy to misread "the recent past has been calm" (low historical volatility) as "the market expects it to stay calm going forward." But if implied volatility is rising over the same period, that shows options traders are paying a premium for an upcoming uncertain event — the actual market consensus is "this calm period is about to end," a signal directly opposite to what historical volatility conveys.</p>
+<ul>
+<li>Historical volatility is a retrospective statistic calculated from actual past price data; implied volatility is a forward-looking market expectation backed out of option prices.</li>
+<li>The two have completely different calculation methods and information sources — they cannot substitute for each other, and shouldn't be assumed to move in the same direction.</li>
+<li>Low historical volatility doesn't mean the market expects future calm; implied volatility rising over the same period can indicate the opposite market consensus.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: An Actual Bitcoin Historical Volatility Trend</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real data captured via Deribit's public API (www.deribit.com/api/v2/public/get_historical_volatility, currency=BTC) during verification in September 2026: historical volatility data over the past 384 hours (approximately 16 days) shows a minimum value of 33.34% (occurring at the most recent data point), a maximum value of 50.54%, and a period average of approximately 44.77%. In other words, the latest historical volatility reading (33.34%) happens to sit at the lowest point of this statistical window, roughly 25% below the period average. These figures can be re-verified in real time via Deribit's public API, and will continue to change with price movement.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, if a verification moment happens to show "historical volatility at a recent low" while media coverage over the same period reports "volatility spiking," researchers should immediately be alert — this apparent contradiction almost certainly means the media report isn't citing the historical volatility data shown in this article's example, but is more likely citing implied volatility (or a different calculation window or data source). Second, even within the same "historical volatility" label, the 384-hour data window itself shows a noticeable range (33.34% to 50.54%, a relative swing approaching 50%), showing that historical volatility itself can vary significantly depending on the chosen statistical window and the specific data timestamp. When citing this figure, researchers should specify the calculation window and data timestamp alongside it, rather than giving only an isolated percentage.</p>
+<ul>
+<li>September 2026 data shows BTC's latest historical volatility reading (33.34%) sits at the lowest point within the statistical window, roughly 25% below the average.</li>
+<li>If historical volatility is at a low point during verification while media reports "volatility spiking," it likely cites implied volatility or a different calculation basis.</li>
+<li>Historical volatility itself varies significantly with the chosen statistical window (33.34%-50.54% in this example) and should be cited alongside its specific window.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: First Confirm Which Type of Volatility a Report Is Citing</h2>
+<p>When verifying a report that mentions "volatility," the first step is to check the specific terminology and data source used, judging whether it's historical or implied volatility. Common clues include: if a report mentions "the volatility index on exchange X" or explicitly cites a specific options exchange (like Deribit's DVOL index), this typically indicates implied volatility, since a volatility index's calculation inherently relies on real-time option market quotes. If a report only broadly states "price swings intensified over the past week" or references the visual description of a price chart, it more likely corresponds to historical volatility or a simple price-range statistic, rather than implied volatility in the strict sense. Researchers should avoid defaulting to assuming which kind of "volatility" a report means, and instead actively check the specific data source and calculation methodology description.</p>
+<p>If a report gives no indication of its data source or calculation method at all, researchers should treat that as a signal of insufficient rigor, and instead independently query both historical and implied volatility from a public data platform to verify for themselves, rather than passively accepting a conclusion from an unspecified-basis report. This step may seem basic, but it's the key precondition for avoiding being misled by the broad term "volatility."</p>
+<ul>
+<li>A report mentioning a specific exchange's volatility index (like DVOL) typically indicates implied volatility; a broad description of intensified price swings more likely corresponds to historical volatility.</li>
+<li>When a report gives no data source or calculation method, treat that as a signal of insufficient rigor and independently verify via a public data platform.</li>
+<li>The first verification step is to pin down what the terminology means, rather than defaulting to a specific meaning behind the broad word "volatility."</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Confirm the Specific Calculation Window for Historical Volatility</h2>
+<p>Even after confirming a report cites historical volatility, researchers still need to check the specific calculation window used — 7-day, 30-day, or 90-day — since the resulting figure can differ noticeably depending on the window, especially when price experienced sharp swings during some part of the window followed by a period of calm: a short window (like 7 days) reflects the latest calm state faster, and the figure may have already dropped noticeably; a longer window (like 90 days) still includes the earlier volatile data and drops more slowly. When comparing historical volatility figures from different sources without checking their respective calculation windows, researchers can easily mistake a window difference for a genuine disagreement about market conditions.</p>
+<p>Researchers should also check the sampling frequency behind historical volatility — whether it's calculated from hourly data or daily closing prices. Higher sampling frequency captures more intraday price-movement detail, but can also amplify the volatility reading if it captures a brief price wick. When verifying, prefer a data source with a transparent methodology and a sampling frequency matching your own research timeframe, rather than simply comparing numbers derived from different calculation bases.</p>
+<ul>
+<li>The specific calculation window for historical volatility (7/30/90 days) significantly affects the resulting figure; a shorter window reflects the latest calm state faster, a longer window declines more slowly.</li>
+<li>Comparing historical volatility figures from different sources with different calculation windows without checking can mistake a window difference for a genuine market disagreement.</li>
+<li>Also check sampling frequency (hourly/daily) — higher frequency captures more intraday detail but can amplify the impact of a brief price wick.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Confirm the Specific Expiry Date Behind an Implied Volatility Figure</h2>
+<p>If a report is confirmed to be citing implied volatility, researchers should further check which specific option expiry date the figure corresponds to, because implied volatility for different expiries can differ noticeably — a difference known as the "volatility term structure." Implied volatility for near-dated options (expiring within a week, say) is typically more sensitive to a specific short-term event about to occur (a known regulatory hearing date, for example) and can spike locally, while implied volatility for longer-dated options (expiring three months out, say) reflects more of the market's pricing of medium-to-long-term uncertainty, and typically moves more gently. If a report broadly states "Bitcoin implied volatility spikes" without specifying which expiry's contracts, researchers should check whether this spike is concentrated around a specific expiry date (say, one that happens to correspond to a known major event window), or whether implied volatility for all expiries is rising in sync — the former is targeted event pricing, while the latter is more genuinely broad-based market panic sentiment.</p>
+<p>Researchers can query the implied volatility curve across different expiries at the same point in time via mainstream options data platforms (usually called a cross-section of the "volatility surface"), observing how the curve's shape changes, rather than focusing only on one isolated number picked out by media coverage. A change in the curve's shape itself (say, from a flat curve to a steep near-term spike) reveals the market's differentiated pricing of short-term versus long-term risk far better than a single number does.</p>
+<ul>
+<li>Implied volatility for different option expiries can differ noticeably — a difference known as the volatility term structure.</li>
+<li>Near-dated contracts' implied volatility is more sensitive to specific known events; longer-dated contracts reflect more medium-to-long-term uncertainty pricing.</li>
+<li>Check whether a volatility spike is concentrated around a specific expiry or rising across all expiries in sync — the two reflect completely different scopes of market sentiment.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you confirmed whether a report's cited "volatility" is specifically historical or implied volatility, rather than defaulting to assuming the two are interchangeable? Second, if it's historical volatility, have you checked the specific calculation window and sampling frequency, and placed the reading within its historical range for comparison? Third, if it's implied volatility, have you checked the specific expiry date it corresponds to, judging whether a spike is localized event pricing or a synchronized rise across the whole curve? Fourth, have you confirmed whether the two metrics move in the same direction at a given moment, and understood what a divergence itself signals, rather than looking only at one metric's absolute level? Only after verifying these four points can you form an accurate judgment of a report mentioning "volatility," rather than being misled by a broad term with no specified meaning. This article discusses verification methodology only, does not draw a conclusive judgment about market conditions at any specific point in time, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: volatility type clarified, calculation window checked, expiry structure confirmed, direction of both metrics cross-compared.</li>
+<li>Real September 2026 data shows BTC's latest historical volatility reading sitting at a recent low within its statistical window, contrasting with broad "volatility spiking" language.</li>
+<li>This article discusses verification methodology only, does not draw a conclusive judgment about market conditions at any specific point in time, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Two Kinds of "Volatility" Answer Completely Different Questions</a></li>
+          <li><a href="#sec-2">2. Real Data: An Actual Bitcoin Historical Volatility Trend</a></li>
+          <li><a href="#sec-3">3. Verification Method One: First Confirm Which Type of Volatility a Report Is Citing</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Confirm the Specific Calculation Window for Historical Volatility</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Confirm the Specific Expiry Date Behind an Implied Volatility Figure</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.deribit.com/statistics/BTC/volatility-index" target="_blank" rel="noopener">Deribit BTC Volatility Index Page</a>: source of this article's example historical volatility data, can be used to check the DVOL implied volatility index and historical volatility data</li>
+            <li><a href="https://docs.deribit.com/" target="_blank" rel="noopener">Deribit Public API Documentation</a>: usable to independently pull historical volatility and options data for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/btc-options-put-call-ratio-verification-guide.html">BTC Options Put/Call Ratio Verification: Is the "Bearish Sentiment" Number Real</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How This "Sentiment" Number Is Actually Weighted</a></li>
+          <li><a href="/en/research/market/options-vault-tail-risk.html">Options Vault Tail Risk Verification: The Hidden Exposure Behind Seller Strategies</a></li>
+          <li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</a></li>
+          <li><a href="/en/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html">Cross-Exchange Perpetual Funding Rate Divergence Verification: How Much Can the Same BTC Contract's Rate Really Differ</a></li>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What the "Sidelined Capital" Signal Actually Measures</a></li>
+          <li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f68cc1b9"></script>
+</body>
+</html>

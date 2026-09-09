@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 - 加密货币研究</title>
+  <meta name="description" content="加密媒体报道&quot;比特币波动率飙升&quot;时，很少说明这个&quot;波动率&quot;具体是指哪一种——历史波动率(HV)是根据过去一段时间实际价格变化计算出的回顾性指标，隐含波动率(IV)则是从期权价格反推出的、市场对未来波动的预期，两者可以在同一时刻朝相反方向变化。本文用Deribit公开抓取的真实历史波动率数据，拆解如何核验一篇报道说的究竟是哪种波动率，以及两者背离时分别意味着什么。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 - 加密货币研究">
+  <meta property="og:description" content="加密媒体报道&quot;比特币波动率飙升&quot;时，很少说明这个&quot;波动率&quot;具体是指哪一种——历史波动率(HV)是根据过去一段时间实际价格变化计算出的回顾性指标，隐含波动率(IV)则是从期权价格反推出的、市场对未来波动的预期，两者可以在同一时刻朝相反方向变化。本文用Deribit公开抓取的真实历史波动率数据，拆解如何核验一篇报道说的究竟是哪种波动率，以及两者背离时分别意味着什么。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-09T12:37:20+08:00">
+  <meta property="article:modified_time" content="2026-09-09T12:37:20+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 - 加密货币研究">
+  <meta name="twitter:description" content="历史波动率和隐含波动率常被媒体混用，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-bitcoin-historical-implied-volatility-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","波动率指标核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-bitcoin-historical-implied-volatility-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html", "name": "比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种", "item": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#article", "headline": "比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种", "description": "历史波动率与隐含波动率是两种性质不同的指标，可能在同一时刻朝相反方向变化，媒体报道常常不加区分地混用。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["历史波动率核验","隐含波动率核验","期权定价指标","波动率背离核验","市场情绪指标方法论"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-09T12:37:20+08:00", "dateModified": "2026-09-09T12:37:20+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/bitcoin-historical-implied-volatility-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种</h1>
+        <p class="article-summary">"比特币波动率飙升，市场进入动荡期"——这类标题在加密媒体上频繁出现，但几乎从不说明这里说的"波动率"具体指哪一种。波动率至少有两种性质完全不同的度量方式：历史波动率(Historical Volatility, HV)是根据过去一段固定时间窗口内的实际价格变化计算出的回顾性统计量，反映"已经发生了什么"；隐含波动率(Implied Volatility, IV)则是从当前期权价格反推出的、市场对未来一段时间波动幅度的预期，反映"市场认为将要发生什么"。这两个指标不仅计算方法完全不同，甚至可以在同一时刻朝相反方向变化——历史波动率可能因为近期价格趋于平稳而下降，隐含波动率却可能因为市场预期即将有重大事件（如某个监管决定或宏观数据发布）而同步上升。本文用Deribit公开抓取的真实历史波动率数据，拆解如何核验一篇报道具体说的是哪种波动率，以及两者出现背离时各自反映了什么信息。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-09T12:37:20+08:00">2026-09-09 12:37:20</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-bitcoin-historical-implied-volatility-verification-guide.svg" alt="比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实报道引用的"波动率"具体是历史波动率(HV)还是隐含波动率(IV)，两者不能互相替代解读</li>
+            <li><span class="article-verify-check">✓</span>用公开数据平台查询历史波动率的具体计算窗口（如7天、30天），并将当前读数放入历史区间比较</li>
+            <li><span class="article-verify-check">✓</span>核实隐含波动率的计算是否覆盖了特定到期日，不同到期日的期权隐含波动率可能明显不同</li>
+            <li><span class="article-verify-check">✓</span>核实两个指标是否出现方向背离，并理解背离本身传递的信息，而非只关注单一指标的绝对高低</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. 两种"波动率"，回答的是完全不同的问题</h2>
+<p>历史波动率的计算逻辑是纯粹回顾性的：取某个固定时间窗口（例如过去7天或30天）内的价格数据，计算这段时间内价格收益率的标准差，并年化成一个百分比数字。这个指标回答的问题是"过去这段时间，价格实际波动了多大"，它完全基于已经发生的历史数据，不包含任何对未来的预期成分。隐含波动率则完全相反：它不是从历史价格数据里算出来的，而是从当前市场上正在交易的期权价格反推出来的——期权定价模型（如Black-Scholes或加密期权常用的变体）需要波动率作为输入参数才能算出理论价格，如果把当前的真实成交价格代入模型反推，得到的波动率数值就是"市场当前愿意为这个价格支付的、对未来波动幅度的隐含预期"。</p>
+<p>这个本质区别意味着，历史波动率是一个滞后指标，隐含波动率则包含前瞻性的市场共识信息。核验者如果不区分这两者，很容易把"过去很平静"（历史波动率低）误读成"市场预期未来也会很平静"，但如果隐含波动率同期正在上升，说明期权交易者正在为即将到来的某个不确定事件支付溢价，市场共识其实是"平静期即将结束"，与历史波动率传递的信号完全相反。</p>
+<ul>
+<li>历史波动率是根据过去实际价格数据计算的回顾性统计量，隐含波动率是从期权价格反推出的前瞻性市场预期。</li>
+<li>两者计算方法和信息来源完全不同，不能互相替代，也不应默认两者会同向变化。</li>
+<li>历史波动率低不代表市场预期未来也会平静，隐含波动率同期上升可能说明相反的市场共识。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：真实的比特币历史波动率走势</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过Deribit公开API（www.deribit.com/api/v2/public/get_historical_volatility，currency=BTC）实测抓取的真实数据：过去384个小时（约16天）的历史波动率数据显示，最低值33.34%（出现在最新一个时间点），最高值50.54%，同期均值约44.77%。也就是说，当前最新的历史波动率读数(33.34%)恰好处于这个统计窗口里的最低点，比同期均值低约25%。以上数字可通过Deribit公开API实时复核，数值会随价格波动持续变化。</p>
+</div>
+<p>这份数据揭示了两个值得深挖的关键点。第一，如果核验时点恰好出现"历史波动率处于近期低点"的读数，而同期媒体却在报道"波动率飙升"，核验者应当立刻警觉——这种表面矛盾几乎可以确定，媒体报道引用的并非本文示例的历史波动率数据，而更可能是隐含波动率（或者是引用了不同的计算窗口、不同的数据源）。第二，即便是同一个"历史波动率"这个名词，384个小时的数据窗口本身也存在明显的区间波动（33.34%到50.54%，接近50%的相对波动幅度），说明历史波动率这个指标本身也会随统计窗口的选择、数据截取的具体时间点产生显著差异，核验者引用这个数字时应当同时说明具体的计算窗口和数据时点，而不是只给出一个孤立的百分比。</p>
+<ul>
+<li>2026年9月数据显示BTC历史波动率最新读数(33.34%)恰好处于统计窗口内的最低点，比均值低约25%。</li>
+<li>如果核验时历史波动率处于低点而媒体报道"波动率飙升"，很可能是引用了隐含波动率或不同的计算口径。</li>
+<li>历史波动率本身会随统计窗口选择产生显著差异（示例中区间达33.34%-50.54%），引用时应说明具体窗口。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：先确认报道引用的是哪一种波动率</h2>
+<p>核验一篇提到"波动率"的报道时，第一步是查证文中具体使用的术语和数据来源，判断这是历史波动率还是隐含波动率。常见的线索包括：如果报道提到"XX交易所的波动率指数"或明确引用了某个期权交易所（如Deribit的DVOL指数），这通常是隐含波动率，因为隐含波动率指数的计算天然依赖期权市场的实时报价；如果报道只是笼统地说"过去一周价格波动加剧"或引用了价格图表的视觉描述，则更可能对应历史波动率或简单的价格振幅统计，而非严格意义上的隐含波动率。核验者应当避免默认报道中的"波动率"就是某一种，而应主动查证具体的数据来源和计算方法说明。</p>
+<p>如果报道完全没有说明数据来源或计算方法，核验者应当把这类表述当作缺乏严谨性的信号，转而自行通过公开数据平台同时查询历史波动率和隐含波动率两组数据，做独立核实，而不是被动接受一篇未注明口径的报道给出的结论。这一步核验看似基础，却是避免被"波动率"这个笼统词汇误导的关键前提。</p>
+<ul>
+<li>报道提及具体交易所波动率指数（如DVOL），通常对应隐含波动率；笼统描述价格波动加剧，更可能对应历史波动率。</li>
+<li>报道未说明数据来源或计算方法时，应视为缺乏严谨性信号，自行通过公开数据平台核实。</li>
+<li>核验的第一步是明确术语所指，而非默认接受"波动率"这个笼统词汇背后的具体含义。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：核实历史波动率的具体计算窗口</h2>
+<p>即便确认报道引用的是历史波动率，核验者仍需查证这个数字的具体计算窗口——是过去7天、30天还是90天，不同窗口计算出的历史波动率数值可能有明显差异，尤其是当价格在窗口内的某一段时间经历过剧烈波动、之后又趋于平静时，短窗口和长窗口计算出的数字会讲述完全不同的故事：短窗口（如7天）会更快地反映最新的平静状态，数值可能已经明显回落；长窗口（如90天）则会因为仍然包含前段时间的剧烈波动数据，读数下降得更慢。核验者在比较不同信息源给出的历史波动率数字时，如果不核实各自使用的计算窗口，很容易把窗口差异误判为市场真实状况的分歧。</p>
+<p>此外，核验者还应查证历史波动率的计算频率——是按小时数据计算还是按日线收盘价计算，采样频率越高，越能捕捉到日内的价格波动细节，但也可能因为捕捉到短暂的插针行情而放大波动率读数。核验时应尽量选择方法论透明、样本频率与自己研究周期相匹配的数据源，而不是简单比较来自不同计算口径的数字。</p>
+<ul>
+<li>历史波动率的具体计算窗口（7天/30天/90天）会显著影响数值，短窗口更快反映最新平静状态，长窗口回落更慢。</li>
+<li>不同信息源的历史波动率数字如果计算窗口不同，直接比较容易把窗口差异误判为市场状况分歧。</li>
+<li>还应核实采样频率（小时线/日线），采样越密集越能捕捉日内细节，但也可能放大插针行情的影响。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：核实隐含波动率对应的具体到期日</h2>
+<p>如果确认报道引用的是隐含波动率，核验者还需要进一步查证这个数字对应的是哪个具体到期日的期权合约，因为不同到期日的隐含波动率可以有明显差异——这种差异被称为"波动率期限结构"(volatility term structure)。临近到期（例如一周内到期）的期权隐含波动率，通常对短期即将发生的具体事件（如某个已知的监管听证会日期）更敏感，可能会出现局部飙升；而远期到期（例如三个月后到期）的期权隐含波动率则更多反映市场对中长期不确定性的定价，波动通常更平缓。如果一篇报道笼统地说"比特币隐含波动率飙升"而不说明是哪个到期日的合约，核验者应当查证这个飙升是否只集中在某个特定到期日附近（例如恰好对应一个已知的重大事件窗口），还是所有到期日的隐含波动率都同步上升——前者是针对性的事件定价，后者才是更广泛意义上的市场恐慌情绪。</p>
+<p>核验者可以通过主流期权数据平台查询同一时间点、不同到期日的隐含波动率曲线（通常称为"波动率曲面"的一个横截面），观察曲线的形状变化，而不是只关注一个被媒体挑选出来的孤立数字。这种曲线形状本身的变化（例如从平缓曲线变为陡峭的近月尖峰），比单一数字更能揭示市场对短期与长期风险的差异化定价。</p>
+<ul>
+<li>不同到期日的期权隐含波动率可能明显不同，这种差异被称为波动率期限结构。</li>
+<li>近月到期合约的隐含波动率对具体已知事件更敏感，远月合约更多反映中长期不确定性定价。</li>
+<li>应查证波动率飙升是集中在特定到期日附近还是所有到期日同步上升，两者反映的市场情绪范围完全不同。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否已经确认报道引用的"波动率"具体是历史波动率还是隐含波动率，而非默认两者可以互换？其二，如果是历史波动率，是否查证过具体的计算窗口和采样频率，并放入历史区间做横向比较？其三，如果是隐含波动率，是否查证过对应的具体到期日，判断飙升是局部事件定价还是全曲线同步上升？其四，是否核实过两个指标在同一时刻的方向是否一致，并理解背离本身传递的信息，而非只看单一指标的绝对数值？把这四个问题逐一核实之后，才能对一篇提到"波动率"的报道形成准确判断，而不是被一个未说明具体所指的笼统词汇带偏。全文仅讨论核验方法论，不针对任何具体时点的市场状况做结论性判断，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：波动率类型是否明确、计算窗口是否查证、到期日结构是否核实、两指标方向是否交叉比对。</li>
+<li>2026年9月真实数据显示BTC历史波动率最新读数处于近期统计窗口低点，与"波动率飙升"这类笼统表述形成对照。</li>
+<li>全文为核验方法论讨论，不对任何具体时点的市场状况做结论性判断，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 两种"波动率"，回答的是完全不同的问题</a></li>
+          <li><a href="#sec-2">2. 实测数据：真实的比特币历史波动率走势</a></li>
+          <li><a href="#sec-3">3. 核验方法一：先确认报道引用的是哪一种波动率</a></li>
+          <li><a href="#sec-4">4. 核验方法二：核实历史波动率的具体计算窗口</a></li>
+          <li><a href="#sec-5">5. 核验方法三：核实隐含波动率对应的具体到期日</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.deribit.com/statistics/BTC/volatility-index" target="_blank" rel="noopener">Deribit BTC波动率指数页面</a>：本文示例历史波动率数据来源，可查询DVOL隐含波动率指数与历史波动率数据</li>
+            <li><a href="https://docs.deribit.com/" target="_blank" rel="noopener">Deribit 公开API文档</a>：可用于自行抓取历史波动率与期权数据进行核验计算</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/btc-options-put-call-ratio-verification-guide.html">比特币期权Put/Call比率核验：所谓的看跌情绪，数据真实吗</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/market/options-vault-tail-risk.html">期权金库尾部风险核验：卖方策略的隐藏敞口</a></li>
+          <li><a href="/research/market/perpetual-margin-tier-threshold-verification-guide.html">永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了</a></li>
+          <li><a href="/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html">跨交易所永续合约资金费率差异核验：同一份BTC合约，费率能差多少</a></li>
+          <li><a href="/research/basics/stablecoin-market-cap-dominance-verification-guide.html">稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱</a></li>
+          <li><a href="/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f68cc1b9"></script>
+</body>
+</html>
