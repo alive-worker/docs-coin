@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports &quot;Bitcoin 24-hour trading volume surges,&quot; it almost never breaks down how much of that number comes from spot trading versus perpetual futures — spot volume reflects real asset changing hands, while most perpetual volume is the same capital repeatedly opening and closing leveraged positions. Using real spot and perpetual volume data pulled from CoinGecko's public API, this guide breaks down how to verify whether a reported volume surge reflects genuine buying pressure or just leveraged turnover. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Bitcoin Spot vs. Perpetual Trading Volume Verification: Who&#39;s Actually Behind a &quot;Volume Surge&quot; Headline - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports &quot;Bitcoin 24-hour trading volume surges,&quot; it almost never breaks down how much of that number comes from spot trading versus perpetual futures — spot volume reflects real asset changing hands, while most perpetual volume is the same capital repeatedly opening and closing leveraged positions. Using real spot and perpetual volume data pulled from CoinGecko's public API, this guide breaks down how to verify whether a reported volume surge reflects genuine buying pressure or just leveraged turnover. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-09T19:00:05+08:00">
+  <meta property="article:modified_time" content="2026-09-09T19:00:05+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bitcoin Spot vs. Perpetual Trading Volume Verification: Who&#39;s Actually Behind a &quot;Volume Surge&quot; Headline - Crypto Research Notes">
+  <meta name="twitter:description" content="Spot and perpetual volume are often lumped into one headline number. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-btc-spot-vs-perpetual-trading-volume-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Bitcoin Spot vs Perpetual Trading Volume Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-btc-spot-vs-perpetual-trading-volume-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-btc-spot-vs-perpetual-trading-volume-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Trading volume structure verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-btc-spot-vs-perpetual-trading-volume-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html", "name": "Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a 'Volume Surge' Headline - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a 'Volume Surge' Headline", "item": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#article", "headline": "Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a 'Volume Surge' Headline", "description": "Spot volume reflects real asset transfer, while most perpetual volume is leveraged capital repeatedly churning. Media coverage often lumps the two into one number. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["spot trading volume verification","perpetual volume verification","leveraged turnover verification","volume surge verification","market structure methodology"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-09T19:00:05+08:00", "dateModified": "2026-09-09T19:00:05+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline</h1>
+        <p class="article-summary">"Bitcoin 24-hour trading volume tops $XX billion as market heats up" — headlines like this appear whenever price moves sharply, but the underlying "volume" number usually mixes together two economically different kinds of trading: spot volume reflects real bitcoin changing hands between buyer and seller, with every dollar corresponding to an actual asset transfer; perpetual futures volume, by contrast, mostly comes from leveraged traders repeatedly opening and closing positions — the same margin can be leveraged, closed, and reopened multiple times within a day by the same trader, generating notional volume far exceeding the actual capital involved, without any real bitcoin changing hands at all. Using real spot exchange volume and perpetual futures volume data pulled from CoinGecko's public API, this guide breaks down how to verify whether a reported "volume surge" reflects genuine buying or selling pressure, or is mostly leveraged traders churning the same capital. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-09T19:00:05+08:00">2026-09-09 19:00:05 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-btc-spot-vs-perpetual-trading-volume-verification-guide-en.svg" alt="Bitcoin Spot vs Perpetual Trading Volume Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether the reported "volume" explicitly splits spot from perpetual (derivatives) volume, or lumps both into one total</li>
+            <li><span class="article-verify-check">✓</span>Query spot and perpetual volume separately from a public data platform and compute the ratio between them</li>
+            <li><span class="article-verify-check">✓</span>Cross-check the concurrent change in open interest to judge whether the volume growth reflects new leveraged positions or repeated churn of existing ones</li>
+            <li><span class="article-verify-check">✓</span>Verify the reporting scope of the volume data (which exchanges are covered, whether wash-trading has been filtered) — coverage varies significantly across data sources</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "24-Hour Trading Volume" Is Often a Blended, Ambiguous Number</h2>
+<p>Crypto media outlets and exchange ticker pages routinely publish a single "24-hour trading volume" figure without clarifying whether it only counts real spot buying and selling, or also folds in perpetual and expiring futures volume. This distinction matters enormously, because the two categories carry entirely different economic meaning: every dollar of spot volume corresponds to an actual transfer of bitcoin, with the buyer paying fiat or a stablecoin to receive real BTC and the seller doing the reverse. Perpetual futures volume, on the other hand, is just the notional contract value of margin-leveraged trades — a trader might open a $10,000 notional position with only $1,000 of margin, and that full $10,000 gets counted as "volume," even though only the margin actually moved and no real bitcoin changed hands.</p>
+<p>More importantly, perpetuals inherently encourage high-frequency repeated trading — the same group of leveraged traders might open, close, and reopen positions multiple times within a single day, with each action counted again in the volume statistics, even though it may just represent the same principal being re-leveraged repeatedly rather than new capital entering or exiting the market. If a report vaguely states that "Bitcoin volume surged" without disclosing the spot-versus-perpetual composition, it becomes easy to mistake high-frequency churn by leveraged traders for genuinely increased buying or selling pressure.</p>
+<ul>
+<li>Spot volume reflects real asset transfer; perpetual volume is mostly notional margin churn — the two carry entirely different economic meaning.</li>
+<li>Perpetuals inherently encourage high-frequency open/close cycles, so the same principal can be counted into volume statistics multiple times.</li>
+<li>When a report cites a "volume surge" without disclosing spot/perpetual composition, it should not be assumed to reflect genuinely increased buying pressure.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual Ratio Between Spot and Perpetual Volume</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from CoinGecko's public API at the time of verification in September 2026: across the top 100 exchanges tracked by CoinGecko, combined 24-hour Bitcoin spot volume totaled approximately 897,737 BTC — roughly $7.085 billion at the concurrent price of about $78,921. At the same moment, across the 146 Bitcoin perpetual futures markets CoinGecko tracks, combined 24-hour perpetual trading volume totaled approximately $12.376 billion. In other words, notional perpetual futures volume was roughly 1.75x real spot volume — meaning that if a "Bitcoin trading volume" figure simply sums spot and perpetual totals, more than 60% of it actually comes from leveraged futures churn rather than genuine spot asset transfer. These figures can be independently re-verified in real time through CoinGecko's public API (the /exchanges and /derivatives endpoints); the ratio itself shifts continuously with market leverage sentiment.</p>
+</div>
+<p>This real data reveals a structural fact that is easy to overlook: even without any extreme leverage-driven episode, perpetual futures volume is routinely and significantly higher than spot volume under normal market conditions — a 1.75x ratio means that under ordinary circumstances, the derivatives component already constitutes the majority of any blended "volume" figure. This also means that when media reports describe a price move accompanied by "volume hitting a new high," verifiers should default to assuming that new high is primarily driven by perpetual contract volume, unless they can independently confirm that spot volume itself rose by a comparable magnitude — spot and perpetual volume frequently do not move in sync, with perpetual volume typically amplified faster during sharp price moves due to cascading liquidations, while spot volume growth tends to be far more modest.</p>
+<ul>
+<li>Real September 2026 data: spot 24-hour volume ~$7.085 billion, perpetual futures volume ~$12.376 billion — perpetuals at roughly 1.75x spot.</li>
+<li>Under normal market conditions derivatives volume already exceeds spot; a "volume surge" report that doesn't break down composition is likely driven mostly by perpetuals.</li>
+<li>During sharp price moves, perpetual volume is often amplified faster by cascading liquidations, while spot volume growth is typically far more modest.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Split Spot and Perpetual Volume Before Citing a Total</h2>
+<p>The first step in verifying any report citing "trading volume" is to check whether the data source explicitly distinguishes spot from perpetual volume. Most mainstream data platforms (CoinGecko, CoinMarketCap) list separate rankings for "spot volume" and "derivatives volume" on their exchange pages, and verifiers should actively query both figures rather than accepting a single blended total. If a cited number is noticeably higher than the known sum of major spot exchanges' volume, it can generally be assumed to include a derivatives component, and verifiers should further check what proportion that represents.</p>
+<p>It's also worth noting the possibility of wash trading at some exchanges, particularly smaller ones, where reported spot volume may be artificially inflated to attract users and listing attention. Verifiers can reference CoinGecko's Exchange Trust Score mechanism, giving more weight to data from higher-trust-score exchanges and treating volume figures from lower-scored exchanges with more skepticism, rather than accepting raw unfiltered volume totals at face value.</p>
+<ul>
+<li>The first verification step is checking whether the data source has already split spot from perpetual volume, rather than accepting one blended total.</li>
+<li>A cited figure noticeably higher than known major spot exchanges' combined volume generally indicates a derivatives component is included.</li>
+<li>Cross-check exchange trust scores for wash-trading suspicion, giving more weight to higher-trust-score exchange data.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Cross-Check Open Interest Changes to Judge the Nature of the Growth</h2>
+<p>Volume alone is insufficient to determine what's actually happening to market structure — verifiers should also cross-check the concurrent change in open interest (OI). If perpetual volume rises sharply alongside a significant simultaneous increase in open interest, it indicates a substantial amount of new leveraged positioning has entered the market, typically corresponding to genuinely increased directional conviction (long or short). But if volume rises sharply while open interest stays flat or even declines, that volume growth more likely reflects frequent churn of existing positions, or repositioning after liquidations, rather than new capital entering — the total outstanding position size hasn't changed; chips are simply changing hands rapidly among traders.</p>
+<p>This cross-check is especially critical for judging whether a "volume surge" reflects genuine demand: an abnormally high volume-to-open-interest ratio typically corresponds to a period of intense sentiment and frequent mutual liquidation between longs and shorts, rather than a healthy uptrend or downtrend driven by sustained incremental capital inflow. Verifiers should read volume and open interest together, not interpret either number in isolation.</p>
+<ul>
+<li>Volume rising alongside a synchronized increase in open interest typically corresponds to new leveraged positioning and genuinely increased directional conviction.</li>
+<li>Volume rising while open interest stays flat or declines more likely reflects frequent churn of existing positions or repositioning after liquidations.</li>
+<li>An abnormally high volume-to-open-interest ratio often corresponds to intense mutual liquidation between longs and shorts, not healthy incremental capital inflow.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Check the Reporting Scope and Methodology Behind Volume Data</h2>
+<p>Different data platforms can use noticeably different reporting scope and methodology for "trading volume," directly affecting the final headline number. Verifiers should check how many exchanges a data source actually covers, whether it includes all major derivatives exchanges (Binance, Bybit, OKX, Gate, etc.), and whether the reporting window is a fixed UTC calendar day or a rolling 24-hour window — different windows can produce noticeably different volume figures during periods of sharp price movement. Some platforms also apply an additional credibility-weighted "normalized volume" adjustment that strips out suspected wash trading, and these cleaned figures are typically more conservative than raw blended totals; verifiers citing a specific number should clarify whether it is a raw total or a cleaned, adjusted figure.</p>
+<p>When comparing volume figures across different sources, verifiers should first confirm whether the underlying methodology is consistent, rather than assuming the discrepancy itself reflects a real change in market conditions — apparently conflicting volume numbers are often simply the result of two data sources covering different sets of exchanges or using different calculation windows.</p>
+<ul>
+<li>Different data platforms cover different exchange sets and use different reporting windows, which can produce noticeably different volume totals.</li>
+<li>Some platforms provide a cleaned "normalized volume" that strips out suspected wash trading, typically more conservative than raw totals.</li>
+<li>When comparing volume figures across sources, first confirm methodology consistency before treating a discrepancy as a real market signal.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, does the reported "volume" figure explicitly split spot from perpetual (derivatives) volume, rather than presenting one blended total? Second, has the spot volume been checked for wash-trading suspicion, giving preference to higher-trust-score exchange data? Third, has the concurrent change in open interest been cross-checked to judge whether volume growth reflects new leveraged positioning or repeated churn of existing positions? Fourth, has the underlying data methodology (exchange coverage, reporting window, whether cleaned of wash trading) been verified, to avoid mistaking a methodology discrepancy for a real market change? Only after working through these four questions can a report citing a "volume surge" be accurately assessed, rather than taken at face value from an undisclosed blended number. This article discusses verification methodology only and does not offer any conclusive judgment about market conditions at any specific point in time; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is spot/perpetual split disclosed, has wash-trading suspicion been checked, has open interest been cross-checked, has methodology been verified.</li>
+<li>Real September 2026 data shows BTC perpetual volume at roughly 1.75x spot volume — derivatives already constitute the majority under normal market conditions.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about market conditions at any specific point in time; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. "24-Hour Trading Volume" Is Often a Blended, Ambiguous Number</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual Ratio Between Spot and Perpetual Volume</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Split Spot and Perpetual Volume Before Citing a Total</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Cross-Check Open Interest Changes to Judge the Nature of the Growth</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Check the Reporting Scope and Methodology Behind Volume Data</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/exchanges" target="_blank" rel="noopener">CoinGecko Exchange Volume Rankings</a>: source for this article's spot volume data; also provides exchange trust scores</li>
+            <li><a href="https://www.coingecko.com/en/derivatives" target="_blank" rel="noopener">CoinGecko Derivatives Markets Page</a>: source for this article's perpetual volume data; also provides open interest per market</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing</a></li>
+          <li><a href="/en/research/market/open-interest-concentration-verification-guide.html">Perpetual Open Interest Verification: Is a Surging OI Real Demand or Leverage Stacking</a></li>
+          <li><a href="/en/research/market/cross-exchange-perpetual-funding-rate-divergence-verification-guide.html">Cross-Exchange Perpetual Funding Rate Divergence Verification: How Different Can the Same BTC Contract's Rate Be</a></li>
+          <li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Maintenance Margin Tier Verification: Crossing One Threshold Changes Both Leverage Cap and Margin Rate</a></li>
+          <li><a href="/en/research/market/btc-options-put-call-ratio-verification-guide.html">Bitcoin Options Put/Call Ratio Verification: Is the Reported Bearish Sentiment Data Real</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score and Self-Reported Volume Verification: Does a High Trust Score Prove Real Volume</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f8935fd3"></script>
+</body>
+</html>

@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'bitcoin-historical-implied-volatility-verification-guide',
-  publishedISO: '2026-09-09T12:37:20+08:00',
-  tagColor: 'teal',
+  slug: 'btc-spot-vs-perpetual-trading-volume-verification-guide',
+  publishedISO: '2026-09-09T19:00:05+08:00',
+  tagColor: 'rose',
   topic: 'market',
 
   zh: {
-    h1: '比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种',
-    tagLabel: '波动率指标核验',
-    cardDesc: '历史波动率与隐含波动率可能在同一时刻朝相反方向变化，媒体报道常不加区分地混用。本文用Deribit真实数据拆解核验方法。',
+    h1: '比特币现货与永续合约成交量核验：媒体说的"成交量暴涨"，到底是谁在买',
+    tagLabel: '成交量结构核验',
+    cardDesc: '现货成交量代表真实资产易手，永续合约成交量大部分是杠杆反复换手，两者常被媒体混算成一个数字。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing',
-    tagLabel: 'Volatility Metrics Verification',
-    cardDesc: 'Historical and implied volatility can move in opposite directions at the same moment, yet media coverage often conflates them. A real-data breakdown using Deribit\'s public API.',
+    h1: 'Bitcoin Spot vs. Perpetual Trading Volume Verification: Who\'s Actually Behind a "Volume Surge" Headline',
+    tagLabel: 'Trading Volume Structure Verification',
+    cardDesc: 'Spot volume reflects real asset transfer, while most perpetual volume is leveraged capital repeatedly churning. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'bitcoin-historical-implied-volatility-verification-guide',
     'nft-floor-price-market-cap-verification-guide',
     'defi-hack-fund-recovery-rate-verification-guide',
     'defi-apy-base-reward-composition-verification-guide',
