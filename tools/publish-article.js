@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'defi-hack-fund-recovery-rate-verification-guide',
-  publishedISO: '2026-09-08T18:43:42+08:00',
-  tagColor: 'indigo',
-  topic: 'governance',
+  slug: 'nft-floor-price-market-cap-verification-guide',
+  publishedISO: '2026-09-09T09:31:33+08:00',
+  tagColor: 'azure',
+  topic: 'basics',
 
   zh: {
-    h1: 'DeFi黑客攻击资金追回率核验：「资金已归还」的报道，真实追回比例是多少',
-    tagLabel: '资金追回率核验',
-    cardDesc: '高调追回案例容易造成整体乐观印象，但真实统计数据显示追回率远低于这种叙事暗示的水平。本文用DefiLlama真实数据库拆解核验方法。',
+    h1: 'NFT地板价与市值核验：展示的floor price，和真实成交价差多少',
+    tagLabel: 'NFT估值核验',
+    cardDesc: '地板价只反映最急于出手卖家的报价，市值假设全部持仓能同时以地板价卖出，两者都存在系统性陷阱。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'DeFi Hack Fund Recovery Rate Verification: What "Funds Returned" Headlines Actually Mean',
-    tagLabel: 'Fund Recovery Verification',
-    cardDesc: 'High-profile recovery cases create an overly optimistic impression, but real statistics show the overall recovery rate is far lower. A real-data breakdown using DefiLlama\'s public hack database.',
+    h1: 'NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices',
+    tagLabel: 'NFT Valuation Verification',
+    cardDesc: 'Floor price reflects only the most eager seller\'s offer, and market cap assumes the entire supply could sell at once — both carry systematic traps. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'defi-hack-fund-recovery-rate-verification-guide',
     'defi-apy-base-reward-composition-verification-guide',
     'stablecoin-market-cap-dominance-verification-guide',
     'cross-exchange-perpetual-funding-rate-divergence-verification-guide',

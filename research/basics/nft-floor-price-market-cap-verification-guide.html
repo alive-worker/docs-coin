@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NFT地板价与市值核验：展示的floor price，和真实成交价差多少 - 加密货币研究</title>
+  <meta name="description" content="NFT交易平台展示的「地板价」(floor price)是该系列当前挂单价格最低的一件，市值则是地板价乘以总供应量得出的理论数字，但这两个指标都存在系统性的解读陷阱——地板价可以被极小额挂单操纵，市值假设整个系列能同时以地板价卖出，这个假设在现实中几乎不成立。本文用CoinGecko公开抓取的真实NFT数据，拆解地板价与真实成交均价之间的差距，以及如何核验一个NFT系列的市值数字是否有意义。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="NFT地板价与市值核验：展示的floor price，和真实成交价差多少 - 加密货币研究">
+  <meta property="og:description" content="NFT交易平台展示的「地板价」(floor price)是该系列当前挂单价格最低的一件，市值则是地板价乘以总供应量得出的理论数字，但这两个指标都存在系统性的解读陷阱——地板价可以被极小额挂单操纵，市值假设整个系列能同时以地板价卖出，这个假设在现实中几乎不成立。本文用CoinGecko公开抓取的真实NFT数据，拆解地板价与真实成交均价之间的差距，以及如何核验一个NFT系列的市值数字是否有意义。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-09T09:31:33+08:00">
+  <meta property="article:modified_time" content="2026-09-09T09:31:33+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NFT地板价与市值核验：展示的floor price，和真实成交价差多少 - 加密货币研究">
+  <meta name="twitter:description" content="NFT地板价和市值都存在系统性陷阱，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="NFT地板价与市值核验：展示的floor price，和真实成交价差多少 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-nft-floor-price-market-cap-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","NFT估值核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html", "name": "NFT地板价与市值核验：展示的floor price，和真实成交价差多少 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "NFT地板价与市值核验：展示的floor price，和真实成交价差多少", "item": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#article", "headline": "NFT地板价与市值核验：展示的floor price，和真实成交价差多少", "description": "NFT地板价可被极小额挂单操纵，市值假设整个系列能同时以地板价卖出，这个假设几乎不成立。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["NFT地板价核验","NFT市值核验","真实成交均价核验","挂单操纵识别","流动性深度核验"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-09T09:31:33+08:00", "dateModified": "2026-09-09T09:31:33+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/basics/nft-floor-price-market-cap-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>NFT地板价与市值核验：展示的floor price，和真实成交价差多少</h1>
+        <p class="article-summary">NFT交易平台和数据聚合网站展示的「地板价」(floor price)，指的是该系列当前所有挂单里价格最低的一件，很多人默认这是"买入这个系列门槛"的合理代理指标，而"市值"这个数字，则通常是用地板价乘以该系列的总供应量简单计算得出。但这两个数字都存在系统性的解读陷阱：地板价只反映最急于出手的卖家愿意接受的价格，可能与绝大多数真实成交价存在明显差距；市值的计算方法隐含一个几乎不可能成立的假设——整个系列的持有者能够同时以地板价这个单一价格全部卖出，而真实市场里稍微增加卖压，价格就会因为买盘深度不足而迅速下滑。本文用CoinGecko公开抓取的真实NFT数据，拆解地板价与真实成交均价之间的具体差距，以及如何核验一个NFT系列展示的市值数字是否有实际意义。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-09T09:31:33+08:00">2026-09-09 09:31:33</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-nft-floor-price-market-cap-verification-guide.svg" alt="NFT地板价与市值核验：展示的floor price，和真实成交价差多少 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>用公开数据平台核实一个系列的地板价与最近实际成交均价之间的差距，而非直接假设两者相近</li>
+            <li><span class="article-verify-check">✓</span>核实展示的市值数字是否只是地板价乘以总供应量的理论计算，而非真实可实现的整体估值</li>
+            <li><span class="article-verify-check">✓</span>核实近期的真实成交笔数（日均交易量），而非只看挂单数量或地板价本身的波动</li>
+            <li><span class="article-verify-check">✓</span>意识到地板价可以被持有者用极小额挂单短期操纵，核实价格变动是否伴随对应的真实成交量支撑</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. 地板价：只反映最想卖的那一个人的报价</h2>
+<p>地板价的计算逻辑很简单——扫描某个NFT系列在市场上所有当前挂单，取其中价格最低的一个。这个设计初衷是给潜在买家一个"进入门槛"的参考，但它有一个容易被忽略的性质：它只反映了愿意以最低价格出手的那一位卖家的报价，不代表这个系列的普遍成交水平，也不代表其他持有者愿意接受的价格。如果一个系列里绝大多数持有者的心理价位远高于当前地板价，但恰好有一两位急需变现的持有者挂出低价单，地板价就会被这一两笔挂单锚定在一个明显偏低的水平，即便这个系列的真实成交价长期稳定在更高区间。</p>
+<p>反过来，地板价同样可以被人为操纵拉高：持有者可以自己或联合他人挂出一笔高于市场认知的报价，只要这笔报价成为"当前最低挂单"，就会被计入地板价，即便这笔报价从未有人接盘成交。核验者应当意识到，地板价本质上是一个订单簿快照统计量，反映的是即时报价结构，而不是一个反映真实市场共识的成交价格，两者之间的差距在流动性较薄的系列里可能非常显著。</p>
+<ul>
+<li>地板价是当前所有挂单里价格最低的一个，只反映最急于出手的卖家报价，不代表普遍成交水平。</li>
+<li>地板价可能被少数急于变现的挂单锚定在偏低水平，也可能被无人接盘的高价挂单人为拉高。</li>
+<li>地板价本质是订单簿快照统计量，与反映真实市场共识的成交价格之间可能存在显著差距。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：真实的地板价与成交均价对比</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过CoinGecko公开API（api.coingecko.com/api/v3/nfts/bored-ape-yacht-club）实测抓取的Bored Ape Yacht Club系列真实数据：当前地板价6.82 ETH（约合16,981.88美元）；按地板价乘以总供应量(9,998件)计算得出的理论市值约1.698亿美元；但同一时刻的24小时真实成交数据显示，过去24小时仅成交8笔，实际成交均价约11.59 ETH，比地板价高出约70%；24小时总成交额约92.69 ETH（约合23.08万美元）；持有该系列的独立地址数约5,667个。以上数字可通过CoinGecko公开API实时复核，数值会随市场状况持续变化。</p>
+</div>
+<p>这份数据揭示了两个值得深挖的关键点。第一，实际成交均价(11.59 ETH)比展示的地板价(6.82 ETH)高出约70%，说明地板价这个数字在这一时刻明显低估了该系列真实的成交水平——真正促成交易的买家，平均支付的价格远高于挂单表上那个最低报价，核验者如果只参考地板价去判断这个系列的"入场成本"，会得出一个明显偏低的估计。第二，1.698亿美元的理论市值和仅23.08万美元的24小时真实成交额之间存在数量级的落差——市值假设全部9,998件都能以地板价卖出，但真实市场一天只消化了8笔交易，这意味着这个理论市值数字对判断"这个系列真实值多少钱"几乎没有参考价值，它只是一个数学乘法结果，而非任何意义上的可实现估值。</p>
+<ul>
+<li>2026年9月数据显示BAYC实际成交均价比展示地板价高出约70%，地板价明显低估了真实成交水平。</li>
+<li>理论市值(1.698亿美元)与24小时真实成交额(约23万美元)之间存在数量级落差，市值假设与真实流动性严重脱节。</li>
+<li>仅凭地板价判断系列"入场成本"或用市值判断"系列价值"，都可能得出与现实脱节的结论。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：查证地板价与真实成交均价的差距</h2>
+<p>核验一个NFT系列的地板价是否具有参考意义，第一步是找到能同时展示地板价与近期真实成交记录的数据源，计算两者之间的具体差距百分比，而非默认地板价就约等于市场普遍认可的成交价格。多数NFT数据聚合平台会同时提供"地板价"和"近24小时/7天平均成交价"两组数字，核验者应当把这两组数字放在一起对比：如果实际成交均价显著高于地板价（如本文示例中的约70%差距），说明该系列的真实交易活跃在明显更高的价格带，地板价这个入口报价只是极少数急售者的行为，不能代表这个系列的普遍价值区间；如果两者比较接近，则说明地板价对该系列而言是一个相对可靠的参考锚点。</p>
+<p>核验者还应留意成交均价样本量的大小——如果一个时间窗口内的成交笔数极少（例如本文示例24小时仅8笔），这个"均价"本身的统计意义也有限，容易被个别几笔异常高价或低价成交拉偏，应当尽量拉长统计窗口（例如7天或30天）来获得更稳定的成交均价参考，而不是只看24小时这个短窗口的数字。</p>
+<ul>
+<li>应同时查证地板价与近期真实成交均价，计算两者具体差距百分比，而非默认两者相近。</li>
+<li>实际成交均价显著高于地板价，说明地板价只是少数急售行为的报价，不代表系列普遍价值区间。</li>
+<li>成交笔数样本量过小时，均价统计意义有限，应拉长统计窗口获取更稳定的参考数据。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：拆穿"市值"这个数字的计算假设</h2>
+<p>NFT系列的"市值"几乎总是用一个简单公式计算：地板价乘以总供应量。这个公式隐含一个在现实市场里几乎不可能成立的假设——该系列全部持有者能够同时以地板价这个单一价格顺利卖出所有持仓。真实市场的运作方式完全不同：任何试图大量抛售的行为，都会因为买盘深度不足而迅速把价格压低，越往后卖出的部分成交价格会越低，这就是所谓的"清算价值"和"市值"之间的本质区别——市值是一个静态快照下的数学乘法结果，清算价值则需要考虑抛售规模对价格本身造成的冲击，两者在流动性充足的资产（如市值最大的几种加密货币）里可能相差不大，但在NFT这类流动性天然稀薄的资产类别里，两者可以相差数量级。</p>
+<p>核验者在看到一个NFT系列被冠以"市值X亿美元"这类表述时，应当追问这个数字的具体计算方法，并结合本文第2节提到的24小时真实成交额做对比——如果真实成交额只有理论市值的千分之一甚至更低，说明这个"市值"数字更接近一个营销话术，而非任何意义上可以拿来跟其他资产类别做横向比较的有效指标。更严谨的替代性核验方法是查看该系列近期（如30天）的累计真实成交总额，用这个数字作为衡量该系列真实资金活跃规模的参考，而非直接引用地板价乘以供应量得出的市值。</p>
+<ul>
+<li>NFT"市值"通常是地板价乘以总供应量，隐含全部持仓能同时以地板价顺利卖出的不现实假设。</li>
+<li>真实抛售会因买盘深度不足压低价格，"清算价值"与静态计算的"市值"在流动性稀薄资产上可能相差数量级。</li>
+<li>应结合近期真实成交总额核验市值数字的实际意义，而非直接引用地板价乘以供应量的理论结果。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：核实地板价变动是否有真实成交量支撑</h2>
+<p>地板价本身的短期波动，也需要结合真实成交量一起核验，才能判断这个变动是否反映了真实的市场供需变化。如果一个系列的地板价在短时间内大幅上涨，但同期的成交笔数和成交总额并没有明显放大，说明这次涨价很可能只是某个或某几个持有者主动撤下低价挂单、或挂出更高报价所致，并没有真实买盘在这个新的价格区间完成成交，这种"无量上涨"的地板价缺乏可信度，随时可能在下一次有持有者急于变现时被打回原形。相反，如果地板价上涨的同时，成交笔数和成交总额同步明显放大，说明确实有真实买盘愿意在新的价格区间接盘，这种"放量上涨"的地板价更值得信赖。</p>
+<p>核验者可以把地板价的时间序列和成交量的时间序列叠加在一起观察，这类图表在部分NFT数据平台上可以直接查看。任何脱离成交量支撑的地板价剧烈波动，都应当被谨慎对待，尤其是在决定是否要以当前地板价作为参考价格执行实际交易之前。</p>
+<ul>
+<li>地板价短期变动应结合同期成交笔数与成交总额一起核验，判断是否有真实买卖盘支撑。</li>
+<li>"无量上涨"的地板价可能只是撤单或挂高价所致，没有真实成交支撑，可信度较低。</li>
+<li>"放量上涨"（地板价与成交量同步放大）的地板价更值得信赖，可叠加时间序列图表辅助判断。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否已经查证过展示的地板价与近期真实成交均价之间的具体差距，而非默认两者相近？其二，是否拆穿过"市值"数字背后地板价乘以总供应量的计算假设，并结合真实成交总额判断其实际意义？其三，是否核实过成交均价所依据的样本笔数是否足够，避免被极小样本量的异常值误导？其四，是否核实过地板价的近期变动是否有对应的真实成交量放大支撑，而非"无量上涨"？把这四个问题逐一核实之后，才能对一个NFT系列展示的地板价和市值数字形成相对客观的判断，而不是把一个可能被少数挂单操纵、且隐含不现实假设的数字，直接等同于这个系列的真实市场价值。全文仅讨论核验方法本身，不针对任何具体系列做优劣评价，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：地板价与成交均价差距是否查证、市值计算假设是否拆穿、成交样本量是否充足、地板价变动是否有量能支撑。</li>
+<li>2026年9月真实数据显示BAYC实际成交均价比地板价高出约70%，理论市值与24小时真实成交额存在数量级落差。</li>
+<li>全文为核验方法论讨论，不对任何具体NFT系列做优劣评价，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 地板价：只反映最想卖的那一个人的报价</a></li>
+          <li><a href="#sec-2">2. 实测数据：真实的地板价与成交均价对比</a></li>
+          <li><a href="#sec-3">3. 核验方法一：查证地板价与真实成交均价的差距</a></li>
+          <li><a href="#sec-4">4. 核验方法二：拆穿"市值"这个数字的计算假设</a></li>
+          <li><a href="#sec-5">5. 核验方法三：核实地板价变动是否有真实成交量支撑</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/nft" target="_blank" rel="noopener">CoinGecko NFT排行页面</a>：本文示例地板价与成交数据来源，可实时查询各系列当前地板价、成交均价与持有地址数</li>
+            <li><a href="https://www.coingecko.com/en/api/documentation" target="_blank" rel="noopener">CoinGecko 公开API文档</a>：可用于自行抓取NFT系列数据进行核验计算</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/governance/nft-collection-research-guide.html">NFT系列研究方法：从地板价到持有者分布</a></li>
+          <li><a href="/research/market/orderbook-depth-verification-guide.html">订单簿深度核验：挂单量为何总在成交前消失</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：所谓多链生态，资金实际集中在几条链</a></li>
+          <li><a href="/research/basics/stablecoin-market-cap-dominance-verification-guide.html">稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱</a></li>
+          <li><a href="/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">空投快照区块选择核验：项目方挑一个「合适」的区块高度，能操纵多少分配结果</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任评分与真实成交量核验：官方公布的24小时成交量，有多少是真实流动性</a></li>
+          <li><a href="/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9808fde6"></script>
+</body>
+</html>

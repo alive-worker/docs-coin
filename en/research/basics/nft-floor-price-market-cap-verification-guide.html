@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices - Crypto Research Notes</title>
+  <meta name="description" content="The &quot;floor price&quot; an NFT marketplace displays is the lowest current listing price in a collection, and &quot;market cap&quot; is usually just that floor price multiplied by total supply — but both metrics carry systematic interpretation traps. Floor price can be manipulated by a single tiny listing, and market cap assumes the entire collection could sell simultaneously at the floor price, an assumption that almost never holds in reality. Using real NFT data pulled from CoinGecko's public API, this guide breaks down the gap between floor price and real average sale price, and how to verify whether a collection's displayed market cap figure is meaningful. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices - Crypto Research Notes">
+  <meta property="og:description" content="The &quot;floor price&quot; an NFT marketplace displays is the lowest current listing price in a collection, and &quot;market cap&quot; is usually just that floor price multiplied by total supply — but both metrics carry systematic interpretation traps. Floor price can be manipulated by a single tiny listing, and market cap assumes the entire collection could sell simultaneously at the floor price, an assumption that almost never holds in reality. Using real NFT data pulled from CoinGecko's public API, this guide breaks down the gap between floor price and real average sale price, and how to verify whether a collection's displayed market cap figure is meaningful. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-09T09:31:33+08:00">
+  <meta property="article:modified_time" content="2026-09-09T09:31:33+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices - Crypto Research Notes">
+  <meta name="twitter:description" content="NFT floor price and market cap both carry systematic traps. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="NFT Floor Price and Market Cap Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-nft-floor-price-market-cap-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","NFT valuation verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-nft-floor-price-market-cap-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html", "name": "NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices", "item": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#article", "headline": "NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices", "description": "NFT floor price can be manipulated by a single tiny listing, and market cap assumes an entire collection could sell simultaneously at the floor price — an assumption that almost never holds. A real-data breakdown of the verification method. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["NFT floor price verification","NFT market cap verification","real average sale price verification","listing manipulation detection","liquidity depth verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-09T09:31:33+08:00", "dateModified": "2026-09-09T09:31:33+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/nft-floor-price-market-cap-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/nft-floor-price-market-cap-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>NFT Floor Price and Market Cap Verification: How Far the Displayed Floor Is From Real Sale Prices</h1>
+        <p class="article-summary">The "floor price" NFT marketplaces and data aggregators display refers to the lowest-priced listing currently active in a collection, and many people default to treating it as a reasonable proxy for "the entry cost of this collection." "Market cap," meanwhile, is usually just a simple calculation of floor price multiplied by the collection's total supply. But both numbers carry systematic interpretation traps: floor price only reflects the price the most eager-to-sell holder is willing to accept, and can diverge substantially from what most real transactions actually settle at; market cap's calculation implicitly assumes something almost impossible in reality — that every holder in the collection could simultaneously sell their entire position at that single floor price — while in real markets, even a modest increase in sell pressure quickly drags the price down due to insufficient buy-side depth. Using real NFT data pulled from CoinGecko's public API, this guide breaks down the specific gap between floor price and real average sale price, and how to verify whether a collection's displayed market cap figure has any practical meaning. This article discusses verification methodology only and is not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-09T09:31:33+08:00">2026-09-09 09:31:33</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-nft-floor-price-market-cap-verification-guide-en.svg" alt="NFT Floor Price and Market Cap Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Verify the gap between a collection's floor price and its recent real average sale price via a public data platform, rather than assuming the two are close</li>
+            <li><span class="article-verify-check">✓</span>Confirm whether a displayed market cap figure is merely a theoretical calculation of floor price times total supply, rather than a genuinely realizable overall valuation</li>
+            <li><span class="article-verify-check">✓</span>Check the actual recent number of real sales (daily average volume), rather than looking only at listing count or floor price fluctuation itself</li>
+            <li><span class="article-verify-check">✓</span>Recognize that floor price can be manipulated short-term by a holder placing a tiny listing, and confirm whether a price move is backed by corresponding real sales volume</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Floor Price: Only Reflects the Offer of the One Person Most Eager to Sell</h2>
+<p>Floor price's calculation logic is simple — scan every current listing for an NFT collection and take the lowest one. This is designed to give potential buyers a reference for the "entry threshold," but it has an easily overlooked property: it only reflects the price offered by the one seller willing to accept the lowest amount, not the collection's general trading level, and not what other holders would be willing to accept. If most holders in a collection have a much higher reservation price than the current floor, but one or two holders who urgently need liquidity happen to list at a low price, the floor price gets anchored at a noticeably low level by that one or two listings — even if the collection's real transaction prices have long been stable in a much higher range.</p>
+<p>Conversely, floor price can just as easily be artificially inflated: a holder can list — alone or in coordination with others — at a price above what the market would genuinely accept, and as long as that listing becomes the "current lowest," it counts toward the floor price, even if no one has ever bought it. Researchers should recognize that floor price is essentially an order-book-snapshot statistic reflecting the instantaneous listing structure, not a figure reflecting genuine market consensus on transaction price — and the gap between the two can be very significant for collections with thin liquidity.</p>
+<ul>
+<li>Floor price is the lowest of all current listings, reflecting only the most eager-to-sell offer, not the general transaction level.</li>
+<li>Floor price can be anchored low by a few urgent-liquidity listings, or artificially inflated by high listings no one ever buys.</li>
+<li>Floor price is essentially an order-book snapshot statistic and can diverge significantly from a price reflecting genuine market consensus.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: An Actual Comparison of Floor Price vs. Average Sale Price</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Real Data</p>
+  <p>Real Bored Ape Yacht Club collection data captured via CoinGecko's public API (api.coingecko.com/api/v3/nfts/bored-ape-yacht-club) during verification in September 2026: current floor price 6.82 ETH (approximately $16,981.88); theoretical market cap calculated as floor price times total supply (9,998 items) at approximately $169.8 million. But real 24-hour transaction data at the same moment shows only 8 sales occurred in the past 24 hours, with a real average sale price of approximately 11.59 ETH — about 70% higher than the floor price; 24-hour total sales volume was approximately 92.69 ETH (approximately $230,831); the number of unique addresses holding the collection was approximately 5,667. These figures can be re-verified in real time via CoinGecko's public API, and will continue to change with market conditions.</p>
+</div>
+<p>This dataset reveals two points worth digging into. First, the real average sale price (11.59 ETH) is about 70% higher than the displayed floor price (6.82 ETH), showing the floor price figure noticeably underestimates the collection's real transaction level at this moment — buyers who actually completed purchases paid, on average, far more than the lowest listing on the board. A researcher relying only on the floor price to judge this collection's "entry cost" would arrive at a noticeably understated estimate. Second, there's an order-of-magnitude gap between the theoretical market cap ($169.8 million) and the real 24-hour transaction volume (just $230,831) — market cap assumes all 9,998 items could sell at the floor price, but the real market only absorbed 8 trades in a day, meaning this theoretical market cap figure has almost no reference value for judging "what this collection is really worth" — it's purely a multiplication result, not a realizable valuation in any meaningful sense.</p>
+<ul>
+<li>September 2026 data shows BAYC's real average sale price is about 70% higher than the displayed floor price, meaningfully understating the real transaction level.</li>
+<li>There's an order-of-magnitude gap between theoretical market cap ($169.8 million) and real 24-hour transaction volume (about $230K), showing the market cap assumption is severely disconnected from real liquidity.</li>
+<li>Judging a collection's "entry cost" from floor price alone, or its "value" from market cap alone, can both lead to conclusions disconnected from reality.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Confirm the Gap Between Floor Price and Real Average Sale Price</h2>
+<p>The first step in verifying whether a collection's floor price has reference value is finding a data source that shows both floor price and recent real transaction records, and calculating the specific percentage gap between them, rather than defaulting to assuming floor price roughly equals the generally accepted transaction price. Most NFT data aggregators provide both a "floor price" figure and a "24-hour/7-day average sale price" figure; researchers should compare the two directly. If the real average sale price is significantly higher than the floor price (as in this article's example, roughly 70% higher), that shows the collection's genuine trading activity is happening at a noticeably higher price band, and the floor-price entry quote is just the behavior of a small number of urgent sellers, not representative of the collection's general value range. If the two are close, the floor price is a relatively reliable reference anchor for that collection.</p>
+<p>Researchers should also watch the sample size behind the average sale price — if very few transactions occurred within a given window (as in this article's example, only 8 in 24 hours), this "average" itself has limited statistical meaning and can be easily skewed by a few unusually high or low sales. Extending the measurement window (e.g., 7 or 30 days) yields a more stable average sale price reference, rather than relying on a short 24-hour window alone.</p>
+<ul>
+<li>Check both floor price and recent real average sale price, calculating the specific percentage gap, rather than defaulting to assuming they're close.</li>
+<li>A real average sale price significantly higher than floor price shows the floor is just a few urgent sellers' offer, not representative of general value.</li>
+<li>When the transaction sample size is too small, the average has limited statistical meaning — extend the measurement window for a more stable reference.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Expose the Calculation Assumption Behind "Market Cap"</h2>
+<p>An NFT collection's "market cap" is almost always calculated with a simple formula: floor price times total supply. This formula implicitly assumes something almost impossible in a real market — that every holder in the collection could simultaneously and successfully sell their entire position at that single floor price. Real markets work completely differently: any attempt at large-scale selling will quickly push the price down due to insufficient buy-side depth, and each subsequent sale in that liquidation will fetch a lower price than the last — this is the fundamental difference between "liquidation value" and "market cap." Market cap is a mathematical multiplication result under a static snapshot; liquidation value has to account for the price impact caused by the sell-off's own scale. The two might not differ much for highly liquid assets (like the largest cryptocurrencies by market cap), but for a naturally thin-liquidity asset class like NFTs, they can differ by an order of magnitude.</p>
+<p>When researchers see an NFT collection described as having a "market cap of $X hundred million," they should ask how that number was specifically calculated, and compare it against the real 24-hour transaction volume discussed in Section 2 — if the real transaction volume is only one-thousandth of the theoretical market cap or even less, that "market cap" figure is closer to a marketing talking point than any metric meaningful for cross-comparison with other asset classes. A more rigorous alternative verification method is to check the collection's cumulative real transaction total over a recent period (e.g., 30 days), and use that figure as a reference for the collection's genuine scale of active capital, rather than directly citing floor price times supply.</p>
+<ul>
+<li>NFT "market cap" is usually floor price times total supply, implicitly assuming an unrealistic scenario where the entire position could sell simultaneously at the floor price.</li>
+<li>Real liquidation pushes prices down due to insufficient buy-side depth; "liquidation value" and a statically calculated "market cap" can differ by an order of magnitude for thin-liquidity assets.</li>
+<li>Verify a market cap figure's practical meaning against recent real transaction totals, rather than directly citing the theoretical result of floor price times supply.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Confirm Whether Floor Price Movement Is Backed by Real Volume</h2>
+<p>Short-term floor price fluctuations themselves also need to be verified alongside real transaction volume to judge whether the move reflects genuine market supply-and-demand change. If a collection's floor price rises sharply in a short period, but transaction count and total volume over the same period haven't noticeably expanded, this price increase is likely just the result of one or a few holders withdrawing low listings or posting higher ones — with no real buy-side actually completing purchases at this new price range. This kind of "volumeless rally" in floor price lacks credibility and can easily be reversed the next time a holder urgently needs to sell. Conversely, if floor price rises alongside a noticeable, synchronized increase in transaction count and total volume, that shows real buy-side interest genuinely willing to transact at the new price range — this kind of "volume-backed rally" is more trustworthy.</p>
+<p>Researchers can overlay the floor price time series with the transaction volume time series to observe them together — some NFT data platforms provide this chart directly. Any sharp floor-price swing detached from volume support should be treated with caution, especially before deciding to use the current floor price as a reference for an actual trade.</p>
+<ul>
+<li>Short-term floor price moves should be verified alongside transaction count and total volume over the same period, to judge whether real buy/sell interest supports them.</li>
+<li>A "volumeless rally" in floor price may just be withdrawn listings or higher postings with no real transactions backing it, and carries low credibility.</li>
+<li>A "volume-backed rally" (floor price and volume rising together) is more trustworthy; overlaying time-series charts can help make this judgment.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, have you checked the specific gap between a displayed floor price and the recent real average sale price, rather than defaulting to assuming they're close? Second, have you exposed the calculation assumption behind the "market cap" figure (floor price times total supply) and judged its practical meaning against real transaction totals? Third, have you confirmed whether the sample size behind the average sale price is sufficient, avoiding being misled by outliers from a tiny sample? Fourth, have you confirmed whether a recent floor price movement is backed by a corresponding increase in real transaction volume, rather than a "volumeless rally"? Only after verifying these four points can you form a relatively objective judgment of an NFT collection's displayed floor price and market cap figures, rather than treating a number that may be manipulated by a few listings and rests on an unrealistic assumption as equivalent to the collection's real market value. This article discusses verification methodology only, does not evaluate any specific collection as superior or inferior, and is provided for research and educational purposes only — not investment advice.</p>
+<ul>
+<li>Four-question checklist: floor-to-average-price gap checked, market cap calculation assumption exposed, transaction sample size confirmed sufficient, floor price movement checked for volume backing.</li>
+<li>Real September 2026 data shows BAYC's real average sale price about 70% higher than floor price, with an order-of-magnitude gap between theoretical market cap and 24-hour real transaction volume.</li>
+<li>This article discusses verification methodology only, does not rank any specific NFT collection, and is not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Floor Price: Only Reflects the Offer of the One Person Most Eager to Sell</a></li>
+          <li><a href="#sec-2">2. Real Data: An Actual Comparison of Floor Price vs. Average Sale Price</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Confirm the Gap Between Floor Price and Real Average Sale Price</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Expose the Calculation Assumption Behind "Market Cap"</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Confirm Whether Floor Price Movement Is Backed by Real Volume</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/nft" target="_blank" rel="noopener">CoinGecko NFT Rankings Page</a>: source of this article's example floor price and transaction data, can be used to check current floor price, average sale price, and holder count for any collection in real time</li>
+            <li><a href="https://www.coingecko.com/en/api/documentation" target="_blank" rel="noopener">CoinGecko Public API Documentation</a>: usable to independently pull NFT collection data for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned may change over time; always refer to official up-to-date information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/nft-collection-research-guide.html">NFT Collection Research Method: From Floor Price to Holder Distribution</a></li>
+          <li><a href="/en/research/market/orderbook-depth-verification-guide.html">Order Book Depth Verification: Why Displayed Liquidity Vanishes Right Before It Fills</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: Where "Multi-Chain" Capital Is Actually Concentrated</a></li>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What the "Sidelined Capital" Signal Actually Measures</a></li>
+          <li><a href="/en/research/governance/airdrop-snapshot-block-selection-manipulation-verification-guide.html">Airdrop Snapshot Block Selection Verification: How Much Can Projects Manipulate Distribution by Choosing a "Convenient" Block Height</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score vs. Reported Volume Verification: How Much of the 24h Volume Is Real Liquidity</a></li>
+          <li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi APY Composition Verification: How Much of the Displayed Rate Is Base Interest vs. Token Rewards</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology, on-chain metrics, and fund-flow observation — helping readers evaluate crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Payment Proxy</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk, please make your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9808fde6"></script>
+</body>
+</html>
