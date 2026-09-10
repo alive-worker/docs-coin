@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价 - 加密货币研究</title>
+  <meta name="description" content="加密媒体报道&quot;某稳定币短暂脱锚&quot;时，很少说明这个脱锚幅度是按日线收盘价计算的，还是按盘中最低成交价计算的——同一枚稳定币在同一天，日线收盘偏离可能只有几个基点，但盘中某一分钟的极端偏离可能达到日线数据的十倍以上，两种统计口径反映的风险完全不是一回事。本文用CoinGecko公开抓取的真实USDC与USDT过去90天日线价格数据，拆解如何核验一篇脱锚报道具体引用的是哪种统计口径，以及日线数据为什么会系统性掩盖盘中的短暂脱锚。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="稳定币脱锚幅度核验：说&quot;脱锚&quot;时，用的是日线收盘价还是盘中最低价 - 加密货币研究">
+  <meta property="og:description" content="加密媒体报道&quot;某稳定币短暂脱锚&quot;时，很少说明这个脱锚幅度是按日线收盘价计算的，还是按盘中最低成交价计算的——同一枚稳定币在同一天，日线收盘偏离可能只有几个基点，但盘中某一分钟的极端偏离可能达到日线数据的十倍以上，两种统计口径反映的风险完全不是一回事。本文用CoinGecko公开抓取的真实USDC与USDT过去90天日线价格数据，拆解如何核验一篇脱锚报道具体引用的是哪种统计口径，以及日线数据为什么会系统性掩盖盘中的短暂脱锚。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-10T09:51:02+08:00">
+  <meta property="article:modified_time" content="2026-09-10T09:51:02+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="稳定币脱锚幅度核验：说&quot;脱锚&quot;时，用的是日线收盘价还是盘中最低价 - 加密货币研究">
+  <meta name="twitter:description" content="日线收盘价与盘中最低价反映的脱锚幅度可能差十倍，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="稳定币脱锚幅度核验 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-stablecoin-peg-deviation-daily-close-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","脱锚幅度核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html", "name": "稳定币脱锚幅度核验：说\"脱锚\"时，用的是日线收盘价还是盘中最低价 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "稳定币脱锚幅度核验：说\"脱锚\"时，用的是日线收盘价还是盘中最低价", "item": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#article", "headline": "稳定币脱锚幅度核验：说\"脱锚\"时，用的是日线收盘价还是盘中最低价", "description": "日线收盘价会系统性掩盖盘中的短暂极端脱锚，两种统计口径反映的风险完全不同。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["稳定币脱锚核验","日线收盘价核验","盘中极值核验","锚定偏离统计口径","稳定币风险方法论"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-10T09:51:02+08:00", "dateModified": "2026-09-10T09:51:02+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价</h1>
+        <p class="article-summary">"XX稳定币一度短暂脱锚"——这类标题在加密媒体上时有出现，但几乎从不说明报道所引用的脱锚幅度具体是按什么口径统计的。这个区分至关重要：如果按日线收盘价计算，一枚稳定币可能全年绝大多数时候的偏离都只有几个基点，几乎可以忽略不计；但如果按盘中分钟级甚至秒级的最低成交价计算，同一枚稳定币在某个流动性骤降的瞬间，价格可能短暂跌到远低于日线数据所能反映的水平——只是因为收盘时价格又迅速回归，日线数据就把这次极端事件完全"抹平"了。本文用CoinGecko公开抓取的真实USDC与USDT过去90天日线价格数据，拆解如何核验一篇脱锚报道具体引用的是哪种统计口径，以及为什么日线数据天然无法反映盘中的短暂脱锚风险。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-10T09:51:02+08:00">2026-09-10 09:51:02</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-stablecoin-peg-deviation-daily-close-verification-guide.svg" alt="稳定币脱锚幅度核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实报道引用的脱锚幅度是按日线收盘价、日线最低价，还是盘中分钟级/秒级极值计算的</li>
+            <li><span class="article-verify-check">✓</span>用公开数据平台分别查询日线数据与更高频率的历史数据，比较两者反映的偏离幅度差异</li>
+            <li><span class="article-verify-check">✓</span>核实脱锚事件的持续时间——是持续数小时的结构性偏离，还是数分钟内自行修复的瞬时波动</li>
+            <li><span class="article-verify-check">✓</span>结合脱锚事件发生时的具体触发因素（如交易所流动性骤降、大额赎回）判断风险性质，而非只看偏离数字本身</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "脱锚"这个词，日线数据和盘中数据讲的是两个故事</h2>
+<p>稳定币"锚定"1美元的机制依赖充足的市场流动性和套利机制及时纠偏，但流动性并非任何时刻都均匀分布——在流动性骤降的短暂窗口内（例如某个交易所出现技术故障、或者某个时段大额赎回集中出现），价格可以在几分钟甚至几十秒内偏离锚定值较大幅度，随后套利者迅速入场把价格拉回接近1美元。如果统计口径是"日线收盘价"，这类瞬时事件几乎不会留下任何痕迹，因为收盘时价格早已修复；但如果统计口径是"当日盘中最低成交价"或更细粒度的分钟级数据，同一天的记录会清晰显示出这次瞬时脱锚的真实幅度。</p>
+<p>这意味着，同一枚稳定币、同一个时间段，用日线收盘价计算出的"最大脱锚幅度"和用盘中极值计算出的"最大脱锚幅度"，可能是两个数量级完全不同的数字。核验者如果不追问报道具体用的是哪种口径，就可能把"过去90天日线数据显示几乎没有脱锚"误读成"这枚稳定币过去90天内从未出现过明显的价格异常"，而后者其实是一个远超前者的、未经证实的结论。</p>
+<ul>
+<li>稳定币价格可能因为流动性骤降在盘中短暂大幅偏离锚定值，随后被套利者迅速拉回。</li>
+<li>日线收盘价统计口径几乎无法捕捉这类瞬时脱锚，因为收盘时价格通常已经修复。</li>
+<li>日线数据"几乎没有脱锚"不等于该稳定币未出现过明显的盘中价格异常，两者是不同粒度的结论。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：USDC与USDT过去90天的日线偏离幅度</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过CoinGecko公开API（/coins/{id}/market_chart，days=90，interval=daily）实测抓取的真实数据：USDC过去90天日线收盘价的最低值约0.99911美元（偏离锚定值约-8.9个基点），最高值约1.00106美元（偏离约+10.6个基点），最新读数约0.99985美元；同期USDT过去90天日线收盘价的最低值约0.99870美元（偏离约-13.0个基点），最高值约1.00022美元（偏离约+2.2个基点），最新读数约0.99968美元。以上数字均为日线收盘价口径，可通过CoinGecko公开API实时复核，数值会随查询时点持续变化。</p>
+</div>
+<p>这份数据本身传递了两层信息。第一，按日线收盘价口径衡量，两枚主流稳定币过去90天的偏离幅度都控制在极窄的区间内（个位数到十几个基点），这与"稳定币经常脱锚"的笼统印象形成明显反差，说明在日线粒度上，主流稳定币的锚定机制运行得相当稳健。第二，也正因为日线数据表现得如此平稳，如果某篇报道声称同一时间段内出现了"某次脱锚跌破0.95美元"这类远超日线数据所示范围的极端说法，核验者应当高度警惕——这种说法要么引用的是盘中极值（需要单独核实具体时间点和触发原因），要么本身缺乏数据支撑，不能直接采信。</p>
+<ul>
+<li>2026年9月实测：USDC 90天日线偏离区间约-8.9至+10.6个基点，USDT约-13.0至+2.2个基点，均处于极窄区间。</li>
+<li>日线粒度数据显示主流稳定币锚定机制运行稳健，与"稳定币经常脱锚"的笼统印象形成反差。</li>
+<li>如报道声称同期出现远超日线数据范围的极端脱锚，应核实是否引用盘中极值，或本身缺乏数据支撑。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：先确认报道引用的统计口径</h2>
+<p>核验一篇提到"脱锚"的报道时，第一步是查证具体的数据口径——是收盘价、当日最低价，还是某个具体时间点的成交价。如果报道给出了具体的时间戳（例如"9月X日 UTC时间X点X分跌至0.95美元"），说明引用的很可能是盘中某一时刻的极值，核验者应尝试通过支持分钟级或小时级数据的平台（部分交易所的历史K线数据、专门的稳定币监控工具）核实这个具体时间点的成交价格是否属实，以及当时是否伴随明显的成交量异常。如果报道只是笼统地说"某稳定币本周脱锚"而不给出具体时间点，核验者应默认这可能只是日线级别的正常波动被夸大表述，需要进一步查证。</p>
+<p>核验者还应注意，不同数据平台对"价格"的计算方式也可能不同——有些是单一交易所的成交价，有些是多交易所加权平均价。单一交易所的极端成交价（尤其是深度较浅的小型交易所）出现瞬时异常的概率远高于多交易所加权平均价，如果报道引用的是单一交易所的极端数据，其代表性和参考价值需要打折扣。</p>
+<ul>
+<li>报道给出具体时间戳的脱锚描述，很可能引用的是盘中某一时刻的极值，需核实该时间点的真实性与成交量背景。</li>
+<li>笼统描述"本周脱锚"而无具体时间点，应默认可能是日线级别正常波动被夸大表述。</li>
+<li>单一交易所成交价与多交易所加权平均价的代表性不同，前者出现瞬时异常的概率远高于后者。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：核实脱锚事件的持续时间与触发因素</h2>
+<p>即便确认某次脱锚事件真实发生，核验者还应查证这次偏离持续了多久——是几秒到几分钟内自行修复的瞬时波动，还是持续数小时甚至数天的结构性偏离。这个时间维度直接决定了事件的性质：瞬时波动通常反映的是某个特定时刻流动性不足或某个交易所的局部技术问题，套利机制很快会把价格拉回，对稳定币整体的信任基础影响有限；而持续数小时以上的结构性偏离，则可能反映更深层的问题，例如储备资产出现流动性危机、发行方赎回机制出现故障，或者市场对发行方偿付能力产生了实质性质疑，这类事件的参考价值和风险信号完全不同。</p>
+<p>核验者应进一步查证这次偏离发生时是否伴随可识别的具体触发因素——例如某个中心化交易所当时是否发生了提现暂停、是否有大额赎回集中出现、或者是否有关于发行方储备状况的负面消息传出。把偏离幅度、持续时间和触发因素三者放在一起交叉核实，才能对一次脱锚事件的严重程度形成准确判断，而不是仅凭一个孤立的价格数字下结论。</p>
+<ul>
+<li>脱锚持续时间是判断事件性质的关键：瞬时波动通常影响有限，持续数小时以上的结构性偏离可能反映更深层问题。</li>
+<li>应查证偏离发生时是否伴随可识别的触发因素，如交易所提现暂停、大额赎回集中或储备状况负面消息。</li>
+<li>偏离幅度、持续时间、触发因素三者交叉核实，才能准确判断脱锚事件的严重程度。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：横向比较不同稳定币的历史偏离基线</h2>
+<p>核验单一稳定币的脱锚幅度时，核验者还应建立一个横向比较的基线——同一时间段内，其他主流稳定币的日线偏离幅度大致处于什么区间。如果某枚稳定币的偏离幅度明显超出同类稳定币的常态区间（例如本文实测数据中USDC与USDT的90天区间都在十几个基点以内），这本身就是一个值得关注的相对信号，即便绝对数字看起来不大。反之，如果某次"脱锚"报道给出的偏离幅度实际上落在同类稳定币的正常波动区间之内，核验者应当谨慎对待这类报道的夸大程度。</p>
+<p>这种横向比较也有助于识别数据源本身的系统性偏差——如果核验者发现某个数据平台报出的所有稳定币偏离幅度都普遍偏高于其他平台，这可能说明该平台的数据采集方法或交易所样本存在问题，而非市场真的出现了普遍性的脱锚现象。核验者应交叉使用至少两个独立数据源，避免被单一数据源的系统性偏差误导。</p>
+<ul>
+<li>建立同类稳定币历史偏离幅度的横向基线，判断某次事件是否明显超出常态区间。</li>
+<li>某次"脱锚"报道的偏离幅度若落在同类稳定币正常波动区间内，应对报道的夸大程度保持谨慎。</li>
+<li>交叉使用至少两个独立数据源，识别并排除单一数据平台可能存在的系统性偏差。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，报道引用的脱锚幅度具体是日线收盘价、日线最低价还是盘中某一时刻的极值？其二，如果引用了具体时间点的极值，是否核实过该时间点的真实成交价格与当时的成交量背景？其三，是否查证过脱锚事件的持续时间，区分瞬时波动与结构性偏离？其四，是否横向比较了同类稳定币同期的偏离基线，判断这次事件是否真的显著异常？把这四个问题逐一核实之后，才能对一篇提到"脱锚"的报道形成准确判断，而不是被一个未说明统计口径的孤立数字带偏。全文仅讨论核验方法论，不针对任何具体稳定币的当前风险状况做结论性判断，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：统计口径是否明确、极值时间点是否核实、持续时间是否查证、是否有横向基线比较。</li>
+<li>2026年9月真实数据显示USDC与USDT的90天日线偏离幅度均在十几个基点以内，处于极窄区间。</li>
+<li>全文为核验方法论讨论，不对任何具体稳定币的当前风险状况做结论性判断，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. "脱锚"这个词，日线数据和盘中数据讲的是两个故事</a></li>
+          <li><a href="#sec-2">2. 实测数据：USDC与USDT过去90天的日线偏离幅度</a></li>
+          <li><a href="#sec-3">3. 核验方法一：先确认报道引用的统计口径</a></li>
+          <li><a href="#sec-4">4. 核验方法二：核实脱锚事件的持续时间与触发因素</a></li>
+          <li><a href="#sec-5">5. 核验方法三：横向比较不同稳定币的历史偏离基线</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/coins/usdc" target="_blank" rel="noopener">CoinGecko USDC 价格页面</a>：本文示例USDC历史日线数据来源</li>
+            <li><a href="https://www.coingecko.com/en/coins/tether" target="_blank" rel="noopener">CoinGecko USDT 价格页面</a>：本文示例USDT历史日线数据来源，可查询历史价格图表与API</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/basics/stablecoin-market-cap-dominance-verification-guide.html">稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱</a></li>
+          <li><a href="/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT交易对价差核验：这个「无风险套利」机会，真的存在吗</a></li>
+          <li><a href="/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">比特币现货与永续合约成交量核验：媒体说的"成交量暴涨"，到底是谁在买</a></li>
+          <li><a href="/research/market/bitcoin-historical-implied-volatility-verification-guide.html">比特币历史波动率与隐含波动率核验：媒体说的「波动率飙升」，指的是哪一种</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任分与自报成交量核验：高信任分能证明交易量真实吗</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：这个「生态繁荣」指标，几个协议就能撑起来</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=0d0ba360"></script>
+</body>
+</html>

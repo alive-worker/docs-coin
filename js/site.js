@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html': '2026-09-10 09:51:02',
     '/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html': '2026-09-09 19:00:05',
     '/research/market/bitcoin-historical-implied-volatility-verification-guide.html': '2026-09-09 12:37:20',
     '/research/basics/nft-floor-price-market-cap-verification-guide.html': '2026-09-09 09:31:33',
@@ -273,6 +274,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html': '2026-09-10 09:51:02',
 '/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html': '2026-09-09 19:00:05',
 '/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html': '2026-09-09 12:37:20',
 '/en/research/basics/nft-floor-price-market-cap-verification-guide.html': '2026-09-09 09:31:33',

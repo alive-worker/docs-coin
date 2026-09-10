@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports that a stablecoin &quot;briefly depegged,&quot; it rarely specifies whether that deviation was measured using the daily closing price or the intraday low trade price — the same stablecoin on the same day might show a daily-close deviation of only a few basis points, while an extreme intraday moment could be ten times larger, and the two methodologies describe entirely different risks. Using real 90-day daily price data for USDC and USDT pulled from CoinGecko's public API, this guide breaks down how to verify which methodology a depeg report is actually using, and why daily-close data systematically hides brief intraday depegs. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the &quot;Depeg&quot; Claim Using - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports that a stablecoin &quot;briefly depegged,&quot; it rarely specifies whether that deviation was measured using the daily closing price or the intraday low trade price — the same stablecoin on the same day might show a daily-close deviation of only a few basis points, while an extreme intraday moment could be ten times larger, and the two methodologies describe entirely different risks. Using real 90-day daily price data for USDC and USDT pulled from CoinGecko's public API, this guide breaks down how to verify which methodology a depeg report is actually using, and why daily-close data systematically hides brief intraday depegs. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-10T09:51:02+08:00">
+  <meta property="article:modified_time" content="2026-09-10T09:51:02+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the &quot;Depeg&quot; Claim Using - Crypto Research Notes">
+  <meta name="twitter:description" content="Daily close and intraday low can show wildly different depeg magnitudes. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Stablecoin Peg Deviation Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-stablecoin-peg-deviation-daily-close-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Peg deviation verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-stablecoin-peg-deviation-daily-close-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html", "name": "Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the 'Depeg' Claim Using - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the 'Depeg' Claim Using", "item": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#article", "headline": "Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the 'Depeg' Claim Using", "description": "Daily close data systematically hides brief extreme intraday depegs, and the two methodologies describe entirely different risks. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["stablecoin depeg verification","daily close price verification","intraday extreme verification","peg deviation methodology","stablecoin risk methodology"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-10T09:51:02+08:00", "dateModified": "2026-09-10T09:51:02+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using</h1>
+        <p class="article-summary">"Stablecoin X briefly depegged" — headlines like this appear from time to time in crypto media, but they almost never clarify which methodology the reported deviation was actually measured with. This distinction matters enormously: measured by daily closing price, a stablecoin might show a deviation of only a few basis points for most of the year, essentially negligible; but measured by the lowest intraday trade price down to the minute or even second, the same stablecoin could briefly trade far below what the daily-close data would ever reveal, during a sudden liquidity air pocket — the price simply recovers so quickly by close that the daily figure completely smooths over the extreme event. Using real 90-day daily price data for USDC and USDT pulled from CoinGecko's public API, this guide breaks down how to verify which methodology a depeg report is actually citing, and why daily-close data is inherently unable to capture brief intraday depeg risk. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-10T09:51:02+08:00">2026-09-10 09:51:02 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-stablecoin-peg-deviation-daily-close-verification-guide-en.svg" alt="Stablecoin Peg Deviation Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether the reported peg deviation is measured by daily closing price, daily low, or a minute-/second-level intraday extreme</li>
+            <li><span class="article-verify-check">✓</span>Query both daily-frequency and higher-frequency historical data from a public source and compare the deviation magnitudes they show</li>
+            <li><span class="article-verify-check">✓</span>Verify how long the depeg lasted — a self-correcting move over minutes, or a structural deviation persisting for hours</li>
+            <li><span class="article-verify-check">✓</span>Identify the specific trigger behind the event (e.g. an exchange liquidity drop, a large redemption) to judge its nature, rather than reading the deviation number in isolation</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "Depeg" Means Two Different Things Depending on Daily vs. Intraday Data</h2>
+<p>A stablecoin's dollar peg relies on sufficient market liquidity and timely arbitrage correction, but liquidity is not evenly distributed at every moment — during a brief window of liquidity drought (say, an exchange outage, or a burst of large redemptions clustering in a short period), the price can deviate meaningfully from the peg within minutes or even tens of seconds, before arbitrageurs quickly step in and pull it back near $1. If the reporting methodology is "daily closing price," an event like this leaves almost no trace, because the price has already recovered by the close; but if the methodology is "the day's lowest intraday trade price" or finer minute-level data, the same day's record will clearly show the true magnitude of that momentary depeg.</p>
+<p>This means that for the same stablecoin over the same window, the "maximum deviation" computed from daily closing prices and the "maximum deviation" computed from intraday extremes can differ by an entire order of magnitude. If a verifier doesn't ask which methodology a report is actually using, "90 days of daily data show almost no depeg" can easily be misread as "this stablecoin showed no notable price anomaly at all over the past 90 days" — the latter being a far stronger, unverified conclusion than the former actually supports.</p>
+<ul>
+<li>A stablecoin's price can briefly deviate significantly from its peg intraday during a liquidity drought, before arbitrageurs quickly pull it back.</li>
+<li>Daily closing price methodology essentially cannot capture this kind of momentary depeg, since the price has typically already recovered by close.</li>
+<li>"Almost no depeg" in daily data does not equal "no notable intraday price anomaly" — these are conclusions at different granularities.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: USDC and USDT's Daily Deviation Range Over the Past 90 Days</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from CoinGecko's public API (/coins/{id}/market_chart, days=90, interval=daily) at the time of verification in September 2026: USDC's 90-day daily closing price ranged from a low of approximately $0.99911 (about -8.9 basis points from peg) to a high of approximately $1.00106 (about +10.6 basis points), with the latest reading around $0.99985. Over the same period, USDT's 90-day daily closing price ranged from a low of approximately $0.99870 (about -13.0 basis points) to a high of approximately $1.00022 (about +2.2 basis points), with the latest reading around $0.99968. All figures above use the daily-close methodology and can be independently re-verified through CoinGecko's public API; the numbers shift continuously as the query window moves.</p>
+</div>
+<p>This data carries two layers of information. First, measured by daily closing price, both major stablecoins kept their 90-day deviation confined to an extremely narrow range (single digits to a dozen-odd basis points), sharply contradicting the vague impression that "stablecoins depeg frequently" — at daily granularity, the major stablecoins' peg mechanisms are actually functioning quite robustly. Second, precisely because the daily data looks this stable, if a report claims an extreme event during the same window — say, "a depeg down to $0.95" — that vastly exceeds what the daily data shows, a verifier should treat that claim with heavy skepticism: it either cites an intraday extreme (which needs to be independently verified for its specific timestamp and trigger) or simply lacks data support and should not be taken at face value.</p>
+<ul>
+<li>Real September 2026 data: USDC's 90-day daily deviation range is about -8.9 to +10.6 basis points; USDT's is about -13.0 to +2.2 basis points — both extremely narrow.</li>
+<li>Daily-granularity data shows major stablecoins' peg mechanisms functioning robustly, contradicting the vague impression that "stablecoins depeg frequently."</li>
+<li>A claimed extreme depeg during the same window that vastly exceeds the daily data range should be checked against intraday sourcing or treated as unsupported.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Confirm the Reporting Methodology First</h2>
+<p>The first step in verifying any report citing "depeg" is to check the specific methodology — closing price, daily low, or the trade price at a specific point in time. If a report gives a specific timestamp (e.g. "dropped to $0.95 at HH:MM UTC on September X"), it likely cites an intraday extreme, and verifiers should try to confirm through platforms that support minute- or hour-level data (some exchanges' historical candlestick data, dedicated stablecoin monitoring tools) whether that specific price actually occurred, and whether it was accompanied by a notable volume anomaly. If a report vaguely states "stablecoin X depegged this week" without a specific timestamp, verifiers should default to assuming this may just be normal daily-level fluctuation being overstated, and should investigate further.</p>
+<p>Verifiers should also note that different data platforms may calculate "price" differently — some use a single exchange's trade price, others use a volume-weighted average across multiple exchanges. An extreme trade price on a single exchange (especially a thinner, smaller one) is far more likely to occur as a transient anomaly than a multi-exchange weighted average; if a report cites a single-exchange extreme, its representativeness and reference value should be discounted accordingly.</p>
+<ul>
+<li>A depeg description with a specific timestamp likely cites an intraday extreme — verify that timestamp's actual price and volume context.</li>
+<li>A vague "depegged this week" claim without a specific timestamp should default to being treated as possibly overstated normal daily fluctuation.</li>
+<li>Single-exchange trade prices and multi-exchange weighted averages have very different representativeness — the former is far more prone to transient anomalies.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Check the Duration and Trigger Behind the Depeg</h2>
+<p>Even after confirming a depeg event genuinely occurred, verifiers should also check how long the deviation lasted — a momentary fluctuation self-correcting within seconds to minutes, or a structural deviation persisting for hours or even days. This time dimension directly determines the nature of the event: a momentary fluctuation typically reflects transient liquidity shortage at a specific moment or a localized technical issue at one exchange, with arbitrage quickly pulling the price back and limited impact on overall trust in the stablecoin; a structural deviation persisting for hours or longer, however, may reflect a deeper problem — a liquidity crisis in the reserve assets, a malfunction in the issuer's redemption mechanism, or genuine market doubt about the issuer's solvency — and carries an entirely different risk signal and reference value.</p>
+<p>Verifiers should further check whether the deviation coincided with an identifiable specific trigger — for instance, whether a centralized exchange suspended withdrawals at the time, whether large redemptions clustered together, or whether negative news about the issuer's reserve status was circulating. Only by cross-checking deviation magnitude, duration, and trigger together can the severity of a depeg event be accurately assessed, rather than concluding from an isolated price number alone.</p>
+<ul>
+<li>Depeg duration is key to judging an event's nature: momentary fluctuations typically have limited impact, while structural deviations persisting for hours or more may reflect deeper problems.</li>
+<li>Check whether the deviation coincided with an identifiable trigger, such as an exchange withdrawal suspension, clustered large redemptions, or negative reserve-status news.</li>
+<li>Cross-checking deviation magnitude, duration, and trigger together allows an accurate assessment of a depeg event's severity.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Benchmark Against Other Stablecoins' Historical Deviation Ranges</h2>
+<p>When verifying a single stablecoin's deviation, verifiers should also establish a comparative baseline — what range other major stablecoins' daily deviations fall into over the same period. If one stablecoin's deviation noticeably exceeds the typical range of comparable stablecoins (as in this article's real data, where both USDC's and USDT's 90-day ranges stayed within a dozen-odd basis points), that relative signal is worth attention even if the absolute number looks small. Conversely, if a "depeg" report's cited deviation actually falls within the normal fluctuation range of comparable stablecoins, verifiers should treat the report's framing with caution regarding how much it overstates the event.</p>
+<p>This kind of cross-comparison also helps identify systematic bias in a data source itself — if a verifier notices that a particular data platform consistently reports higher deviations across all stablecoins than other platforms do, that likely points to a data collection or exchange-sampling issue at that platform, rather than a genuinely widespread depeg phenomenon across the market. Verifiers should cross-reference at least two independent data sources to avoid being misled by a single source's systematic bias.</p>
+<ul>
+<li>Establish a comparative baseline of historical deviation ranges across comparable stablecoins to judge whether an event is genuinely anomalous.</li>
+<li>If a reported deviation falls within comparable stablecoins' normal fluctuation range, treat the report's framing with caution regarding overstatement.</li>
+<li>Cross-reference at least two independent data sources to identify and rule out systematic bias in any single data platform.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, is the reported deviation measured by daily closing price, daily low, or an intraday extreme at a specific point in time? Second, if a specific-timestamp extreme is cited, has that timestamp's actual trade price and volume context been verified? Third, has the depeg event's duration been checked, distinguishing momentary fluctuation from structural deviation? Fourth, has a comparative baseline against comparable stablecoins over the same period been established to judge whether the event is genuinely anomalous? Only after working through these four questions can a report citing "depeg" be accurately assessed, rather than taken at face value from an isolated number with undisclosed methodology. This article discusses verification methodology only and does not offer any conclusive judgment about any specific stablecoin's current risk status; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is methodology disclosed, has the extreme timestamp been verified, has duration been checked, is there a comparative baseline.</li>
+<li>Real September 2026 data shows USDC's and USDT's 90-day daily deviations both confined to a dozen-odd basis points — an extremely narrow range.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about any specific stablecoin's current risk status; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. "Depeg" Means Two Different Things Depending on Daily vs. Intraday Data</a></li>
+          <li><a href="#sec-2">2. Real Data: USDC and USDT's Daily Deviation Range Over the Past 90 Days</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Confirm the Reporting Methodology First</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Check the Duration and Trigger Behind the Depeg</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Benchmark Against Other Stablecoins' Historical Deviation Ranges</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/coins/usdc" target="_blank" rel="noopener">CoinGecko USDC Price Page</a>: source for this article's USDC historical daily data</li>
+            <li><a href="https://www.coingecko.com/en/coins/tether" target="_blank" rel="noopener">CoinGecko USDT Price Page</a>: source for this article's USDT historical daily data; also provides historical price charts and API access</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What Methodology Traps Hide Behind This "Capital Inflow" Signal</a></li>
+          <li><a href="/en/research/basics/usdc-usdt-trading-pair-spread-verification-guide.html">USDC/USDT Trading Pair Spread Verification: Does This "Risk-Free Arbitrage" Opportunity Actually Exist</a></li>
+          <li><a href="/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline</a></li>
+          <li><a href="/en/research/market/bitcoin-historical-implied-volatility-verification-guide.html">Bitcoin Historical vs. Implied Volatility Verification: Which "Volatility Spike" Headlines Are Actually Citing</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score and Self-Reported Volume Verification: Does a High Trust Score Prove Real Volume</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: How Few Protocols Can Prop Up This "Ecosystem Health" Metric</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=0d0ba360"></script>
+</body>
+</html>

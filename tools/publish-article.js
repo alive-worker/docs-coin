@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'btc-spot-vs-perpetual-trading-volume-verification-guide',
-  publishedISO: '2026-09-09T19:00:05+08:00',
-  tagColor: 'rose',
-  topic: 'market',
+  slug: 'stablecoin-peg-deviation-daily-close-verification-guide',
+  publishedISO: '2026-09-10T09:51:02+08:00',
+  tagColor: 'cobalt',
+  topic: 'governance',
 
   zh: {
-    h1: '比特币现货与永续合约成交量核验：媒体说的"成交量暴涨"，到底是谁在买',
-    tagLabel: '成交量结构核验',
-    cardDesc: '现货成交量代表真实资产易手，永续合约成交量大部分是杠杆反复换手，两者常被媒体混算成一个数字。本文用CoinGecko真实数据拆解核验方法。',
+    h1: '稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价',
+    tagLabel: '脱锚幅度核验',
+    cardDesc: '日线收盘价会系统性掩盖盘中的短暂极端脱锚，两种统计口径反映的风险完全不同。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Bitcoin Spot vs. Perpetual Trading Volume Verification: Who\'s Actually Behind a "Volume Surge" Headline',
-    tagLabel: 'Trading Volume Structure Verification',
-    cardDesc: 'Spot volume reflects real asset transfer, while most perpetual volume is leveraged capital repeatedly churning. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using',
+    tagLabel: 'Peg Deviation Verification',
+    cardDesc: 'Daily close data systematically hides brief extreme intraday depegs, and the two methodologies describe entirely different risks. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'btc-spot-vs-perpetual-trading-volume-verification-guide',
     'bitcoin-historical-implied-volatility-verification-guide',
     'nft-floor-price-market-cap-verification-guide',
     'defi-hack-fund-recovery-rate-verification-guide',
