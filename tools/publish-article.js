@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'stablecoin-peg-deviation-daily-close-verification-guide',
-  publishedISO: '2026-09-10T09:51:02+08:00',
-  tagColor: 'cobalt',
-  topic: 'governance',
+  slug: 'defi-protocol-mcap-tvl-ratio-verification-guide',
+  publishedISO: '2026-09-10T14:08:30+08:00',
+  tagColor: 'sage',
+  topic: 'basics',
 
   zh: {
-    h1: '稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价',
-    tagLabel: '脱锚幅度核验',
-    cardDesc: '日线收盘价会系统性掩盖盘中的短暂极端脱锚，两种统计口径反映的风险完全不同。本文用CoinGecko真实数据拆解核验方法。',
+    h1: 'DeFi协议市值/TVL比值核验："协议规模"和代币估值，完全是两码事',
+    tagLabel: '协议估值核验',
+    cardDesc: 'TVL统计的是用户存入的第三方资产，代币市值反映的是市场估值，两者可能相差上百倍。本文用DefiLlama真实数据拆解核验方法。',
   },
   en: {
-    h1: 'Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using',
-    tagLabel: 'Peg Deviation Verification',
-    cardDesc: 'Daily close data systematically hides brief extreme intraday depegs, and the two methodologies describe entirely different risks. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing',
+    tagLabel: 'Protocol Valuation Verification',
+    cardDesc: 'TVL measures third-party assets deposited by users; token market cap reflects the market\'s valuation of the token. A real-data breakdown using DefiLlama\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'stablecoin-peg-deviation-daily-close-verification-guide',
     'btc-spot-vs-perpetual-trading-volume-verification-guide',
     'bitcoin-historical-implied-volatility-verification-guide',
     'nft-floor-price-market-cap-verification-guide',

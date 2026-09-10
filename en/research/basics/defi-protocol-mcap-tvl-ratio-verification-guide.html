@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports that &quot;a protocol's TVL has surpassed $X billion, an impressive scale,&quot; it often implies that number is equivalent to the protocol's own value — but TVL (Total Value Locked) measures third-party assets deposited by users into the protocol, while the protocol token's market cap reflects the market's valuation of the token itself. These two figures can differ by tens or even hundreds of times, especially for liquid staking and bridge protocols, where TVL can reach tens of billions while token market cap is a small fraction. Using real TVL and market cap data pulled from DefiLlama's public API, this guide breaks down how to verify whether a &quot;protocol size&quot; claim refers to locked assets or token valuation. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi Protocol Market Cap to TVL Ratio Verification: &quot;Protocol Size&quot; and Token Valuation Are Not the Same Thing - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports that &quot;a protocol's TVL has surpassed $X billion, an impressive scale,&quot; it often implies that number is equivalent to the protocol's own value — but TVL (Total Value Locked) measures third-party assets deposited by users into the protocol, while the protocol token's market cap reflects the market's valuation of the token itself. These two figures can differ by tens or even hundreds of times, especially for liquid staking and bridge protocols, where TVL can reach tens of billions while token market cap is a small fraction. Using real TVL and market cap data pulled from DefiLlama's public API, this guide breaks down how to verify whether a &quot;protocol size&quot; claim refers to locked assets or token valuation. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-10T14:08:30+08:00">
+  <meta property="article:modified_time" content="2026-09-10T14:08:30+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Protocol Market Cap to TVL Ratio Verification: &quot;Protocol Size&quot; and Token Valuation Are Not the Same Thing - Crypto Research Notes">
+  <meta name="twitter:description" content="TVL reflects deposited assets, token market cap reflects valuation — the two are often conflated. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-protocol-mcap-tvl-ratio-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Protocol Market Cap to TVL Ratio Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-protocol-mcap-tvl-ratio-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-defi-protocol-mcap-tvl-ratio-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Protocol valuation verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-protocol-mcap-tvl-ratio-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html", "name": "DeFi Protocol Market Cap to TVL Ratio Verification: 'Protocol Size' and Token Valuation Are Not the Same Thing - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Protocol Market Cap to TVL Ratio Verification: 'Protocol Size' and Token Valuation Are Not the Same Thing", "item": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#article", "headline": "DeFi Protocol Market Cap to TVL Ratio Verification: 'Protocol Size' and Token Valuation Are Not the Same Thing", "description": "TVL measures third-party assets deposited by users; token market cap reflects the market's valuation of the token. The two can differ by hundreds of times. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["TVL verification","market cap TVL ratio verification","protocol valuation methodology","locked asset verification","token valuation trap"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-10T14:08:30+08:00", "dateModified": "2026-09-10T14:08:30+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing</h1>
+        <p class="article-summary">"Protocol X's TVL surpasses $10 billion, becoming an industry giant" — headlines like this easily lead readers to an implicit assumption: the higher the TVL, the more "valuable" the protocol itself must be. But TVL (Total Value Locked) actually measures the total third-party assets users have deposited into a protocol's smart contracts — say, ETH a user has staked, or stablecoins deposited into a lending protocol — assets whose ownership remains with the user the entire time, merely custodied temporarily by the contract. The protocol token's market cap, by contrast, reflects the market's valuation of the protocol itself (including its governance rights, expected future cash flows, and brand value). There is no necessary proportional relationship between the two figures — a protocol can easily custody tens of billions of dollars in user assets while its token's market cap is only a tiny fraction of that scale, because the token itself may carry no direct cash-flow claim, or the market may judge the protocol's moat to be shallow. Using real TVL and market cap data pulled from DefiLlama's public API, this guide breaks down how to verify whether a "protocol size" claim actually refers to total locked assets or token market valuation. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-10T14:08:30+08:00">2026-09-10 14:08:30 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-protocol-mcap-tvl-ratio-verification-guide-en.svg" alt="DeFi Protocol Market Cap to TVL Ratio Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether a "protocol size" claim refers to TVL (locked assets) or token market cap — the two should not be conflated</li>
+            <li><span class="article-verify-check">✓</span>Query TVL and token market cap separately from a public data platform and compute the market-cap-to-TVL ratio to judge whether the token is relatively over- or under-valued against locked scale</li>
+            <li><span class="article-verify-check">✓</span>Understand who actually owns the locked assets in TVL — typically the users, not the protocol token holders, who have no direct claim on them</li>
+            <li><span class="article-verify-check">✓</span>Benchmark the ratio against comparable protocols to judge whether a given ratio falls within a reasonable range, rather than reading an isolated number</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. TVL Measures "Custodied Assets," Not "Protocol Value"</h2>
+<p>TVL was originally designed to measure a DeFi protocol's ability to attract capital — it's calculated by summing, at current market prices, all assets deposited into a protocol's smart contracts. This methodology means TVL fundamentally reflects "how much third-party asset value is currently custodied in this protocol," not "how much this protocol itself is worth." Take a liquid staking protocol as an example: a user deposits ETH into the protocol in exchange for a staking receipt token, and that ETH's ownership remains with the user throughout (the protocol merely stakes it on the user's behalf and collects a service fee). The protocol's TVL grows as more ETH gets deposited, but this doesn't mean the protocol's own value grows proportionally — what actually can be "captured" and reflected in the token's value is typically only the discounted present value of the fee revenue the protocol extracts from those custodied assets, a figure usually far smaller than the total custodied asset value itself.</p>
+<p>This is also why verifiers should not equate "TVL hitting a new high" with "protocol value hitting a new high." TVL growth can simply result from the underlying asset (e.g. ETH) appreciating in price, or more users depositing assets to earn yield — neither of which directly justifies a proportional increase in the protocol token's value. Conflating the two is one of the most common and most misleading valuation traps in crypto media coverage.</p>
+<ul>
+<li>TVL measures the total third-party assets deposited into a protocol's contracts; ownership typically remains with users, not the protocol itself.</li>
+<li>What a protocol can actually capture in its token's value is typically only the discounted fee revenue it extracts from custodied assets, far smaller than the total custodied value.</li>
+<li>"TVL hitting a new high" does not equal "protocol value hitting a new high" — conflating the two is a common valuation trap in crypto media coverage.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual Distribution of Market Cap to TVL Ratios</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from DefiLlama's public API (/protocols) at the time of verification in September 2026: among the top protocols ranked by TVL, Lido's TVL was approximately $24.012 billion with a token market cap of approximately $313 million — a market-cap-to-TVL ratio of about 0.01; SSV Network's TVL was approximately $12.956 billion with a token market cap of approximately $41.2 million — a ratio of about 0.003. By contrast, Tether Gold, which is backed by a physical asset, had a TVL of approximately $3.123 billion and a token market cap of approximately $2.709 billion — a ratio of about 0.87, close to 1:1 (because its token is itself a claim on gold reserves, so TVL and market cap should theoretically track closely). Protocols with similarly multi-billion-dollar TVL can show market-cap-to-TVL ratios differing by nearly a hundredfold. These figures can be independently re-verified through DefiLlama's public API; the numbers shift continuously with token prices and locked asset scale.</p>
+</div>
+<p>This data clearly shows there is no fixed proportional relationship between TVL and token market cap — the ratio's level depends on the protocol's business model. A liquid staking protocol's token (like Lido's LDO) primarily represents governance rights and an expected share of future protocol fee revenue, not a direct claim on the staked ETH itself, so a naturally low ratio is expected. An asset-backed token like Tether Gold, by contrast, is itself a claim on an equivalent value of gold reserves, so TVL (the reserve value) and token market cap should theoretically converge — a ratio close to 1 is the "normal" outcome. Without understanding this context, a verifier could easily misread Lido's "$24 billion TVL but only $313 million token market cap" as "the token is severely undervalued by the market," when in fact this is exactly the normal proportional relationship dictated by this kind of protocol's business model.</p>
+<ul>
+<li>Real September 2026 data: Lido's market-cap-to-TVL ratio is about 0.01, SSV Network's about 0.003, Tether Gold's about 0.87 — all at similarly multi-billion-dollar TVL scale, but ratios differ by nearly a hundredfold.</li>
+<li>Liquid staking protocol tokens primarily represent governance rights and expected fee revenue rather than a direct claim on locked assets, so a naturally low ratio is expected.</li>
+<li>Asset-backed tokens' (like Tether Gold) TVL and market cap should theoretically converge near 1 — this is normal, and a single standard cannot be applied to judge all protocols.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Confirm Whether "Protocol Size" Means TVL or Market Cap</h2>
+<p>The first step in verifying any report citing "protocol size" or "protocol value" is to check whether the cited figure is a TVL number or a token market cap number. If a report directly uses terms like "locked amount" or "TVL," it typically cites total locked assets; if it uses terms like "valuation" or "market cap," it should correspond to token market cap. Verifiers should be wary of reports that conflate the two — for instance, using a TVL absolute number to support a valuation-type conclusion like "this is a protocol worth $X billion." This kind of framing is logically unsound, because TVL itself is not the protocol's valuation.</p>
+<p>Verifiers can query both TVL and token market cap for the same protocol through platforms like DefiLlama and CoinGecko; if a report's cited "protocol value" figure is noticeably closer to TVL than to token market cap, that generally indicates a conceptual conflation, and this discrepancy should be factored into how the report's conclusion is understood.</p>
+<ul>
+<li>Reports using terms like "locked amount" or "TVL" typically correspond to total custodied assets; terms like "valuation" or "market cap" should correspond to token market cap — the two should not be interchanged.</li>
+<li>Using a TVL figure directly to support a valuation conclusion like "protocol worth $X billion" is logically unsound, since TVL itself is not the protocol's valuation.</li>
+<li>Query both TVL and market cap through platforms like DefiLlama and CoinGecko to check whether a report is conflating the two concepts.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Understand That "Reasonable Ranges" Differ by Business Model</h2>
+<p>There is no universally "reasonable" value for the market-cap-to-TVL ratio — verifiers need to judge it in the context of the protocol's specific business model. For pure asset-custody protocols (liquid staking, bridges), token holders typically have no direct claim on the custodied assets, and token value derives mainly from governance rights and discounted expected fee revenue, so a generally low ratio (perhaps between 0.001 and 0.05) is a normal occurrence. For asset-backed tokens (various gold- or fiat-pegged tokenized assets), TVL is essentially the reserve asset value itself, and the token's market cap should closely track TVL — a ratio near 1 is the healthy state; if such a token's ratio deviates noticeably from 1 (whether higher or lower), that is actually a signal worth scrutinizing, possibly indicating a problem with reserve asset management or market doubt about redemption capability.</p>
+<p>When comparing ratios across different protocols, verifiers should first determine which business-model category a protocol belongs to, then select the appropriate reference benchmark, rather than applying the same "reasonable range" to judge all protocols — treating a liquid staking protocol's low ratio as an "undervalued" buy signal, or dismissing an asset-backed token's deviation from 1 as normal, are both common sources of misjudgment.</p>
+<ul>
+<li>Pure asset-custody protocols (liquid staking, bridges) commonly having a low ratio is normal — token value derives mainly from governance rights and expected fee revenue.</li>
+<li>An asset-backed token's TVL is essentially its reserve asset value, so its ratio should be near 1 — a noticeable deviation from 1 is a signal worth scrutinizing.</li>
+<li>When verifying ratios across protocols, first determine the business-model category, then select the appropriate benchmark — a single standard cannot judge all protocols.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Benchmark Against Comparable Protocols to Identify Outliers</h2>
+<p>After determining a protocol's business-model category, verifiers should further benchmark it against comparable protocols to establish a more precise reference range. For example, comparing the market-cap-to-TVL ratios of several major liquid staking protocols: if one protocol's ratio is noticeably higher than the peer average, that may indicate the market is pricing in a higher governance premium or growth expectation (or it could reflect short-term speculative inflation of the token price); if noticeably lower, it may reflect market concern about that protocol's long-term competitiveness or security. This kind of cross-comparison helps verifiers judge whether an unusual ratio reflects reasonable market differentiation or warrants deeper investigation as a risk signal.</p>
+<p>Verifiers should also pay attention to the ratio's historical trend rather than a single static snapshot — if a protocol's ratio jumps sharply over a short period (say, the token price surges without a corresponding rise in TVL), it's worth checking whether there's a specific catalyst (a token unlock, a major partnership announcement) and assessing the sustainability of that change, rather than simply assuming the new ratio level will persist.</p>
+<ul>
+<li>Cross-compare market-cap-to-TVL ratios among comparable business-model protocols to establish a more precise benchmark and identify genuine outliers.</li>
+<li>A ratio noticeably above or below peer average may reflect a market premium/growth expectation or concern about competitiveness/security, respectively.</li>
+<li>Pay attention to the ratio's historical trend and specific catalysts, rather than drawing conclusions from a single static snapshot.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, does a "protocol size" claim refer to TVL or token market cap, and are the two being conflated to support a valuation conclusion? Second, is it understood that assets locked in TVL are typically owned by users, with protocol token holders having no direct claim on them? Third, has the reasonable range for the market-cap-to-TVL ratio been judged based on the protocol's specific business model (asset-custody vs. asset-backed), rather than applying a uniform standard? Fourth, has the ratio been benchmarked against comparable protocols, with attention paid to its historical trend and specific catalysts? Only after working through these four questions can a report citing "protocol size" or "protocol value" be accurately assessed, rather than taken at face value from an ambiguous, undisclosed number. This article discusses verification methodology only and does not offer any conclusive judgment about any specific protocol's current valuation; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is TVL/market cap being conflated, is asset ownership understood, is the reasonable ratio range judged by business model, has peer benchmarking been done.</li>
+<li>Real September 2026 data shows protocols at similarly multi-billion-dollar TVL scale can have market-cap-to-TVL ratios differing by nearly a hundredfold, depending on business model.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about any specific protocol's current valuation; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. TVL Measures "Custodied Assets," Not "Protocol Value"</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual Distribution of Market Cap to TVL Ratios</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Confirm Whether "Protocol Size" Means TVL or Market Cap</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Understand That "Reasonable Ranges" Differ by Business Model</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Benchmark Against Comparable Protocols to Identify Outliers</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://defillama.com/" target="_blank" rel="noopener">DefiLlama</a>: source for this article's TVL and protocol token market cap data; provides comparisons of locked amount vs. market cap across protocols</li>
+            <li><a href="https://www.coingecko.com/" target="_blank" rel="noopener">CoinGecko</a>: can be used to cross-check protocol token market cap and price data</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: How Few Protocols Can Prop Up This "Ecosystem Health" Metric</a></li>
+          <li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi Protocol APY Composition Verification: How Much of the Displayed Yield Is Base Interest vs. Token Rewards</a></li>
+          <li><a href="/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using</a></li>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What Methodology Traps Hide Behind This "Capital Inflow" Signal</a></li>
+          <li><a href="/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score and Self-Reported Volume Verification: Does a High Trust Score Prove Real Volume</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a87606fd"></script>
+</body>
+</html>
