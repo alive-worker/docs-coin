@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols" - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports that &quot;the DEX sector is thriving, with hundreds of protocols in bloom,&quot; the evidence cited is usually protocol count or aggregate TVL — but the more direct measure of whether a protocol is genuinely being used at scale is fee revenue: every real trade generates a fee, and this figure is hard to prop up with marketing narrative alone. Using real DEX fee data pulled from DefiLlama's public API, this guide breaks down why fee revenue concentration is often even more extreme than TVL concentration, and how to verify the real revenue distribution behind an &quot;ecosystem thriving&quot; claim. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind &quot;Hundreds of DEX Protocols&quot; - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports that &quot;the DEX sector is thriving, with hundreds of protocols in bloom,&quot; the evidence cited is usually protocol count or aggregate TVL — but the more direct measure of whether a protocol is genuinely being used at scale is fee revenue: every real trade generates a fee, and this figure is hard to prop up with marketing narrative alone. Using real DEX fee data pulled from DefiLlama's public API, this guide breaks down why fee revenue concentration is often even more extreme than TVL concentration, and how to verify the real revenue distribution behind an &quot;ecosystem thriving&quot; claim. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-10T17:24:19+08:00">
+  <meta property="article:modified_time" content="2026-09-10T17:24:19+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind &quot;Hundreds of DEX Protocols&quot; - Crypto Research Notes">
+  <meta name="twitter:description" content="Fee revenue concentration is often even more extreme than TVL concentration. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DEX Fee Revenue Concentration Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-dex-fee-revenue-concentration-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Fee revenue verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html", "name": "DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind 'Hundreds of DEX Protocols' - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind 'Hundreds of DEX Protocols'", "item": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#article", "headline": "DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind 'Hundreds of DEX Protocols'", "description": "Fee revenue reflects genuine trading activity, and its concentration is often even more extreme than TVL concentration. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["DEX fee verification","revenue concentration verification","protocol activity methodology","long-tail protocol verification","ecosystem narrative verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-10T17:24:19+08:00", "dateModified": "2026-09-10T17:24:19+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/dex-fee-revenue-concentration-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols"</h1>
+        <p class="article-summary">"The DEX sector is blooming, hundreds of protocols thriving together" — this kind of narrative shows up frequently in crypto media industry overviews, typically citing total protocol count or aggregate TVL as evidence. But neither a large protocol count nor a large TVL directly proves that activity in this sector is genuinely distributed — the metric that truly reflects "are users actually using this protocol to trade" is fee revenue: fees come from every real trade executed, they can't be conjured out of token incentives or marketing narrative, and they're much harder to artificially inflate than TVL (which can be pushed up quickly by a single whale's deposit). Using real DEX fee data pulled from DefiLlama's public API, this guide breaks down why fee revenue concentration is often even more extreme than TVL concentration, and how to verify the real revenue distribution behind an "ecosystem thriving, hundreds blooming" claim. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-10T17:24:19+08:00">2026-09-10 17:24:19 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dex-fee-revenue-concentration-verification-guide-en.svg" alt="DEX Fee Revenue Concentration Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check whether an "ecosystem thriving" claim is based on protocol count, TVL scale, or fee revenue — the three carry very different meanings of activity</li>
+            <li><span class="article-verify-check">✓</span>Query fee revenue for all protocols in that sector from a public data platform, compute the top protocols' share, and compare it against TVL concentration</li>
+            <li><span class="article-verify-check">✓</span>Understand that fee revenue is much harder to artificially manipulate than TVL, making it a more reliable indicator of genuine protocol usage</li>
+            <li><span class="article-verify-check">✓</span>Check the real revenue scale of long-tail protocols (the large majority ranked lower) to judge whether a "hundreds of protocols" claim carries practical meaning</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Neither Protocol Count Nor TVL Is Reliable Evidence of "Ecosystem Thriving"</h2>
+<p>A statement like "this sector has hundreds of protocols" carries almost no information by itself, because the barrier to deploying a DEX smart contract is low — any team can fork an off-the-shelf AMM code template and launch a new protocol, so protocol count growth can happen entirely independently of genuine user demand. TVL is similarly prone to being misread as a prosperity signal — TVL can balloon quickly because a protocol launches heavy token incentives to attract liquidity providers to deposit assets, and those assets may generate almost no real trading at all, simply "parked" in the protocol to farm token rewards; once the incentives end, that TVL can exit just as quickly. Fee revenue, by contrast, is fundamentally different: every fee corresponds to an actual trade that was executed, and a user must genuinely want to complete a swap to pay it — this metric cannot be conjured out of token subsidies or marketing narrative.</p>
+<p>Precisely because fee revenue is much harder to artificially manipulate, it more genuinely reflects how concentrated capital and activity actually are around leading protocols. A verifier who concludes "this sector is fragmented, competition is robust" purely from protocol count or TVL scale may be overlooking a plainer fact: even with hundreds of protocols coexisting, only a tiny handful might actually be used consistently by a large number of users to complete trades.</p>
+<ul>
+<li>Protocol count growth can happen entirely independently of genuine user demand, since the deployment barrier is low and count alone is not evidence of activity.</li>
+<li>TVL can balloon from token incentives, with those assets generating little real trading, and can exit just as quickly once incentives end.</li>
+<li>Fee revenue corresponds to actual executed trades and cannot be conjured from token subsidies or narrative, making it a more reliable activity indicator.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual Fee Revenue Distribution Across the DEX Sector</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from DefiLlama's public API (/overview/fees, filtered to category=Dexs) at the time of verification in September 2026: on that day, 469 DEX protocols generated fee revenue, totaling approximately $18.4125 million in combined 24-hour fees. Of that, the top 3 protocols by revenue (Uniswap V4, PumpSwap, Uniswap V3) accounted for approximately 57.56% combined, and the top 10 protocols accounted for approximately 90.71% combined — meaning the remaining 459 protocols (nearly 98% of the total protocol count) collectively shared less than 10% of total fee revenue. These figures can be independently re-verified through DefiLlama's public API; the specific rankings and shares shift continuously with market activity.</p>
+</div>
+<p>The degree of concentration this data reveals is far more extreme than most people would imagine from a statement like "there are numerous protocols." Among 469 protocols, the top 3 alone captured over half of the revenue — a concentration level even higher than the TVL concentration many verifiers are already familiar with, because TVL can be spread out and inflated by incentive-driven deposits across a long tail of protocols, whereas fee revenue is almost entirely driven by genuine user trading demand, which naturally tends to concentrate around the protocols with the deepest liquidity, lowest slippage, and strongest brand recognition. If a verifier sees a claim like "the DEX sector has 469 protocols," they should recognize that among those 469, likely only a single-digit number are actually generating meaningful, sustained trading volume and revenue — the vast majority may sit in a state of near-zero real usage for extended periods.</p>
+<ul>
+<li>Real September 2026 data: among 469 DEX protocols, the top 3 accounted for about 57.56% of 24-hour fee revenue, and the top 10 accounted for about 90.71%.</li>
+<li>The remaining approximately 459 protocols (nearly 98% of the total count) collectively shared less than 10% of fee revenue, indicating extremely low real activity among long-tail protocols.</li>
+<li>Fee revenue concentration is often more extreme than TVL concentration, since TVL can be spread out by incentive-driven deposits while fees directly reflect genuine trading demand.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Distinguish Whether "Thriving" Refers to Count, TVL, or Revenue</h2>
+<p>The first step in verifying a report claiming "ecosystem thriving" or "hundreds blooming" is to check whether the specific evidence cited is protocol count, aggregate TVL, or fee/revenue data. If a report only cites protocol count or total TVL, verifiers should proactively ask: how many of these protocols are actually generating meaningful fee revenue? Verifiers can query protocol count, TVL rankings, and fee rankings for the same sector simultaneously through platforms like DefiLlama, comparing the concentration each reveals to judge whether the report's chosen metric is representative.</p>
+<p>Verifiers should be especially wary of reports that only emphasize "protocol count hitting a new high" while entirely omitting revenue data — this kind of selective citation is itself a signal worth noting. If revenue data also supported a "thriving" conclusion, a report would typically cite it proactively; conversely, avoiding revenue data while only discussing count often suggests the real revenue distribution may not actually support a "blooming" narrative.</p>
+<ul>
+<li>Check whether a report's cited evidence is specifically protocol count, TVL, or fee/revenue data — the three carry different meanings of activity.</li>
+<li>Query all three data sets for the same sector through platforms like DefiLlama, comparing concentration to judge whether the report's basis is representative.</li>
+<li>A report that only emphasizes protocol count while avoiding revenue data often suggests the real revenue distribution may not support a "blooming" narrative.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Use a Simplified Top-Share Metric for Quantitative Comparison</h2>
+<p>Verifiers can borrow a simplified approach from economic market-concentration measures — without computing a full Herfindahl index, simply calculating the top-3 and top-10 protocols' share of total revenue provides a quick, comparable quantitative benchmark. If a sector's top-3 revenue share exceeds 50%, that typically indicates a highly concentrated, winner-take-most market, and a "hundreds of protocols" claim in that context is more a nominal accumulation of numbers than substantive, broad-based competition. Verifiers should compare this top-share figure against the same sector's historical data from prior months, observing whether concentration is expanding or shrinking — this reveals the trajectory of the competitive landscape far better than a single static snapshot.</p>
+<p>Verifiers should also watch for turnover among the specific protocols occupying the top 3 — if the exact names change frequently over short periods, that suggests internal competition within the sector remains intense and leading positions are not yet entrenched; if the top names stay stable over long periods, that suggests the sector has already formed a fairly entrenched moat advantage, making it difficult for new entrants to disrupt the existing order.</p>
+<ul>
+<li>Calculating the top-3 and top-10 protocols' revenue share provides a quick quantitative benchmark for sector concentration without needing a complex index.</li>
+<li>A top-3 share exceeding 50% typically indicates a highly concentrated, winner-take-most market, where a "hundreds of protocols" claim is more nominal accumulation than substantive competition.</li>
+<li>Observe the historical trend of the top share and turnover among specific protocol rankings to judge whether the competitive landscape is entrenching or still intensely contested.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Check Whether Long-Tail Protocols' Real Revenue Scale Is Meaningful</h2>
+<p>After confirming top-level concentration, verifiers should further examine the specific revenue figures for long-tail protocols (the large majority ranked lower), rather than stopping at a vague statement like "the remaining protocols collectively account for less than 10%." Dividing that remaining share by the number of long-tail protocols yields an average revenue level per long-tail protocol — a figure often low enough to directly demonstrate these protocols have essentially no substantive user trading. For example, if the top 10 among 469 protocols account for 90.71%, the remaining 459 protocols collectively share only about 9.29% of revenue (roughly $1.71 million), averaging under $4,000 in 24-hour fee revenue per protocol — a figure that typically can't even cover a protocol's basic operating costs, let alone support a claim of an "active ecosystem."</p>
+<p>Verifiers should treat this kind of long-tail protocol real revenue scale as key corroborating evidence when judging the practical meaning of a claim like "this sector has numerous protocols" — protocol count is only an upper bound; what truly determines a sector's health is how many protocols actually clear an economically meaningful revenue threshold, not the nominal total number of protocols indexed by a platform like DefiLlama.</p>
+<ul>
+<li>Calculate the average revenue level of long-tail protocols rather than stopping at a vague "remaining protocols account for under 10%" statement.</li>
+<li>In this article's real data, long-tail protocols average about $4,000 in 24-hour fee revenue, typically insufficient to cover basic operating costs.</li>
+<li>Protocol count is only a nominal upper bound — what truly determines sector health is how many protocols clear an economically meaningful revenue threshold.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, is a report's "ecosystem thriving" claim specifically based on protocol count, TVL scale, or fee revenue, and are these being conflated to support the same conclusion? Second, has the top-3 and top-10 protocols' revenue share for that sector been queried and compared against TVL concentration? Third, has the historical trend of the top share and turnover among specific protocol rankings been observed to judge the trajectory of the competitive landscape? Fourth, has the average revenue level of long-tail protocols been calculated to judge whether a "hundreds of protocols" claim carries practical economic meaning? Only after working through these four questions can a report claiming "ecosystem thriving, hundreds blooming" be accurately assessed, rather than taken at face value from a nominal protocol-count ceiling. This article discusses verification methodology only and does not offer any conclusive judgment about the current competitive state of any specific protocol or sector; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is the evidence basis clear, is the top share quantified, is the concentration trend observed, is long-tail revenue verified.</li>
+<li>Real September 2026 data shows that among 469 DEX protocols, the top 3 accounted for about 57.56% of 24-hour fee revenue, and the top 10 about 90.71%.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about the current competitive state of any specific protocol or sector; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Neither Protocol Count Nor TVL Is Reliable Evidence of "Ecosystem Thriving"</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual Fee Revenue Distribution Across the DEX Sector</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Distinguish Whether "Thriving" Refers to Count, TVL, or Revenue</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Use a Simplified Top-Share Metric for Quantitative Comparison</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Check Whether Long-Tail Protocols' Real Revenue Scale Is Meaningful</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://defillama.com/fees" target="_blank" rel="noopener">DefiLlama Fees Rankings</a>: source for this article's DEX fee data; provides revenue rankings for protocols by category</li>
+            <li><a href="https://defillama.com/" target="_blank" rel="noopener">DefiLlama</a>: can be used to cross-check TVL data and compare TVL concentration against revenue concentration</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: How Few Protocols Can Prop Up This "Ecosystem Health" Metric</a></li>
+          <li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi Protocol APY Composition Verification: How Much of the Displayed Yield Is Base Interest vs. Token Rewards</a></li>
+          <li><a href="/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline</a></li>
+          <li><a href="/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using</a></li>
+          <li><a href="/en/research/governance/exchange-trust-score-reported-volume-verification-guide.html">Exchange Trust Score and Self-Reported Volume Verification: Does a High Trust Score Prove Real Volume</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4b203e19"></script>
+</body>
+</html>

@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'defi-protocol-mcap-tvl-ratio-verification-guide',
-  publishedISO: '2026-09-10T14:08:30+08:00',
-  tagColor: 'sage',
-  topic: 'basics',
+  slug: 'dex-fee-revenue-concentration-verification-guide',
+  publishedISO: '2026-09-10T17:24:19+08:00',
+  tagColor: 'steel',
+  topic: 'market',
 
   zh: {
-    h1: 'DeFi协议市值/TVL比值核验："协议规模"和代币估值，完全是两码事',
-    tagLabel: '协议估值核验',
-    cardDesc: 'TVL统计的是用户存入的第三方资产，代币市值反映的是市场估值，两者可能相差上百倍。本文用DefiLlama真实数据拆解核验方法。',
+    h1: 'DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中',
+    tagLabel: '手续费收入核验',
+    cardDesc: '手续费收入反映真实交易活跃度，其集中度往往比TVL集中度更极端。本文用DefiLlama真实数据拆解核验方法。',
   },
   en: {
-    h1: 'DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing',
-    tagLabel: 'Protocol Valuation Verification',
-    cardDesc: 'TVL measures third-party assets deposited by users; token market cap reflects the market\'s valuation of the token. A real-data breakdown using DefiLlama\'s public API.',
+    h1: 'DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols"',
+    tagLabel: 'Fee Revenue Verification',
+    cardDesc: 'Fee revenue reflects genuine trading activity, and its concentration is often even more extreme than TVL concentration. A real-data breakdown using DefiLlama\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'defi-protocol-mcap-tvl-ratio-verification-guide',
     'stablecoin-peg-deviation-daily-close-verification-guide',
     'btc-spot-vs-perpetual-trading-volume-verification-guide',
     'bitcoin-historical-implied-volatility-verification-guide',

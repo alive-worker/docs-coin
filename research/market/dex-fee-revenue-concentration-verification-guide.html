@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中 - 加密货币研究</title>
+  <meta name="description" content="加密媒体报道&quot;DEX生态繁荣，数百个协议百花齐放&quot;时，通常引用的是协议数量或TVL总规模，但衡量一个协议是否真正被大量使用的更直接指标是手续费收入——用户每笔真实成交都会产生手续费，这个数字很难靠营销叙事撑起来。本文用DefiLlama公开抓取的真实DEX手续费数据，拆解为什么手续费收入的集中度往往比TVL集中度更极端，以及如何核验一个&quot;生态繁荣&quot;的说法背后真实的收入分布。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="DEX手续费收入集中度核验：&quot;上百个DEX协议&quot;背后，真实收入比TVL更集中 - 加密货币研究">
+  <meta property="og:description" content="加密媒体报道&quot;DEX生态繁荣，数百个协议百花齐放&quot;时，通常引用的是协议数量或TVL总规模，但衡量一个协议是否真正被大量使用的更直接指标是手续费收入——用户每笔真实成交都会产生手续费，这个数字很难靠营销叙事撑起来。本文用DefiLlama公开抓取的真实DEX手续费数据，拆解为什么手续费收入的集中度往往比TVL集中度更极端，以及如何核验一个&quot;生态繁荣&quot;的说法背后真实的收入分布。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-10T17:24:19+08:00">
+  <meta property="article:modified_time" content="2026-09-10T17:24:19+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DEX手续费收入集中度核验：&quot;上百个DEX协议&quot;背后，真实收入比TVL更集中 - 加密货币研究">
+  <meta name="twitter:description" content="手续费收入的集中度往往比TVL集中度更极端，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DEX手续费收入集中度核验 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-dex-fee-revenue-concentration-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","手续费收入核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dex-fee-revenue-concentration-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html", "name": "DEX手续费收入集中度核验：\"上百个DEX协议\"背后，真实收入比TVL更集中 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DEX手续费收入集中度核验：\"上百个DEX协议\"背后，真实收入比TVL更集中", "item": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#article", "headline": "DEX手续费收入集中度核验：\"上百个DEX协议\"背后，真实收入比TVL更集中", "description": "手续费收入反映真实交易活跃度，其集中度往往比TVL集中度更极端。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DEX手续费核验","收入集中度核验","协议活跃度方法论","长尾协议核验","生态繁荣叙事核验"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-10T17:24:19+08:00", "dateModified": "2026-09-10T17:24:19+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/dex-fee-revenue-concentration-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/dex-fee-revenue-concentration-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中</h1>
+        <p class="article-summary">"DEX赛道百花齐放，数百个协议共同繁荣"——这类叙事经常出现在加密媒体的行业综述里，通常用协议总数或TVL总规模作为论据。但协议数量多、TVL规模大，都不能直接证明这个赛道的活跃度是分散的——真正能反映"用户是否在真实使用这个协议做交易"的指标，其实是手续费收入：手续费来自每一笔真实成交，无法靠代币激励或营销叙事凭空撑起来，也很难通过锁仓某个大额资产人为做高（不像TVL那样可以被单一巨鲸存款迅速推高）。本文用DefiLlama公开抓取的真实DEX手续费数据，拆解为什么手续费收入的集中度往往比TVL集中度更极端，以及如何核验一个"生态繁荣、百花齐放"的说法背后真实的收入分布状况。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-10T17:24:19+08:00">2026-09-10 17:24:19</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dex-fee-revenue-concentration-verification-guide.svg" alt="DEX手续费收入集中度核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实"生态繁荣"的说法引用的是协议数量、TVL规模，还是手续费收入——三者反映的活跃度含义完全不同</li>
+            <li><span class="article-verify-check">✓</span>用公开数据平台查询该赛道全部协议的手续费收入，计算头部协议占比，与TVL集中度做对比</li>
+            <li><span class="article-verify-check">✓</span>理解手续费收入比TVL更难被人为操纵，是判断协议真实使用度的更可靠指标</li>
+            <li><span class="article-verify-check">✓</span>核实长尾协议（收入排名靠后的大多数）的真实收入规模，判断"数百个协议"的说法是否具有实际意义</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. 协议数量和TVL，都不是"生态繁荣"的可靠证据</h2>
+<p>"这个赛道有数百个协议"这类表述本身几乎没有信息量，因为部署一个DEX智能合约的门槛很低，任何团队都可以复制一套现成的AMM代码模板上线一个新协议，协议数量的增长可以完全脱离真实用户需求。TVL同样容易被误读为繁荣信号——TVL可以因为某个协议推出高额代币激励吸引流动性提供者存入资产而迅速膨胀，这些资产可能几乎没有产生任何真实交易，纯粹是为了赚取代币奖励而"停泊"在协议里，一旦激励结束，这些TVL可能同样迅速撤离。相比之下，手续费收入的性质完全不同：每一笔手续费都对应一次真实发生的交易撮合，用户必须真的想要完成一笔兑换才会支付这笔费用，这个指标无法通过代币补贴或营销叙事凭空创造。</p>
+<p>正因为手续费收入更难被人为操纵，它也更真实地反映了资金和活跃度向头部协议集中的程度。核验者如果只看协议数量或TVL规模就得出"赛道分散、竞争充分"的结论，很可能忽略了一个更朴素的事实：即便有数百个协议同时存在，真正被大量用户持续使用来完成交易的，可能只是其中极少数几个。</p>
+<ul>
+<li>协议数量增长可以完全脱离真实用户需求，部署门槛低使得数量本身不构成活跃度证据。</li>
+<li>TVL可因代币激励迅速膨胀，这些资产可能很少产生真实交易，激励结束后可能同样迅速撤离。</li>
+<li>手续费收入对应真实发生的交易撮合，无法靠代币补贴或叙事凭空创造，是更可靠的活跃度指标。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：DEX赛道真实的手续费收入分布</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过DefiLlama公开API（/overview/fees，按category=Dexs筛选）实测抓取的真实数据：当天共有469个DEX协议产生了手续费收入，合计24小时手续费总额约1841.25万美元。其中收入排名前3的协议（Uniswap V4、PumpSwap、Uniswap V3）合计占比约57.56%，前10名协议合计占比约90.71%——也就是说，剩余459个协议（占协议总数的近98%）分享的手续费收入总和不到全部收入的10%。以上数字可通过DefiLlama公开API实时复核，具体排名与占比会随市场活跃度持续变化。</p>
+</div>
+<p>这份数据展示的集中度程度，比多数人依据"协议数量众多"这类表述所想象的要极端得多。469个协议中，前3名就拿走了超过一半的收入，这个集中度甚至比很多核验者熟悉的TVL集中度更高——因为TVL可以被大量中长尾协议的激励性存款分散拉高，而手续费收入几乎完全由用户的真实交易需求驱动，交易需求本身就天然倾向于集中在流动性最好、滑点最低、品牌最知名的头部协议。核验者如果看到"DEX赛道有469个协议"这类表述，应当意识到这469个协议里，能真正持续产生有意义交易量和收入的可能只是个位数，其余绝大多数协议可能长期处于近乎无人使用的状态。</p>
+<ul>
+<li>2026年9月实测：469个DEX协议中，前3名占24小时手续费收入的约57.56%，前10名占约90.71%。</li>
+<li>剩余约459个协议（近98%的协议数量）合计分享不到10%的手续费收入，长尾协议的真实活跃度极低。</li>
+<li>手续费收入集中度往往比TVL集中度更极端，因为TVL可被激励性存款分散拉高，而手续费直接反映真实交易需求。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：先分清"繁荣"说的是数量、TVL还是收入</h2>
+<p>核验一篇提到"生态繁荣""百花齐放"的报道时，第一步是查证具体的论据是协议数量、TVL总规模，还是手续费/收入数据。如果报道只列举了协议数量或TVL总数，核验者应主动追问：这些协议里有多少个真正产生了有意义的手续费收入？可以通过DefiLlama等平台同时查询同一赛道的协议数量、TVL排行和手续费排行三组数据，对比三者反映出的集中度差异，判断报道所依据的指标是否具有代表性。</p>
+<p>核验者应特别警惕那些只强调"协议数量创新高"而完全不提收入数据的报道，这种选择性引用本身就是一个值得关注的信号——如果收入数据同样支持"繁荣"的结论，报道通常会主动引用；反之，回避收入数据、只谈数量，往往说明真实的收入分布可能并不支持"百花齐放"的叙事。</p>
+<ul>
+<li>核验报道引用的具体是协议数量、TVL，还是手续费/收入数据，三者反映的活跃度含义不同。</li>
+<li>可通过DefiLlama等平台同时查询三组数据，对比集中度差异，判断报道依据是否具有代表性。</li>
+<li>只强调协议数量却回避收入数据的报道，往往说明真实收入分布可能并不支持"百花齐放"的叙事。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：用赫芬达尔式的头部占比做量化对比</h2>
+<p>核验者可以借鉴经济学中衡量市场集中度的简化思路，不必计算完整的赫芬达尔指数，只需计算头部3家、头部10家协议占总收入的比例，就能快速形成一个可比较的量化基准。如果一个赛道的头部3家协议收入占比超过50%，通常意味着这是一个高度集中、赢家通吃特征明显的市场，"数百个协议"的表述在这种情况下更多是名义上的数量堆积，而非实质意义上的充分竞争。核验者应当把这个头部占比数字，与同一赛道过去几个月的历史数据做比较，观察集中度是在扩大还是在缩小，这比单一时点的静态占比更能说明赛道竞争格局的演变方向。</p>
+<p>此外，核验者还应留意头部协议自身的排名波动——如果头部3家的具体协议名单在短期内频繁变化，说明这个赛道内部竞争仍然激烈，头部地位并不稳固；如果头部名单长期保持稳定，则说明该赛道已经形成较为固化的护城河优势，新进入者难以撼动现有格局。</p>
+<ul>
+<li>计算头部3家、头部10家协议的收入占比，可快速形成衡量赛道集中度的量化基准，无需完整计算复杂指数。</li>
+<li>头部3家占比超过50%通常意味着高度集中、赢家通吃的市场，"数百个协议"更多是名义数量堆积。</li>
+<li>应观察头部占比的历史趋势与具体协议排名的波动，判断竞争格局是在固化还是仍然激烈变动。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：核实长尾协议的真实收入规模是否有意义</h2>
+<p>确认头部集中度之后，核验者还应进一步查看长尾协议（排名靠后的大多数）的具体收入数字，而不是止步于"剩余协议合计占比不到10%"这类笼统表述。把这个剩余份额除以长尾协议的数量，可以得到每个长尾协议的平均收入水平，这个数字往往低到可以直接说明这些协议基本没有实质性的用户交易——例如，如果469个协议中前10名占了90.71%，剩余459个协议合计只分享约9.29%的收入（约171万美元），平均每个协议24小时手续费收入不到4000美元，这个数字通常连覆盖协议基本运营成本都困难，更谈不上支撑一个"活跃生态"的说法。</p>
+<p>核验者应把这类长尾协议的真实收入规模，作为判断"某赛道协议数量众多"这类表述实际意义的关键佐证——协议数量本身只是一个上限，真正决定这个赛道健康程度的，是有多少协议能达到具备实际经济意义的收入门槛，而不是名义上被DefiLlama等平台收录的协议总数。</p>
+<ul>
+<li>应计算长尾协议的平均收入水平，而非止步于"剩余协议合计占比不到10%"这类笼统表述。</li>
+<li>本文实测数据中，长尾协议平均24小时手续费收入约4000美元，通常难以覆盖基本运营成本。</li>
+<li>协议数量只是名义上限，真正决定赛道健康度的是达到实际经济意义收入门槛的协议数量。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，报道所说的"生态繁荣"具体依据是协议数量、TVL规模还是手续费收入，三者是否被混用来支撑同一个结论？其二，是否查询过该赛道头部3家、头部10家协议的收入占比，并与TVL集中度做过对比？其三，是否观察过头部占比的历史趋势与具体协议排名的波动，判断竞争格局的演变方向？其四，是否计算过长尾协议的平均收入水平，判断"数百个协议"这类表述是否具有实际经济意义？把这四个问题逐一核实之后，才能对一篇提到"生态繁荣、百花齐放"的报道形成准确判断，而不是被协议总数这个名义上限带偏。全文仅讨论核验方法论，不针对任何具体协议或赛道的当前竞争状况做结论性判断，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：论据是否明确、头部占比是否量化、集中度趋势是否观察、长尾收入是否核实。</li>
+<li>2026年9月真实数据显示469个DEX协议中，前3名占24小时手续费收入约57.56%，前10名约90.71%。</li>
+<li>全文为核验方法论讨论，不对任何具体协议或赛道的当前竞争状况做结论性判断，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. 协议数量和TVL，都不是"生态繁荣"的可靠证据</a></li>
+          <li><a href="#sec-2">2. 实测数据：DEX赛道真实的手续费收入分布</a></li>
+          <li><a href="#sec-3">3. 核验方法一：先分清"繁荣"说的是数量、TVL还是收入</a></li>
+          <li><a href="#sec-4">4. 核验方法二：用赫芬达尔式的头部占比做量化对比</a></li>
+          <li><a href="#sec-5">5. 核验方法三：核实长尾协议的真实收入规模是否有意义</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://defillama.com/fees" target="_blank" rel="noopener">DefiLlama 手续费排行</a>：本文示例DEX手续费数据来源，可按分类查询各赛道协议的收入排行</li>
+            <li><a href="https://defillama.com/" target="_blank" rel="noopener">DefiLlama</a>：可交叉核实TVL数据，对比TVL集中度与收入集中度的差异</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi协议市值/TVL比值核验："协议规模"和代币估值，完全是两码事</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：这个「生态繁荣」指标，几个协议就能撑起来</a></li>
+          <li><a href="/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少</a></li>
+          <li><a href="/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">比特币现货与永续合约成交量核验：媒体说的"成交量暴涨"，到底是谁在买</a></li>
+          <li><a href="/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价</a></li>
+          <li><a href="/research/governance/exchange-trust-score-reported-volume-verification-guide.html">交易所信任分与自报成交量核验：高信任分能证明交易量真实吗</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=4b203e19"></script>
+</body>
+</html>
