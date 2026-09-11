@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports that &quot;a DAO proposal passed with an overwhelming majority,&quot; it rarely mentions whether that proposal had a quorum threshold set at all, and rarely distinguishes between vote count (how many wallets voted) and weighted score total (scores_total, a token-holding-weighted figure) — two entirely different numbers. A proposal with just 3 wallets voting can legally pass and execute if there's no quorum constraint, while the tens of millions or billions in &quot;weighted score&quot; shown in coverage may simply be the token holdings of a handful of whale wallets converted into a number. Using real DAO proposal data pulled from Snapshot's public API, this guide breaks down how to verify the real participation threshold and vote count behind a &quot;passed with an overwhelming majority&quot; claim. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports that &quot;a DAO proposal passed with an overwhelming majority,&quot; it rarely mentions whether that proposal had a quorum threshold set at all, and rarely distinguishes between vote count (how many wallets voted) and weighted score total (scores_total, a token-holding-weighted figure) — two entirely different numbers. A proposal with just 3 wallets voting can legally pass and execute if there's no quorum constraint, while the tens of millions or billions in &quot;weighted score&quot; shown in coverage may simply be the token holdings of a handful of whale wallets converted into a number. Using real DAO proposal data pulled from Snapshot's public API, this guide breaks down how to verify the real participation threshold and vote count behind a &quot;passed with an overwhelming majority&quot; claim. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-11T15:20:15+08:00">
+  <meta property="article:modified_time" content="2026-09-11T15:20:15+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All - Crypto Research Notes">
+  <meta name="twitter:description" content="Over 60% of DAO proposals have no quorum threshold set. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DAO Proposal Quorum Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-dao-proposal-quorum-threshold-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Quorum threshold verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html", "name": "DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All", "item": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#article", "headline": "DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All", "description": "Most DAO proposals have no minimum participation threshold, so a handful of wallets can pass them. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["DAO quorum verification","quorum threshold verification","vote count vs weighted score verification","governance participation verification","DAO proposal passage mechanism methodology"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-11T15:20:15+08:00", "dateModified": "2026-09-11T15:20:15+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/dao-proposal-quorum-threshold-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All</h1>
+        <p class="article-summary">"A DAO proposal passed with an overwhelming majority, clear community consensus" — this kind of framing is common in crypto governance coverage, but it almost never mentions whether the proposal had a quorum threshold set, and rarely distinguishes between "vote count" (how many distinct wallet addresses voted) and "weighted score total" (a sum of scores converted from each participant's token holdings) — two entirely different numbers. In on-chain governance protocol design, a quorum threshold is supposed to be the key safeguard against a small handful of participants bypassing community consensus to unilaterally pass a proposal. But in practice, a substantial share of DAO proposals have no quorum threshold set at all, or set it to zero — meaning that even if only 3 wallet addresses vote, as long as the majority vote is "in favor," the proposal is already "legally passed" under the protocol's rules, sharply at odds with the sense of weight conveyed by the tens of millions or even billions shown as the "weighted score" in coverage. Using real DAO proposal data pulled from Snapshot's public API, this guide breaks down how to verify the real participation threshold and vote count behind a "passed with an overwhelming majority" claim. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-11T15:20:15+08:00">2026-09-11 15:20:15 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dao-proposal-quorum-threshold-verification-guide-en.svg" alt="DAO Proposal Quorum Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check what specific quorum threshold a DAO proposal has set, and whether it's zero or unset entirely</li>
+            <li><span class="article-verify-check">✓</span>Distinguish "vote count" (number of distinct wallet addresses that voted) from "weighted score total" (a sum converted from token holdings) — the two cannot substitute for each other</li>
+            <li><span class="article-verify-check">✓</span>Query the specific list of voting addresses from a public data platform to judge whether voting power is concentrated in a handful of whale wallets</li>
+            <li><span class="article-verify-check">✓</span>Check whether the proposal's passage relies solely on an off-chain voting signal, or whether there's an additional on-chain execution gate</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Quorum: On-Chain Governance's Theoretical Safeguard Against "Bypassing Consensus"</h2>
+<p>The quorum mechanism was designed to prevent a small handful of token holders from unilaterally passing a proposal with major implications for a DAO while the majority of the community neither participated nor expressed an opinion. In theory, a sound quorum setup should require the proposal's total voting weight (or vote count) to reach some minimum share of total token supply before the vote's outcome takes effect — a proposal falling short of that threshold should be treated as lacking sufficient community authorization to execute, even if "in favor" votes were the majority. This mechanism is equally common in traditional corporate governance and real-world parliamentary systems, and is a foundational safeguard of governance design.</p>
+<p>But in the actual practice of crypto governance, the authority to set the quorum threshold typically rests entirely with the DAO itself — different DAOs can decide for themselves whether to set a quorum at all, how high to set it, and can even amend the quorum rule itself at any time through a governance proposal. This means whether a quorum exists, and how high it is, is itself a variable that needs to be checked DAO by DAO — a "proposal passed" outcome should never be assumed to have gone through any meaningful participation screening.</p>
+<ul>
+<li>The quorum mechanism was designed to prevent a small handful of token holders from unilaterally passing a major proposal while most of the community doesn't participate.</li>
+<li>A sound quorum should require voting weight or count to reach a minimum share before the vote's outcome takes effect — a foundational safeguard of governance design.</li>
+<li>The authority to set a quorum rests entirely with the DAO itself; whether it exists and how high it is needs to be checked DAO by DAO, never assumed already screened.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: Quorum Settings Across Real DAO Proposals</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from Snapshot's public GraphQL API (hub.snapshot.org/graphql) at the time of verification in September 2026: among a sample of the 100 most recently closed DAO governance proposals, 64 proposals had a quorum threshold set to 0 (no minimum participation requirement at all), a share of 64%. Within the same sample, 60 proposals had an actual vote count (distinct wallet addresses) of 5 or fewer. Proposals meeting both conditions simultaneously (quorum of 0 AND vote count ≤5) numbered 36, or 36% of the total sample. In other words, more than a third of closed proposals had neither a quorum constraint nor more than a single-digit number of wallets actually voting. These figures can be independently re-verified through Snapshot's public API; the specific proportions shift with the proposal sample at the time of the query.</p>
+</div>
+<p>This data reveals a phenomenon more widespread than most people would expect: a quorum of 0 is not an isolated oversight at a handful of fringe DAOs, but a common configuration across a substantial share of governance proposals. For this category of proposal, "passed" is entirely valid at the protocol-rule level, but the "community consensus" it represents carries nowhere near the weight of a proposal that went through broad participation from hundreds of independent wallets and cleared a preset participation threshold. A verifier who only sees the "proposal passed" result label, without checking the specific quorum setting and actual vote count, can easily overestimate the real breadth of community support behind that proposal.</p>
+<ul>
+<li>Real September 2026 data: among 100 closed DAO proposals sampled, 64% had a quorum of 0, and 60% had an actual vote count of 5 or fewer.</li>
+<li>Proposals with both quorum=0 and vote count ≤5 made up 36% of the sample, indicating over a third of proposals lack even the most basic participation screening.</li>
+<li>A "proposal passed" result label is valid at the protocol-rule level but doesn't imply the proposal received broad community participation and authorization.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Check the Specific Quorum Setting Rather Than Assuming It Exists</h2>
+<p>The first step in verifying a report claiming a DAO proposal "passed with an overwhelming majority" is to check that proposal's specific quorum setting. Most DAO governance platforms (like Snapshot) clearly display the quorum threshold and the current cumulative voting weight's share of that threshold on a proposal's detail page — verifiers should proactively check this number, rather than assuming "passed" is equivalent to "met a reasonable participation requirement." If quorum shows as 0 or unset, verifiers should flag that proposal as "no minimum participation constraint" and discount its governance weight accordingly when interpreting it.</p>
+<p>Verifiers should also note that some DAOs set different quorum rules for different proposal types — for example, treasury spending proposals may require a higher quorum, while ordinary community sentiment surveys may have no quorum at all. When citing a "proposal passed" conclusion, verifiers should specify which category the proposal belongs to and whether its corresponding quorum rule was inherently lenient, avoiding conflating proposals of different importance levels and threshold requirements.</p>
+<ul>
+<li>The first verification step is checking the proposal's specific quorum setting — most platforms clearly display this on the proposal detail page, and it should never be assumed already met.</li>
+<li>A proposal with quorum of 0 or unset should be flagged as "no minimum participation constraint," discounting its governance weight accordingly.</li>
+<li>Different proposal types may have different quorum rules — specify the proposal category during verification to avoid conflating proposals of different importance levels.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Distinguish Vote Count from Weighted Score, They're Not Interchangeable</h2>
+<p>Verifiers should strictly distinguish two frequently conflated numbers: one is "vote count" — how many distinct wallet addresses participated in the vote, reflecting breadth of participation; the other is "weighted score total" (such as scores_total) — the sum obtained by converting each participant's token holdings (or delegated voting power) into a score, reflecting the scale of token holdings represented by the vote outcome. These two numbers can diverge dramatically — in this article's real data, some proposals had only 3 wallets voting yet a weighted score total in the tens of millions or even trillions (depending on token decimals and price), a situation that typically means a tiny number of addresses holding massive token amounts or receiving large delegations dominated the vote outcome.</p>
+<p>When verifiers see a report using the absolute magnitude of a weighted score to paint a picture of "the proposal received broad support," they should proactively check the corresponding vote count — if the count is extremely small, they should recognize that this "broad support" framing is misleading, and the reality is more likely "a whale's opinion dressed up as community consensus." Conversely, a case where vote count is high but weighted score is concentrated in a handful of addresses is equally worth verifying, as it likewise reflects real concentration of governance power.</p>
+<ul>
+<li>Vote count reflects breadth of participation; weighted score total reflects the scale of token holdings represented by the vote outcome — the two are not interchangeable.</li>
+<li>An extremely low vote count paired with a huge weighted score typically means a tiny number of addresses holding massive token amounts dominated the vote.</li>
+<li>When verifying a "broad support" framing built on weighted score magnitude, also check the actual vote count to judge whether the framing is misleading.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Check Voting Power Concentration and Any Additional On-Chain Execution Gate</h2>
+<p>After confirming a divergence between vote count and weighted score, verifiers can further query the specific list of voting addresses (most governance platforms support publicly querying the full voting breakdown for a single proposal), and calculate the top handful of addresses' share of total voting weight, to judge whether voting power in that vote is highly concentrated. If the top 1-2 addresses account for the overwhelming majority of voting weight, verifiers should understand the "passed" outcome of that proposal as "the intent of a handful of whales" rather than a broadly representative community decision.</p>
+<p>Verifiers should also check whether this off-chain vote (such as a Snapshot vote, which itself generates no on-chain transaction and merely records governance intent) requires going through an additional on-chain execution step — for example, whether the proposal needs to be manually executed by multisig holders, or requires a timelock delay before taking effect. This kind of additional gate can, to some extent, serve as a supplementary safeguard for the absence of a quorum, but if the multisig holders significantly overlap with the whales who dominated the vote, this "additional gate" may effectively be hollow. Verifiers should judge quorum setting, voting power concentration, and execution gate mechanism together, rather than concluding solely from a "proposal passed" label.</p>
+<ul>
+<li>Query the full voting address breakdown for a proposal and calculate the top addresses' share of voting weight to judge whether voting power is highly concentrated.</li>
+<li>When the top 1-2 addresses hold the overwhelming majority of voting weight, understand "proposal passed" as a handful of whales' intent rather than a broadly representative community decision.</li>
+<li>Check whether off-chain voting has an on-chain execution gate (multisig, timelock), and whether that gate is effectively hollow due to overlapping personnel.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, has the proposal's specific quorum threshold setting been checked, and is it zero or unset? Second, have vote count and weighted score total been distinguished, avoiding using the latter's absolute magnitude to paint a "broad support" picture? Third, has the specific voting address breakdown been queried to judge whether voting power is highly concentrated among a handful of whales? Fourth, has it been checked whether an on-chain execution gate exists beyond the off-chain vote, and whether that gate is actually effective? Only after working through these four questions can a report claiming a DAO proposal "passed with an overwhelming majority" be accurately assessed, rather than taken at face value from a "passed" label that's valid at the protocol-rule level but whose community weight is questionable. This article discusses verification methodology only and does not offer any conclusive judgment about the governance validity of any specific DAO or proposal; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is the quorum setting checked, are vote count and weighted score distinguished, is voting power concentration verified, is the execution gate checked.</li>
+<li>Real September 2026 data shows that among 100 closed DAO proposals sampled, 64% had a quorum of 0, and 36% met both quorum=0 and vote count ≤5.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about the governance validity of any specific DAO or proposal; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. Quorum: On-Chain Governance's Theoretical Safeguard Against "Bypassing Consensus"</a></li>
+          <li><a href="#sec-2">2. Real Data: Quorum Settings Across Real DAO Proposals</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Check the Specific Quorum Setting Rather Than Assuming It Exists</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Distinguish Vote Count from Weighted Score, They're Not Interchangeable</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Check Voting Power Concentration and Any Additional On-Chain Execution Gate</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://snapshot.org/" target="_blank" rel="noopener">Snapshot</a>: source for this article's DAO proposal data; provides quorum settings, vote counts, and voting address breakdowns for DAO proposals</li>
+            <li><a href="https://docs.snapshot.org/tools/api" target="_blank" rel="noopener">Snapshot Public API Documentation</a>: can be used to independently pull proposal data for verification</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/governance/dao-voter-count-voting-power-verification-guide.html">DAO Voter Count and Voting Power Verification: Many Participants Doesn't Mean Power Isn't Concentrated</a></li>
+          <li><a href="/en/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">Governance Vote Snapshot Manipulation Verification: How Much Voting Power Can One Block Height Choice Change</a></li>
+          <li><a href="/en/research/basics/defi-market-cap-index-composition-verification-guide.html">DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token</a></li>
+          <li><a href="/en/research/market/dex-fee-revenue-concentration-verification-guide.html">DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols"</a></li>
+          <li><a href="/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: How Few Protocols Can Prop Up This "Ecosystem Health" Metric</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=979a2208"></script>
+</body>
+</html>

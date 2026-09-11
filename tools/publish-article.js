@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'defi-market-cap-index-composition-verification-guide',
-  publishedISO: '2026-09-11T09:52:41+08:00',
-  tagColor: 'indigo',
-  topic: 'basics',
+  slug: 'dao-proposal-quorum-threshold-verification-guide',
+  publishedISO: '2026-09-11T15:20:15+08:00',
+  tagColor: 'amber',
+  topic: 'governance',
 
   zh: {
-    h1: 'DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导',
-    tagLabel: '板块指数核验',
-    cardDesc: 'DeFi板块市值指数是按分类汇总的加权数字，权重可能高度集中于单一代币。本文用CoinGecko真实数据拆解核验方法。',
+    h1: 'DAO提案法定人数核验：超六成提案根本没有设置quorum门槛',
+    tagLabel: '法定人数核验',
+    cardDesc: '多数DAO提案没有设置最低参与门槛，仅需极少数钱包投票即可通过。本文用Snapshot真实数据拆解核验方法。',
   },
   en: {
-    h1: 'DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token',
-    tagLabel: 'Sector Index Verification',
-    cardDesc: 'A DeFi sector market cap index is a weighted aggregate figure whose weight can be highly concentrated in a single token. A real-data breakdown using CoinGecko\'s public API.',
+    h1: 'DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All',
+    tagLabel: 'Quorum Threshold Verification',
+    cardDesc: 'Most DAO proposals have no minimum participation threshold, so a handful of wallets can pass them. A real-data breakdown using Snapshot\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'defi-market-cap-index-composition-verification-guide',
     'dex-fee-revenue-concentration-verification-guide',
     'defi-protocol-mcap-tvl-ratio-verification-guide',
     'stablecoin-peg-deviation-daily-close-verification-guide',

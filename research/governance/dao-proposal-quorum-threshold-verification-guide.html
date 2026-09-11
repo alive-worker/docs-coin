@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAO提案法定人数核验：超六成提案根本没有设置quorum门槛 - 加密货币研究</title>
+  <meta name="description" content="加密媒体报道&quot;某DAO提案高票通过&quot;时，很少说明这个提案是否设置了法定人数(quorum)门槛，也很少区分投票人数(votes)和加权投票值(scores_total)这两个完全不同的数字——一个提案哪怕只有3个钱包地址参与投票，只要没有quorum门槛限制，就可以合法通过并执行，而报道展示的动辄数千万甚至数十亿的&quot;加权得分&quot;，可能只是极少数大户钱包的持仓换算结果。本文用Snapshot公开抓取的真实DAO提案数据，拆解如何核验一个&quot;高票通过&quot;的提案背后真实的参与门槛与投票人数。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="DAO提案法定人数核验：超六成提案根本没有设置quorum门槛 - 加密货币研究">
+  <meta property="og:description" content="加密媒体报道&quot;某DAO提案高票通过&quot;时，很少说明这个提案是否设置了法定人数(quorum)门槛，也很少区分投票人数(votes)和加权投票值(scores_total)这两个完全不同的数字——一个提案哪怕只有3个钱包地址参与投票，只要没有quorum门槛限制，就可以合法通过并执行，而报道展示的动辄数千万甚至数十亿的&quot;加权得分&quot;，可能只是极少数大户钱包的持仓换算结果。本文用Snapshot公开抓取的真实DAO提案数据，拆解如何核验一个&quot;高票通过&quot;的提案背后真实的参与门槛与投票人数。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-11T15:20:15+08:00">
+  <meta property="article:modified_time" content="2026-09-11T15:20:15+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAO提案法定人数核验：超六成提案根本没有设置quorum门槛 - 加密货币研究">
+  <meta name="twitter:description" content="超六成DAO提案没有设置法定人数门槛，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DAO提案法定人数核验 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-dao-proposal-quorum-threshold-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","法定人数核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-proposal-quorum-threshold-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html", "name": "DAO提案法定人数核验：超六成提案根本没有设置quorum门槛 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DAO提案法定人数核验：超六成提案根本没有设置quorum门槛", "item": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#article", "headline": "DAO提案法定人数核验：超六成提案根本没有设置quorum门槛", "description": "多数DAO提案没有设置最低参与门槛，仅需极少数钱包投票即可通过。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DAO法定人数核验","quorum门槛核验","投票人数与加权得分核验","治理参与度核验","DAO提案通过机制方法论"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-11T15:20:15+08:00", "dateModified": "2026-09-11T15:20:15+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/governance/dao-proposal-quorum-threshold-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DAO提案法定人数核验：超六成提案根本没有设置quorum门槛</h1>
+        <p class="article-summary">"某DAO提案高票通过，社区共识明确"——这类表述在加密治理报道中很常见，但几乎从不提及这个提案是否设置了法定人数(quorum)门槛，也很少区分"投票人数"(有多少个不同钱包地址参与了投票)和"加权投票值"(按代币持仓折算出的分数总和)这两个性质完全不同的数字。链上治理协议的设计里，quorum门槛本应是防止极少数人绕过社区共识、擅自通过提案的关键防线，但现实是，相当一部分DAO提案根本没有设置任何quorum门槛，或者把门槛设为0——这意味着哪怕只有3个钱包地址参与投票，只要投票结果是"赞成"占多数，这个提案在协议规则上就已经"合法通过"，与提案报道里展示的动辄数千万甚至数十亿的"加权得分"数字给人的分量感形成鲜明反差。本文用Snapshot公开抓取的真实DAO提案数据，拆解如何核验一个"高票通过"的提案背后真实的参与门槛与投票人数。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-11T15:20:15+08:00">2026-09-11 15:20:15</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-dao-proposal-quorum-threshold-verification-guide.svg" alt="DAO提案法定人数核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实一个DAO提案具体设置的法定人数(quorum)门槛是多少，是否存在门槛为零或未设置的情况</li>
+            <li><span class="article-verify-check">✓</span>区分"投票人数"(参与投票的不同钱包地址数量)与"加权投票值"(按代币持仓折算的分数总和)，两者不能互相替代</li>
+            <li><span class="article-verify-check">✓</span>用公开数据平台查询该提案的具体投票地址列表，判断投票权是否集中在极少数大户钱包手中</li>
+            <li><span class="article-verify-check">✓</span>核实提案的通过是否仅依赖链下投票信号，还是有链上执行环节的额外把关机制</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. Quorum门槛：链上治理理论上的"防止少数绕过共识"防线</h2>
+<p>法定人数(quorum)机制的设计初衷，是为了防止一小撮持币者在社区大多数人未参与、未表达意见的情况下，单方面通过对DAO有重大影响的提案。理论上，一个健全的quorum设置应当要求提案的总投票权重（或投票人数）达到某个最低比例的代币总供应量，才能使该提案的表决结果生效，未达到这个门槛的提案即便赞成票占多数，也应当被视为"未获得充分社区授权"而无法执行。这个机制在传统公司治理和现实世界的议会制度中同样普遍存在，属于治理设计的基础性保障。</p>
+<p>但在加密治理的实际操作中，quorum门槛的设置权通常完全掌握在DAO自己手中，不同DAO可以自行决定是否设置quorum、设置多高的quorum，甚至可以随时通过治理提案修改quorum规则本身。这意味着，quorum是否存在、存在时门槛高低，本身就是一个需要逐个DAO核实的变量，不能默认所有"投票通过"的提案都经过了有意义的参与度筛选。</p>
+<ul>
+<li>Quorum机制的设计初衷是防止少数持币者在社区大多数人未参与的情况下单方面通过重大提案。</li>
+<li>健全的quorum应要求投票权重或人数达到最低比例才能使表决结果生效，这是治理设计的基础性保障。</li>
+<li>quorum的设置权完全掌握在DAO自己手中，是否存在、门槛高低需要逐个DAO核实，不能默认已经过有效筛选。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：真实DAO提案的法定人数设置情况</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过Snapshot公开GraphQL API（hub.snapshot.org/graphql）实测抓取的真实数据：在最近100个已结束的DAO治理提案样本中，有64个提案的quorum门槛被设置为0（即未设置任何最低参与要求），占比高达64%；同一批样本中，有60个提案的实际投票人数（不同钱包地址数）在5个或以下；两个条件同时满足（quorum为0且投票人数≤5）的提案有36个，占样本总量的36%。也就是说，超过三分之一的已结束提案，既没有quorum门槛约束，实际参与投票的钱包也只有个位数。以上数字可通过Snapshot公开API实时复核，具体比例会随抓取时点的提案样本变化。</p>
+</div>
+<p>这份数据揭示的现象比多数人预期的更普遍：quorum为0并非个别边缘DAO的疏漏，而是相当比例的治理提案的常态配置。对于这类提案，"投票通过"这个结论在协议规则层面完全成立，但它所代表的"社区共识"含金量，与一个经过数百个独立钱包广泛参与、且达到了预设参与度门槛的提案相比，完全不是一个量级。核验者如果只看到"提案已通过"这个结果标签，而不去查证具体的quorum设置和实际投票人数，很容易高估这类提案背后真实的社区支持广度。</p>
+<ul>
+<li>2026年9月实测：100个已结束DAO提案样本中，64%的quorum门槛为0，60%的实际投票人数在5个或以下。</li>
+<li>quorum为0且投票人数≤5的提案占样本总量的36%，说明超三分之一的提案缺乏最基本的参与度筛选。</li>
+<li>"提案已通过"这个结果标签在协议规则层面成立，但不代表这个提案获得了广泛的社区参与和授权。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：先查证具体的quorum设置，而非默认存在</h2>
+<p>核验一篇提到DAO提案"高票通过"的报道时，第一步应查证这个提案具体的quorum设置数值。多数DAO治理平台（如Snapshot）会在提案详情页明确标注quorum门槛及当前累计投票权重占门槛的比例，核验者应主动查看这个数字，而不是默认"通过"就等同于"达到了合理的参与度要求"。如果quorum显示为0或未设置，核验者应当把这个提案标记为"无最低参与度约束"，在解读其治理含金量时相应打折扣。</p>
+<p>核验者还应留意，部分DAO会为不同类型的提案设置不同的quorum规则——例如资金支出类提案可能要求更高的quorum，而普通的社区意见征询类提案可能完全不设quorum。核验者引用某个"提案通过"的结论时，应说明清楚这个提案属于哪一类，对应的quorum规则是否本就宽松，避免把不同重要程度、不同门槛要求的提案混为一谈。</p>
+<ul>
+<li>核验第一步是查证提案具体的quorum设置数值，多数平台会在提案详情页明确标注，不应默认已达标。</li>
+<li>quorum为0或未设置的提案应标记为"无最低参与度约束"，解读其治理含金量时应相应打折扣。</li>
+<li>不同类型提案的quorum规则可能不同，核验时应说明提案类别，避免混淆不同重要程度的提案。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：区分投票人数与加权投票值，两者不可互换</h2>
+<p>核验者应严格区分两个经常被混用的数字：一个是"投票人数"，即有多少个不同的钱包地址参与了这次投票，反映的是参与的广泛程度；另一个是"加权投票值"（如scores_total），即把每个参与者的代币持仓（或委托到的投票权）折算成分数后加总得出的总分，反映的是投票结果背后代表的代币总量规模。这两个数字可以出现巨大的反差——本文实测数据中就有提案投票人数只有3个钱包，但加权投票值高达数千万甚至数万亿（取决于代币精度和价格），这种情况通常意味着极少数持有巨额代币或获得大量委托的地址主导了投票结果。</p>
+<p>核验者看到报道用加权投票值的绝对数字来渲染"提案获得广泛支持"时，应主动查证对应的投票人数，如果人数极少，就应当意识到这个"广泛支持"的表述存在误导性——真实情况更可能是"少数巨鲸的意见被包装成了社区共识"。反过来，投票人数多但加权投票值集中在少数几个地址的情况也值得核验，这同样反映治理权力的实际集中程度。</p>
+<ul>
+<li>投票人数反映参与的广泛程度，加权投票值反映投票结果背后代表的代币总量规模，两者不可互换使用。</li>
+<li>投票人数极少而加权投票值巨大，通常意味着少数持有巨额代币的地址主导了投票结果。</li>
+<li>核验加权投票值渲染的"广泛支持"表述时，应同时查证实际投票人数，判断表述是否存在误导。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：核实投票权集中度与链上执行的额外把关</h2>
+<p>确认投票人数和加权投票值的反差后，核验者可以进一步查询具体的投票地址列表（多数治理平台支持公开查询单个提案的完整投票明细），计算头部几个地址占总投票权重的比例，判断这次表决的投票权是否高度集中。如果头部1-2个地址就占据了绝大多数投票权重，核验者应当把这个提案的"通过"结果理解为"少数大户的意向"，而非广泛意义上的社区决策。</p>
+<p>此外，核验者还应查证这次链下投票（如Snapshot投票，本身不产生链上交易，仅作为治理意向的记录）是否需要经过额外的链上执行环节——例如提案需要被多签持有者手动执行、或需要通过时间锁延迟后才生效。这类额外把关机制在一定程度上可以作为quorum缺失的补充保障，但如果多签持有者与主导投票的大户高度重合，这层"额外把关"实际上可能形同虚设。核验者应把quorum设置、投票权集中度、执行把关机制三者放在一起综合判断，而不是仅凭"提案已通过"的标签下结论。</p>
+<ul>
+<li>可查询提案的完整投票地址明细，计算头部地址占投票权重的比例，判断投票权是否高度集中。</li>
+<li>头部1-2个地址占据绝大多数投票权重时，应把"提案通过"理解为少数大户意向而非广泛社区决策。</li>
+<li>应核实链下投票是否有链上执行把关（多签、时间锁），并判断这层把关是否因人员重合而形同虚设。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否查证过这个提案具体的quorum门槛设置，是否存在为0或未设置的情况？其二，是否区分了投票人数与加权投票值两个数字，避免用后者的绝对规模渲染"广泛支持"？其三，是否查询过具体投票地址列表，判断投票权是否高度集中于少数大户？其四，是否核实过链下投票之外是否存在链上执行的额外把关机制，以及这层把关是否有效？把这四个问题逐一核实之后，才能对一篇提到DAO提案"高票通过"的报道形成准确判断，而不是被一个协议规则层面成立、但社区含金量存疑的"通过"标签带偏。全文仅讨论核验方法论，不针对任何具体DAO或提案的治理有效性做结论性判断，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：quorum设置是否查证、投票人数与加权值是否区分、投票权集中度是否核实、执行把关是否核实。</li>
+<li>2026年9月真实数据显示，100个已结束DAO提案样本中64%的quorum为0，36%同时满足quorum为0且投票人数≤5。</li>
+<li>全文为核验方法论讨论，不对任何具体DAO或提案的治理有效性做结论性判断，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. Quorum门槛：链上治理理论上的"防止少数绕过共识"防线</a></li>
+          <li><a href="#sec-2">2. 实测数据：真实DAO提案的法定人数设置情况</a></li>
+          <li><a href="#sec-3">3. 核验方法一：先查证具体的quorum设置，而非默认存在</a></li>
+          <li><a href="#sec-4">4. 核验方法二：区分投票人数与加权投票值，两者不可互换</a></li>
+          <li><a href="#sec-5">5. 核验方法三：核实投票权集中度与链上执行的额外把关</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://snapshot.org/" target="_blank" rel="noopener">Snapshot</a>：本文示例DAO提案数据来源，可查询各DAO提案的quorum设置、投票人数与投票地址明细</li>
+            <li><a href="https://docs.snapshot.org/tools/api" target="_blank" rel="noopener">Snapshot 公开API文档</a>：可用于自行抓取提案数据进行核验计算</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/governance/dao-voter-count-voting-power-verification-guide.html">DAO投票人数与投票权核验：参与人数众多，不代表权力不集中</a></li>
+          <li><a href="/research/governance/governance-vote-snapshot-manipulation-verification-guide.html">治理投票快照操纵核验：一个区块高度的选择，能改变多少投票权</a></li>
+          <li><a href="/research/basics/defi-market-cap-index-composition-verification-guide.html">DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导</a></li>
+          <li><a href="/research/market/dex-fee-revenue-concentration-verification-guide.html">DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中</a></li>
+          <li><a href="/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi协议市值/TVL比值核验："协议规模"和代币估值，完全是两码事</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：这个「生态繁荣」指标，几个协议就能撑起来</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=979a2208"></script>
+</body>
+</html>

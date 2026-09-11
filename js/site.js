@@ -219,6 +219,7 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/governance/dao-proposal-quorum-threshold-verification-guide.html': '2026-09-11 15:20:15',
     '/research/basics/defi-market-cap-index-composition-verification-guide.html': '2026-09-11 09:52:41',
     '/research/market/dex-fee-revenue-concentration-verification-guide.html': '2026-09-10 17:24:19',
     '/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html': '2026-09-10 14:08:30',
@@ -277,6 +278,7 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html': '2026-09-11 15:20:15',
 '/en/research/basics/defi-market-cap-index-composition-verification-guide.html': '2026-09-11 09:52:41',
 '/en/research/market/dex-fee-revenue-concentration-verification-guide.html': '2026-09-10 17:24:19',
 '/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html': '2026-09-10 14:08:30',
