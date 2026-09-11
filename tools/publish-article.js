@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dex-fee-revenue-concentration-verification-guide',
-  publishedISO: '2026-09-10T17:24:19+08:00',
-  tagColor: 'steel',
-  topic: 'market',
+  slug: 'defi-market-cap-index-composition-verification-guide',
+  publishedISO: '2026-09-11T09:52:41+08:00',
+  tagColor: 'indigo',
+  topic: 'basics',
 
   zh: {
-    h1: 'DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中',
-    tagLabel: '手续费收入核验',
-    cardDesc: '手续费收入反映真实交易活跃度，其集中度往往比TVL集中度更极端。本文用DefiLlama真实数据拆解核验方法。',
+    h1: 'DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导',
+    tagLabel: '板块指数核验',
+    cardDesc: 'DeFi板块市值指数是按分类汇总的加权数字，权重可能高度集中于单一代币。本文用CoinGecko真实数据拆解核验方法。',
   },
   en: {
-    h1: 'DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols"',
-    tagLabel: 'Fee Revenue Verification',
-    cardDesc: 'Fee revenue reflects genuine trading activity, and its concentration is often even more extreme than TVL concentration. A real-data breakdown using DefiLlama\'s public API.',
+    h1: 'DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token',
+    tagLabel: 'Sector Index Verification',
+    cardDesc: 'A DeFi sector market cap index is a weighted aggregate figure whose weight can be highly concentrated in a single token. A real-data breakdown using CoinGecko\'s public API.',
   },
 
   existingSlugsNewestFirst: [
+    'dex-fee-revenue-concentration-verification-guide',
     'defi-protocol-mcap-tvl-ratio-verification-guide',
     'stablecoin-peg-deviation-daily-close-verification-guide',
     'btc-spot-vs-perpetual-trading-volume-verification-guide',

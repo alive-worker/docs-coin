@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token - Crypto Research Notes</title>
+  <meta name="description" content="When crypto media reports that &quot;DeFi sector market cap rose X% today,&quot; it's easy to assume this reflects broad-based activity across the entire DeFi ecosystem — but this so-called &quot;DeFi sector market cap&quot; is really just a weighted index a data platform sums up based on some token categorization standard, and that index's weight distribution can be highly concentrated. If a single token accounts for over a fifth of the index's weight, that token's own price move alone is mathematically enough to dominate the entire &quot;sector's&quot; direction, with little relation to the real performance of the other hundred-plus DeFi tokens. Using real DeFi sector market cap composition data pulled from CoinGecko's public API, this guide breaks down how to verify the real weight concentration behind a &quot;DeFi sector&quot; move. For research purposes only, not investment advice.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token - Crypto Research Notes">
+  <meta property="og:description" content="When crypto media reports that &quot;DeFi sector market cap rose X% today,&quot; it's easy to assume this reflects broad-based activity across the entire DeFi ecosystem — but this so-called &quot;DeFi sector market cap&quot; is really just a weighted index a data platform sums up based on some token categorization standard, and that index's weight distribution can be highly concentrated. If a single token accounts for over a fifth of the index's weight, that token's own price move alone is mathematically enough to dominate the entire &quot;sector's&quot; direction, with little relation to the real performance of the other hundred-plus DeFi tokens. Using real DeFi sector market cap composition data pulled from CoinGecko's public API, this guide breaks down how to verify the real weight concentration behind a &quot;DeFi sector&quot; move. For research purposes only, not investment advice.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-11T09:52:41+08:00">
+  <meta property="article:modified_time" content="2026-09-11T09:52:41+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research Notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token - Crypto Research Notes">
+  <meta name="twitter:description" content="The DeFi sector market cap index's weight can be highly concentrated in a single token. A real-data breakdown of the verification method.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi Sector Market Cap Verification cover image">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide-en.png">
+  <link rel="preload" as="image" href="/img/article-defi-market-cap-index-composition-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language site focused on crypto research methodology and on-chain data, for research and educational purposes only, not investment advice.", "knowsAbout": ["Crypto research","On-chain data analysis","Tokenomics","Stablecoins","Cross-chain","Smart contract security","DAO governance","Proof of reserves","Sector index verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html", "name": "DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token - Crypto Research Notes", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "All Articles", "item": "https://coin.ponr.org/en/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token", "item": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#article", "headline": "DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token", "description": "A DeFi sector market cap index is a weighted aggregate figure whose weight can be highly concentrated in a single token. A real-data breakdown. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research Notes", "isAccessibleForFree": true, "keywords": ["DeFi sector market cap verification","index weight concentration verification","categorization methodology verification","single token dominance verification","sector narrative verification"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-11T09:52:41+08:00", "dateModified": "2026-09-11T09:52:41+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/defi-market-cap-index-composition-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi Sector Market Cap Verification: This Index Can Be Dominated by a Single Token</h1>
+        <p class="article-summary">"DeFi sector market cap rose 5% today, capital flowing back into decentralized finance" — a statement like this creates the intuitive impression that hundreds of DeFi protocol tokens are broadly rallying, reflecting a wide-ranging shift in market sentiment. But so-called "DeFi sector market cap" is really just a composite index a data platform computes by summing (or market-cap-weighting) all tokens it has classified as "DeFi tokens" under some categorization standard — an index whose composition and weight distribution is rarely mentioned in coverage. If a single token's weight in that index reaches a fifth or more, that token's own price move on any given day is mathematically enough to dominate the entire index's direction, almost independent of how the majority of other DeFi tokens actually perform. Using real DeFi sector market cap composition data pulled from CoinGecko's public API, this guide breaks down how to verify the real weight concentration behind a "DeFi sector" move. For research purposes only, not investment advice.</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · Crypto Research Notes Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-11T09:52:41+08:00">2026-09-11 09:52:41 (UTC+8)</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-market-cap-index-composition-verification-guide-en.svg" alt="DeFi Sector Market Cap Verification cover image" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">Verification Checklist</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>Check the specific categorization methodology and calculation behind a "DeFi sector market cap" index, understanding it as a weighted aggregate figure rather than a direct activity indicator</li>
+            <li><span class="article-verify-check">✓</span>Query the largest tokens in that index by weight and their specific shares from a public data platform, to judge whether the index is dominated by a small number of tokens</li>
+            <li><span class="article-verify-check">✓</span>Check whether the largest-weight token qualifies as a genuine "DeFi protocol token," or falls into a boundary-blurring category like a liquid staking derivative</li>
+            <li><span class="article-verify-check">✓</span>Decompose the sector index's move into the top token's contribution versus the rest of the constituents' contribution, before accepting a "sector-wide rally/decline" claim</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "Sector Market Cap" Is a Composite Index, Not Direct Evidence of Activity</h2>
+<p>Crypto data platforms, to let users browse by sector, classify thousands of tokens into categories by business type — DeFi, Layer1, GameFi, and so on — and compute each sector's total market cap by summing all tokens within it. This calculation is fundamentally similar to a broad stock index — a weighted aggregate value, not an independent measure of activity for every project within the sector. The problem is that these sector market cap indexes often have extremely uneven weight distribution: because crypto market caps exhibit a severe power-law distribution, the one or two largest tokens in a sector can account for a disproportionately large share of the entire sector's market cap, with the rest of the constituent tokens combined potentially unable to match the leading tokens.</p>
+<p>This means a statement like "DeFi sector market cap rose" likely just describes the one or two largest-weight tokens in that sector rising that day, while the actual performance of the sector's other hundred-plus constituent tokens may be entirely unrelated — it's even possible for a rising top token to mask a decline across most constituent tokens. A verifier who directly equates a sector market cap move with "broad-based activity across the entire sector" can easily be misled by this inherent characteristic of how such indexes are constructed.</p>
+<ul>
+<li>A sector market cap is fundamentally a weighted aggregate index, calculated similarly to a broad stock index, not an independent measure of activity for every project in the sector.</li>
+<li>Crypto market caps exhibit a severe power-law distribution, so the one or two largest tokens in a sector can account for a disproportionate share of the sector's total market cap.</li>
+<li>A "sector market cap rise" may only reflect the top tokens' performance, potentially entirely unrelated to the actual trends of most other constituent tokens.</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. Real Data: The Actual Weight Composition of DeFi Sector Market Cap</h2>
+<div class="case-study-box">
+  <p class="case-study-label">Verified Data</p>
+  <p>Real data pulled from CoinGecko's public API (/global/decentralized_finance_defi) at the time of verification in September 2026: the current DeFi sector market cap totaled approximately $115.705 billion, accounting for about 4.28% of the total crypto market cap (DeFi Dominance). Within that $115.705 billion DeFi sector market cap, the single largest-weight token was Lido Staked Ether (stETH), whose market cap represented approximately 20.46% of the entire DeFi sector — meaning this one token alone accounted for more than a fifth of the DeFi sector's market cap. These figures can be independently re-verified through CoinGecko's public API; the specific shares shift continuously as individual token prices fluctuate.</p>
+</div>
+<p>This data reveals a key point worth examining further: stETH is a liquid staking derivative token, fundamentally a receipt representing a user's staked Ethereum principal plus accrued staking rewards, and its price tracks almost entirely with Ethereum's (ETH) own price — a completely different price-driving logic from a traditional "DeFi protocol token" (like a lending or DEX governance token, whose price typically reflects the market's independent pricing of protocol revenue and governance rights). When ETH's price moves sharply, stETH's market cap moves in sync, directly dragging the entire "DeFi sector market cap" index in the same direction — even if every other lending, DEX, and other protocol token in the sector shows no price change at all. If a verifier sees a report of "DeFi sector market cap surging," they should recognize this is very likely just ETH's price appreciation being "counted into" the DeFi sector through stETH's categorization, rather than any fundamental change to DeFi protocols themselves.</p>
+<ul>
+<li>Real September 2026 data: DeFi sector market cap is about $115.705 billion, roughly 4.28% of the total market, with stETH alone accounting for about 20.46% of the sector's market cap.</li>
+<li>stETH's price tracks almost entirely with ETH's price, a completely different independent-pricing logic from traditional DeFi protocol tokens, yet it's still classified within the DeFi sector.</li>
+<li>A "DeFi sector market cap surging" report is very likely just ETH's price move being counted in via stETH's categorization, not a fundamental change to DeFi protocols.</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. Verification Method One: Check the Sector Index's Top Weight Share First</h2>
+<p>The first step in verifying a report claiming a "sector market cap rose/fell" is to check the largest-weight tokens in that sector index and their specific shares. Most data platforms (like CoinGecko's sector category pages) list constituent tokens ranked by market cap, letting verifiers quickly calculate the top 1-3 tokens' combined share of total sector market cap. If that share exceeds a third, or approaches half, verifiers should treat a vague "sector-wide rally/decline" claim with caution, and instead check the top tokens' and remaining constituents' respective moves separately, to judge whether the sector index's change is a broad-based phenomenon or an individual move by the top tokens.</p>
+<p>Verifiers should also note that sector categorization itself can be contested — different data platforms may classify the same token differently (for example, some platforms categorize stETH under DeFi, while others might place it under a separate "Liquid Staking" category). When citing a sector market cap figure, verifiers should specify the data source and its categorization methodology, to avoid discrepancies from cross-platform comparisons that use different classification standards.</p>
+<ul>
+<li>The first verification step is checking the largest-weight tokens in a sector index and their specific shares — most platforms provide a ranked list of sector constituents.</li>
+<li>When top tokens' combined share exceeds a third, treat a vague "sector-wide rally/decline" claim with caution and check the top tokens' and remaining constituents' moves separately.</li>
+<li>Different data platforms may classify the same token differently, so specify the categorization methodology when comparing sector market cap figures across platforms.</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. Verification Method Two: Check Whether the Top Token Is "Nominal DeFi" vs. "Substantive DeFi"</h2>
+<p>After identifying the top-weight token, verifiers should further judge whether it qualifies as a token with genuine DeFi protocol fundamentals (lending spread income, fee revenue share, governance rights value), or falls into a boundary category like a liquid staking receipt, whose price-driving logic is closer to "a shadow of the underlying asset." Verifiers can check the token's specific mechanism documentation to judge this: if a token's price is primarily determined by the price of the underlying asset it represents (e.g. ETH itself), with the price barely reflecting the protocol's own revenue, user growth, or other fundamental changes, then even when this kind of token is classified within DeFi sector statistics, its price move carries relatively limited informational value for judging "whether the DeFi ecosystem is genuinely more active."</p>
+<p>This distinction isn't meant to dispute the reasonableness of classifying liquid staking tokens as DeFi (staking protocols genuinely are an important branch of DeFi in terms of product form) — rather, it's a reminder that when interpreting an aggregate figure like "DeFi sector market cap," verifiers should recognize it blends two distinct driving factors: one part is the underlying asset's (e.g. ETH's) own price fluctuation, and the other is the independent change that genuinely reflects DeFi protocol usage, governance rights pricing, and similar factors. Separating these two parts allows for a more accurate understanding of what a "DeFi sector" narrative actually means.</p>
+<ul>
+<li>Check whether the top-weight token has genuine DeFi protocol fundamentals like lending spreads or fee revenue share, or whether its price-driving logic is closer to a shadow of the underlying asset.</li>
+<li>Classifying liquid staking tokens as DeFi has its own logic, but their price moves carry relatively limited reference value for judging "DeFi ecosystem activity."</li>
+<li>A sector market cap figure blends underlying asset price fluctuation and protocol fundamental change — separating the two gives a more accurate understanding of the sector narrative.</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. Verification Method Three: Decompose the Sector Move Into Top-Token and Constituent Contributions</h2>
+<p>Verifiers can perform a simple quantitative decomposition: calculate the sector index's overall move for the day, the top-weight token's move for the day, and the weighted average move of the remaining constituents excluding the top token — comparing all three clearly reveals which part is primarily driving the sector index's move. If the top token's move closely tracks the sector index's overall move, while the remaining constituents' move is noticeably smaller or even in the opposite direction, that confirms this "sector move" is substantively an individual move by the top token, not broad-based capital flowing into or out of the sector.</p>
+<p>Verifiers should treat this decomposition method as a standard step for interpreting any "sector index" narrative, not just DeFi — Layer1, GameFi, and other sectors can equally have weight highly concentrated in one or two leading projects. Mastering this decomposition method helps verifiers quickly judge, when they see a report of "sector market cap hitting a new high/crashing," whether this reflects broad-based sector-wide activity or is simply driven by an individual leading asset.</p>
+<ul>
+<li>Decomposing the sector's overall move, the top token's move, and the remaining constituents' weighted average move reveals the sector move's real driving source.</li>
+<li>Top token's move closely tracking the sector's overall move, with remaining constituents noticeably smaller, indicates an individual move by the top token rather than broad-based sector capital flow.</li>
+<li>This decomposition method applies to any sector index narrative, not just DeFi — Layer1, GameFi, and other sectors can equally have concentrated weight issues.</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. Verification Checklist and Conclusion</h2>
+<p>Consolidating the preceding sections into a reusable checklist: First, has the specific categorization methodology and calculation behind a "sector market cap" index been checked, understanding it as a weighted aggregate figure rather than direct evidence of activity? Second, have the largest-weight tokens in the sector and their specific shares been queried, to judge whether the index is dominated by a small number of tokens? Third, has the top-weight token been checked for genuine DeFi protocol fundamentals, versus price-driving logic closer to a shadow of the underlying asset? Fourth, has the sector move been decomposed into top-token contribution versus constituent contribution, to judge whether a "sector-wide rally/decline" claim actually holds? Only after working through these four questions can a report citing a "sector market cap" move be accurately assessed, rather than taken at face value from a surface-level aggregate number. This article discusses verification methodology only and does not offer any conclusive judgment about the current market state of any specific sector or token; for research and educational purposes only, not investment advice.</p>
+<ul>
+<li>Four-question checklist: is the categorization methodology clear, is top weight verified, is token nature checked, is the move decomposed.</li>
+<li>Real September 2026 data shows DeFi sector market cap at about $115.705 billion, with stETH alone accounting for about 20.46% of it.</li>
+<li>This article discusses verification methodology only and offers no conclusive judgment about the current market state of any specific sector or token; not investment advice.</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="Table of contents">
+          <h2>Table of Contents</h2>
+          <ol>
+          <li><a href="#sec-1">1. "Sector Market Cap" Is a Composite Index, Not Direct Evidence of Activity</a></li>
+          <li><a href="#sec-2">2. Real Data: The Actual Weight Composition of DeFi Sector Market Cap</a></li>
+          <li><a href="#sec-3">3. Verification Method One: Check the Sector Index's Top Weight Share First</a></li>
+          <li><a href="#sec-4">4. Verification Method Two: Check Whether the Top Token Is "Nominal DeFi" vs. "Substantive DeFi"</a></li>
+          <li><a href="#sec-5">5. Verification Method Three: Decompose the Sector Move Into Top-Token and Constituent Contributions</a></li>
+          <li><a href="#sec-6">6. Verification Checklist and Conclusion</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="Sources and further reading">
+          <h2>Sources and Further Reading</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/global-charts" target="_blank" rel="noopener">CoinGecko Global Market Data</a>: source for this article's DeFi sector market cap data; provides sector constituent rankings and weight shares</li>
+            <li><a href="https://www.coingecko.com/en/categories/decentralized-finance-defi" target="_blank" rel="noopener">CoinGecko DeFi Category Page</a>: provides all constituent tokens in the DeFi sector and their respective market cap rankings</li>
+          </ul>
+          <p class="ref-note">Tools, data sources, and third-party platform features mentioned in this article may change over time; refer to official sources for the latest information. For research and educational purposes only, not investment advice.</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="Related articles">
+          <h2>Related Articles</h2>
+          <ul>
+          <li><a href="/en/research/market/dex-fee-revenue-concentration-verification-guide.html">DEX Fee Revenue Concentration Verification: Real Revenue Is Even More Concentrated Than TVL Behind "Hundreds of DEX Protocols"</a></li>
+          <li><a href="/en/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi Protocol Market Cap to TVL Ratio Verification: "Protocol Size" and Token Valuation Are Not the Same Thing</a></li>
+          <li><a href="/en/research/governance/chain-tvl-concentration-verification-guide.html">Chain TVL Concentration Verification: How Few Protocols Can Prop Up This "Ecosystem Health" Metric</a></li>
+          <li><a href="/en/research/basics/stablecoin-market-cap-dominance-verification-guide.html">Stablecoin Market Cap Dominance Verification: What Methodology Traps Hide Behind This "Capital Inflow" Signal</a></li>
+          <li><a href="/en/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">Bitcoin Spot vs. Perpetual Trading Volume Verification: Who's Actually Behind a "Volume Surge" Headline</a></li>
+          <li><a href="/en/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">Stablecoin Peg Deviation Verification: Daily Close or Intraday Low — Which One Is the "Depeg" Claim Using</a></li>
+          <li><a href="/en/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">Crypto Fear and Greed Index Verification: How Is This "Sentiment" Number Actually Weighted</a></li>
+          <li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/en/">Back to Home</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6a48961e"></script>
+</body>
+</html>

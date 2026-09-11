@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导 - 加密货币研究</title>
+  <meta name="description" content="加密媒体报道&quot;DeFi板块市值今日上涨X%&quot;时，很容易让人以为这是整个DeFi生态普遍活跃的信号，但这个所谓的&quot;DeFi板块市值&quot;本质上是数据平台按代币分类标准汇总出的一个加权指数，而这个指数的权重分布可能高度集中——如果单一代币占据了这个指数五分之一以上的权重，那么这枚代币自身的价格波动就足以主导整个&quot;板块&quot;的涨跌，与其余上百个DeFi代币的真实表现关系不大。本文用CoinGecko公开抓取的真实DeFi板块市值构成数据，拆解如何核验一个&quot;DeFi板块&quot;涨跌说法背后真实的权重集中度。仅供学习研究，不构成投资建议。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导 - 加密货币研究">
+  <meta property="og:description" content="加密媒体报道&quot;DeFi板块市值今日上涨X%&quot;时，很容易让人以为这是整个DeFi生态普遍活跃的信号，但这个所谓的&quot;DeFi板块市值&quot;本质上是数据平台按代币分类标准汇总出的一个加权指数，而这个指数的权重分布可能高度集中——如果单一代币占据了这个指数五分之一以上的权重，那么这枚代币自身的价格波动就足以主导整个&quot;板块&quot;的涨跌，与其余上百个DeFi代币的真实表现关系不大。本文用CoinGecko公开抓取的真实DeFi板块市值构成数据，拆解如何核验一个&quot;DeFi板块&quot;涨跌说法背后真实的权重集中度。仅供学习研究，不构成投资建议。">
+  <meta property="og:url" content="https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-11T09:52:41+08:00">
+  <meta property="article:modified_time" content="2026-09-11T09:52:41+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="加密货币研究">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导 - 加密货币研究">
+  <meta name="twitter:description" content="DeFi板块市值指数的权重可能高度集中于单一代币，本文用真实数据拆解核验方法。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="DeFi板块市值核验 主题配图">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide.png">
+  <link rel="preload" as="image" href="/img/article-defi-market-cap-index-composition-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","代币经济学","稳定币","跨链","智能合约安全","DAO治理","储备证明","板块指数核验"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-defi-market-cap-index-composition-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html", "name": "DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "全部文章", "item": "https://coin.ponr.org/articles.html" },
+        { "@type": "ListItem", "position": 3, "name": "DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导", "item": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#article", "headline": "DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导", "description": "DeFi板块市值指数是按分类汇总的加权数字，权重可能高度集中于单一代币。本文用真实公开数据拆解核验方法。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#primaryimage" }, "articleSection": "加密货币研究", "isAccessibleForFree": true, "keywords": ["DeFi板块市值核验","指数权重集中度核验","分类统计口径核验","单一代币主导核验","板块叙事核验"], "wordCount": 2200, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-09-11T09:52:41+08:00", "dateModified": "2026-09-11T09:52:41+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/basics/defi-market-cap-index-composition-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/basics/defi-market-cap-index-composition-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+        <h1>DeFi板块市值核验：说DeFi板块涨跌时，这个指数可能被一枚代币主导</h1>
+        <p class="article-summary">"DeFi板块今日市值上涨5%，资金重新流入去中心化金融赛道"——这类表述给人的直觉印象是整个DeFi生态的上百个协议代币普遍上涨，反映的是一种广泛的市场情绪转变。但所谓的"DeFi板块市值"，本质上只是数据平台按照某个代币分类标准，把所有被归类为"DeFi代币"的市值简单加总（或按市值加权）算出的一个复合指数，这个指数的构成方式和权重分布很少被报道提及。如果这个指数里单一代币的权重占比达到五分之一甚至更高，那么这枚代币当天的价格波动，就足以在数学上主导整个指数的涨跌方向，而与其余大多数DeFi代币的真实表现几乎无关。本文用CoinGecko公开抓取的真实DeFi板块市值构成数据，拆解如何核验一个"DeFi板块"涨跌说法背后真实的权重集中度。全文仅讨论核验方法本身，不构成投资建议。</p>
+        <p class="article-meta"><span><a href="https://coin.ponr.org/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-09-11T09:52:41+08:00">2026-09-11 09:52:41</time></p>
+      </header>
+        <img class="article-cover" src="/img/article-defi-market-cap-index-composition-verification-guide.svg" alt="DeFi板块市值核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+        <div class="article-body">
+
+        <div class="article-verify-panel">
+          <p class="article-verify-title">核验清单</p>
+          <ul class="article-verify-list">
+            <li><span class="article-verify-check">✓</span>核实"DeFi板块市值"这个指数具体的分类口径和统计方式，理解它只是一个复合加总数字，而非直接的活跃度指标</li>
+            <li><span class="article-verify-check">✓</span>用公开数据平台查询这个指数里权重最大的几枚代币及其具体占比，判断指数是否被少数代币主导</li>
+            <li><span class="article-verify-check">✓</span>核实占比最大的代币是否属于严格意义上的"DeFi协议代币"，还是流动性质押衍生品等边界模糊的分类</li>
+            <li><span class="article-verify-check">✓</span>把板块指数涨跌拆解为头部代币贡献和其余成分代币贡献两部分，再判断"板块普涨/普跌"的说法是否成立</li>
+          </ul>
+        </div>
+
+<section id="sec-1">
+<h2>1. "板块市值"是一个复合指数，不是活跃度的直接证据</h2>
+<p>加密数据平台为了方便用户按赛道浏览，会把成千上万个代币按照业务类型归入不同的"板块"分类，例如DeFi、Layer1、GameFi等，并计算每个板块内所有代币的市值总和作为该板块的"板块市值"。这个数字的计算方式本质上和大盘股指数类似——是一个加权聚合值，而不是对板块内每个项目活跃度的独立衡量。问题在于，这类板块市值指数的权重分布往往极不均匀：由于加密货币的市值本身呈现严重的幂律分布特征，一个板块内最大的一两个代币，可能占据整个板块市值的相当大比例，其余成分代币的市值合计起来也未必能与头部代币抗衡。</p>
+<p>这意味着，"DeFi板块市值上涨"这类表述所描述的，很可能只是这个板块里权重最大的那一两枚代币当天上涨了，而板块内其余上百个代币的实际表现可能毫不相关，甚至可能出现头部代币上涨掩盖了大多数成分代币下跌的情况。核验者如果把板块市值的涨跌直接等同于"整个赛道普遍活跃"，很容易被这种指数构成方式的天然特性误导。</p>
+<ul>
+<li>板块市值本质是加权聚合指数，计算方式类似大盘股指数，而非对板块内每个项目活跃度的独立衡量。</li>
+<li>加密货币市值呈严重幂律分布，板块内头部一两枚代币可能占据整个板块市值的相当大比例。</li>
+<li>"板块市值上涨"可能只反映头部代币的表现，与板块内其余大多数代币的真实走势可能毫不相关。</li>
+</ul>
+</section>
+
+<section id="sec-2">
+<h2>2. 实测数据：DeFi板块市值的真实权重构成</h2>
+<div class="case-study-box">
+  <p class="case-study-label">实测数据</p>
+  <p>2026年9月核验时通过CoinGecko公开API（/global/decentralized_finance_defi）实测抓取的真实数据：当前DeFi板块市值合计约1157.05亿美元，占全市场加密货币总市值的比例（DeFi Dominance）约4.28%；而在这1157.05亿美元的DeFi板块市值中，权重占比最大的单一代币是Lido质押以太坊(Lido Staked Ether, stETH)，其市值占整个DeFi板块的比例高达约20.46%——也就是说，仅这一枚代币就占了DeFi板块市值的五分之一以上。以上数字可通过CoinGecko公开API实时复核，具体占比会随各代币价格波动持续变化。</p>
+</div>
+<p>这份数据揭示了一个值得深挖的关键点：stETH是一种流动性质押衍生代币，本质上代表用户质押的以太坊本金加累积质押收益的凭证，它的价格几乎完全跟随以太坊(ETH)本身的价格波动，与传统意义上"DeFi协议代币"（如借贷协议或DEX的治理代币，其价格通常反映市场对协议收入、治理权的独立定价）的价格驱动逻辑完全不同。当ETH价格大幅波动时，stETH的市值会同步大幅波动，进而直接拖动整个"DeFi板块市值"指数朝同一方向变化，即便板块内其余借贷、DEX等协议代币的价格完全没有变化。核验者如果看到"DeFi板块市值大涨"的报道，应当意识到这很可能只是ETH价格上涨通过stETH的分类归属被"计入"了DeFi板块，而非DeFi协议本身出现了任何基本面变化。</p>
+<ul>
+<li>2026年9月实测：DeFi板块市值约1157.05亿美元，占全市场比例约4.28%，其中stETH一枚代币占板块市值约20.46%。</li>
+<li>stETH价格几乎完全跟随ETH价格波动，与传统DeFi协议代币的独立定价逻辑完全不同，但仍被归入DeFi板块统计。</li>
+<li>"DeFi板块市值大涨"的报道，很可能只是ETH价格波动通过stETH的分类归属被计入，而非DeFi协议基本面变化。</li>
+</ul>
+</section>
+
+<section id="sec-3">
+<h2>3. 核验方法一：先查证板块指数的头部权重占比</h2>
+<p>核验一篇提到"某板块市值上涨/下跌"的报道时，第一步是查证这个板块指数里权重最大的几枚代币及其具体占比。多数数据平台（如CoinGecko的板块分类页面）会列出板块内各代币按市值排序的列表，核验者可以据此快速计算头部1-3枚代币合计占板块总市值的比例。如果这个比例超过三分之一甚至接近一半，核验者就应当对"板块普遍上涨/下跌"这类笼统表述保持警惕，转而查证头部代币和其余成分代币各自的具体涨跌幅度，判断板块指数的变化究竟是广泛现象还是头部代币的个别行情。</p>
+<p>核验者还应留意板块分类本身是否存在争议——不同数据平台对同一枚代币的板块归类可能不一致（例如stETH，有的平台归入DeFi，有的可能归入"流动性质押"这个独立分类），核验者引用某个板块市值数字时，应说明具体的数据来源及其分类口径，避免跨平台直接比较可能因分类标准不同而产生的数字差异。</p>
+<ul>
+<li>核验第一步是查证板块指数内权重最大的几枚代币及其具体占比，多数平台会提供板块内代币排行列表。</li>
+<li>头部代币合计占比超过三分之一时，应对"板块普遍上涨/下跌"保持警惕，转而核实头部与其余成分的分别表现。</li>
+<li>不同数据平台对同一代币的板块归类可能不一致，跨平台比较板块市值时应注明具体分类口径。</li>
+</ul>
+</section>
+
+<section id="sec-4">
+<h2>4. 核验方法二：核实头部代币是否属于"名义DeFi"而非"实质DeFi"</h2>
+<p>确认头部权重代币之后，核验者还应进一步判断这枚代币是否属于严格意义上具有DeFi协议基本面（如借贷利差收入、交易手续费分成、治理权价值）的代币，还是像流动性质押凭证这类价格驱动逻辑更接近"底层资产影子"的边界型分类。核验者可以通过查证该代币的具体机制说明来做判断：如果代币价格主要由其代表的底层资产（如ETH本身）的价格决定，价格几乎不反映协议自身的收入、用户增长等基本面变化，这类代币即便被归入DeFi板块的统计口径，其涨跌信息量对判断"DeFi生态是否真的更活跃"的参考价值也相对有限。</p>
+<p>这个区分并非要否定流动性质押代币被归类为DeFi的合理性（从产品形态上，质押协议确实是DeFi的一个重要分支），而是提醒核验者，在解读"DeFi板块市值"这类聚合数字时，应当意识到这个数字混合了两种性质不同的驱动因素：一部分是底层资产（如ETH）价格本身的波动，另一部分才是真正反映DeFi协议使用度、治理权定价等因素的独立变化。把这两部分拆开看，才能更准确地判断"DeFi板块"叙事的真实含义。</p>
+<ul>
+<li>核验头部代币是否具备借贷利差、手续费分成等DeFi协议基本面，还是价格驱动逻辑更接近底层资产的影子。</li>
+<li>流动性质押代币被归类为DeFi有其合理性，但其涨跌对判断"DeFi生态活跃度"的参考价值相对有限。</li>
+<li>板块市值数字混合了底层资产价格波动与协议基本面变化两种驱动因素，拆开看才能准确理解板块叙事含义。</li>
+</ul>
+</section>
+
+<section id="sec-5">
+<h2>5. 核验方法三：拆分板块涨跌的头部贡献与成分贡献</h2>
+<p>核验者可以做一个简单的量化拆解：分别计算板块指数当日的整体涨跌幅、头部权重代币的当日涨跌幅，以及剔除头部代币后剩余成分代币的加权平均涨跌幅，三者对比即可清楚判断板块指数的涨跌主要来自哪个部分。如果头部代币涨跌幅与板块整体涨跌幅高度接近，而剩余成分代币的涨跌幅明显更小甚至方向相反，就可以确认这次"板块行情"实质上是头部代币的个别行情，而非板块内广泛的资金流入或流出。</p>
+<p>核验者应把这种拆解方法作为解读任何"板块指数"类叙事的标准动作，不只局限于DeFi板块——Layer1、GameFi等其他板块同样可能存在权重高度集中于一两个头部项目的情况。掌握这个拆解方法，可以帮助核验者在看到"某板块市值创新高/暴跌"这类报道时，快速判断这背后是广泛的板块性行情，还是仅仅由个别头部资产驱动的局部行情。</p>
+<ul>
+<li>拆解板块整体涨跌幅、头部代币涨跌幅、剩余成分代币加权涨跌幅三者，可判断板块行情的真实驱动来源。</li>
+<li>头部代币涨跌幅与板块整体高度接近而其余成分明显更小，说明这是头部代币的个别行情而非板块性资金流动。</li>
+<li>这种拆解方法适用于任何板块指数叙事，不局限于DeFi，Layer1、GameFi等板块同样可能存在权重集中问题。</li>
+</ul>
+</section>
+
+<section id="sec-6">
+<h2>6. 核验清单与结论</h2>
+<p>把前面各节收敛为一套可复用的核验清单：其一，是否查证过"板块市值"这个指数具体的分类口径和构成方式，理解它是加权聚合数字而非活跃度的直接证据？其二，是否查询过板块内权重最大的几枚代币及其具体占比，判断指数是否被少数代币主导？其三，是否核实过头部权重代币是否具备实质性的DeFi协议基本面，还是价格驱动逻辑更接近底层资产的影子？其四，是否拆解过板块涨跌的头部贡献与成分贡献，判断"板块普涨/普跌"的说法是否成立？把这四个问题逐一核实之后，才能对一篇提到"板块市值"涨跌的报道形成准确判断，而不是被一个聚合指数的表面数字带偏。全文仅讨论核验方法论，不针对任何具体板块或代币的当前市场状况做结论性判断，仅供学习与研究参考，不构成投资建议。</p>
+<ul>
+<li>核验清单四问：分类口径是否明确、头部权重是否查证、代币性质是否核实、涨跌贡献是否拆解。</li>
+<li>2026年9月真实数据显示DeFi板块市值约1157.05亿美元，其中stETH一枚代币占比约20.46%。</li>
+<li>全文为核验方法论讨论，不对任何具体板块或代币的当前市场状况做结论性判断，不构成投资建议。</li>
+</ul>
+</section>
+        </div>
+        <div class="article-sidebar">
+        <nav class="toc" aria-label="本文目录">
+          <h2>本文目录</h2>
+          <ol>
+          <li><a href="#sec-1">1. "板块市值"是一个复合指数，不是活跃度的直接证据</a></li>
+          <li><a href="#sec-2">2. 实测数据：DeFi板块市值的真实权重构成</a></li>
+          <li><a href="#sec-3">3. 核验方法一：先查证板块指数的头部权重占比</a></li>
+          <li><a href="#sec-4">4. 核验方法二：核实头部代币是否属于"名义DeFi"而非"实质DeFi"</a></li>
+          <li><a href="#sec-5">5. 核验方法三：拆分板块涨跌的头部贡献与成分贡献</a></li>
+          <li><a href="#sec-6">6. 核验清单与结论</a></li>
+          </ol>
+        </nav>
+        <aside class="references" aria-label="资料来源与延伸阅读">
+          <h2>资料来源与延伸阅读</h2>
+          <ul>
+            <li><a href="https://www.coingecko.com/en/global-charts" target="_blank" rel="noopener">CoinGecko 全球市场数据页面</a>：本文示例DeFi板块市值数据来源，可查询板块内代币排行与权重占比</li>
+            <li><a href="https://www.coingecko.com/en/categories/decentralized-finance-defi" target="_blank" rel="noopener">CoinGecko DeFi分类页面</a>：可查询DeFi板块内全部成分代币及各自市值排名</li>
+          </ul>
+          <p class="ref-note">文中提及的工具、数据源与第三方平台功能可能随时间变化，请以官方最新信息为准。本文仅供学习与研究参考，不构成投资建议。</p>
+        </aside>
+        </div>
+        </div>
+        <aside class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <ul>
+          <li><a href="/research/market/dex-fee-revenue-concentration-verification-guide.html">DEX手续费收入集中度核验："上百个DEX协议"背后，真实收入比TVL更集中</a></li>
+          <li><a href="/research/basics/defi-protocol-mcap-tvl-ratio-verification-guide.html">DeFi协议市值/TVL比值核验："协议规模"和代币估值，完全是两码事</a></li>
+          <li><a href="/research/governance/chain-tvl-concentration-verification-guide.html">公链TVL集中度核验：这个「生态繁荣」指标，几个协议就能撑起来</a></li>
+          <li><a href="/research/basics/stablecoin-market-cap-dominance-verification-guide.html">稳定币市值占比核验：这个「入场资金」信号，计算口径藏着什么陷阱</a></li>
+          <li><a href="/research/market/btc-spot-vs-perpetual-trading-volume-verification-guide.html">比特币现货与永续合约成交量核验：媒体说的"成交量暴涨"，到底是谁在买</a></li>
+          <li><a href="/research/governance/stablecoin-peg-deviation-daily-close-verification-guide.html">稳定币脱锚幅度核验：说"脱锚"时，用的是日线收盘价还是盘中最低价</a></li>
+          <li><a href="/research/basics/crypto-fear-greed-index-methodology-verification-guide.html">加密货币恐惧贪婪指数核验：这个「情绪」数字，权重到底怎么分配的</a></li>
+          <li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li>
+          </ul>
+        </aside>
+        <div class="back-row"><a href="/">返回首页</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6a48961e"></script>
+</body>
+</html>
