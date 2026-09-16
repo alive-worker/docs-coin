@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERC-4626 Vault Yield: Verify Donations and Redemption Limits</title>
+  <meta name="description" content="Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="ERC-4626 Vault Yield: Verify Donations and Redemption Limits">
+  <meta property="og:description" content="Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <meta property="article:published_time" content="2026-09-16T15:15:11+08:00">
+  <meta property="article:modified_time" content="2026-09-16T15:15:11+08:00">
+  <meta property="article:section" content="Protocol Research">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="ERC-4626 Vault Yield: Verify Donations and Redemption Limits">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ERC-4626 Vault Yield: Verify Donations and Redemption Limits">
+  <meta name="twitter:description" content="Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification-en.png">
+  <meta name="twitter:image:alt" content="ERC-4626 Vault Yield: Verify Donations and Redemption Limits">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="preload" as="image" href="/img/article-erc4626-vault-yield-donation-redemption-verification-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html",
+      "name": "ERC-4626 Vault Yield: Verify Donations and Redemption Limits",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Protocol Research",
+          "item": "https://coin.ponr.org/en/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "ERC-4626 Vault Yield: Verify Donations and Redemption Limits",
+          "item": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#article",
+      "headline": "ERC-4626 Vault Yield: Verify Donations and Redemption Limits",
+      "description": "Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.",
+      "image": [
+        "https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification-en.png"
+      ],
+      "datePublished": "2026-09-16T15:15:11+08:00",
+      "dateModified": "2026-09-16T15:15:11+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#webpage"
+      },
+      "articleSection": "Protocol & Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-4626",
+        "https://docs.openzeppelin.com/contracts/5.x/erc4626"
+      ],
+      "wordCount": 935
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/erc4626-vault-yield-donation-redemption-verification.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol & Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--teal">Vault Yield Verification</span></p>
+          <h1>ERC-4626 Vault Yield: Verify Donations and Redemption Limits</h1>
+          <p class="article-summary">A rising vault share price may reflect strategy profit, an external transfer, a valuation update or fee accounting. Research should explain who supplied the additional assets, whether the change can recur, and whether holders can actually exit. This article separates the origin of returns from their realizability. Every numerical example is hypothetical, not an observed return from a live protocol.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-09-16T15:15:11+08:00">2026-09-16 15:15:11</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-erc4626-vault-yield-donation-redemption-verification-en.svg" alt="Three checks for vault returns: profit source, external transfers and redemption capacity" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Pin the block, implementation and both decimal precisions before comparing observations.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Separate strategy earnings, external transfers and accounting adjustments.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Measure rounding at the intended deposit size and inspect minimum-share enforcement.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Read redemption previews alongside owner-specific limits and simulate the exit.</li></ul></div>
+            <section id="sec-1"><h2>1. Start with assets per share, not TVL growth</h2><p>Rising TVL does not automatically enrich existing holders. A normal deposit increases both assets and shares, potentially leaving the value of each existing share unchanged. In a simplified vault without virtual offsets or fees, where every share represents the same underlying asset, let A be total assets and S be total shares. The displayed exchange rate is P=A/S. Read the decimals of both tokens before interpreting raw integers as a human-readable price.</p><p>The <a href="https://eips.ethereum.org/EIPS/eip-4626#methods" target="_blank" rel="noopener">ERC-4626 method definitions</a> standardize an interface rather than every strategy's accounting. A/S is therefore a starting point, not a substitute for the deployed conversion logic. My research rule is straightforward: reconcile the source of asset growth before discussing the quality of returns. Annualizing a price move before explaining it reverses that order.</p></section>
+<section id="sec-2"><h2>2. A worked example: a 10% gain with no strategy profit</h2><p>Assume a vault holds 1,000 asset units against 1,000 shares, so P=1. An address transfers another 100 assets directly to the vault without minting shares. Assume this implementation includes that transfer in totalAssets. P becomes 1.10, and a holder's 100 shares now represent 110 assets instead of 100.</p><table><caption>Hypothetical example, excluding fees, virtual offsets and rounding</caption><thead><tr><th scope="col">State</th><th scope="col">Assets A</th><th scope="col">Shares S</th><th scope="col">A/S</th></tr></thead><tbody><tr><td>Before transfer</td><td>1,000</td><td>1,000</td><td>1.00</td></tr><tr><td>100 assets donated</td><td>1,100</td><td>1,000</td><td>1.10</td></tr><tr><td>New deposit of 110</td><td>1,210</td><td>1,100</td><td>1.10</td></tr></tbody></table><p>The final row assumes that a new depositor receives 100 shares at the new exchange rate. Existing holders may receive a real gift, but no strategy profit was required. If the donor and the holder belong to the same economic entity, its 100-asset outflow must also enter the calculation. Counting only its vault position can turn an internal transfer into apparent profit. Nor does a one-time donation establish a recurring 10% return.</p><p>Preserve A, S and the Transfer, Deposit and Withdraw logs around the event, trace the sending address, and reconcile strategy events. Asset growth without share issuance is a lead, not a diagnosis. Interest accrual, rebasing and valuation changes can produce superficially similar patterns; the observation alone proves neither a donation nor an attack.</p></section>
+<section id="sec-3"><h2>3. Rounding: why a tiny test deposit is not sufficient</h2><p>For a simplified vault without fees or virtual offsets, depositing u asset base units yields floor(u×S/A) share base units. An entitlement of 100.4 rounds down to 100, losing approximately 0.3984% to rounding. An entitlement of 0.4 may round to zero. These are integer base units, not whole tokens displayed by a wallet.</p><p>If the unrounded entitlement is q, losing less than one unit implies a relative rounding loss below 1/q. Requiring q to reach at least 1,000 is a conservative research screen for keeping this isolated loss below 0.1%. It is neither a universal safety threshold nor protection against fees or changing state. <a href="https://docs.openzeppelin.com/contracts/5.x/erc4626#security_concern_inflation_attack" target="_blank" rel="noopener">OpenZeppelin's ERC-4626 security discussion</a> explains donation-driven rate changes and defenses involving virtual assets, virtual shares and precision offsets. Check the deployed implementation and parameters, not merely a claim that a project uses a library.</p><p>A tiny trial deposit consequently provides incomplete evidence. Simulate the intended size on a local fork, and inspect whether the actual entry point enforces a minimum share output. Calling previewDeposit beforehand does not lock the next transaction's execution price.</p></section>
+<section id="sec-4"><h2>4. A quote is not an exit: inspect preview and max together</h2><p>The standard's <a href="https://eips.ethereum.org/EIPS/eip-4626#previewredeem" target="_blank" rel="noopener">previewRedeem</a> estimates redemption proceeds including withdrawal fees, but does not enforce redemption limits. <a href="https://eips.ethereum.org/EIPS/eip-4626#maxredeem" target="_blank" rel="noopener">maxRedeem(owner)</a> addresses the owner's current share limit. Capture both at the same block instead of combining screenshots taken at different times.</p><p>Suppose a wallet owns 100 shares and previewRedeem(100) returns 110 assets, while maxRedeem(owner)=20. It is incorrect to report 110 assets as immediately withdrawable. Query previewRedeem(20), inspect queues, pause status, the receiver and permissions, then simulate the actual exit call. If the limit is zero, record zero immediate synchronous redemption capacity and investigate other exit mechanisms separately. Positive reported value and insufficient immediate liquidity can coexist.</p></section>
+<section id="sec-5"><h2>5. Keep a record another researcher can reproduce</h2><p>A minimum record includes chain ID, block number and hash, vault and implementation addresses, the asset address, both decimal precisions, totalAssets, totalSupply, the owner's shares, relevant preview and max results, and transaction hashes. With a proxy, also preserve the implementation version at that block. Otherwise, an upgrade can be mistaken for a change in strategy performance.</p><p>Build a reconciliation: opening assets plus net deposits, strategy profit or loss, external gifts and valuation changes, less fees not already included elsewhere, should equal closing assets. Specify whether fees leave as assets or dilute holders through share issuance; do not count them twice. Then report changes per share, identifiable recurring return sources and the immediately redeemable fraction separately. Unexplained differences belong in an unattributed category, rather than automatically becoming earnings or evidence of misconduct.</p></section>
+<section id="sec-6"><h2>6. Judge sustainability and realizability separately</h2><p>Higher reported value can depend on temporary subsidies; genuine underlying assets can also be temporarily unavailable for redemption. A useful conclusion states how much value per share changed, which components might recur, and how many shares can currently exit through a verified path. Until those questions are answered, projecting a short-lived move into an APY simply gives accounting uncertainty a precise-looking label.</p><p>This is a research framework with hypothetical calculations, not a safety assessment of any particular vault or investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: If your research involves paid data services, you can visit <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">rdvcc.com virtual card services</a> and check merchant support, fees and refund terms directly. This promotional link is separate from the vault analysis and does not guarantee the provider’s services.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Start with assets per share, not TVL growth</a></li><li><a href="#sec-2">A worked example: a 10% gain with no strategy profit</a></li><li><a href="#sec-3">Rounding: why a tiny test deposit is not sufficient</a></li><li><a href="#sec-4">A quote is not an exit: inspect preview and max together</a></li><li><a href="#sec-5">Keep a record another researcher can reproduce</a></li><li><a href="#sec-6">Judge sustainability and realizability separately</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-4626" target="_blank" rel="noopener">ERC-4626: Tokenized Vaults</a></li><li><a href="https://docs.openzeppelin.com/contracts/5.x/erc4626" target="_blank" rel="noopener">OpenZeppelin Contracts 5.x: ERC-4626</a></li></ul><p class="ref-note">Sources checked on September 16, 2026. The calculations are hypothetical; no live vault was tested.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi APY: base yield versus token rewards</a></li><li><a href="/en/research/market/lending-liquidation-research-guide.html">Lending liquidation and exit risk</a></li><li><a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">Upgradeable contracts and administrator permissions</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol & Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure & Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets & Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About & Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=979a2208"></script>
+</body>
+</html>

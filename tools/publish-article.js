@@ -100,23 +100,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dao-proposal-quorum-threshold-verification-guide',
-  publishedISO: '2026-09-11T15:20:15+08:00',
-  tagColor: 'amber',
-  topic: 'governance',
+  slug: 'erc4626-vault-yield-donation-redemption-verification',
+  publishedISO: '2026-09-16T15:15:11+08:00',
+  tagColor: 'teal',
+  topic: 'protocol',
 
   zh: {
-    h1: 'DAO提案法定人数核验：超六成提案根本没有设置quorum门槛',
-    tagLabel: '法定人数核验',
-    cardDesc: '多数DAO提案没有设置最低参与门槛，仅需极少数钱包投票即可通过。本文用Snapshot真实数据拆解核验方法。',
+    h1: "ERC-4626金库收益核验：份额涨价不等于策略盈利",
+    tagLabel: "金库收益核验",
+    cardDesc: "ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。",
   },
   en: {
-    h1: 'DAO Proposal Quorum Verification: Over 60% of Proposals Have No Quorum Threshold Set At All',
-    tagLabel: 'Quorum Threshold Verification',
-    cardDesc: 'Most DAO proposals have no minimum participation threshold, so a handful of wallets can pass them. A real-data breakdown using Snapshot\'s public API.',
+    h1: "ERC-4626 Vault Yield: Verify Donations and Redemption Limits",
+    tagLabel: "Vault Yield Verification",
+    cardDesc: "Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.",
   },
 
   existingSlugsNewestFirst: [
+    'dao-proposal-quorum-threshold-verification-guide',
     'defi-market-cap-index-composition-verification-guide',
     'dex-fee-revenue-concentration-verification-guide',
     'defi-protocol-mcap-tvl-ratio-verification-guide',
@@ -349,7 +350,7 @@ function updateItemLists() {
     if (numMatch) block = block.replace(numMatch[0], `"numberOfItems": ${parseInt(numMatch[1], 10) + 1}`);
     const anchor = /(itemListElement": \[\r?\n)/;
     if (!anchor.test(block)) { console.log('  [itemlist] SKIP (anchor not found):', t.file); continue; }
-    const newItem = `        { "@type": "ListItem", "position": 1, "name": "${t.name}", "item": "${t.prefix}/research/${CONFIG.topic}/${CONFIG.slug}.html" },\n`;
+    const newItem = `        ${JSON.stringify({ '@type': 'ListItem', position: 1, name: t.name, item: `${t.prefix}/research/${CONFIG.topic}/${CONFIG.slug}.html` }).replace(/</g, '\\u003c')},\n`;
     block = block.replace(anchor, (m, g1) => g1 + newItem);
     const positions = [...block.matchAll(/"position": (\d+)/g)];
     for (let i = positions.length - 1; i >= 1; i--) {

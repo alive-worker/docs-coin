@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERC-4626金库收益核验：份额涨价不等于策略盈利 - 加密货币研究</title>
+  <meta name="description" content="ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="ERC-4626金库收益核验：份额涨价不等于策略盈利">
+  <meta property="og:description" content="ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html">
+  <meta property="article:published_time" content="2026-09-16T15:15:11+08:00">
+  <meta property="article:modified_time" content="2026-09-16T15:15:11+08:00">
+  <meta property="article:section" content="协议风险研究">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="ERC-4626金库收益核验：份额涨价不等于策略盈利">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ERC-4626金库收益核验：份额涨价不等于策略盈利">
+  <meta name="twitter:description" content="ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification.png">
+  <meta name="twitter:image:alt" content="ERC-4626金库收益核验：份额涨价不等于策略盈利">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="preload" as="image" href="/img/article-erc4626-vault-yield-donation-redemption-verification.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html",
+      "name": "ERC-4626金库收益核验：份额涨价不等于策略盈利",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "协议风险研究",
+          "item": "https://coin.ponr.org/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "ERC-4626金库收益核验：份额涨价不等于策略盈利",
+          "item": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#article",
+      "headline": "ERC-4626金库收益核验：份额涨价不等于策略盈利",
+      "description": "ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。",
+      "image": [
+        "https://coin.ponr.org/img/article-erc4626-vault-yield-donation-redemption-verification.png"
+      ],
+      "datePublished": "2026-09-16T15:15:11+08:00",
+      "dateModified": "2026-09-16T15:15:11+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/protocol/erc4626-vault-yield-donation-redemption-verification.html#webpage"
+      },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-4626",
+        "https://docs.openzeppelin.com/contracts/5.x/erc4626"
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--teal">金库收益核验</span></p>
+          <h1>ERC-4626金库收益核验：份额涨价不等于策略盈利</h1>
+          <p class="article-summary">金库份额价格上涨，可能来自策略盈利，也可能只是外部转账、估值调整或费用结算。研究者真正需要解释的是：新增资产由谁创造、下一期能否重复，以及持有人能否按展示价格退出。本文将收益来源与可兑现性分开核验；所有数字均为教学假设，不是某个协议的实测收益。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-16T15:15:11+08:00">2026-09-16 15:15:11</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-erc4626-vault-yield-donation-redemption-verification.svg" alt="金库收益核验图：策略利润、外部转入与当前可赎回能力" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>锁定区块、实现合约及资产和份额精度，保证前后数据可比。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>把份额价格变化拆成经营收益、外部转入和会计调整。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>用实际存款规模检查舍入损失，并核对交易的最低份额保护。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>同时读取赎回预览和用户上限，验证退出路径是否可执行。</li></ul></div>
+            <section id="sec-1"><h2>1. 收益研究的单位，应从TVL转向每份额净资产</h2><p>TVL增长并不自动增加老用户的财富：新存款同时增加资产与份额，理论上可以让单位份额价值保持不变。对没有虚拟偏移、没有费用、份额全部对应同一基础资产的简化金库，定义资产总量为A、份额总量为S，展示汇率P=A/S。实际核验必须先读取两种代币的decimals；不同精度的原始整数不能直接当成可读价格。</p><p><a href="https://eips.ethereum.org/EIPS/eip-4626#methods" target="_blank" rel="noopener">ERC-4626标准的方法定义</a>规定了资产、份额和兑换接口，却没有统一每个策略的会计实现。因此A/S只是研究起点，不能替代具体合约的兑换逻辑。我的判断是：只有把份额变化与资产来源对上账，才有资格讨论收益质量；先把一个上涨数字年化，再解释来源，会让研究顺序倒置。</p></section>
+<section id="sec-2"><h2>2. 一个可复算案例：10%涨幅为什么可能没有策略利润</h2><p>假设金库起初持有1,000个资产单位、发行1,000份额，P=1。随后某地址直接转入100个资产单位，不铸造份额，且该实现把这笔转账计入totalAssets。P就变为1.10，原有100份额的账面资产从100变成110。</p><table><caption>教学案例：忽略费用、虚拟偏移及舍入</caption><thead><tr><th scope="col">状态</th><th scope="col">资产A</th><th scope="col">份额S</th><th scope="col">A/S</th></tr></thead><tbody><tr><td>转账之前</td><td>1,000</td><td>1,000</td><td>1.00</td></tr><tr><td>外部转入100</td><td>1,100</td><td>1,000</td><td>1.10</td></tr><tr><td>新用户存入110</td><td>1,210</td><td>1,100</td><td>1.10</td></tr></tbody></table><p>最后一行假设新用户按1.10获得100份额。三行数据说明，原持有人确实可能获得外部赠与，但策略本身没有因此创造利润。若捐赠地址属于同一经济主体，还应扣除它付出的100；只统计该主体金库仓位的升值，会把内部搬账误认成净盈利。一次性转入也不能支撑未来持续的10%回报。</p><p>可复核的办法是保存转账前后区块的A、S及Transfer、Deposit、Withdraw日志，追溯转入地址，并与策略收益事件核对。余额增加且没有铸份额只是线索；利息累积、rebase和会计重估也可能出现相似表象，不能仅凭这一条件认定捐赠或攻击。</p></section>
+<section id="sec-3"><h2>3. 舍入风险：小额试存不一定更安全</h2><p>在无费用、无虚拟偏移的简化模型中，存入u个资产最小单位会得到floor(u×S/A)个份额最小单位。假设应得100.4个最小份额单位，实际只能拿到100，舍入损失约为0.3984%；应得0.4则可能变为0。这讨论的是链上整数单位，不是界面显示的整枚代币。</p><p>设未舍入份额为q，少于一个单位的舍入损失意味着相对损失小于1/q。若只希望将此项损失压到0.1%以下，q至少达到1,000是一个保守的研究筛选条件；这不是协议统一的安全阈值，也没有覆盖手续费和状态变化。<a href="https://docs.openzeppelin.com/contracts/5.x/erc4626#security_concern_inflation_attack" target="_blank" rel="noopener">OpenZeppelin的ERC-4626安全说明</a>分析了通过外部捐赠改变汇率的风险，以及虚拟资产、虚拟份额和精度偏移的防护思路。是否具有这些防护，要查已部署的实现和参数，不能只看项目声称使用某个库。</p><p>因此，“先试一笔极小存款”并非完整验证。更有价值的是在本地分叉环境按拟交易规模预演，并检查入口合约是否强制最低获得份额；单独调用previewDeposit并不会锁住下一笔交易的成交结果。</p></section>
+<section id="sec-4"><h2>4. 报价不等于退出能力：把preview和max一起看</h2><p><a href="https://eips.ethereum.org/EIPS/eip-4626#previewredeem" target="_blank" rel="noopener">标准中的previewRedeem</a>用于估算赎回所得并考虑提现费用，但不负责检查赎回限额；<a href="https://eips.ethereum.org/EIPS/eip-4626#maxredeem" target="_blank" rel="noopener">maxRedeem(owner)</a>才回答特定持有人当前最多可赎回多少份额。研究记录应在同一区块同时保存两者，而不是从两次不同时间的网页截图拼出结论。</p><p>假设钱包有100份额，previewRedeem(100)返回110个资产单位，但maxRedeem(owner)=20。你不能据此声称“110可以立即提走”；应进一步查询previewRedeem(20)，核对队列、暂停状态、接收地址和授权，再模拟真实退出调用。若上限为0，应把当前同步退出能力记为0，并单独调查其他退出机制。界面仍然显示正数净值，与即时流动性不足可以同时成立。</p></section>
+<section id="sec-5"><h2>5. 一份研究记录必须能够被别人复现</h2><p>最低记录集应包括链ID、区块号与哈希、金库及实现地址、asset地址、两种decimals、totalAssets、totalSupply、用户份额、相关preview与max返回值，以及对应交易哈希。代理合约还需保存当时实现版本；否则升级前后的变化可能被误读为策略绩效。</p><p>先构建“期初资产＋净存入＋策略损益＋外部赠与＋估值调整－未计入其他项的费用＝期末资产”的对账桥梁，并说明费用是资产流出还是增发份额，避免重复扣减。然后分别报告单位份额变化、可解释的持续收益来源和即时可赎回比例。任何解释不了的差额先列为未归因项目；它不应自动成为收益，也不应自动成为恶意行为的证据。</p></section>
+<section id="sec-6"><h2>6. 结论：收益的可持续性和可兑现性是两条轴</h2><p>较高净值可以伴随不可持续的外部补贴，也可以伴随暂时无法退出的真实资产。一个更可靠的研究结论不是“这只金库年化很高”，而是“该区间份额上涨多少、其中哪些部分能重复、当前多少份额能通过已核验路径退出”。当这三个问题尚未回答时，用短期涨幅外推APY，只会把会计不确定性包装成精确数字。</p><p>本文提出的是分析框架和教学算例，未对任何具体金库做安全背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：如果你的研究流程涉及付费数据服务，可访问 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">rdvcc.com 虚拟卡服务</a>，自行核对商户支持、费率与退款规则。该推广入口与本文金库核验结论无关，也不代表对平台服务作保证。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">收益研究的单位，应从TVL转向每份额净资产</a></li><li><a href="#sec-2">一个可复算案例：10%涨幅为什么可能没有策略利润</a></li><li><a href="#sec-3">舍入风险：小额试存不一定更安全</a></li><li><a href="#sec-4">报价不等于退出能力：把preview和max一起看</a></li><li><a href="#sec-5">一份研究记录必须能够被别人复现</a></li><li><a href="#sec-6">结论：收益的可持续性和可兑现性是两条轴</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-4626" target="_blank" rel="noopener">ERC-4626: Tokenized Vaults</a></li><li><a href="https://docs.openzeppelin.com/contracts/5.x/erc4626" target="_blank" rel="noopener">OpenZeppelin Contracts 5.x: ERC-4626</a></li></ul><p class="ref-note">资料核对日期：2026年9月16日。算例为教学假设，未对实际金库进行链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi APY拆解：基础收益与代币奖励</a></li><li><a href="/research/market/lending-liquidation-research-guide.html">借贷清算研究：抵押品与退出风险</a></li><li><a href="/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">可升级合约核验：实现与管理员权限</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=979a2208"></script>
+</body>
+</html>
