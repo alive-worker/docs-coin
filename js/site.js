@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html': '2026-09-20 16:04:25',
+    '/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html': '2026-09-20 16:04:25',
     '/en/research/basics/research-dashboard-clock-lag-verification-guide.html': '2026-09-20 13:08:04',
     '/research/basics/research-dashboard-clock-lag-verification-guide.html': '2026-09-20 13:08:04',
     '/en/research/protocol/ai-agent-onchain-verification.html': '2026-07-24 10:32:14',

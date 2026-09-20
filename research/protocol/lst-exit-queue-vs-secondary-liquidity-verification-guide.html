@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>流动性质押退出核验：二级市场成交不等于队列赎回 - 加密货币研究</title>
+  <meta name="description" content="官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="流动性质押退出核验：二级市场成交不等于队列赎回">
+  <meta property="og:description" content="官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-20T16:04:25+08:00">
+  <meta property="article:modified_time" content="2026-09-20T16:04:25+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="流动性质押退出">
+  <meta property="article:tag" content="验证者退出队列">
+  <meta property="article:tag" content="二级市场深度">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="流动性质押退出核验：界面一天、队列十二天、近端深度一百二十万美元">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="流动性质押退出核验：二级市场成交不等于队列赎回">
+  <meta name="twitter:description" content="官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.png">
+  <meta name="twitter:image:alt" content="流动性质押退出核验：界面一天、队列十二天、近端深度一百二十万美元">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html",
+      "name": "流动性质押退出核验：二级市场成交不等于队列赎回",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "协议与基础设施风险",
+          "item": "https://coin.ponr.org/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "流动性质押退出核验：二级市场成交不等于队列赎回",
+          "item": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#article",
+      "headline": "流动性质押退出核验：二级市场成交不等于队列赎回",
+      "description": "官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。",
+      "image": [
+        "https://coin.ponr.org/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.png"
+      ],
+      "datePublished": "2026-09-20T16:04:25+08:00",
+      "dateModified": "2026-09-20T16:04:25+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#webpage"
+      },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["流动性质押退出核验","验证者退出队列","二级市场深度","即时赎回缓冲","LST流动性","加密货币研究"],
+      "wordCount": 2180,
+      "citation": [
+        "https://ethereum.org/en/staking/withdrawals/",
+        "https://eips.ethereum.org/EIPS/eip-4895",
+        "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/",
+        "https://docs.uniswap.org/contracts/v3/guides/swaps/single-swaps"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "二级市场上有成交，是否等于流动性质押可以即时赎回？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不等于。DEX 或 CEX 成交是别人接盘，共识层赎回走验证者退出与提款扫描。两套时钟、两套容量，不能把成交量写成赎回能力。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "核验 LST 退出要对照哪三条路径？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "协议缓冲或即时赎回上限；二级市场在给定滑点内的可执行深度；共识层退出队列与提款扫描延迟。缺任何一条，都不得把界面上的随时退出写成已核验。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "研究规模超过多少就不能写成流动退出？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "教学筛选是：拟退出规模不得超过即时缓冲，也不得超过 50 个基点滑点内二级深度的一半。超过任一上限，应分别写出缓冲、滑点容量与队列等待，而不是一个流动一词。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--teal">退出队列</span></p>
+          <h1>流动性质押退出核验：二级市场成交不等于队列赎回</h1>
+          <p class="article-summary">流动性质押代币把锁仓收据做成可转让份额，界面因此常写「随时退出」。成交发生在别人的订单簿上，赎回发生在验证者退出与提款扫描上。下文用教学数字把缓冲、近端深度与队列等待拆开；全部算例均为假设，不指向任何真实协议，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-20T16:04:25+08:00">2026-09-20 16:04:25</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-lst-exit-queue-vs-secondary-liquidity-verification-guide.svg" alt="流动性质押退出核验图：界面约1天、队列12天、DEX近端深度120万美元" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>读取协议即时赎回上限或缓冲余额，记下同一区块的合约返回值，而不是界面文案。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>对主要交易对做只读报价，测出 50 个基点滑点内可执行的二级规模。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>对照共识层退出与提款规则，把队列等待写成天数，而不是「大约很快」。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>若拟研究规模超过缓冲，也超过近端深度一半，禁止写成流动退出，改为三条路径并列。</li></ul></div>
+            <section id="sec-1"><h2>1. 可转让收据不是即时赎回权</h2><p>流动性质押把一份锁在共识层的本金，做成一张可在执行层转让的收据。转让很快，本金退出并不快。<a href="https://ethereum.org/en/staking/withdrawals/" target="_blank" rel="noopener">以太坊官方对质押提款的说明</a>把完整退出拆成验证者退出队列与后续扫描入账；<a href="https://eips.ethereum.org/EIPS/eip-4895" target="_blank" rel="noopener">EIP-4895</a>规定的是信标链把提款推入执行层，不是 DEX 池里有人愿意接盘。产品文案把两件事写成同一个「流动」，研究结论就会把别人的流动性误当成自己的赎回权。</p><p>我的判断是：任何声称 LST「可即时退出」的句子，必须同时给出三个数字——协议缓冲、给定滑点下的二级容量、队列等待天数。缺一项，流动只是形容词。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：同一「随时退出」，三条路径差一个数量级</h2><p>假设某 LST 界面写「约 1 天退出」，协议 TVL 8.0 亿美元。同一区块读到的即时缓冲为 400 万美元。主池只读报价显示：50 个基点滑点内大约只能成交 120 万美元等值。按公开的退出与扫描规则估算，完整赎回队列约 12 天。研究者若要把 2000 万美元仓位写成「流动、可随时变现」，三条路径没有一条撑得住。下表全部为教学假设。</p>
+            <table><caption>教学案例：同一退出主张，三条路径的容量与等待</caption><thead><tr><th scope="col">路径</th><th scope="col">读取对象</th><th scope="col">容量或等待</th><th scope="col">相对 2000 万美元</th></tr></thead><tbody><tr><td>协议缓冲</td><td>即时赎回上限</td><td>400 万美元</td><td>覆盖 20%</td></tr><tr><td>二级市场</td><td>50bp 近端深度</td><td>120 万美元</td><td>覆盖 6%</td></tr><tr><td>共识层队列</td><td>退出加扫描</td><td>约 12 天</td><td>容量名义上足够，时间不够「随时」</td></tr></tbody></table>
+            <p>120 万与 8000 万 TVL 的差额不是「市场暂时折价」。大量流动性锁在验证者里，不在当前价格附近的池子里。把 TVL 当成可退出规模，等于把锁仓收据的市值当成收银台里的现金。正确写法是：即时最多 400 万；50bp 内二级约 120 万；其余必须进入队列，教学等待 12 天。2000 万这一笔不得称为流动退出。</p></section>
+            <section id="sec-3"><h2>3. 三条路径怎么读，才不会把成交量当成赎回</h2><p>第一层读协议自己的即时出口：缓冲合约余额、maxRedeem 一类上限、暂停开关。必须是同一区块的返回值。第二层读二级市场：用路由或 Quoter 的只读接口，按 <a href="https://docs.uniswap.org/contracts/v3/guides/swaps/single-swaps" target="_blank" rel="noopener">Uniswap v3 单跳兑换的报价思路</a> 测出把价格推出 50 个基点所需的名义本金；CEX 则读当前盘口上下各 50bp 的累计挂单，并注明截图时刻。第三层读共识层：按 <a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/" target="_blank" rel="noopener">PoS 退出与最终性文档</a> 把验证者退出队列、扫尾延迟写成区间，而不是抄界面的「约一天」。</p><p>三条路径的会计单位不同。缓冲是协议金库里尚未再质押出去的 ETH；二级深度是对手方愿意在滑点内买走的收据；队列是信标状态机允许离开的速率。把 24 小时 DEX 成交额加总，再写成「日赎回能力」，是把已经发生的别人的换手，当成自己还没发出的退出。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：研究规模不得超过缓冲，也不得超过近端深度一半</h2><p>教学筛选是两个不等式同时成立，才允许把仓位 S 写成「可即时变现」：S ≤ 缓冲；S ≤ 0.5 ×（50bp 二级深度）。一半是给同一区块里其他卖盘和报价衰减留余量，不是监管标准。上例 S=2000 万，缓冲 400 万，近端一半 60 万，两个不等式都失败，结论只能是：该规模走二级会显著冲击价格，走协议则取决于队列，不得使用流动一词。</p><p>该筛选不覆盖折价、罚没、凭证更换或暂停。那些是另一套核验。时钟通过、深度通过，也不等于份额价格等于底层本金——那是汇率问题，要另文对账。反过来，队列很长并不证明协议将违约；它只证明「随时」这个词用错了。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：链 ID、区块号与哈希、LST 与底层资产地址、缓冲或 maxRedeem 原文、报价调用与返回、50bp 深度、界面等待文案、按规范估算的队列天数、拟研究规模 S、两个不等式是否成立。CEX 盘口要保存时间戳与档位；链上报价要保存 calldata 或查询字符串，避免用另一次刷新拼行。</p><p>对账顺序固定为：缓冲 → 近端深度 → 队列。任何界面「约一天」与队列估算对不上的缺口，列入未归因等待。未归因不是指控造假，只是禁止把缺口写进已核验的即时流动性。需要付费节点才能稳定读信标队列时，把数据源等级写进记录。</p></section>
+            <section id="sec-6"><h2>6. 结论：流动是三条路径，不是一个形容词</h2><p>加密研究的错误句式是「该 LST 流动性很好，TVL 很高」。更可靠的句子是「缓冲 B；50bp 深度 D；队列约 T 天；规模 S 相对 B 与 D/2 的覆盖率」。在这四个量写出来之前，用成交量去讨论「挤兑时可以马上出来」，是把别人的换手写成自己的出口。</p><p>本文是分析框架和教学算例，未对任何流动性质押协议做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：稳定读取信标队列、付费 RPC 或报价节点时，部分服务只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文退出核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">可转让收据不是即时赎回权</a></li><li><a href="#sec-2">教学案例：同一「随时退出」，三条路径差一个数量级</a></li><li><a href="#sec-3">三条路径怎么读，才不会把成交量当成赎回</a></li><li><a href="#sec-4">筛选线：研究规模不得超过缓冲，也不得超过近端深度一半</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：流动是三条路径，不是一个形容词</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://ethereum.org/en/staking/withdrawals/" target="_blank" rel="noopener">Ethereum.org：Staking withdrawals</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-4895" target="_blank" rel="noopener">EIP-4895：Beacon chain push withdrawals</a></li><li><a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/" target="_blank" rel="noopener">Ethereum.org：Proof-of-stake</a></li><li><a href="https://docs.uniswap.org/contracts/v3/guides/swaps/single-swaps" target="_blank" rel="noopener">Uniswap v3：Single-hop swaps</a></li></ul><p class="ref-note">资料核对日期：2026年9月20日。算例为教学假设，未对实际 LST 协议做链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/liquid-staking-token-price-deviation.html">流动性质押代币：为什么代币价格不总是等于底层质押资产</a></li><li><a href="/research/market/staking-apy-net-yield-verification-guide.html">质押年化收益率核验：官网写的APY，和你实际到手的收益率对不对得上</a></li><li><a href="/research/market/dex-liquidity-research-guide.html">DEX流动性核验：TVL数字之外，AMM池子的真实深度是多少</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=2c8b8c32"></script>
+</body>
+</html>

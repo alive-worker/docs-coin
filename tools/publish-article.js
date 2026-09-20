@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'research-dashboard-clock-lag-verification-guide',
-  publishedISO: '2026-09-20T13:08:04+08:00',
-  tagColor: 'steel',
-  topic: 'basics',
+  slug: 'lst-exit-queue-vs-secondary-liquidity-verification-guide',
+  publishedISO: '2026-09-20T16:04:25+08:00',
+  tagColor: 'teal',
+  topic: 'protocol',
 
   zh: {
-    h1: "研究看板时滞核验：页面时间戳不等于区块时间",
-    tagLabel: "时滞核验",
-    cardDesc: "研报截图上的当前TVL，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。",
+    h1: "流动性质押退出核验：二级市场成交不等于队列赎回",
+    tagLabel: "退出队列",
+    cardDesc: "官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。",
   },
   en: {
-    h1: "Research Dashboard Clock Lag: Page Time Is Not Block Time",
-    tagLabel: "Clock Lag Check",
-    cardDesc: "A screenshot labelled current TVL is often not chain state now. Compare last-updated, subgraph head and the latest RPC block.",
+    h1: "LST Exit Queue Check: Secondary Volume Is Not Consensus Withdrawal",
+    tagLabel: "Exit Queue Check",
+    cardDesc: "Unstake anytime often treats a DEX print as a beacon withdrawal. Compare the exit queue, sweep delay and near-tick depth.",
   },
 
   existingSlugsNewestFirst: [
+    'research-dashboard-clock-lag-verification-guide',
     'token-transfer-tax-buy-sell-path-verification-guide',
     'erc4626-vault-yield-donation-redemption-verification',
     'dao-proposal-quorum-threshold-verification-guide',
