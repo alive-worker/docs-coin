@@ -82,6 +82,13 @@ const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 
+function assertThisSite() {
+  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf-8');
+  if (!index.includes('coin.ponr.org')) {
+    throw new Error('This publish-article.js is for coin.ponr.org (docs-coin). Do not run it in docs.');
+  }
+}
+
 // URL scheme (since the 2026-08-22 restructure): articles live at
 // /research/<topic>/<slug>.html (and /en/research/<topic>/<slug>.html), not the old
 // flat /articles/<slug>.html. slug_topic_map.json at repo root is the persistent
@@ -732,6 +739,7 @@ async function pingIndexNow() {
 
 // ---------------------------------------------------------------------------
 async function main() {
+  assertThisSite();
   if (CONFIG.slug.startsWith('REPLACE-ME')) {
     console.error('Fill in CONFIG at the top of this script before running.');
     process.exit(1);
@@ -742,17 +750,19 @@ async function main() {
   }
   insertSidebarItems();
   insertRelatedItems();
-  updateItemLists();
   insertArchiveItem('zh');
   insertArchiveItem('en');
+  // 公开计数、JSON-LD position、RSS、旧 URL 桩、virtual-card noindex
+  // 一律以 slug_topic_map.json 为准，避免再出现 127 vs 128 分叉。
+  execSync('node tools/verify-publish.js --fix', { cwd: root, stdio: 'inherit' });
   rebuildHomepageCarouselAndGrid('zh');
   rebuildHomepageCarouselAndGrid('en');
   updateSitemap();
-  regenerateFeeds();
   updateSiteJsDates();
   propagateHashesIfChanged();
   execSync('node tools/generate-topic-hubs.js', { cwd: root, stdio: 'inherit' });
   await pingIndexNow();
+  execSync('node tools/verify-publish.js', { cwd: root, stdio: 'inherit' });
   console.log('\nDone. Now: (1) fix the TODO-cardDesc placeholder(s) in index.html/en/index.html left where the');
   console.log('previously-featured article got demoted into the grid, (2) spot-check JSON-LD validity and tag');
   console.log('balance on the touched files, (3) verify in the browser.');
