@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/research/market/token-transfer-tax-buy-sell-path-verification-guide.html': '2026-09-20 10:36:12',
+    '/research/protocol/erc4626-vault-yield-donation-redemption-verification.html': '2026-09-16 15:15:11',
     '/research/governance/dao-proposal-quorum-threshold-verification-guide.html': '2026-09-11 15:20:15',
     '/research/basics/defi-market-cap-index-composition-verification-guide.html': '2026-09-11 09:52:41',
     '/research/market/dex-fee-revenue-concentration-verification-guide.html': '2026-09-10 17:24:19',
@@ -278,6 +280,8 @@
     '/research/protocol/agent-downtime-failure-liability-verification.html': '2026-08-20 13:38:00',
     '/research/protocol/longtail-token-swap-liquidity-risk-guide.html': '2026-08-20 10:08:00',
     '/research/protocol/crosschain-swap-fee-optimization-guide.html': '2026-08-19 17:32:00',
+'/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html': '2026-09-20 10:36:12',
+    '/en/research/protocol/erc4626-vault-yield-donation-redemption-verification.html': '2026-09-16 15:15:11',
 '/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html': '2026-09-11 15:20:15',
 '/en/research/basics/defi-market-cap-index-composition-verification-guide.html': '2026-09-11 09:52:41',
 '/en/research/market/dex-fee-revenue-concentration-verification-guide.html': '2026-09-10 17:24:19',

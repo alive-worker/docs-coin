@@ -77,6 +77,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
@@ -100,23 +101,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'erc4626-vault-yield-donation-redemption-verification',
-  publishedISO: '2026-09-16T15:15:11+08:00',
-  tagColor: 'teal',
-  topic: 'protocol',
+  slug: 'token-transfer-tax-buy-sell-path-verification-guide',
+  publishedISO: '2026-09-20T10:36:12+08:00',
+  tagColor: 'amber',
+  topic: 'market',
 
   zh: {
-    h1: "ERC-4626金库收益核验：份额涨价不等于策略盈利",
-    tagLabel: "金库收益核验",
-    cardDesc: "ERC-4626金库份额涨价就是收益吗？通过捐赠前后的数字案例，核验资产来源、整数舍入、预览报价与赎回上限，建立可复算的DeFi收益研究流程。",
+    h1: "代币转账税核验：买路径到账不等于卖路径到账",
+    tagLabel: "转账税核验",
+    cardDesc: "宣传页上的买卖税经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核验方向不对称与隐藏扣费。",
   },
   en: {
-    h1: "ERC-4626 Vault Yield: Verify Donations and Redemption Limits",
-    tagLabel: "Vault Yield Verification",
-    cardDesc: "Audit ERC-4626 vault yield with worked examples of donations, share rounding and redemption limits. Separate repeatable strategy profit from paper gains.",
+    h1: "Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts",
+    tagLabel: "Transfer Tax Check",
+    cardDesc: "Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet transfers to catch directional gaps.",
   },
 
   existingSlugsNewestFirst: [
+    'erc4626-vault-yield-donation-redemption-verification',
     'dao-proposal-quorum-threshold-verification-guide',
     'defi-market-cap-index-composition-verification-guide',
     'dex-fee-revenue-concentration-verification-guide',
@@ -661,7 +663,7 @@ function updateSiteJsDates() {
 
 // --- Step 9: hash propagation (only if content changed) -------------------------
 function sha1(filePath) {
-  return execSync(`sha1sum "${filePath}"`).toString().trim().split(/\s+/)[0].replace(/^\\/, '').slice(0, 8);
+  return crypto.createHash('sha1').update(fs.readFileSync(filePath)).digest('hex').slice(0, 8);
 }
 function propagateHashesIfChanged() {
   const cssPath = path.join(root, 'styles.css');
@@ -673,14 +675,23 @@ function propagateHashesIfChanged() {
   const oldCssHash = (sample.match(/styles\.css\?v=([a-f0-9]+)/) || [])[1];
   const oldJsHash = (sample.match(/site\.js\?v=([a-f0-9]+)/) || [])[1];
 
+  function walkHtml(dir, acc) {
+    acc = acc || [];
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (ent.name === 'node_modules' || ent.name.startsWith('.')) continue;
+      const p = path.join(dir, ent.name);
+      if (ent.isDirectory()) walkHtml(p, acc);
+      else if (ent.name.endsWith('.html')) acc.push(p);
+    }
+    return acc;
+  }
   function replaceHashEverywhere(oldHash, newHash, filePattern) {
     if (oldHash === newHash) return 0;
-    const out = execSync(`grep -rl "${filePattern}?v=${oldHash}" --include="*.html" "${root}"`, { encoding: 'utf-8' }).trim();
-    if (!out) return 0;
-    const files = out.split('\n');
+    const needle = `${filePattern}?v=${oldHash}`;
+    const files = walkHtml(root).filter((f) => fs.readFileSync(f, 'utf-8').includes(needle));
     for (const f of files) {
       let t = fs.readFileSync(f, 'utf-8');
-      t = t.split(`${filePattern}?v=${oldHash}`).join(`${filePattern}?v=${newHash}`);
+      t = t.split(needle).join(`${filePattern}?v=${newHash}`);
       fs.writeFileSync(f, t, 'utf-8');
     }
     return files.length;

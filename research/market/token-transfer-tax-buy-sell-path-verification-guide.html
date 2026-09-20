@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>代币转账税核验：买路径到账不等于卖路径到账 - 加密货币研究</title>
+  <meta name="description" content="代币宣传页上的买卖税，经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核对广告税率、方向不对称与隐藏扣费。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="代币转账税核验：买路径到账不等于卖路径到账">
+  <meta property="og:description" content="代币宣传页上的买卖税，经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核对广告税率、方向不对称与隐藏扣费。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-20T10:36:12+08:00">
+  <meta property="article:modified_time" content="2026-09-20T10:36:12+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="代币转账税核验：买路径、卖路径与钱包互转到账对比">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="代币转账税核验：买路径到账不等于卖路径到账">
+  <meta name="twitter:description" content="代币宣传页上的买卖税，经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核对广告税率、方向不对称与隐藏扣费。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide.png">
+  <meta name="twitter:image:alt" content="代币转账税核验：买路径、卖路径与钱包互转到账对比">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="preload" as="image" href="/img/article-token-transfer-tax-buy-sell-path-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html",
+      "name": "代币转账税核验：买路径到账不等于卖路径到账",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "市场结构与流动性",
+          "item": "https://coin.ponr.org/research/market/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "代币转账税核验：买路径到账不等于卖路径到账",
+          "item": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#article",
+      "headline": "代币转账税核验：买路径到账不等于卖路径到账",
+      "description": "代币宣传页上的买卖税，经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核对广告税率、方向不对称与隐藏扣费。",
+      "image": [
+        "https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide.png"
+      ],
+      "datePublished": "2026-09-20T10:36:12+08:00",
+      "dateModified": "2026-09-20T10:36:12+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#webpage"
+      },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["代币转账税核验","买卖税不对称","卖路径到账比例","钱包互转不能代替卖出","eth_call模拟核验","隐藏扣费"],
+      "wordCount": 2242,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-20",
+        "https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract",
+        "https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call"
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">转账税核验</span></p>
+          <h1>代币转账税核验：买路径到账不等于卖路径到账</h1>
+          <p class="article-summary">宣传页上的“买入税 5%、卖出税 5%”，往往只是对转账钩子的一句声称。钱包互转成功、小额买入成功，都不能推出持有人能按同样比例卖出。真正决定可交易性的，是卖路径在锁定区块、锁定规模下的到账比例。下文用教学数字把三条路径拆开对账；全部算例均为假设，不指向任何真实代币，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-20T10:36:12+08:00">2026-09-20 10:36:12</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-token-transfer-tax-buy-sell-path-verification-guide.svg" alt="代币转账税核验图：买路径、卖路径与钱包互转到账比例对比" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>在同一区块分别模拟钱包互转、经交易对买入、经交易对卖出，比较三者到账比例。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>把宣传税率换算成预期到账，与模拟差额对照；超过手续费与舍入范围的部分记为未解释扣费。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>用拟交易规模而不是极小测试额重跑卖路径；核对单笔上限、冷却时间和地址白名单。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>记录代币、交易对、区块哈希与调用失败原因，避免用另一次前端报价拼凑结论。</li></ul></div>
+            <section id="sec-1"><h2>1. 税率是声称，到账比例才是研究对象</h2><p><a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">ERC-20 标准</a>只规定 <code>transfer</code> / <code>transferFrom</code> 要移动余额并触发事件，并不禁止实现在转账中扣费、拒绝特定接收方，或按“是否与交易对交互”切换规则。因此，官网写“买卖税各 5%”只是项目方的一句声称。研究者要测量的是三个不同上下文里的到账比例：钱包到钱包、稳定币换入该代币（买路径）、该代币换回稳定币（卖路径）。</p><p>这三条路径经常被写成同一个百分比，是因为前端把池子储备算出的报价，直接当成用户钱包会收到的数量。报价合约通常只读储备和手续费档位，并不执行代币自己的转账钩子。于是会出现一种很常见、却很少被拆开写清的结构：买入时到账接近宣传税率，钱包互转几乎不扣，卖出时大幅少到或直接回滚。我的判断是：可交易性应取三条路径中最差的一条，而不是取宣传页上最好看的那一条。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：5% 宣传税，卖路径只剩 40%</h2><p>假设某代币对外宣传买入税 5%、卖出税 5%。忽略 AMM 价格影响和池子手续费，只看代币合约在转账时扣下的份额。投入按 1,000 个最小展示单位计。</p>
+            <table><caption>教学案例：同一区块、同一发送地址，三条路径的到账</caption><thead><tr><th scope="col">路径</th><th scope="col">投入</th><th scope="col">收到</th><th scope="col">到账比例</th><th scope="col">相对宣传卖出税的差额</th></tr></thead><tbody><tr><td>钱包互转</td><td>1,000</td><td>990</td><td>99.0%</td><td>宣传未覆盖的 1% 转账税</td></tr><tr><td>买路径（代币出池）</td><td>1,000</td><td>950</td><td>95.0%</td><td>与 5% 买入税一致</td></tr><tr><td>卖路径（代币进池）</td><td>1,000</td><td>400</td><td>40.0%</td><td>比宣传 5% 多扣 55 个百分点</td></tr></tbody></table>
+            <p>若有人用买路径的 95% 去外推“持有成本”，会把卖路径上消失的 550 单位当成尚未实现的利润。正确写法是分别报告：买入摩擦 5%，钱包转账摩擦 1%，卖出摩擦 60%。三者不能平均，更不能只引用买入那一列。</p><p>差额本身不能自动等于恶意。实现可能把“卖出税”动态上调、把交易对地址列入高税率名单，或把手续费打给营销合约。研究任务是把数字钉住，而不是先给动机命名。反过来，钱包互转成功也证明不了能卖出：不少实现允许普通地址互转，却在接收方为交易对时提高税率或直接 <code>revert</code>。</p></section>
+            <section id="sec-3"><h2>3. 用锁定区块的模拟，而不是另一次前端报价</h2><p>核验应在同一区块高度完成。先读取代币 <code>decimals</code>、<code>balanceOf</code> 以及交易对储备；再分别构造：一次普通 <code>transfer</code>，一次买入方向的兑换，一次卖出方向的兑换。兑换应走该代币实际使用的路由或交易对，而不是只调用 <code>transfer</code> 假装“已经卖出”。<a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call" target="_blank" rel="noopener">eth_call</a> 不会广播交易，适合用来读取返回值或失败原因；它也<strong>不会</strong>锁住下一笔真实交易的结果，状态随时可能变。</p><p><a href="https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract" target="_blank" rel="noopener">Uniswap V2 的兑换接口说明</a>把“按储备计算的输出”和“代币合约实际转出的数量”分成两件事。若模拟买入返回 950，而同一区块的卖出模拟回滚，应把卖路径可执行规模记为零，而不是沿用 950。失败原因同样要记：超额、冷却、交易未开启、接收方受限，对应完全不同的后续问题。本文只讨论如何读取这些公开结果，不提供绕过限制或构造有害代币的步骤。</p></section>
+            <section id="sec-4"><h2>4. 极小额测试会系统性低估卖出摩擦</h2><p>设未扣税数量为 q。若实现按固定比例扣税，小额和大额的比例相同，测 1 个单位或 10,000 个单位看起来差不多。一旦存在单笔上限、分档税率、地址名单或“首次卖出附加税”，比例就会随规模和发送方跳变。保守的研究筛选可以是：卖路径到账比例不得低于宣传卖出税率所隐含到账的 90%，且拟交易规模本身必须跑通。例如宣传卖出税 5%，隐含到账 95%；若模拟卖出只有 40%，40/95≈0.42，远低于 0.90 这条筛选线，应把“广告税率”标为未核验通过。</p><p>0.90 不是行业安全标准，只是把“宣传与实测是否同量级”写成可复核的不等式。它不覆盖 AMM 滑点、池子手续费，也不覆盖下一区块的参数修改。管理员若能改税率、改交易对地址或开关交易，当前区块的一次通过也不能外推到未来。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：链 ID、区块号与哈希、代币与交易对地址、两边 decimals、宣传买入/卖出税率、三条路径的投入与到账、卖出模拟是否回滚及原因、发送方是否在名单内、单笔上限。代理合约还要记下当时的实现地址，避免升级被读成“税率突然变化”。</p><p>对账顺序建议固定为：宣传隐含到账 → 钱包互转到账 → 买路径到账 → 卖路径到账。任何无法用手续费档位和整数舍入解释的缺口，先列入未归因扣费。未归因不是罪名，只是禁止把缺口写进“已核验的 5% 税”。</p></section>
+            <section id="sec-6"><h2>6. 结论：可交易性由最差的那条路径决定</h2><p>买入顺畅只说明资金能进；钱包互转顺畅只说明余额能搬家。持有人能不能按接近宣传的成本退出，要看卖路径。一个更可靠的研究结论不是“这个代币税很低”，而是“该区块上买路径到账 x%、卖路径到账 y% 或不可执行、钱包互转 z%，与宣传税率的差额分别是多少”。在 y 尚未测到之前，用买入摩擦去推持有成本或所谓净收益，是把会计不确定性包装成精确数字。</p><p>本文是分析框架和教学算例，未对任何具体代币做安全背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若研究流程需要先把资产换到目标链，再做小额路径对照，可访问 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">AllSwap 跨链兑换</a>，自行核对其展示的路由、预计到账与费用。该入口与本文税率核验结论无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的资产管理，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">税率是声称，到账比例才是研究对象</a></li><li><a href="#sec-2">教学案例：5% 宣传税，卖路径只剩 40%</a></li><li><a href="#sec-3">用锁定区块的模拟，而不是另一次前端报价</a></li><li><a href="#sec-4">极小额测试会系统性低估卖出摩擦</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：可交易性由最差的那条路径决定</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">ERC-20: Token Standard</a></li><li><a href="https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract" target="_blank" rel="noopener">Uniswap V2: trading from a contract</a></li><li><a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call" target="_blank" rel="noopener">Ethereum JSON-RPC: eth_call</a></li></ul><p class="ref-note">资料核对日期：2026年9月20日。算例为教学假设，未对实际代币进行链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/longtail-token-swap-liquidity-risk-guide.html">小币种跨链兑换：流动性薄，仿冒币多</a></li><li><a href="/research/protocol/defi-token-approval-security-guide.html">DeFi代币授权安全指南：无限授权风险与撤销核验实操</a></li><li><a href="/research/market/dex-liquidity-research-guide.html">DEX流动性核验：TVL数字之外，AMM池子的真实深度是多少</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=239a68bc"></script>
+</body>
+</html>

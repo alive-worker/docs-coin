@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts</title>
+  <meta name="description" content="Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet-to-wallet transfers to verify rates, directional gaps and hidden deductions.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts">
+  <meta property="og:description" content="Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet-to-wallet transfers to verify rates, directional gaps and hidden deductions.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-20T10:36:12+08:00">
+  <meta property="article:modified_time" content="2026-09-20T10:36:12+08:00">
+  <meta property="article:section" content="Market Structure &amp; Liquidity">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Token transfer tax verification: buy path, sell path and wallet transfer compared">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts">
+  <meta name="twitter:description" content="Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet-to-wallet transfers to verify rates, directional gaps and hidden deductions.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Token transfer tax verification: buy path, sell path and wallet transfer compared">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="preload" as="image" href="/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html",
+      "name": "Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Market Structure & Liquidity",
+          "item": "https://coin.ponr.org/en/research/market/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts",
+          "item": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#article",
+      "headline": "Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts",
+      "description": "Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet-to-wallet transfers to verify rates, directional gaps and hidden deductions.",
+      "image": [
+        "https://coin.ponr.org/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.png"
+      ],
+      "datePublished": "2026-09-20T10:36:12+08:00",
+      "dateModified": "2026-09-20T10:36:12+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html#webpage"
+      },
+      "articleSection": "Market Structure & Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["token transfer tax verification","buy-sell tax asymmetry","sell-path receipt ratio","wallet transfer is not a sale","eth_call simulation","hidden deductions"],
+      "wordCount": 1102,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-20",
+        "https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract",
+        "https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call"
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/token-transfer-tax-buy-sell-path-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Transfer Tax Check</span></p>
+          <h1>Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts</h1>
+          <p class="article-summary">A website that advertises “5% buy tax and 5% sell tax” is making a claim about transfer hooks, not reporting a measurement. A successful wallet-to-wallet transfer, or a tiny buy, does not imply that a holder can sell at the same ratio. Tradability is the sell-path receipt at a pinned block and size. The figures below are hypothetical teaching examples, not observations from a live token, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-09-20T10:36:12+08:00">2026-09-20 10:36:12</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-token-transfer-tax-buy-sell-path-verification-guide-en.svg" alt="Three receipt ratios for token tax research: buy path, sell path and wallet transfer" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>At one block, simulate a wallet transfer, a pair buy and a pair sell; compare receipt ratios.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Convert the advertised tax into an expected receipt and treat any extra gap, beyond pool fees and rounding, as unexplained.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Re-run the sell path at the intended size, not a dust test; inspect per-transaction caps, cooldowns and allowlists.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Record the token, pair, block hash and any revert reason; do not splice quotes from another moment.</li></ul></div>
+            <section id="sec-1"><h2>1. Tax rates are claims; receipt ratios are the object of study</h2><p>The <a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">ERC-20 standard</a> requires <code>transfer</code> and <code>transferFrom</code> to move balances and emit events. It does not forbid an implementation from taking a fee, rejecting a receiver, or switching rules when the counterparty is a trading pair. A website that prints “5% buy / 5% sell” is therefore a claim. What a researcher can measure are three receipt ratios: wallet to wallet, stablecoin into the token (buy path), and the token back into a stablecoin (sell path).</p><p>Front ends often collapse those three numbers into one percentage because they display a reserve-based quote as if it were the amount that will arrive in a wallet. Quote helpers typically read reserves and the pool fee tier; they do not execute the token’s own transfer hook. A common pattern follows: buys land near the advertised tax, peer transfers barely deduct, and sells take far more or revert. My working rule is to take tradability from the worst of the three paths, not from the most flattering line on a landing page.</p></section>
+            <section id="sec-2"><h2>2. A worked example: 5% advertised, 40% received on the sell path</h2><p>Suppose a token advertises a 5% buy tax and a 5% sell tax. Ignore AMM price impact and the pool’s swap fee; isolate what the token contract withholds during transfer. Inputs are 1,000 display units.</p>
+            <table><caption>Hypothetical example: three paths, same block, same sender</caption><thead><tr><th scope="col">Path</th><th scope="col">Input</th><th scope="col">Received</th><th scope="col">Receipt ratio</th><th scope="col">Gap versus advertised sell tax</th></tr></thead><tbody><tr><td>Wallet transfer</td><td>1,000</td><td>990</td><td>99.0%</td><td>1% transfer tax the page did not mention</td></tr><tr><td>Buy path (token out of the pair)</td><td>1,000</td><td>950</td><td>95.0%</td><td>Matches a 5% buy tax</td></tr><tr><td>Sell path (token into the pair)</td><td>1,000</td><td>400</td><td>40.0%</td><td>55 percentage points beyond the advertised 5%</td></tr></tbody></table>
+            <p>Using the buy-path 95% as a holding-cost estimate treats the missing 550 units on the sell path as unrealised profit. Report the three frictions separately: 5% to enter, 1% to move between wallets, 60% to exit. They must not be averaged, and the buy column must not stand in for the rest.</p><p>A gap is not automatically malice. An implementation may raise a “sell tax” dynamically, list the pair as a high-tax address, or route fees to a marketing contract. The research job is to pin the numbers before naming a motive. Conversely, a successful peer transfer does not prove that a sale works: many implementations allow ordinary wallets to move tokens, then raise the tax or <code>revert</code> when the receiver is the pair.</p></section>
+            <section id="sec-3"><h2>3. Simulate at a pinned block; do not reuse another quote</h2><p>Complete the checks at one block height. Read <code>decimals</code>, <code>balanceOf</code> and pair reserves, then construct an ordinary <code>transfer</code>, a buy-side swap and a sell-side swap. The swaps should use the pair or router the token actually trades through; calling <code>transfer</code> alone does not constitute a sale. <a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call" target="_blank" rel="noopener">eth_call</a> does not broadcast a transaction and is suitable for reading return values or revert reasons. It also does <strong>not</strong> lock the next live trade; state can change immediately afterwards.</p><p><a href="https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract" target="_blank" rel="noopener">Uniswap V2’s swap interface notes</a> separate “output implied by reserves” from “amount the token contract actually sends”. If a simulated buy returns 950 and a sell at the same block reverts, record executable sell size as zero rather than recycling 950. Log the revert reason as well: a cap, a cooldown, trading-disabled and a blocked receiver each imply a different follow-up. This article discusses how to read those public results. It does not provide steps for bypassing limits or for building harmful tokens.</p></section>
+            <section id="sec-4"><h2>4. Dust tests systematically understate sell friction</h2><p>If the implementation withholds a fixed fraction, a 1-unit test and a 10,000-unit test can look alike. Per-transaction caps, tiered rates, allowlists and a surcharge on the first sale make the ratio jump with size and sender. A conservative research screen is: the sell-path receipt should be at least 90% of the receipt implied by the advertised sell tax, and the intended size itself must succeed. A 5% advertised sell tax implies a 95% receipt; a simulated 40% is 40/95≈0.42, well below 0.90, so the advertised rate fails the check.</p><p>0.90 is not an industry safety standard. It is only a reproducible inequality for “are the claim and the measurement in the same order of magnitude?” It ignores AMM slippage, pool fees and parameter changes in the next block. If an admin can edit the tax, the pair address or a trading switch, one passing call does not extend into the future.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>A minimum record includes chain ID, block number and hash, token and pair addresses, both decimal precisions, advertised buy and sell taxes, inputs and receipts on all three paths, whether the sell simulation reverted and why, whether the sender is listed, and any per-transaction cap. For a proxy, store the implementation at that block so an upgrade is not misread as a sudden tax change.</p><p>Reconcile in a fixed order: advertised implied receipt, then wallet transfer, then buy path, then sell path. Any remainder that pool fees and integer rounding cannot explain belongs in unexplained deductions. Unexplained is not an accusation; it is a ban on writing the remainder into a “verified 5% tax”.</p></section>
+            <section id="sec-6"><h2>6. Tradability is decided by the worst path</h2><p>A smooth buy only shows that capital can enter. A smooth wallet transfer only shows that balances can move. Whether a holder can exit near the advertised cost is a sell-path question. A useful conclusion states buy-path receipt x%, sell-path receipt y% or not executable, wallet-transfer z%, and the gaps versus the advertised rates. Until y is measured, projecting holding cost or “net yield” from buy-side friction gives accounting uncertainty a precise-looking label.</p><p>This is a research framework with hypothetical calculations, not a safety opinion on any token and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: If a research workflow needs to move assets onto a target chain before a small-size path check, you can visit <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">AllSwap cross-chain swap</a> and inspect its displayed routes, estimated output and fees yourself. The link is separate from this tax analysis and does not guarantee the service. Use any swap only for genuine, lawful asset management.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Tax rates are claims; receipt ratios are the object of study</a></li><li><a href="#sec-2">A worked example: 5% advertised, 40% received on the sell path</a></li><li><a href="#sec-3">Simulate at a pinned block; do not reuse another quote</a></li><li><a href="#sec-4">Dust tests systematically understate sell friction</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Tradability is decided by the worst path</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">ERC-20: Token Standard</a></li><li><a href="https://docs.uniswap.org/contracts/v2/guides/smart-contract-integration/trading-from-a-smart-contract" target="_blank" rel="noopener">Uniswap V2: trading from a contract</a></li><li><a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call" target="_blank" rel="noopener">Ethereum JSON-RPC: eth_call</a></li></ul><p class="ref-note">Sources checked on 20 September 2026. The calculations are hypothetical; no live token was tested.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/longtail-token-swap-liquidity-risk-guide.html">Swapping Long-Tail Tokens: Fake Contracts, Thin Liquidity</a></li><li><a href="/en/research/protocol/defi-token-approval-security-guide.html">DeFi Token Approval Security: Unlimited Allowance Risk and How to Revoke</a></li><li><a href="/en/research/market/dex-liquidity-research-guide.html">Verifying DEX Liquidity: Beyond the TVL Number, What Is an AMM Pool's Real Depth</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=239a68bc"></script>
+</body>
+</html>
