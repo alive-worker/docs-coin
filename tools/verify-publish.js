@@ -11,6 +11,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const FIX = process.argv.includes('--fix');
@@ -36,8 +37,10 @@ function extractMeta(slug, lang) {
   const h1 = ((html.match(/<h1>([\s\S]*?)<\/h1>/) || [])[1] || '').replace(/<[^>]+>/g, '').trim();
   const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
   const pub = (html.match(/<meta property="article:published_time" content="([^"]*)"/) || [])[1] || '';
-  const tagLabel = (html.match(/<span class="side-tag archive-tag archive-tag--[a-z]+"[^>]*>([^<]*)<\/span>/) || [])[1] || '';
-  const tagColor = (html.match(/<span class="side-tag archive-tag archive-tag--([a-z]+)"/) || [])[1] || 'blue';
+  // 只读 article-head 面包屑上的本篇标签，避开侧栏其它文章的 side-tag
+  const head = (html.match(/<header class="article-head">[\s\S]*?<\/header>/) || [])[0] || '';
+  const tagLabel = ((head.match(/<span class="side-tag archive-tag archive-tag--[a-z]+"[^>]*>\s*([^<]*?)\s*<\/span>/) || [])[1] || '').trim();
+  const tagColor = (head.match(/<span class="side-tag archive-tag archive-tag--([a-z]+)"/) || [])[1] || 'blue';
   return { slug, topic: slugTopicMap[slug], h1, desc, pub, tagLabel, tagColor };
 }
 
@@ -127,13 +130,160 @@ function replaceItemList(html, items, lang) {
   return out.replace(re, (_, start, end) => start + rebuilt + end);
 }
 
+function parseArchiveTags(html) {
+  const map = {};
+  const re = /<li class="archive-item"[^>]*>\s*<a href="\/(?:en\/)?research\/[a-z]+\/([a-z0-9-]+)\.html">\s*<span class="archive-tag archive-tag--([a-z]+)"[^>]*>([^<]*)<\/span>/g;
+  for (const m of html.matchAll(re)) {
+    const label = (m[3] || '').trim();
+    if (label) map[m[1]] = { color: m[2], label };
+  }
+  return map;
+}
+
+function parseArchiveTagsFromGit(file) {
+  try {
+    const hashes = execSync(`git log -30 --pretty=%H -- ${file}`, {
+      cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim().split(/\r?\n/).filter(Boolean);
+    for (const h of hashes) {
+      const html = execSync(`git show ${h}:${file}`, {
+        cwd: root, encoding: 'utf8', maxBuffer: 12 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+      const map = parseArchiveTags(html);
+      if (Object.keys(map).length >= slugs.length * 0.8) return map;
+    }
+  } catch (_) { /* 无 git 或浅克隆时退回 topic 默认标签 */ }
+  return {};
+}
+
+const TOPIC_TAG_FALLBACK = {
+  zh: {
+    basics: { label: '研究方法', color: 'teal' },
+    governance: { label: '治理核验', color: 'violet' },
+    market: { label: '市场核验', color: 'azure' },
+    protocol: { label: '协议核验', color: 'rust' },
+  },
+  en: {
+    basics: { label: 'Research', color: 'teal' },
+    governance: { label: 'Governance', color: 'violet' },
+    market: { label: 'Market', color: 'azure' },
+    protocol: { label: 'Protocol', color: 'rust' },
+  },
+};
+
+function fillItemTags(items, lang) {
+  const file = lang === 'en' ? 'en/articles.html' : 'articles.html';
+  let map = parseArchiveTags(read(file));
+  const needGit = items.some((it) => !(it.tagLabel || '').trim() && !(map[it.slug] && map[it.slug].label));
+  if (needGit) map = { ...parseArchiveTagsFromGit(file), ...map };
+  return items.map((it) => {
+    let label = (it.tagLabel || '').trim();
+    let color = it.tagColor;
+    if (!label && map[it.slug]) {
+      label = map[it.slug].label;
+      color = map[it.slug].color;
+    }
+    if (!label) {
+      const fb = TOPIC_TAG_FALLBACK[lang][it.topic];
+      label = fb.label;
+      if (!color || color === 'blue') color = fb.color;
+    }
+    return { ...it, tagLabel: label, tagColor: color || 'blue', lang };
+  });
+}
+
+function countEmptyArchiveTags(html) {
+  const ul = (html.match(/<ul class="archive-list"[^>]*>[\s\S]*?<\/ul>/) || [])[0] || '';
+  return [...ul.matchAll(/<span class="archive-tag archive-tag--[a-z]+"[^>]*>([^<]*)<\/span>/g)]
+    .filter((m) => !m[1].trim()).length;
+}
+
+function countEmptyHomeTags(html) {
+  return [...html.matchAll(/<span class="archive-tag archive-tag--[a-z]+"[^>]*>([^<]*)<\/span>/g)]
+    .filter((m) => !m[1].trim()).length;
+}
+
+const TOPIC_HUB = {
+  zh: {
+    basics: { href: '/research/basics/', label: '研究方法基础' },
+    governance: { href: '/research/governance/', label: '治理、资产与专项核验' },
+    market: { href: '/research/market/', label: '市场结构与流动性' },
+    protocol: { href: '/research/protocol/', label: '协议与基础设施风险' },
+  },
+  en: {
+    basics: { href: '/en/research/basics/', label: 'Research Foundations' },
+    governance: { href: '/en/research/governance/', label: 'Governance, Assets &amp; Special Checks' },
+    market: { href: '/en/research/market/', label: 'Market Structure &amp; Liquidity' },
+    protocol: { href: '/en/research/protocol/', label: 'Protocol &amp; Infrastructure Risk' },
+  },
+};
+
+function fillHomepageEmptyTags(html, items) {
+  const bySlug = Object.fromEntries(items.map((it) => [it.slug, it]));
+  return html.replace(
+    /(<article class="post-card[^"]*" id="([a-z0-9-]+)"[\s\S]{0,1200}?<span class="archive-tag archive-tag--)([a-z]+)(">)([^<]*)(<\/span>)/g,
+    (full, pre, slug, color, mid, inner, end) => {
+      const it = bySlug[slug];
+      if (!it || inner.trim()) return full;
+      return `${pre}${it.tagColor}${mid}${it.tagLabel}${end}`;
+    }
+  );
+}
+
+function ensureArticleSideTags(items, lang) {
+  let n = 0;
+  for (const it of items) {
+    const rel = lang === 'en' ? enPath(it.slug) : zhPath(it.slug);
+    const html = read(rel);
+    const head = (html.match(/<header class="article-head">[\s\S]*?<\/header>/) || [])[0] || '';
+    if (/class="side-tag archive-tag/.test(head)) continue;
+    const hub = TOPIC_HUB[lang][it.topic];
+    const kicker = `          <p><a href="${hub.href}">${hub.label}</a> / <span class="side-tag archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span></p>\n`;
+    const next = html.replace(
+      /(<header class="article-head">\s*)(<h1>)/,
+      (_, a, b) => a + kicker + '          ' + b
+    );
+    if (next === html) {
+      fail(`could not insert side-tag: ${rel}`);
+      continue;
+    }
+    write(rel, next);
+    n++;
+  }
+  if (n) noteFix(`article side-tag inserted (${lang}): ${n}`);
+}
+
+function normalizeArticleHeads(items, lang) {
+  let n = 0;
+  for (const it of items) {
+    const rel = lang === 'en' ? enPath(it.slug) : zhPath(it.slug);
+    const html = read(rel);
+    const next = html.replace(
+      /(<header class="article-head">)\s*(<p><a href="\/(?:en\/)?research\/[\s\S]*?<\/p>)\s*(<h1>)/,
+      (_, a, p, h) => `${a}\n          ${p}\n          ${h}`
+    );
+    if (next !== html) {
+      write(rel, next);
+      n++;
+    }
+  }
+  if (n) noteFix(`article-head indent normalized (${lang}): ${n}`);
+}
+
 function parseArchiveEntries(ulInner) {
   return [...ulInner.matchAll(/<li class="archive-item"[\s\S]*?<\/li>/g)].map((m) => {
     const block = m[0];
     const slug = (block.match(/\/([a-z0-9-]+)\.html"/) || [])[1];
-    const pub = (block.match(/datetime="([^"]*)"/) || [])[1] || '';
-    return { slug, pub, block };
+    return { slug, block };
   });
+}
+
+function fillTagInBlock(block, it) {
+  return block.replace(
+    /<span class="archive-tag archive-tag--[a-z]+"[^>]*>[^<]*<\/span>/,
+    `<span class="archive-tag archive-tag--${it.tagColor}" aria-hidden="true">${it.tagLabel}</span>`
+  );
 }
 
 function replaceArchiveChrome(html, items, lang) {
@@ -155,15 +305,39 @@ function replaceArchiveChrome(html, items, lang) {
     return out;
   }
   const bySlug = new Map(parseArchiveEntries(ul[2]).map((e) => [e.slug, e]));
-  const missing = items.filter((it) => !bySlug.has(it.slug));
-  for (const it of missing) {
-    bySlug.set(it.slug, { slug: it.slug, pub: it.pub, block: buildArchiveItem({ ...it, lang }) });
-  }
-  const ordered = items.map((it) => bySlug.get(it.slug)).filter(Boolean);
+  let filled = 0;
+  let missing = 0;
+  const ordered = items.map((it) => {
+    const existing = bySlug.get(it.slug);
+    if (!existing) {
+      missing++;
+      return buildArchiveItem({ ...it, lang });
+    }
+    const label = ((existing.block.match(/<span class="archive-tag archive-tag--[a-z]+"[^>]*>([^<]*)<\/span>/) || [])[1] || '').trim();
+    const block = existing.block.replace(/^\s*/, '        ');
+    if (label) return block;
+    filled++;
+    return fillTagInBlock(block, it);
+  });
   if (ordered.length !== n) fail(`archive (${lang}) ordered ${ordered.length} !== ${n}`);
-  const inner = ordered.map((e) => e.block.replace(/^\s*/, '        ')).join('\n');
-  if (missing.length) noteFix(`archive (${lang}) inserted ${missing.length} missing slug(s) in date order`);
-  return out.replace(ulRe, (_, a, _old, c) => a + inner + c);
+  if (missing) noteFix(`archive (${lang}) inserted ${missing} missing slug(s) in date order`);
+  if (filled) noteFix(`archive (${lang}) filled ${filled} empty tag pills`);
+  return out.replace(ulRe, (_, a, _old, c) => a + ordered.join('\n') + c);
+}
+
+function fillFeedCategories(xml, items) {
+  let out = xml;
+  let n = 0;
+  for (const it of items) {
+    const guid = `${HOST}${archiveHref(it.slug, it.lang)}`;
+    const esc = guid.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(<guid isPermaLink="true">${esc}</guid>\\s*<pubDate>[^<]*</pubDate>\\s*)<category></category>`);
+    const next = out.replace(re, `$1<category>${escapeXml(it.tagLabel)}</category>`);
+    if (next !== out) n++;
+    out = next;
+  }
+  if (n) noteFix(`feed categories filled (${items[0] && items[0].lang}): ${n}`);
+  return out;
 }
 
 function replaceHeroCount(html, n) {
@@ -317,15 +491,19 @@ function propagateJsHash() {
 }
 
 function applyFix() {
-  const zhItems = sortedMeta('zh');
-  const enItems = sortedMeta('en');
+  const zhItems = fillItemTags(sortedMeta('zh'), 'zh');
+  const enItems = fillItemTags(sortedMeta('en'), 'en');
   const n = zhItems.length;
   if (enItems.length !== n) fail(`zh/en meta length mismatch ${n} vs ${enItems.length}`);
 
-  write('articles.html', restoreBreadcrumb(replaceArchiveChrome(replaceItemList(read('articles.html'), zhItems, 'zh'), zhItems, 'zh'), 'zh', 'articles'));
-  write('en/articles.html', restoreBreadcrumb(replaceArchiveChrome(replaceItemList(read('en/articles.html'), enItems, 'en'), enItems, 'en'), 'en', 'articles'));
-  write('index.html', replaceHeroCount(replaceItemList(read('index.html'), zhItems, 'zh'), n));
-  write('en/index.html', replaceHeroCount(replaceItemList(read('en/index.html'), enItems, 'en'), n));
+  write('articles.html', restoreBreadcrumb(replaceItemList(replaceArchiveChrome(read('articles.html'), zhItems, 'zh'), zhItems, 'zh'), 'zh', 'articles'));
+  write('en/articles.html', restoreBreadcrumb(replaceItemList(replaceArchiveChrome(read('en/articles.html'), enItems, 'en'), enItems, 'en'), 'en', 'articles'));
+  write('index.html', fillHomepageEmptyTags(replaceHeroCount(replaceItemList(read('index.html'), zhItems, 'zh'), n), zhItems));
+  write('en/index.html', fillHomepageEmptyTags(replaceHeroCount(replaceItemList(read('en/index.html'), enItems, 'en'), n), enItems));
+  ensureArticleSideTags(zhItems, 'zh');
+  ensureArticleSideTags(enItems, 'en');
+  normalizeArticleHeads(zhItems, 'zh');
+  normalizeArticleHeads(enItems, 'en');
   noteFix(`index/articles numberOfItems, JSON-LD positions, hero, lede, topic-tag-count → ${n}`);
 
   write('feed.xml', buildFeed(zhItems, 'zh'));
@@ -417,6 +595,25 @@ function runChecks() {
 
   if (!files['articles.html'].includes(`共 ${n} 篇`)) fail(`articles.html lede is not 共 ${n} 篇`);
   if (!files['en/articles.html'].includes(`${n} articles`)) fail(`en/articles.html lede is not ${n} articles`);
+  const emptyZh = countEmptyArchiveTags(files['articles.html']);
+  const emptyEn = countEmptyArchiveTags(files['en/articles.html']);
+  if (emptyZh) fail(`articles.html has ${emptyZh} empty archive-tag pills`);
+  if (emptyEn) fail(`en/articles.html has ${emptyEn} empty archive-tag pills`);
+  const emptyHomeZh = countEmptyHomeTags(files['index.html']);
+  const emptyHomeEn = countEmptyHomeTags(files['en/index.html']);
+  if (emptyHomeZh) fail(`index.html has ${emptyHomeZh} empty archive-tag pills`);
+  if (emptyHomeEn) fail(`en/index.html has ${emptyHomeEn} empty archive-tag pills`);
+
+  let missingZhSide = 0;
+  let missingEnSide = 0;
+  for (const slug of slugs) {
+    const zhHead = (read(zhPath(slug)).match(/<header class="article-head">[\s\S]*?<\/header>/) || [])[0] || '';
+    const enHead = (read(enPath(slug)).match(/<header class="article-head">[\s\S]*?<\/header>/) || [])[0] || '';
+    if (!/class="side-tag archive-tag/.test(zhHead)) missingZhSide++;
+    if (!/class="side-tag archive-tag/.test(enHead)) missingEnSide++;
+  }
+  if (missingZhSide) fail(`${missingZhSide} zh articles missing article-head side-tag`);
+  if (missingEnSide) fail(`${missingEnSide} en articles missing article-head side-tag`);
 
   for (const t of TOPICS) {
     const zhItems = (files['articles.html'].match(new RegExp(`<li class="archive-item" data-topic="${t}">`, 'g')) || []).length;
@@ -457,7 +654,8 @@ function runChecks() {
   if (!exists('tools/nginx-legacy-redirects.conf')) fail('tools/nginx-legacy-redirects.conf missing');
   else {
     const ngx = read('tools/nginx-legacy-redirects.conf');
-    if (!ngx.includes('rewrite ^/articles/')) fail('nginx redirect map does not cover slugs');
+    const rewrites = (ngx.match(/^rewrite /gm) || []).length;
+    if (rewrites !== n * 2 + 2) fail(`nginx redirect map has ${rewrites} rewrites, expected ${n * 2 + 2}`);
     if (!ngx.includes('virtual-card')) fail('nginx redirect map missing virtual-card');
   }
   if (!exists('REDIRECT_MAP.txt')) fail('REDIRECT_MAP.txt missing');

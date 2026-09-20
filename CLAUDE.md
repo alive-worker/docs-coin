@@ -14,7 +14,7 @@
 
 1. 手写 `research/<topic>/<slug>.html` 与 `en/research/<topic>/<slug>.html`（含核验清单）。
 2. 填 `tools/publish-article.js` 的 `CONFIG`，跑 `node tools/publish-article.js`。
-3. 立刻再跑 `node tools/verify-publish.js`。计数、DATES、旧 URL 跳转桩、JSON-LD position 对不上时，用 `node tools/verify-publish.js --fix` 以 `slug_topic_map.json` 为源对齐，再复查。
+3. 立刻再跑 `node tools/verify-publish.js`。计数、DATES、旧 URL 跳转桩、JSON-LD position 对不上时，用 `node tools/verify-publish.js --fix` 以 `slug_topic_map.json` 为源对齐，再复查。`--fix` 只补空的归档/RSS 标签，不会整表重写已有标题。
 
 文章计数以 `slug_topic_map.json` 为准，不要手工改首页 127/128。
 
