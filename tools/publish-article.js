@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'token-transfer-tax-buy-sell-path-verification-guide',
-  publishedISO: '2026-09-20T10:36:12+08:00',
-  tagColor: 'amber',
-  topic: 'market',
+  slug: 'research-dashboard-clock-lag-verification-guide',
+  publishedISO: '2026-09-20T13:08:04+08:00',
+  tagColor: 'steel',
+  topic: 'basics',
 
   zh: {
-    h1: "代币转账税核验：买路径到账不等于卖路径到账",
-    tagLabel: "转账税核验",
-    cardDesc: "宣传页上的买卖税经常和真实到账对不上。用买路径、卖路径和钱包互转三组模拟，核验方向不对称与隐藏扣费。",
+    h1: "研究看板时滞核验：页面时间戳不等于区块时间",
+    tagLabel: "时滞核验",
+    cardDesc: "研报截图上的当前TVL，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。",
   },
   en: {
-    h1: "Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts",
-    tagLabel: "Transfer Tax Check",
-    cardDesc: "Advertised token taxes often disagree with received amounts. Simulate buy, sell and wallet transfers to catch directional gaps.",
+    h1: "Research Dashboard Clock Lag: Page Time Is Not Block Time",
+    tagLabel: "Clock Lag Check",
+    cardDesc: "A screenshot labelled current TVL is often not chain state now. Compare last-updated, subgraph head and the latest RPC block.",
   },
 
   existingSlugsNewestFirst: [
+    'token-transfer-tax-buy-sell-path-verification-guide',
     'erc4626-vault-yield-donation-redemption-verification',
     'dao-proposal-quorum-threshold-verification-guide',
     'defi-market-cap-index-composition-verification-guide',

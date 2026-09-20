@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>研究看板时滞核验：页面时间戳不等于区块时间 - 加密货币研究</title>
+  <meta name="description" content="研报截图上的“当前TVL”，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="研究看板时滞核验：页面时间戳不等于区块时间">
+  <meta property="og:description" content="研报截图上的“当前TVL”，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。">
+  <meta property="og:url" content="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-20T13:08:04+08:00">
+  <meta property="article:modified_time" content="2026-09-20T13:08:04+08:00">
+  <meta property="article:section" content="研究方法基础">
+  <meta property="article:tag" content="研究看板时滞">
+  <meta property="article:tag" content="区块时间戳">
+  <meta property="article:tag" content="子图同步高度">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="研究看板时滞核验：看板时钟、索引头与RPC区块三层对照">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="研究看板时滞核验：页面时间戳不等于区块时间">
+  <meta name="twitter:description" content="研报截图上的“当前TVL”，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide.png">
+  <meta name="twitter:image:alt" content="研究看板时滞核验：看板时钟、索引头与RPC区块三层对照">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-research-dashboard-clock-lag-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html",
+      "name": "研究看板时滞核验：页面时间戳不等于区块时间",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "研究方法基础",
+          "item": "https://coin.ponr.org/research/basics/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "研究看板时滞核验：页面时间戳不等于区块时间",
+          "item": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#article",
+      "headline": "研究看板时滞核验：页面时间戳不等于区块时间",
+      "description": "研报截图上的“当前TVL”，经常不是此刻链上状态。对照看板更新时间、子图同步高度与RPC最新区块，把时滞写成可复核的分钟数。",
+      "image": [
+        "https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide.png"
+      ],
+      "datePublished": "2026-09-20T13:08:04+08:00",
+      "dateModified": "2026-09-20T13:08:04+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#webpage"
+      },
+      "articleSection": "研究方法基础",
+      "isAccessibleForFree": true,
+      "keywords": ["研究看板时滞核验","页面时间戳不等于区块时间","子图同步高度","RPC最新区块","TVL口径时滞","加密货币研究"],
+      "wordCount": 2330,
+      "citation": [
+        "https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber",
+        "https://thegraph.com/docs/en/subgraphs/querying/graphql-api/",
+        "https://docs.llama.fi/",
+        "https://docs.coingecko.com/reference/coins-id"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "看板显示刚刚更新，是否等于链上此刻状态？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不等于。页面 last-updated 只是产品时钟。要把该时刻与索引同步头、RPC 最新区块时间戳对照，时滞用分钟写出，才能判断数字是否可称为链上当前。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "核验研究看板时滞需要对照哪三层时钟？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "三层分别是：页面或 API 的 last-updated；子图或适配器的同步头区块；eth_getBlockByNumber 读到的最新区块时间戳。缺任何一层，都无法把截图写成可复核结论。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "时滞超过多少就不能写成链上实时？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "教学筛选是：时滞不得超过该指标自身声称的采样周期。若适配器声称 15 分钟刷新，而索引头落后 RPC 超过 15 分钟，该数字不得写成实时链上状态，只能写成截至某区块。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/basics/research-dashboard-clock-lag-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/basics/">研究方法基础</a> / <span class="side-tag archive-tag archive-tag--steel">时滞核验</span></p>
+          <h1>研究看板时滞核验：页面时间戳不等于区块时间</h1>
+          <p class="article-summary">研报里截一张 DefiLlama 或 CoinGecko 页面，把角标“刚刚更新”写成“链上当前 TVL”，等于把产品时钟当成账本时钟。看板刷新、子图同步、节点出块是三件不同的事。下文用教学数字把三层时钟拆开对账；全部算例均为假设，不指向任何真实协议，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-20T13:08:04+08:00">2026-09-20 13:08:04</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-research-dashboard-clock-lag-verification-guide.svg" alt="研究看板时滞核验图：看板时钟 13:00、索引头落后 6 小时、RPC 区块为此刻" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>记下页面或 API 的 last-updated，并与同一时刻的 RPC 最新区块时间戳相减，得到页面时滞。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>查询子图或适配器的同步头区块号，换算成时间戳，得到索引时滞。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>若索引时滞超过该指标声称的采样周期，禁止把数字写成链上实时，改为“截至区块 N”。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>记录链 ID、RPC URL 类型、区块哈希与查询原文，避免用另一次刷新拼凑结论。</li></ul></div>
+            <section id="sec-1"><h2>1. 看板时间是产品时钟，区块时间才是账本时钟</h2><p>研究加密项目时，最容易被截图说服的不是白皮书，而是一张带“Live”角标的看板。页面上的时间字符串通常来自前端缓存、CDN 或聚合 API 的 <code>last_updated</code> 字段，例如 <a href="https://docs.coingecko.com/reference/coins-id" target="_blank" rel="noopener">CoinGecko 币种接口里的 last_updated</a>。它回答的是：这家产品上次写库是什么时候。它不回答：那条链上最新一个被节点接受的区块，时间戳是多少。</p><p>账本时钟要用 <a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber" target="_blank" rel="noopener">eth_getBlockByNumber</a> 读 <code>latest</code>（或该链等价接口）得到的 <code>timestamp</code>。两者差一分钟，截图仍可能大致可用；差六个小时，把看板数字写成“当前锁仓”，就是把过期快照包装成实时观测。我的判断是：凡声称“链上当前”的研究结论，必须同时给出 RPC 区块号。缺区块号的“当前”，只是产品文案。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：同一“截至此刻”，三个数字差 6 小时</h2><p>假设研究者在北京时间 13:00 截图某 TVL 看板，页面写“刚刚更新”，数字 12.0 亿美元。同一分钟查询该看板底层子图的 <code>_meta.block</code>，头区块时间戳对应 07:00。再向公共 RPC 要 <code>latest</code>，区块时间戳就是 13:00。若按子图头区块重算锁仓，得到 9.8 亿美元。下表全部为教学假设。</p>
+            <table><caption>教学案例：同一截图时刻，三层时钟给出的 TVL</caption><thead><tr><th scope="col">时钟</th><th scope="col">读取位置</th><th scope="col">时间</th><th scope="col">TVL</th><th scope="col">相对 RPC 的时滞</th></tr></thead><tbody><tr><td>看板时钟</td><td>页面 last-updated</td><td>13:00</td><td>12.0 亿美元</td><td>0 分钟（产品自称）</td></tr><tr><td>索引时钟</td><td>子图同步头</td><td>07:00</td><td>9.8 亿美元</td><td>360 分钟</td></tr><tr><td>账本时钟</td><td>RPC latest 区块</td><td>13:00</td><td>未在看板展示</td><td>0 分钟（基准）</td></tr></tbody></table>
+            <p>12.0 与 9.8 的差额不是“市场涨了 22%”。它可能只是索引停在早盘、而页面仍用缓存标签说自己是新的。把 12.0 写进研报而不写区块高度，等于允许读者把六小时前的状态当成当下。正确写法是：截至区块 N（07:00）锁仓 9.8 亿；看板 13:00 展示 12.0 亿，索引落后 360 分钟，该展示不得称为链上实时。</p></section>
+            <section id="sec-3"><h2>3. 三层时钟怎么读，才不会把缓存当成共识</h2><p>第一层读页面或官方 API 的更新字段，记下时区。第二层读索引头：The Graph 类子图用 <a href="https://thegraph.com/docs/en/subgraphs/querying/graphql-api/" target="_blank" rel="noopener">GraphQL 的 _meta 查询</a> 取 <code>block.number</code> 与 <code>block.timestamp</code>；适配器型看板（如 <a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama 文档所述的拉取/适配流程</a>）则要找到它声明的刷新周期，而不是相信前端动效。第三层用 RPC 的 latest 区块时间戳做减法：页面时滞 = 看板时间 − 区块时间；索引时滞 = 区块时间 − 索引头时间。正负号必须写清：索引落后为正，看板时钟快于区块为可疑（常见于本地电脑时间未校准）。</p><p>只核对页面时钟是不够的。CDN 可以把 6 小时前的 JSON 贴上新的 Date 头。必须看到索引头区块，才能判断数字有没有走过那 6 小时里的存取款。RPC 也要注明是自建节点、付费节点还是公共限流端点：公共节点的 latest 有时会短暂分叉或落后几个块，记录 endpoint 类型，避免把节点落后写成协议异常。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：时滞不得超过指标自己声称的采样周期</h2><p>不同指标的“可接受过期”不一样。秒级资金费率、15 分钟 TVL 适配、日线收盘市值，不能用同一把尺子。教学筛选是：索引时滞 ≤ 该来源公开声称的采样周期。若文档写每 15 分钟跑一次适配器，而 <code>_meta</code> 显示落后 360 分钟，15/360≈0.04，远低于“同一量级”，应把该 TVL 标为未核验通过的实时数字，降级为历史快照。</p><p>0.04 不是监管标准，只是把“声称频率与实测频率是否同量级”写成可复核的比。它不覆盖：适配器漏记某种仓位、跨链重复计算、价格预言机本身滞后。那些是口径问题，要另开核验，不能用时钟检查一次打穿。反过来，时钟检查通过也不等于数字正确，只等于“至少量的是那个时刻的索引，而不是随便一个缓存页”。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：截图或请求的北京时间、看板 URL、last-updated 原文、链 ID、RPC 区块号与哈希、索引头区块号与时间戳、指标名称与单位、两个时滞分钟数、是否超过声称采样周期。若走 GraphQL，保存查询字符串；若走 REST，保存响应里的时间字段，而不是自己在表格里手填“现在”。</p><p>对账顺序建议固定为：RPC 区块 → 索引头 → 页面标签。任何无法用采样周期解释的缺口，先列入未归因时滞。未归因不是指控数据造假，只是禁止把缺口写进“已核验的实时链上指标”。需要付费节点或付费分析席位才能稳定读 latest 时，也把数据源等级写进记录，避免用一次公共 RPC 的抖动否定整张表。</p></section>
+            <section id="sec-6"><h2>6. 结论：没有区块号的“当前”，只是文案</h2><p>加密研究的竞争力不在把看板截得更清楚，而在拒绝让产品文案代替账本。一个更可靠的句子不是“当前 TVL 为 X”，而是“RPC 区块 N 时刻为 T1；索引头落后 D 分钟；看板展示 X，页面时钟为 T0”。在 D 尚未测到之前，用 X 去讨论“资金刚刚进出”，是把缓存延迟写成市场判断。</p><p>本文是分析框架和教学算例，未对任何数据商或协议做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：稳定读取付费 RPC、Dune 或 Nansen 等研究接口时，部分服务只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文时滞核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">看板时间是产品时钟，区块时间才是账本时钟</a></li><li><a href="#sec-2">教学案例：同一“截至此刻”，三个数字差 6 小时</a></li><li><a href="#sec-3">三层时钟怎么读，才不会把缓存当成共识</a></li><li><a href="#sec-4">筛选线：时滞不得超过指标自己声称的采样周期</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：没有区块号的“当前”，只是文案</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber" target="_blank" rel="noopener">Ethereum JSON-RPC: eth_getBlockByNumber</a></li><li><a href="https://thegraph.com/docs/en/subgraphs/querying/graphql-api/" target="_blank" rel="noopener">The Graph GraphQL API（含 _meta）</a></li><li><a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama docs</a></li><li><a href="https://docs.coingecko.com/reference/coins-id" target="_blank" rel="noopener">CoinGecko coins/{id} last_updated</a></li></ul><p class="ref-note">资料核对日期：2026年9月20日。算例为教学假设，未对实际协议看板做链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/basics/onchain-data-analysis.html">链上数据分析：地址不是身份，交易不是意图</a></li><li><a href="/research/basics/crypto-research-fundamentals.html">加密项目研究方法论：为什么单一信息源永远不够</a></li><li><a href="/research/protocol/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=24e3eaa6"></script>
+</body>
+</html>

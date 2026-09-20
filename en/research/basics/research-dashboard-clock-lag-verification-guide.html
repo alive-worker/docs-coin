@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research Dashboard Clock Lag: Page Time Is Not Block Time</title>
+  <meta name="description" content="A screenshot labelled current TVL is often not chain state now. Compare dashboard last-updated, subgraph head and the latest RPC block, and write lag in minutes.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Research Dashboard Clock Lag: Page Time Is Not Block Time">
+  <meta property="og:description" content="A screenshot labelled current TVL is often not chain state now. Compare dashboard last-updated, subgraph head and the latest RPC block, and write lag in minutes.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-20T13:08:04+08:00">
+  <meta property="article:modified_time" content="2026-09-20T13:08:04+08:00">
+  <meta property="article:section" content="Research Foundations">
+  <meta property="article:tag" content="dashboard clock lag">
+  <meta property="article:tag" content="block timestamp">
+  <meta property="article:tag" content="subgraph sync head">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Dashboard clock lag check: page clock, index head and RPC block compared">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Research Dashboard Clock Lag: Page Time Is Not Block Time">
+  <meta name="twitter:description" content="A screenshot labelled current TVL is often not chain state now. Compare dashboard last-updated, subgraph head and the latest RPC block, and write lag in minutes.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Dashboard clock lag check: page clock, index head and RPC block compared">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-research-dashboard-clock-lag-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html",
+      "name": "Research Dashboard Clock Lag: Page Time Is Not Block Time",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Research Foundations",
+          "item": "https://coin.ponr.org/en/research/basics/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Research Dashboard Clock Lag: Page Time Is Not Block Time",
+          "item": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#article",
+      "headline": "Research Dashboard Clock Lag: Page Time Is Not Block Time",
+      "description": "A screenshot labelled current TVL is often not chain state now. Compare dashboard last-updated, subgraph head and the latest RPC block, and write lag in minutes.",
+      "image": [
+        "https://coin.ponr.org/img/article-research-dashboard-clock-lag-verification-guide-en.png"
+      ],
+      "datePublished": "2026-09-20T13:08:04+08:00",
+      "dateModified": "2026-09-20T13:08:04+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#webpage"
+      },
+      "articleSection": "Research Foundations",
+      "isAccessibleForFree": true,
+      "keywords": ["research dashboard clock lag","page timestamp is not block time","subgraph sync head","latest RPC block","TVL snapshot lag","crypto research methodology"],
+      "wordCount": 1067,
+      "citation": [
+        "https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber",
+        "https://thegraph.com/docs/en/subgraphs/querying/graphql-api/",
+        "https://docs.llama.fi/",
+        "https://docs.coingecko.com/reference/coins-id"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/basics/research-dashboard-clock-lag-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does a dashboard that says it just updated equal on-chain state right now?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. last-updated is a product clock. Compare it with the index sync head and the latest RPC block timestamp, and write the lag in minutes, before calling the figure current on-chain state."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which three clocks should a dashboard lag check use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The page or API last-updated field; the subgraph or adapter sync-head block; and the timestamp from eth_getBlockByNumber latest. Drop any layer and a screenshot is not a reproducible claim."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much lag disqualifies a figure from being called real-time on-chain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A teaching screen is: lag must not exceed the metric's own claimed sampling interval. If an adapter claims a 15-minute refresh and the index head trails RPC by more than 15 minutes, write the number as of block N, not as live chain state."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/research-dashboard-clock-lag-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/basics/">Research Foundations</a> / <span class="side-tag archive-tag archive-tag--steel">Clock Lag Check</span></p>
+          <h1>Research Dashboard Clock Lag: Page Time Is Not Block Time</h1>
+          <p class="article-summary">Cropping a DefiLlama or CoinGecko page that says “just updated” and calling that figure “current on-chain TVL” treats a product clock as a ledger clock. Dashboard refresh, index sync and block production are three different events. The figures below are hypothetical teaching examples, not observations from a live protocol, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-09-20T13:08:04+08:00">2026-09-20 13:08:04</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-research-dashboard-clock-lag-verification-guide-en.svg" alt="Three clocks for dashboard lag research: page last-updated at 13:00, index head six hours behind, RPC block as now" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Record the page or API last-updated time and subtract the latest RPC block timestamp to get page lag.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Read the subgraph or adapter sync-head block, convert it to a timestamp, and get index lag.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>If index lag exceeds the metric’s claimed sampling interval, do not call the figure live on-chain; write “as of block N”.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Store chain ID, RPC class, block hash and the raw query; do not splice another refresh into the same row.</li></ul></div>
+            <section id="sec-1"><h2>1. Dashboard time is a product clock; block time is the ledger clock</h2><p>In crypto project research, the screenshot that persuades is rarely the white paper. It is a board with a “Live” badge. The time string on that page usually comes from a front-end cache, a CDN, or an aggregator field such as <code>last_updated</code> on <a href="https://docs.coingecko.com/reference/coins-id" target="_blank" rel="noopener">CoinGecko’s coin endpoint</a>. That field answers: when did this product last write to its store. It does not answer: what is the timestamp of the latest block this chain’s nodes accepted.</p><p>The ledger clock is the <code>timestamp</code> from <a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber" target="_blank" rel="noopener">eth_getBlockByNumber</a> with <code>latest</code> (or the chain’s equivalent). A one-minute gap can still be usable. A six-hour gap, written up as “current TVL”, wraps an expired snapshot as a live observation. My rule is: any claim of “current on-chain” must carry an RPC block number. “Current” without a block is copy.</p></section>
+            <section id="sec-2"><h2>2. A worked example: one “as of now”, three numbers six hours apart</h2><p>Suppose a researcher screenshots a TVL board at 13:00 Beijing time. The page says it just updated; the figure is $1.20 billion. In the same minute, the underlying subgraph’s <code>_meta.block</code> timestamp corresponds to 07:00. A public RPC <code>latest</code> block timestamp is 13:00. Recomputing TVL at the subgraph head yields $0.98 billion. The table is hypothetical.</p>
+            <table><caption>Hypothetical example: three clocks, one screenshot moment</caption><thead><tr><th scope="col">Clock</th><th scope="col">Where it is read</th><th scope="col">Time</th><th scope="col">TVL</th><th scope="col">Lag versus RPC</th></tr></thead><tbody><tr><td>Page clock</td><td>last-updated</td><td>13:00</td><td>$1.20bn</td><td>0 min (product claim)</td></tr><tr><td>Index clock</td><td>subgraph sync head</td><td>07:00</td><td>$0.98bn</td><td>360 min</td></tr><tr><td>Ledger clock</td><td>RPC latest block</td><td>13:00</td><td>not shown on the board</td><td>0 min (baseline)</td></tr></tbody></table>
+            <p>The gap between 1.20 and 0.98 is not “the market rallied 22%”. The index may still be sitting on the morning print while the page keeps a fresh-looking label. Writing 1.20 into a note without a block height lets a reader treat a six-hour-old state as now. The correct sentence is: as of block N (07:00) TVL was $0.98bn; the board showed $1.20bn at 13:00; the index lagged 360 minutes; that display is not live on-chain state.</p></section>
+            <section id="sec-3"><h2>3. Read three clocks so a cache is not mistaken for consensus</h2><p>Layer one is the page or official API update field, with its timezone written down. Layer two is the index head: Graph-style subgraphs expose <code>block.number</code> and <code>block.timestamp</code> via the <a href="https://thegraph.com/docs/en/subgraphs/querying/graphql-api/" target="_blank" rel="noopener">GraphQL <code>_meta</code> query</a>; adapter boards described in <a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama’s docs</a> need their stated refresh interval, not a CSS pulse. Layer three subtracts from the RPC latest timestamp: page lag = dashboard time − block time; index lag = block time − sync-head time. Sign must be explicit: a trailing index is positive; a page clock ahead of the block is suspicious (often an uncalibrated laptop clock).</p><p>Checking only the page clock is not enough. A CDN can serve six-hour-old JSON with a new Date header. Without the sync-head block you cannot tell whether deposits and withdrawals in those six hours entered the number. Note whether the RPC is self-hosted, paid, or a public rate-limited endpoint: public <code>latest</code> can lag a few blocks or sit on a short fork. Recording the endpoint class stops node lag being written up as protocol failure.</p></section>
+            <section id="sec-4"><h2>4. A screen: lag must not exceed the metric’s own sampling interval</h2><p>Acceptable staleness is not the same for a second-level funding rate, a 15-minute TVL adapter and a daily market-cap close. The teaching screen is: index lag ≤ the source’s publicly claimed sampling interval. If the docs say the adapter runs every 15 minutes and <code>_meta</code> shows a 360-minute trail, 15/360≈0.04, far from the same order of magnitude. Mark that TVL as failing a live check and demote it to a historical snapshot.</p><p>0.04 is not a regulatory standard. It is only a reproducible ratio for “are claimed frequency and measured frequency in the same ballpark?” It does not cover missed vault types, double-counted bridged TVL, or a lagging price oracle. Those are methodology issues for a separate check. Passing the clock check also does not prove the figure is right; it only proves you measured that moment’s index rather than an anonymous cached page.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>A minimum record includes Beijing (or UTC) time of the screenshot or request, board URL, raw last-updated text, chain ID, RPC block number and hash, sync-head block and timestamp, metric name and unit, both lags in minutes, and whether they exceed the claimed interval. For GraphQL, store the query string; for REST, store the time field in the response rather than typing “now” into a sheet.</p><p>Reconcile in a fixed order: RPC block, then index head, then page label. Any remainder the sampling interval cannot explain belongs in unexplained lag. Unexplained is not an accusation of fabrication; it is a ban on writing the remainder into a “verified live on-chain metric”. If a paid node or a paid analytics seat is required to read <code>latest</code> stably, record that source grade so one jittery public RPC cannot dismiss the whole table.</p></section>
+            <section id="sec-6"><h2>6. “Current” without a block number is copy</h2><p>The scarce skill in crypto research is not a sharper crop of a dashboard. It is refusing to let product copy stand in for the ledger. A useful sentence is not “TVL is now X”. It is “RPC block N at T1; the index head lags D minutes; the board shows X with page clock T0”. Until D is measured, using X to narrate “capital just moved” turns cache delay into a market view.</p><p>This is a research framework with hypothetical calculations, not a quality opinion on any data vendor or protocol, and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Paid RPC, Dune or Nansen seats sometimes accept only international cards. You can inspect <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC virtual cards</a> for issuance and stablecoin top-up terms, and check fees, statements and limits yourself. The link is separate from this lag analysis and does not guarantee the service. Use any card only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Dashboard time is a product clock; block time is the ledger clock</a></li><li><a href="#sec-2">A worked example: one “as of now”, three numbers six hours apart</a></li><li><a href="#sec-3">Read three clocks so a cache is not mistaken for consensus</a></li><li><a href="#sec-4">A screen: lag must not exceed the metric’s own sampling interval</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">“Current” without a block number is copy</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getblockbynumber" target="_blank" rel="noopener">Ethereum JSON-RPC: eth_getBlockByNumber</a></li><li><a href="https://thegraph.com/docs/en/subgraphs/querying/graphql-api/" target="_blank" rel="noopener">The Graph GraphQL API (_meta)</a></li><li><a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama docs</a></li><li><a href="https://docs.coingecko.com/reference/coins-id" target="_blank" rel="noopener">CoinGecko coins/{id} last_updated</a></li></ul><p class="ref-note">Sources checked on 20 September 2026. The calculations are hypothetical; no live protocol dashboard was measured on-chain.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/basics/onchain-data-analysis.html">On-Chain Data Analysis: An Address Is Not an Identity, a Transaction Is Not Intent</a></li><li><a href="/en/research/basics/crypto-research-fundamentals.html">Crypto Project Research Methodology: Why a Single Source Is Never Enough</a></li><li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Verifying Oracle Prices: A Few Blocks of Feed Delay Is a Manipulator's Window</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=24e3eaa6"></script>
+</body>
+</html>
