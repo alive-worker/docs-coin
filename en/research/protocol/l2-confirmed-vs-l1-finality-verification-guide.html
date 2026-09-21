@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 Confirmed Check: A Wallet Tick Is Not L1 Finality</title>
+  <meta name="description" content="A wallet tick in two seconds is sequencer soft confirmation. Compare the L1 batch inclusion and beacon finality, and write settled as clocks, not a green check.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="L2 Confirmed Check: A Wallet Tick Is Not L1 Finality">
+  <meta property="og:description" content="A wallet tick in two seconds is sequencer soft confirmation. Compare the L1 batch inclusion and beacon finality, and write settled as clocks, not a green check.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-21T14:24:51+08:00">
+  <meta property="article:modified_time" content="2026-09-21T14:24:51+08:00">
+  <meta property="article:section" content="Protocol and Infrastructure Risk">
+  <meta property="article:tag" content="soft confirmation">
+  <meta property="article:tag" content="L2 finality">
+  <meta property="article:tag" content="sequencer">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2 confirmed check: wallet two seconds, batch eighteen minutes, L1 finality thirty-one minutes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 Confirmed Check: A Wallet Tick Is Not L1 Finality">
+  <meta name="twitter:description" content="A wallet tick in two seconds is sequencer soft confirmation. Compare the L1 batch inclusion and beacon finality, and write settled as clocks, not a green check.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="L2 confirmed check: wallet two seconds, batch eighteen minutes, L1 finality thirty-one minutes">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html",
+      "name": "L2 Confirmed Check: A Wallet Tick Is Not L1 Finality",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Protocol and Infrastructure Risk",
+          "item": "https://coin.ponr.org/en/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "L2 Confirmed Check: A Wallet Tick Is Not L1 Finality",
+          "item": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#article",
+      "headline": "L2 Confirmed Check: A Wallet Tick Is Not L1 Finality",
+      "description": "A wallet tick in two seconds is sequencer soft confirmation. Compare the L1 batch inclusion and beacon finality, and write settled as clocks, not a green check.",
+      "image": [
+        "https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.png"
+      ],
+      "datePublished": "2026-09-21T14:24:51+08:00",
+      "dateModified": "2026-09-21T14:24:51+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#webpage"
+      },
+      "articleSection": "Protocol and Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "keywords": ["L2 confirmed verification","sequencer soft confirmation","L1 finality","rollup batch","crypto research methodology"],
+      "wordCount": 1060,
+      "citation": [
+        "https://docs.optimism.io/stack/transactions/transaction-finality",
+        "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality",
+        "https://eips.ethereum.org/EIPS/eip-4844",
+        "https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If the wallet says Confirmed, is the L2 transfer irreversible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Most wallets mean the sequencer accepted the transaction — a soft confirmation. Until the batch is on L1 and that L1 block is finalized, the sequencer can still reorder or drop it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "The batch is already on L1. Why wait for finality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inclusion only means the execution layer saw the data. Beacon economic finality still takes about two epochs. An unfinalized L1 block can reorg, and the batch hash moves with it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the optimistic challenge window a fourth clock?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, but it constrains withdrawals, not whether this L2 transfer happened. Folding the window into settled mixes exit risk into an inbound-credit claim."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--teal">Soft Confirm</span></p>
+          <h1>L2 Confirmed Check: A Wallet Tick Is Not L1 Finality</h1>
+          <p class="article-summary">Most L2 wallets paint Confirmed in about two seconds. That is a sequencer soft confirmation, not a batch on Ethereum, and not beacon finality. Split the three clocks. The figures below are hypothetical teaching examples, not observations from a live chain, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-09-21T14:24:51+08:00">2026-09-21 14:24:51</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-confirmed-vs-l1-finality-verification-guide-en.svg" alt="L2 confirmed check: wallet about 2 seconds, L1 batch about 18 minutes, finality about 31 minutes" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Copy the wallet status and timestamp; label it soft confirmation, not L1 inclusion.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Find the L1 batch or blob that contains the transaction; write block number and hash.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Check whether that L1 block is beacon-finalized; if not, do not write settled.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The optimistic challenge window constrains withdrawals only; do not fold it into inbound settlement.</li></ul></div>
+            <section id="sec-1"><h2>1. A green tick is a sequencer receipt, not a settlement proof</h2><p>A centralized sequencer queues the transaction first, then later posts a batch or blob to L1. <a href="https://docs.optimism.io/stack/transactions/transaction-finality" target="_blank" rel="noopener">Optimism’s transaction-finality note</a> splits unsafe / safe / finalized. The wallet’s Confirmed usually maps to unsafe or a preconfirmation: the sequencer said it took the tx; L1 has not seen it. Writing the tick as settled treats one operator’s memory as Ethereum consensus.</p><p>This is not the site’s dashboard-clock note. That note asks whether a screenshot clock is a chain clock. This note asks: even when the L2 explorer already shows a hash, which clock does that hash sit on. The units differ. Soft confirmation is a sequencer log. L1 inclusion is a batch transaction or an <a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844 blob</a>. Finality is a beacon checkpoint.</p></section>
+            <section id="sec-2"><h2>2. A worked example: two-second tick, thirty-one minutes to finalize</h2><p>A researcher sends an L2 transfer at T0. At T0+2s the wallet shows Confirmed. At T0+18 min an L1 block contains the batch, still unfinalized. At T0+31 min the beacon marks that L1 block finalized. A write-up that screenshots T0+2s and says “bridged in, counted in today’s book” has two clocks still missing. The table is hypothetical.</p>
+            <table><caption>Hypothetical example: one L2 transfer, three clocks an order of magnitude apart</caption><thead><tr><th scope="col">Clock</th><th scope="col">What is read</th><th scope="col">Teaching wait</th><th scope="col">May write settled?</th></tr></thead><tbody><tr><td>Soft confirm</td><td>wallet or sequencer receipt</td><td>~2 seconds</td><td>No; can be rewritten</td></tr><tr><td>L1 inclusion</td><td>batch or blob block</td><td>~18 minutes</td><td>No; L1 can still reorg</td></tr><tr><td>L1 finality</td><td>beacon finalized checkpoint</td><td>~31 minutes</td><td>Inbound credit may pass</td></tr><tr><td>Optimistic window</td><td>fault-proof window</td><td>days</td><td>Withdrawals only, not inbound credit</td></tr></tbody></table>
+            <p>The gap between two seconds and thirty-one minutes is not UI lag. Most of the safety still sits in L1 consensus, not in the sequencer mempool. Treating wallet speed as settlement speed writes an operator SLA as a protocol guarantee. <a href="https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/" target="_blank" rel="noopener">Ethereum’s optimistic-rollup note</a> likewise splits fast sequencer blocks from mainnet publication: the first is UX; the second is verifiability.</p></section>
+            <section id="sec-3"><h2>3. Read three paths so a preconfirmation is not mistaken for finality</h2><p>Layer one is the wallet or RPC status string. Copy Confirmed, Success or Safe verbatim, with client and timestamp. Layer two is L1: invert the tx hash to the batch-posting transaction or blob versioned hash, and check that the L2 tx is actually inside that batch. An L2-explorer hash with no L1 inclusion stops at soft confirm. Layer three is the beacon: using <a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality" target="_blank" rel="noopener">the PoS finality note</a>, check whether that L1 block sits in a finalized checkpoint, and write the epoch or block number rather than “about fifteen minutes”.</p><p>The failure modes differ. Soft-confirm failure is sequencer censorship, downtime or a private reordering. Inclusion failure is a batch not yet posted or a missing blob. Finality failure is an L1 reorg. Collapsing all three into “not arrived yet” starts the next debug on the wrong layer.</p></section>
+            <section id="sec-4"><h2>4. A screen: settled requires a finalized L1 block</h2><p>The teaching screen allows a research note to call an L2 transfer settled, bookable or safe to sequence the next action only if a batch containing it exists on L1 and that L1 block is finalized. Soft confirmation is written as “sequencer accepted”. Included but unfinalized is written as “posted, awaiting finality”. The optimistic challenge window sits on its own line and is labelled withdrawals-only.</p><p>The screen does not replace a data-availability check or a forced-exit check. Those ask whether data can be retrieved and whether a user can leave under censorship. This note only answers which clock the wallet’s Confirmed sits on. Passing finality also does not prove a counterparty on another chain has credited the funds — that is a messaging-finality question, a separate reconciliation.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>A minimum record includes L2 chain ID, tx hash, wallet copy and client, soft-confirm timestamp, L1 batch or blob tx hash, L1 block number and hash, whether that block is finalized, minutes from send to finality, and whether settled entered the conclusion. An L2-explorer screenshot is not an L1 inclusion proof. Store RPC request and return so two refreshes are not spliced into one row.</p><p>Reconcile in a fixed order: soft confirm, then L1 inclusion, then L1 finality, then the challenge window if a withdrawal is in scope. Any gap between wallet Confirmed and L1 inclusion belongs in unexplained wait. Unexplained is not an accusation of fabrication; it is a ban on writing the gap into verified settlement. If a paid archive node is required to read historical blobs stably, record that source grade.</p></section>
+            <section id="sec-6"><h2>6. Confirmed is three clocks, not one adjective</h2><p>The weak sentence is “the L2 already confirmed; it landed in two seconds”. A useful one is “soft confirm t1; L1 inclusion block B; finalized at t3; minutes from send to t3”. Until those three quantities are written, using a wallet tick to narrate irreversibility treats a sequencer receipt as Ethereum finality.</p><p>This is a research framework with hypothetical calculations, not a quality opinion on any rollup or wallet, and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Paid archive RPC used to read L1 batches, blobs and beacon finality sometimes accept only international cards. You can inspect <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC virtual cards</a> for issuance and stablecoin top-up terms, and check fees, statements and limits yourself. The link is separate from this finality analysis and does not guarantee the service. Use any card only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">A green tick is a sequencer receipt, not a settlement proof</a></li><li><a href="#sec-2">A worked example: two-second tick, thirty-one minutes to finalize</a></li><li><a href="#sec-3">Read three paths so a preconfirmation is not mistaken for finality</a></li><li><a href="#sec-4">A screen: settled requires a finalized L1 block</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Confirmed is three clocks, not one adjective</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://docs.optimism.io/stack/transactions/transaction-finality" target="_blank" rel="noopener">Optimism: Transaction finality</a></li><li><a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality" target="_blank" rel="noopener">Ethereum.org: PoS finality</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844: Shard Blob Transactions</a></li><li><a href="https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/" target="_blank" rel="noopener">Ethereum.org: Optimistic rollups</a></li></ul><p class="ref-note">Sources checked on 21 September 2026. The calculations are hypothetical; no live L2 transaction was measured on-chain.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/layer2-rollup-research-guide.html">Verifying the Layer2 Sequencer: Who Packages Your Transaction, and Who Can Censor It</a></li><li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li><li><a href="/en/research/protocol/rollup-forced-exit-sequencer-censorship-guide.html">Rollup Forced Exit Mechanism: Can You Actually Get Your Funds Out If the Sequencer Goes Rogue</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=7b35a575"></script>
+</body>
+</html>

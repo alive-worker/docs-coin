@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 已确认核验：钱包绿勾不等于主网最终性 - 加密货币研究</title>
+  <meta name="description" content="钱包两秒显示已确认，只是排序器软确认。对照 L1 批次入块与信标最终性，把已结算写成可复核的时钟，而不是界面绿勾。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="L2 已确认核验：钱包绿勾不等于主网最终性">
+  <meta property="og:description" content="钱包两秒显示已确认，只是排序器软确认。对照 L1 批次入块与信标最终性，把已结算写成可复核的时钟，而不是界面绿勾。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-21T14:24:51+08:00">
+  <meta property="article:modified_time" content="2026-09-21T14:24:51+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="软确认">
+  <meta property="article:tag" content="L2最终性">
+  <meta property="article:tag" content="排序器">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2已确认核验：钱包两秒、批次十八分钟、主网最终性三十一分钟">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 已确认核验：钱包绿勾不等于主网最终性">
+  <meta name="twitter:description" content="钱包两秒显示已确认，只是排序器软确认。对照 L1 批次入块与信标最终性，把已结算写成可复核的时钟，而不是界面绿勾。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide.png">
+  <meta name="twitter:image:alt" content="L2已确认核验：钱包两秒、批次十八分钟、主网最终性三十一分钟">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-l2-confirmed-vs-l1-finality-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html",
+      "name": "L2 已确认核验：钱包绿勾不等于主网最终性",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "协议与基础设施风险",
+          "item": "https://coin.ponr.org/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "L2 已确认核验：钱包绿勾不等于主网最终性",
+          "item": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#article",
+      "headline": "L2 已确认核验：钱包绿勾不等于主网最终性",
+      "description": "钱包两秒显示已确认，只是排序器软确认。对照 L1 批次入块与信标最终性，把已结算写成可复核的时钟，而不是界面绿勾。",
+      "image": [
+        "https://coin.ponr.org/img/article-l2-confirmed-vs-l1-finality-verification-guide.png"
+      ],
+      "datePublished": "2026-09-21T14:24:51+08:00",
+      "dateModified": "2026-09-21T14:24:51+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#webpage"
+      },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["L2已确认核验","排序器软确认","L1最终性","rollup批次","加密货币研究"],
+      "wordCount": 2280,
+      "citation": [
+        "https://docs.optimism.io/stack/transactions/transaction-finality",
+        "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality",
+        "https://eips.ethereum.org/EIPS/eip-4844",
+        "https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "钱包显示已确认，是否等于这笔 L2 交易已经不可逆？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不等于。多数钱包的已确认只表示排序器收下了交易，属于软确认。批次尚未写入 L1、L1 区块尚未最终确定时，排序器仍可改写或丢弃该笔。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "L1 已经包含该批次，为什么还要等最终性？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "包含只说明执行层出现了这笔数据。以太坊信标链的经济最终性大约还要两个 epoch。未最终确定的 L1 区块仍可能重组，批次哈希会跟着变。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "乐观 Rollup 的挑战窗口是不是第四口时钟？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "是，但只约束提款，不约束「这笔 L2 转账是否发生」。研究笔记把挑战窗口写进已结算，会把提款风险错当成入账风险。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--teal">软确认</span></p>
+          <h1>L2 已确认核验：钱包绿勾不等于主网最终性</h1>
+          <p class="article-summary">多数 L2 钱包在两秒内画出已确认，那是排序器的软确认，不是批次写入以太坊，更不是信标链最终性。下文把三口时钟拆开；全部算例均为教学假设，不指向任何真实链，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-21T14:24:51+08:00">2026-09-21 14:24:51</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-confirmed-vs-l1-finality-verification-guide.svg" alt="L2已确认核验图：钱包约2秒、L1批次约18分钟、最终性约31分钟" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>记下钱包文案与时间戳，标明这是软确认，不是 L1 包含。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>在 L1 上找到包含该交易的批次或 blob，写下区块号与哈希。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>核对该 L1 区块是否已被信标链最终确定；未最终确定不得写成已结算。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>乐观挑战窗口只约束提款，不得并入口径写成入账已完成。</li></ul></div>
+            <section id="sec-1"><h2>1. 绿勾是排序器收据，不是结算证明</h2><p>中心化排序器先把交易排进自己的队列，再异步把批次或 blob 发到 L1。<a href="https://docs.optimism.io/stack/transactions/transaction-finality" target="_blank" rel="noopener">Optimism 对交易最终性的分层说明</a>把「unsafe / safe / finalized」拆成三档：钱包常用的已确认，对应的是 unsafe 或预确认——排序器说收下了，L1 还没看见。把绿勾写成已结算，等于把一家运营方的内存状态，当成以太坊的共识结果。</p><p>这与本站看板时滞笔记不是同一问题。时滞问的是截图时钟是不是链上时钟；本笔记问的是：即便 L2 浏览器已经给出交易哈希，这笔哈希落在哪一口时钟上。三口时钟的会计单位不同：软确认以排序器日志为准；L1 包含以批次交易或 <a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844 blob</a> 为准；最终性以信标检查点为准。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：两秒绿勾，三十一分钟才最终确定</h2><p>假设研究者在 T0 发出一笔 L2 转账。T0+2 秒钱包显示 Confirmed。T0+18 分钟，L1 出现包含该批次的区块，但该区块尚未最终确定。T0+31 分钟，信标链将该 L1 区块标记为 finalized。若研报在 T0+2 秒截图并写「跨链入账已完成，可计入当日仓位」，三口时钟有两口尚未发生。下表全部为教学假设。</p>
+            <table><caption>教学案例：同一笔 L2 转账，三口时钟差一个数量级</caption><thead><tr><th scope="col">时钟</th><th scope="col">读取对象</th><th scope="col">教学等待</th><th scope="col">可否写成已结算</th></tr></thead><tbody><tr><td>软确认</td><td>钱包或排序器收据</td><td>约 2 秒</td><td>否，可被改写</td></tr><tr><td>L1 包含</td><td>批次或 blob 所在区块</td><td>约 18 分钟</td><td>否，L1 仍可能重组</td></tr><tr><td>L1 最终性</td><td>信标 finalized 检查点</td><td>约 31 分钟</td><td>入账口径可通过</td></tr><tr><td>乐观挑战窗</td><td>故障证明窗口</td><td>数天</td><td>只约束提款，不约束入账</td></tr></tbody></table>
+            <p>2 秒与 31 分钟的差额不是界面延迟。大量安全性仍锁在 L1 共识里，不在排序器的内存池里。把钱包速度当成结算速度，等于把运营方的 SLA 写成协议保证。<a href="https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/" target="_blank" rel="noopener">以太坊对乐观 Rollup 的说明</a>也把排序器快速出块与主网发布拆开：前者服务体验，后者服务可验证性。</p></section>
+            <section id="sec-3"><h2>3. 三条路径怎么读，才不会把预确认当成最终性</h2><p>第一层读钱包或 RPC 返回的状态字符串。必须原文照抄 Confirmed、Success、Safe，并记下客户端与时间戳。第二层读 L1：用交易哈希反查批次提交交易或 blob 版本哈希，确认目标 L2 交易确实被编进该批次。只看见 L2 浏览器有哈希、看不见 L1 包含，核验停在软确认。第三层读信标：按 <a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality" target="_blank" rel="noopener">PoS 最终性说明</a> 核对该 L1 区块是否已进入 finalized 检查点，写下 epoch 或区块号，而不是抄「大约十五分钟」。</p><p>三条路径的失败模式不同。软确认失败是排序器审查、宕机或私下重排；L1 包含失败是批次尚未提交或 blob 丢失；最终性失败是 L1 重组。把三种失败写成同一个「还没到账」，会让后续排障从错误的层开始。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：写成已结算必须看到 finalized 的 L1 区块</h2><p>教学筛选是：研究笔记要把一笔 L2 转账写成已结算、可计入仓位或可触发下一笔操作，当且仅当 L1 上存在包含该交易的批次，且该 L1 区块已被最终确定。软确认只能写成「排序器已受理」。L1 已包含但未最终确定，写成「已发布、待最终性」。乐观挑战窗口另起一行，标注它只覆盖提款，不覆盖这笔入账是否发生。</p><p>该筛选不代替数据可用性核验，也不代替强制退出核验。那两篇问的是数据能否被取回、审查时能否自行离开。本笔记只回答：界面上的已确认，落在哪一口时钟。通过最终性筛选，也不等于对手方已经在另一条链认账——那是跨链消息的终局性问题，要另文对账。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：L2 链 ID、交易哈希、钱包文案与客户端、软确认时间戳、批次或 blob 的 L1 交易哈希、L1 区块号与哈希、该区块是否 finalized、从发到最终确定的分钟数、是否把已结算写进结论。L2 浏览器截图不能代替 L1 包含证明；RPC 查询要保存请求与返回，避免用另一次刷新拼行。</p><p>对账顺序固定为：软确认 → L1 包含 → L1 最终性 →（如涉及提款）挑战窗口。任何钱包「已确认」与 L1 包含对不上的缺口，列入未归因等待。未归因不是指控造假，只是禁止把缺口写进已核验的结算。需要付费归档节点才能稳定读历史 blob 时，把数据源等级写进记录。</p></section>
+            <section id="sec-6"><h2>6. 结论：已确认是三口时钟，不是一个形容词</h2><p>加密研究的错误句式是「L2 已经确认，两秒到账」。更可靠的句子是「软确认 t1；L1 包含区块 B；finalized 时刻 t3；从发到 t3 的分钟数」。在这三个量写出来之前，用钱包绿勾去讨论「已经不可逆」，是把排序器的收据写成以太坊的最终性。</p><p>本文是分析框架和教学算例，未对任何 Rollup 或钱包做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：稳定读取 L1 批次、blob 与信标最终性时，部分归档 RPC 只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文最终性核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">绿勾是排序器收据，不是结算证明</a></li><li><a href="#sec-2">教学案例：两秒绿勾，三十一分钟才最终确定</a></li><li><a href="#sec-3">三条路径怎么读，才不会把预确认当成最终性</a></li><li><a href="#sec-4">筛选线：写成已结算必须看到 finalized 的 L1 区块</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：已确认是三口时钟，不是一个形容词</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://docs.optimism.io/stack/transactions/transaction-finality" target="_blank" rel="noopener">Optimism：Transaction finality</a></li><li><a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/#finality" target="_blank" rel="noopener">Ethereum.org：PoS finality</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844：Shard Blob Transactions</a></li><li><a href="https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/" target="_blank" rel="noopener">Ethereum.org：Optimistic rollups</a></li></ul><p class="ref-note">资料核对日期：2026年9月21日。算例为教学假设，未对实际 L2 交易做链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/layer2-rollup-research-guide.html">Layer2测序器核验：谁在打包你的交易，谁能审查它</a></li><li><a href="/research/protocol/data-availability-layer-verification.html">数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</a></li><li><a href="/research/protocol/rollup-forced-exit-sequencer-censorship-guide.html">Rollup强制退出机制：排序器作恶或宕机时，资产真的能拿回来吗</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=7b35a575"></script>
+</body>
+</html>

@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html': '2026-09-21 14:24:51',
+    '/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html': '2026-09-21 14:24:51',
     '/en/research/market/lending-utilization-available-liquidity-apy-verification-guide.html': '2026-09-21 10:19:47',
     '/research/market/lending-utilization-available-liquidity-apy-verification-guide.html': '2026-09-21 10:19:47',
     '/en/research/protocol/lst-exit-queue-vs-secondary-liquidity-verification-guide.html': '2026-09-20 16:04:25',

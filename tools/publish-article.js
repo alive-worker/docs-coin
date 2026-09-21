@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'lending-utilization-available-liquidity-apy-verification-guide',
-  publishedISO: '2026-09-21T10:19:47+08:00',
-  tagColor: 'amber',
-  topic: 'market',
+  slug: 'l2-confirmed-vs-l1-finality-verification-guide',
+  publishedISO: '2026-09-21T14:24:51+08:00',
+  tagColor: 'teal',
+  topic: 'protocol',
 
   zh: {
-    h1: "借贷利用率核验：展示 APY 不等于可按该规模进场",
-    tagLabel: "可借余额",
-    cardDesc: "借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。",
+    h1: "L2 已确认核验：钱包绿勾不等于主网最终性",
+    tagLabel: "软确认",
+    cardDesc: "钱包两秒显示已确认，只是排序器软确认。对照L1批次入块与信标最终性，把已结算写成可复核的时钟。",
   },
   en: {
-    h1: "Lending Utilization Check: Displayed APY Is Not Capacity at Your Size",
-    tagLabel: "Available Liquidity",
-    cardDesc: "Displayed supply APY is the marginal rate at current utilization. Check cash, utilization and target size on one block.",
+    h1: "L2 Confirmed Check: A Wallet Tick Is Not L1 Finality",
+    tagLabel: "Soft Confirm",
+    cardDesc: "A wallet tick in two seconds is sequencer soft confirmation. Compare L1 batch inclusion and beacon finality.",
   },
 
   existingSlugsNewestFirst: [
+    'lending-utilization-available-liquidity-apy-verification-guide',
     'lst-exit-queue-vs-secondary-liquidity-verification-guide',
     'research-dashboard-clock-lag-verification-guide',
     'token-transfer-tax-buy-sell-path-verification-guide',
