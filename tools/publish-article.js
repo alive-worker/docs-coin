@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'lst-exit-queue-vs-secondary-liquidity-verification-guide',
-  publishedISO: '2026-09-20T16:04:25+08:00',
-  tagColor: 'teal',
-  topic: 'protocol',
+  slug: 'lending-utilization-available-liquidity-apy-verification-guide',
+  publishedISO: '2026-09-21T10:19:47+08:00',
+  tagColor: 'amber',
+  topic: 'market',
 
   zh: {
-    h1: "流动性质押退出核验：二级市场成交不等于队列赎回",
-    tagLabel: "退出队列",
-    cardDesc: "官网写随时退出，常把DEX成交当成共识层赎回。对照验证者退出队列、提款扫描与近端深度，把可即时变现规模写成可复核数字。",
+    h1: "借贷利用率核验：展示 APY 不等于可按该规模进场",
+    tagLabel: "可借余额",
+    cardDesc: "借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。",
   },
   en: {
-    h1: "LST Exit Queue Check: Secondary Volume Is Not Consensus Withdrawal",
-    tagLabel: "Exit Queue Check",
-    cardDesc: "Unstake anytime often treats a DEX print as a beacon withdrawal. Compare the exit queue, sweep delay and near-tick depth.",
+    h1: "Lending Utilization Check: Displayed APY Is Not Capacity at Your Size",
+    tagLabel: "Available Liquidity",
+    cardDesc: "Displayed supply APY is the marginal rate at current utilization. Check cash, utilization and target size on one block.",
   },
 
   existingSlugsNewestFirst: [
+    'lst-exit-queue-vs-secondary-liquidity-verification-guide',
     'research-dashboard-clock-lag-verification-guide',
     'token-transfer-tax-buy-sell-path-verification-guide',
     'erc4626-vault-yield-donation-redemption-verification',
@@ -580,13 +581,30 @@ function updateSitemap() {
   const p = path.join(root, 'sitemap.xml');
   let t = fs.readFileSync(p, 'utf-8');
   if (t.includes(`${CONFIG.slug}.html`)) { console.log('[6/9] sitemap already updated, skip'); return; }
-  const zhAnchor = `  <url>\n    <loc>https://coin.ponr.org/${zhPath(CONFIG.existingSlugsNewestFirst[0])}</loc>`;
-  const enAnchor = `  <url>\n    <loc>https://coin.ponr.org/${enPath(CONFIG.existingSlugsNewestFirst[0])}</loc>`;
-  const zhEntry = `  <url>\n    <loc>https://coin.ponr.org/${zhPath(CONFIG.slug)}</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-  const enEntry = `  <url>\n    <loc>https://coin.ponr.org/${enPath(CONFIG.slug)}</loc>\n    <lastmod>${CONFIG.publishedISO}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-  if (!t.includes(zhAnchor) || !t.includes(enAnchor)) { console.log('[6/9] SKIP (anchor not found in sitemap.xml)'); return; }
-  t = t.replace(zhAnchor, zhEntry + zhAnchor);
-  t = t.replace(enAnchor, enEntry + enAnchor);
+  const nl = t.includes('\r\n') ? '\r\n' : '\n';
+  const zhLoc = `https://coin.ponr.org/${zhPath(CONFIG.slug)}`;
+  const enLoc = `https://coin.ponr.org/${enPath(CONFIG.slug)}`;
+  const zhOld = `https://coin.ponr.org/${zhPath(CONFIG.existingSlugsNewestFirst[0])}`;
+  const enOld = `https://coin.ponr.org/${enPath(CONFIG.existingSlugsNewestFirst[0])}`;
+  const hreflang = `    <xhtml:link rel="alternate" hreflang="zh-CN" href="${zhLoc}" />${nl}    <xhtml:link rel="alternate" hreflang="en" href="${enLoc}" />${nl}    <xhtml:link rel="alternate" hreflang="x-default" href="${zhLoc}" />${nl}`;
+  const zhEntry = `  <url>${nl}    <loc>${zhLoc}</loc>${nl}    <lastmod>${CONFIG.publishedISO}</lastmod>${nl}    <changefreq>monthly</changefreq>${nl}    <priority>0.8</priority>${nl}${hreflang}  </url>${nl}`;
+  const enEntry = `  <url>${nl}    <loc>${enLoc}</loc>${nl}    <lastmod>${CONFIG.publishedISO}</lastmod>${nl}    <changefreq>monthly</changefreq>${nl}    <priority>0.8</priority>${nl}${hreflang}  </url>${nl}`;
+  function insertBeforeLoc(xml, loc, entry) {
+    const needle = `<loc>${loc}</loc>`;
+    const locIdx = xml.indexOf(needle);
+    if (locIdx < 0) return null;
+    const urlIdx = xml.lastIndexOf('<url>', locIdx);
+    if (urlIdx < 0) return null;
+    let start = urlIdx;
+    while (start > 0 && (xml[start - 1] === ' ' || xml[start - 1] === '\t')) start--;
+    if (xml[start - 1] === '\n') start--;
+    if (xml[start - 1] === '\r') start--;
+    return xml.slice(0, start) + nl + entry.trimEnd() + xml.slice(start);
+  }
+  const nextZh = insertBeforeLoc(t, zhOld, zhEntry);
+  const nextEn = nextZh && insertBeforeLoc(nextZh, enOld, enEntry);
+  if (!nextEn) { console.log('[6/9] SKIP (anchor not found in sitemap.xml)'); return; }
+  t = nextEn;
   // The homepage and both article-index pages change on every publish (new
   // featured card, new archive row) but their <lastmod> was never refreshed,
   // sending crawlers a stale "nothing changed here" signal indefinitely.
@@ -754,12 +772,12 @@ async function main() {
   insertRelatedItems();
   insertArchiveItem('zh');
   insertArchiveItem('en');
+  updateSitemap();
   // 公开计数、JSON-LD position、RSS、旧 URL 桩、virtual-card noindex
   // 一律以 slug_topic_map.json 为准，避免再出现 127 vs 128 分叉。
   execSync('node tools/verify-publish.js --fix', { cwd: root, stdio: 'inherit' });
   rebuildHomepageCarouselAndGrid('zh');
   rebuildHomepageCarouselAndGrid('en');
-  updateSitemap();
   updateSiteJsDates();
   propagateHashesIfChanged();
   execSync('node tools/generate-topic-hubs.js', { cwd: root, stdio: 'inherit' });

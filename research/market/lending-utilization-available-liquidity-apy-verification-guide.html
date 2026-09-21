@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>借贷利用率核验：展示 APY 不等于可按该规模进场 - 加密货币研究</title>
+  <meta name="description" content="借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="借贷利用率核验：展示 APY 不等于可按该规模进场">
+  <meta property="og:description" content="借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+  <meta property="article:published_time" content="2026-09-21T10:19:47+08:00">
+  <meta property="article:modified_time" content="2026-09-21T10:19:47+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="可借余额">
+  <meta property="article:tag" content="利用率">
+  <meta property="article:tag" content="供应APY">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lending-utilization-available-liquidity-apy-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="借贷利用率核验：展示APY百分之十四点二、利用率百分之九十八、可借余额二百四十万美元">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="借贷利用率核验：展示 APY 不等于可按该规模进场">
+  <meta name="twitter:description" content="借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lending-utilization-available-liquidity-apy-verification-guide.png">
+  <meta name="twitter:image:alt" content="借贷利用率核验：展示APY百分之十四点二、利用率百分之九十八、可借余额二百四十万美元">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-lending-utilization-available-liquidity-apy-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html",
+      "name": "借贷利用率核验：展示 APY 不等于可按该规模进场",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-lending-utilization-available-liquidity-apy-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "市场结构与流动性",
+          "item": "https://coin.ponr.org/research/market/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "借贷利用率核验：展示 APY 不等于可按该规模进场",
+          "item": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#article",
+      "headline": "借贷利用率核验：展示 APY 不等于可按该规模进场",
+      "description": "借贷池展示的供应APY是当前利用率下的边际利率。同一区块核验可借余额、利用率与目标规模，避免把高收益写成还能按这个规模进场。",
+      "image": [
+        "https://coin.ponr.org/img/article-lending-utilization-available-liquidity-apy-verification-guide.png"
+      ],
+      "datePublished": "2026-09-21T10:19:47+08:00",
+      "dateModified": "2026-09-21T10:19:47+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#webpage"
+      },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["借贷利用率核验","可借余额","供应APY","借贷池现金","加密货币研究"],
+      "wordCount": 2260,
+      "citation": [
+        "https://docs.aave.com/developers/smart-contracts/pool",
+        "https://docs.compound.finance/interest-rates/",
+        "https://eips.ethereum.org/EIPS/eip-20",
+        "https://docs.llama.fi/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/lending-utilization-available-liquidity-apy-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "利用率百分之九十八是否意味着协议即将出问题？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不一定。高利用率说明现金已被借薄、利率被曲线推高，但不等于储备资不抵债。它首先是容量信号：新的大额供应或借款会显著改变利用率。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么阈值是可借余额的一半，而不是全部？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "全部用尽意味着新资金已经改写了利用率，边际利率不再适用。一半是可证伪的保守规则，用来把冲击留给池内其余参与者；笔记可以写明更严或更松的系数，但不能省略规模。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "TVL 很高是否可以忽略可借余额？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不可以。TVL 通常含已借出部分。APY 是边际量，必须用现金（可借余额）来约束目标规模。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/lending-utilization-available-liquidity-apy-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">可借余额</span></p>
+          <h1>借贷利用率核验：展示 APY 不等于可按该规模进场</h1>
+          <p class="article-summary">借贷面板上的供应 APY 是当前利用率下的边际利率，不是池子还能按这个利率吸收任意规模。下文把可借余额、利用率与目标规模绑在同一区块上；全部算例均为教学假设，不指向任何真实协议，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-09-21T10:19:47+08:00">2026-09-21 10:19:47</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-lending-utilization-available-liquidity-apy-verification-guide.svg" alt="借贷利用率核验图：展示APY 14.2%、利用率 98%、可借余额 240 万美元" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一区块读取现金、总借款，并现场计算利用率，不以仪表盘缓存为准。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>写下目标规模 S；若 S 大于可借余额的一半，禁止把展示 APY 写成可执行收益。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>按 S 作为新存款试算新利用率，再代入公开利率模型；利率跌破原值的 70% 时改为报区间。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>激励代币折年收益必须拆出，可借余额规则只约束基础利息。</li></ul></div>
+            <section id="sec-1"><h2>1. APY 是边际利率，不是容量保证</h2><p>多数借贷协议把借款利率写成利用率 U 的分段函数：U = totalBorrows / (cash + totalBorrows)。<a href="https://docs.compound.finance/interest-rates/" target="_blank" rel="noopener">Compound 利率模型文档</a>把斜率、拐点与超额利用率写进合约参数；现金越少，U 越高，借款利率与供应利率一起抬升。面板上的高 APY，往往正是现金已经被借薄之后的结果，而不是市场正在提供充裕的、可按规模复制的收益。</p><p>把「展示 APY = 14.2%」写成研究结论，等于默认两件并未核验的事：第一，池子里仍有足够现金，让新的存款或借款按这个利率成交；第二，新资金进入后，U 不会立刻下滑、把利率打回更低的区间。这两件事都不是利率曲线本身能保证的。本笔记只处理基础利息：链上可读的现金、借款与利用率。激励代币折算的奖励 APY 另见本站收益拆解笔记，不得与基础利息混写成一条总 APY。</p></section>
+            <section id="sec-2"><h2>2. 同一区块读取现金、借款与利用率</h2><p>核验起点是协议公开的储备数据，而不是仪表盘截图。对 Aave 风格的池，同一区块调用 <a href="https://docs.aave.com/developers/smart-contracts/pool" target="_blank" rel="noopener">Pool 的 getReserveData</a> 或等价视图，读取总借款与可用流动性；对 Compound 风格的市场，读取 getCash 与 totalBorrows。现金侧还应与底层 <a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">ERC-20 的 balanceOf(pool)</a> 交叉核对，排除面板把未计入可借的余额算进 TVL。</p><p>利用率必须当场计算。不要使用仪表盘缓存的 Utilization 98%——缓存可能来自上一分钟，而利率曲线在拐点附近对 1 个百分点的 U 变化极度敏感。若链上算出的 U 与面板相差超过 2 个百分点，以链上为准，并在笔记里写明区块号。TVL 不能代替现金。<a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama 对 TVL 口径的说明</a>通常把已借出部分也算进去；研究者要判断的是还能被借走、或还能被新存款稀释的现金。只报 TVL 再报 APY，等于用存量规模给边际利率做背书，这是量纲错误。</p></section>
+            <section id="sec-3"><h2>3. 目标规模不得大于可借余额的一半</h2><p>研究者准备把某条 APY 写进报告时，必须同时写下打算使用的目标规模 S。本笔记采用一条可证伪规则：若 S 大于 0.5 倍 availableLiquidity，不得把展示 APY 写成该规模下可执行的收益。一半不是物理常数，而是把冲击留给仍在池内的借款人与后续存款人——超过一半，新资金已经在改写 U，边际利率不再适用。</p>
+            <table><caption>教学案例：高 APY 与可借余额同时出现时如何判定</caption><thead><tr><th scope="col">字段</th><th scope="col">链上或设定值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>池 TVL</td><td>1.2 亿美元（含已借出部分）</td><td>不可单独为 APY 背书</td></tr><tr><td>总借款 / 现金</td><td>1.176 亿 / 240 万</td><td>U = 98%</td></tr><tr><td>展示供应 APY</td><td>14.2%（基础利息）</td><td>边际利率，非容量</td></tr><tr><td>目标规模 S</td><td>1000 万美元</td><td>大于 0.5 × 240 万 = 120 万，失败</td></tr><tr><td>可执行写法</td><td>仅对远小于 120 万美元的增量引用 14.2%</td><td>1000 万应改为试算后的区间</td></tr></tbody></table>
+            <p>教学例子里的数字是课堂设定，不是对某一协议的报价。研究者若想写入「可部署 1000 万美元、吃到 14.2%」，规则判定失败。正确写法是：14.2% 只对远小于 120 万美元的增量有意义；1000 万美元会先把现金垫厚，U 下降，APY 随利率曲线回落。借款侧同理。若策略依赖还能借出 1000 万，而可借余额只有 240 万，则策略在当前区块不可执行。利用率接近拐点时，清算与利率跳升会同时发生，可借余额可能在数个区块内再被抽薄，核验记录必须带区块号与时间戳。</p></section>
+            <section id="sec-4"><h2>4. 新资金会压低利用率与后续利率</h2><p>供应侧新存款会增加现金、降低 U；借款侧新借款会减少现金、抬高 U。利率曲线在最优利用率（常见在 80%–90%）附近往往有斜率突变。把当前 14.2% 外推到「再存入 1000 万仍是 14.2%」，等于假设新存款发生后 U 不变——这在会计上不成立。</p><p>核验动作是做一次反向试算：假设目标规模 S 作为供应进入，新利用率 U' = borrows / (cash + S + borrows)，再把 U' 代入公开的利率模型，得到新的供应利率。若 APY' / APY 小于 0.7，说明展示利率对规模极度敏感，报告应改为区间，而不是单点。试算用协议文档中的斜率参数，不要用仪表盘上无法复现的平滑曲线。试算失败并不等于协议有问题，只说明当前截图里的数字不能代表研究者打算使用的规模。这与 DEX 的「TVL 高不等于报价深度」是同一类错误：存量指标被拿来为边际价格背书。</p></section>
+            <section id="sec-5"><h2>5. 激励 APY 必须拆开，并留下可复现记录</h2><p>面板常把基础供应利息与激励代币折年收益加总成一条总 APY。激励部分依赖于排放速率、代币价格与领取后是否立即出售，波动远大于利用率曲线。可借余额规则只约束基础利息；激励 APY 必须单独成行，并标明价格时点。若激励占展示总 APY 的一半以上，即使可借余额充足，也不得把总 APY 写成稳定借贷收益。</p><p>最低记录包括：链 ID、区块号与哈希、储备或 cToken 地址、getCash 或 availableLiquidity 原文、totalBorrows、现场计算的 U、面板展示 APY、激励分项与价格时点、目标规模 S、0.5 倍可借余额是否过线、试算后的 U' 与 APY'。调用要保存 calldata 或查询字符串，避免用另一次刷新拼行。交叉阅读本站已有的收益拆解笔记：先拆开基础与奖励，再把本笔记的可借余额规则套在基础利息上。顺序不能反。</p></section>
+            <section id="sec-6"><h2>6. 结论：APY 回答价格，可借余额回答容量</h2><p>加密研究的错误句式是「该池子收益 14%，TVL 很高，可以部署」。更可靠的句子是「U；现金 C；规模 S 相对 C/2 的覆盖率；试算后的 APY'」。APY 回答下一单位资金的价格，可借余额回答这个价格还剩多少容量。两个数字缺一，高收益就是未完成核验的截图。</p><p>本文是分析框架和教学算例，未对任何借贷协议做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：稳定读取储备视图、付费 RPC 或归档节点时，部分服务只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文利用率核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">APY 是边际利率，不是容量保证</a></li><li><a href="#sec-2">同一区块读取现金、借款与利用率</a></li><li><a href="#sec-3">目标规模不得大于可借余额的一半</a></li><li><a href="#sec-4">新资金会压低利用率与后续利率</a></li><li><a href="#sec-5">激励 APY 必须拆开，并留下可复现记录</a></li><li><a href="#sec-6">结论：APY 回答价格，可借余额回答容量</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://docs.aave.com/developers/smart-contracts/pool" target="_blank" rel="noopener">Aave：Pool 与储备数据</a></li><li><a href="https://docs.compound.finance/interest-rates/" target="_blank" rel="noopener">Compound：Interest Rate Model</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank" rel="noopener">EIP-20：balanceOf</a></li><li><a href="https://docs.llama.fi/" target="_blank" rel="noopener">DefiLlama docs：TVL 口径</a></li></ul><p class="ref-note">资料核对日期：2026年9月21日。算例为教学假设，未对实际借贷协议做链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/lending-liquidation-research-guide.html">借贷清算机制核验：一次预言机延迟，如何触发连锁清算</a></li><li><a href="/research/market/defi-apy-base-reward-composition-verification-guide.html">DeFi协议APY构成核验：展示的收益率，基础利息和代币奖励各占多少</a></li><li><a href="/research/market/isolated-cross-margin-contagion-risk-verification-guide.html">逐仓与全仓保证金核验：一个仓位爆仓，会不会传染到你账户里的其他仓位</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a5da1fd2"></script>
+</body>
+</html>
