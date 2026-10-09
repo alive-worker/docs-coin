@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'l2-l1-data-fee-vs-wallet-gas-verification-guide',
-  publishedISO: '2026-10-09T10:34:55+08:00',
-  tagColor: 'cyan',
-  topic: 'protocol',
+  slug: 'perp-mark-vs-last-price-liquidation-verification-guide',
+  publishedISO: '2026-10-09T14:04:00+08:00',
+  tagColor: 'steel',
+  topic: 'market',
 
   zh: {
-    h1: "L2 数据费核验：钱包 Gas 不等于回执里的真实成本",
-    tagLabel: "数据费",
-    cardDesc: "L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实成本。",
+    h1: "永续强平核验：K线最新价不等于标记价格",
+    tagLabel: "标记价格",
+    cardDesc: "永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。",
   },
   en: {
-    h1: "L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost",
-    tagLabel: "Data Fee",
-    cardDesc: "Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt before calling a transfer cheap.",
+    h1: "Perp Liquidation Check: Last Price Is Not the Mark",
+    tagLabel: "Mark Price",
+    cardDesc: "Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.",
   },
 
   existingSlugsNewestFirst: [
+    'l2-l1-data-fee-vs-wallet-gas-verification-guide',
     'l2-confirmed-vs-l1-finality-verification-guide',
     'lending-utilization-available-liquidity-apy-verification-guide',
     'lst-exit-queue-vs-secondary-liquidity-verification-guide',

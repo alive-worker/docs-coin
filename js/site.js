@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html': '2026-10-09 14:04:00',
+    '/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html': '2026-10-09 14:04:00',
     '/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html': '2026-10-09 10:34:55',
     '/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html': '2026-10-09 10:34:55',
     '/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html': '2026-09-21 14:24:51',

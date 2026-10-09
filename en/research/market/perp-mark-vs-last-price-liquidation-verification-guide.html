@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perp Liquidation Check: Last Price Is Not the Mark</title>
+  <meta name="description" content="Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Perp Liquidation Check: Last Price Is Not the Mark">
+  <meta property="og:description" content="Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-09T14:04:00+08:00">
+  <meta property="article:modified_time" content="2026-10-09T14:04:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="mark price">
+  <meta property="article:tag" content="last price">
+  <meta property="article:tag" content="perp liquidation">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Perp liquidation check: last 64000, mark 62800 already below liquidation 63200, gap 1.91 percent exceeds buffer 1.25 percent">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Perp Liquidation Check: Last Price Is Not the Mark">
+  <meta name="twitter:description" content="Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Perp liquidation check: last 64000, mark 62800 already below liquidation 63200, gap 1.91 percent exceeds buffer 1.25 percent">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html",
+      "name": "Perp Liquidation Check: Last Price Is Not the Mark",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Market Structure and Liquidity",
+          "item": "https://coin.ponr.org/en/research/market/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Perp Liquidation Check: Last Price Is Not the Mark",
+          "item": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#article",
+      "headline": "Perp Liquidation Check: Last Price Is Not the Mark",
+      "description": "Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.",
+      "image": [
+        "https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.png"
+      ],
+      "datePublished": "2026-10-09T14:04:00+08:00",
+      "dateModified": "2026-10-09T14:04:00+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/en/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#webpage"
+      },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["perp liquidation check","mark price","last price","liquidation price","crypto research"],
+      "wordCount": 1432,
+      "citation": [
+        "https://www.binance.com/en/support/faq/detail/360033525271",
+        "https://www.binance.com/en/support/faq/detail/360033525071",
+        "https://www.okx.com/en-us/help/liquidation-faq",
+        "https://www.okx.com/en-us/help/ii-mark-price-and-last-price"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If the last price is still above the liquidation price, is a long safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not necessarily. Most perpetual engines compare the mark price with the liquidation price, not the last trade. The mark can already be below the liquidation price while the last print is still above it. A chart of last price will describe a liquidatable long as if it still had a buffer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why not liquidate on the last price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The last price is the most recent fill on that venue’s book. One market order on a thin book can print it through a level. The mark is usually a spot index plus a smoothed basis, so a single print does not by itself liquidate the book. A research note has to quote the series the engine actually compares, not the series the chart draws by default."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Realized PnL uses last price and unrealized PnL uses the mark. Which one belongs in the note?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Copy by use. To judge liquidation, copy the mark and the liquidation condition at one timestamp. The last price only says where the latest fill printed, and it is often the series used for realized PnL. Joining the two into “the position is still safe” answers a risk-engine question with a trade print."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--steel">Mark Price</span></p>
+          <h1>Perp Liquidation Check: Last Price Is Not the Mark</h1>
+          <p class="article-summary">A perpetual liquidation engine compares the mark price. The default chart draws the last trade. Both can be true at once: last is still above the liquidation price, and the mark has already crossed it. The screen below is falsifiable. Every figure is a hypothetical teaching case, not a live venue or account, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-09T14:04:00+08:00">2026-10-09 14:04:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-perp-mark-vs-last-price-liquidation-verification-guide-en.svg" alt="Perp liquidation check: last price 64000, mark 62800 already below liquidation price 63200" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>At one timestamp, read the mark, the last price, and the liquidation comparator the venue’s docs name (liquidation price or maintenance-margin ratio).</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A long is liquidatable when mark is at or below the liquidation price; a short, when mark is at or above it. Do not substitute last price.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Buffer R = |last − liq| / last. Divergence V = |mark − last| / mark. If V &gt; R, do not call the position safe.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A chart screenshot must name its price type and timestamp. An unlabeled candle is not liquidation evidence.</li></ul></div>
+            <section id="sec-1"><h2>1. Last price is a fill; the mark is the risk price</h2><p>A perpetual panel carries at least two prices. Last price is the latest fill on that venue’s book. The mark is the reference used for unrealized PnL and for liquidation. <a href="https://www.binance.com/en/support/faq/detail/360033525271" target="_blank" rel="noopener">Binance’s liquidation note</a> says liquidation happens when the mark reaches the liquidation price, while realized PnL is calculated from the last price. The two series do not answer the same question. A note that pastes only the default chart has copied a trade print, not the series the engine is comparing.</p><p>This is not the site’s spot-futures basis note. That one asks whether funding pays the carry. This one takes the liquidation price as already computed and asks which tape you compare it with. It is also not the margin-tier note: a tier changes the liquidation price itself when notional crosses a threshold. Here the price is given, and the ban is on letting last price stand in for the mark. Auto-deleveraging is later still. It starts after the insurance fund cannot absorb the liquidation. Until the mark has crossed, that discussion has not started.</p></section>
+            <section id="sec-2"><h2>2. A worked example: last is 1.25% away, the mark has already crossed</h2><p>Take a long. The chart’s last price is 64000 and the liquidation price is 63200, so the picture shows 800 of room. Buffer R = 800 / 64000 = 1.25%. At the same timestamp the mark is 62800. Divergence V = |62800 − 64000| / 62800 = 1200 / 62800 ≈ 1.91%. V is greater than R. A long is liquidatable when the mark is at or below the liquidation price: 62800 is already below 63200, while last is still 800 above the line. A sentence that says “price has not touched the liquidation line” fails the screen. The table is entirely hypothetical.</p>
+            <table><caption>Worked example: at one timestamp, last price and the mark are not the same liquidation column</caption><thead><tr><th scope="col">Field</th><th scope="col">Teaching value</th><th scope="col">Reading</th></tr></thead><tbody><tr><td>Last price</td><td>64000</td><td>What the default chart draws</td></tr><tr><td>Mark price</td><td>62800</td><td>What the liquidation engine reads</td></tr><tr><td>Liquidation price</td><td>63200</td><td>The long’s comparator</td></tr><tr><td>Last-price buffer R</td><td>800 / 64000 = 1.25%</td><td>The panel still looks clear</td></tr><tr><td>Divergence V</td><td>1200 / 62800 ≈ 1.91%</td><td>Greater than R; not “safe”</td></tr><tr><td>Long liquidatable?</td><td>62800 ≤ 63200</td><td>Yes; last has not touched the line</td></tr></tbody></table>
+            <p>The 1.91% gap is not a rendering bug. Last price can be pulled away by one fill on a thin local book while the mark stays near the index. For a long, the dangerous sign is mark below last: the chart is still above the line and the engine is already under it. A short is the mirror. When the mark sits above last, the chart looks farther from liquidation than the engine is. Reverse the side and the buffer changes sign.</p></section>
+            <section id="sec-3"><h2>3. The mark is an index plus a smoothed basis, not this venue’s last trade</h2><p><a href="https://www.binance.com/en/support/faq/detail/360033525071" target="_blank" rel="noopener">Binance’s mark-price note</a> builds the contract mark as a median of several inputs, including a price index, time remaining in the funding interval, and a basis moving average on the order of 30 seconds. It is not defined as the last trade. <a href="https://www.okx.com/en-us/help/ii-mark-price-and-last-price" target="_blank" rel="noopener">OKX’s mark-price note</a> writes mark as the index plus a moving-average basis, where the basis is a smoothed gap between the contract mid and the index. The formulas differ. The check does not: open that venue’s spec, name the series liquidation reads, and sample that series at one timestamp.</p><p><a href="https://www.okx.com/en-us/help/liquidation-faq" target="_blank" rel="noopener">OKX’s liquidation FAQ</a> adds a second cut. The liquidation price shown on a position is an estimate. The trigger is the mark at the moment the maintenance-margin ratio hits the venue’s threshold. An estimated line that was not recomputed after a size change, a leverage change, or a margin-tier crossing is already stale. Confirm the line still matches the position, then compare the mark with it. A stale estimate stops the note at “liquidation price not refreshed.” It is not a verified safety distance.</p><p>When the index feed breaks, some venues temporarily substitute a bounded last price for the mark. If the spec describes that fallback, the note has to say “fallback is on.” Do not assume the engine is still reading the index. In that window the two series converge, so a smaller V does not mean the risk went away. It means the two columns were tied together for a while.</p></section>
+            <section id="sec-4"><h2>4. A screen: if the gap exceeds the buffer, the position is not “safe”</h2><p>The teaching screen is: last-price buffer R = |last − liq| / last, divergence V = |mark − last| / mark. If V &gt; R, do not call the position safe from a last-price chart. A long has a harder line: if the mark is at or below the liquidation price, it is liquidatable, wherever last sits. A short is symmetric: mark at or above the liquidation price means liquidatable. The inequality is not a physical constant. It says the gap between the two series is already wider than the room you thought you had, so quoting the candle is quoting the lesser series.</p><p>The screen does not say who takes the other side after a liquidation, and it does not say whether the next clip will move the liquidation price up a margin tier. A failed fill walks into the insurance fund and auto-deleveraging. A tier moves the liquidation price. This note only asks, at the moment the liquidation price is given, whether the price the engine sees has crossed it. Passing once does not make the next minute safe. The mark updates continuously. One pass does not generalize to “this move had no liquidation risk.” A generalization needs the path of the mark relative to the liquidation price over the window, and in a violent window the p95 of V, not the mean. The mean is pulled down by quiet seconds and writes the second that crossed as noise.</p><p>A stop can also be wired to the wrong trigger. If the stop fires on last price and liquidation reads the mark, the two conditions race. Last can miss the stop while the mark liquidates the position, or the reverse. Write down the stop’s trigger type. “The stop should have fired first,” with no trigger type, is not evidence that the liquidation was wrong.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>The minimum fields are: venue and contract, side, margin mode, timestamp, the mark as printed, the last price as printed, the liquidation price or maintenance-margin ratio as printed, R, V, whether V exceeded R, the cross test for that side, the chart’s price type, and the stop’s trigger type. Mark and last must share a timestamp. If they are more than a few seconds apart, book them as two states. Do not join the rows. The fill price on a liquidation report is not the trigger. The trigger is the mark at that moment. The fill is whatever the book paid afterward, and in a fast market the two can separate.</p><p>Reconcile in a fixed order: the comparator named in the docs, the mark at that timestamp, whether it crossed, then the last-price buffer. Compute V before deciding whether the chart may be cited. A screenshot that does not name its price type cannot support a “verified safety distance.” If replaying historical marks requires a paid archive, write the data-source grade into the record.</p></section>
+            <section id="sec-6"><h2>6. Safety is measured on the mark, not on the candle</h2><p>The weak sentence is “the candle has not touched the liquidation price, so the position is safe.” A useful one is “mark; last; liquidation condition; R; V; crossed or not.” Last price says where this venue just traded. The mark says which line the engine will liquidate on. Missing either column, safety is an unverified interface.</p><p>This is a research framework with hypothetical calculations, not a quality opinion on any venue or price feed, and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Replaying historical mark and last prices sometimes requires a market-data archive that accepts only international cards. You can inspect <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC virtual cards</a> for issuance and stablecoin top-up terms, and check fees, statements and limits yourself. The link is separate from this liquidation analysis and does not guarantee the service. Use any card only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Last price is a fill; the mark is the risk price</a></li><li><a href="#sec-2">A worked example: last is 1.25% away, the mark has already crossed</a></li><li><a href="#sec-3">The mark is an index plus a smoothed basis, not this venue’s last trade</a></li><li><a href="#sec-4">A screen: if the gap exceeds the buffer, the position is not “safe”</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Safety is measured on the mark, not on the candle</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://www.binance.com/en/support/faq/detail/360033525271" target="_blank" rel="noopener">Binance: Futures liquidation protocols</a></li><li><a href="https://www.binance.com/en/support/faq/detail/360033525071" target="_blank" rel="noopener">Binance: Mark price and price index</a></li><li><a href="https://www.okx.com/en-us/help/liquidation-faq" target="_blank" rel="noopener">OKX: Liquidation FAQ</a></li><li><a href="https://www.okx.com/en-us/help/ii-mark-price-and-last-price" target="_blank" rel="noopener">OKX: Mark price and last price</a></li></ul><p class="ref-note">Sources checked on 9 October 2026. The calculations are hypothetical; no live account or tape was measured.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/spot-futures-basis-trade-risk-guide.html">Spot-Futures Basis Trading: Where the Risk Actually Hides in a "Riskless" 20% APY</a></li><li><a href="/en/research/market/perpetual-margin-tier-threshold-verification-guide.html">Perpetual Margin Tier Verification: Cross One Threshold and Max Leverage, Maintenance Margin Rate Both Jump</a></li><li><a href="/en/research/market/auto-deleveraging-insurance-fund.html">Auto-Deleveraging: When the Insurance Fund Runs Dry, Whose Position Gets Closed</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=51a91e7f"></script>
+</body>
+</html>

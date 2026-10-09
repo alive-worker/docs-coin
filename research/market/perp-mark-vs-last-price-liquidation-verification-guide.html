@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>永续强平核验：最新价不等于标记价格 - 加密货币研究</title>
+  <meta name="description" content="永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="永续强平核验：最新价不等于标记价格">
+  <meta property="og:description" content="永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-09T14:04:00+08:00">
+  <meta property="article:modified_time" content="2026-10-09T14:04:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="标记价格">
+  <meta property="article:tag" content="最新价">
+  <meta property="article:tag" content="永续强平">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="永续强平核验：最新价 64000，标记价格 62800 已低于强平价 63200，偏离 1.91% 大于缓冲 1.25%">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="永续强平核验：最新价不等于标记价格">
+  <meta name="twitter:description" content="永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide.png">
+  <meta name="twitter:image:alt" content="永续强平核验：最新价 64000，标记价格 62800 已低于强平价 63200，偏离 1.91% 大于缓冲 1.25%">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-perp-mark-vs-last-price-liquidation-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html",
+      "name": "永续强平核验：最新价不等于标记价格",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "市场结构与流动性",
+          "item": "https://coin.ponr.org/research/market/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "永续强平核验：最新价不等于标记价格",
+          "item": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#article",
+      "headline": "永续强平核验：最新价不等于标记价格",
+      "description": "永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。",
+      "image": [
+        "https://coin.ponr.org/img/article-perp-mark-vs-last-price-liquidation-verification-guide.png"
+      ],
+      "datePublished": "2026-10-09T14:04:00+08:00",
+      "dateModified": "2026-10-09T14:04:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#webpage"
+      },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["永续强平核验","标记价格","最新价","强平价","加密货币研究"],
+      "wordCount": 2174,
+      "citation": [
+        "https://www.binance.com/en/support/faq/detail/360033525271",
+        "https://www.binance.com/en/support/faq/detail/360033525071",
+        "https://www.okx.com/en-us/help/liquidation-faq",
+        "https://www.okx.com/en-us/help/ii-mark-price-and-last-price"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "K线最新价还在强平价上方，多单是否安全？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不一定。多数永续合约的强平引擎比较的是标记价格，不是最新成交价。标记价格可以已经低于强平价，而最新价仍停在强平价上方。只看K线，会把已经可强平的多单写成还有缓冲。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么不用最新价触发强平？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "最新价是本所订单簿最近一笔成交，薄簿上一笔市价单就能把它打穿。标记价格通常用多交易所现货指数加上平滑后的基差，目的是减少单笔插针对强平的影响。研究笔记要核验的是引擎实际比较的那一列，不是图表默认画的那一列。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "已实现盈亏看最新价、未实现盈亏看标记价格，该抄哪一个？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "按用途抄，不要混成一个价格。判断会不会被强平，只抄同一时刻的标记价格和强平条件。最新价只说明最近一笔成交落在哪里，也常被用来结算已实现盈亏。把两列拼成「仓位还安全」，等于用成交价回答风控价的问题。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--steel">标记价格</span></p>
+          <h1>永续强平核验：K线最新价不等于标记价格</h1>
+          <p class="article-summary">永续合约的强平引擎比较的是标记价格，K线默认画的是最新成交价。两列可以同时为真：最新价还在强平价上方，标记价格已经穿过去。下文给出一条可证伪的偏离门槛；全部算例均为教学假设，不指向任何真实交易所或账户，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-09T14:04:00+08:00">2026-10-09 14:04:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-perp-mark-vs-last-price-liquidation-verification-guide.svg" alt="永续强平核验图：最新价 64000，标记价格 62800 已低于强平价 63200" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一时刻读取标记价格、最新价，以及该所文档规定的强平比较对象（强平价或维持保证金率）。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>多单在标记价格小于等于强平价时可强平；空单在标记价格大于等于强平价时可强平。不得用最新价代替。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>缓冲 R = |最新价 − 强平价| / 最新价；偏离 V = |标记价格 − 最新价| / 标记价格。若 V &gt; R，禁止把仓位写成安全。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>截图必须标明价格类型与时间戳。未标明是标记价格还是最新价的K线，不得当作强平证据。</li></ul></div>
+            <section id="sec-1"><h2>1. 最新价是一笔成交，标记价格是风控价</h2><p>永续界面上至少有两条价格。最新价是本所订单簿最近一笔成交；标记价格是风控用的参考价，用来算未实现盈亏，并决定强平。<a href="https://www.binance.com/en/support/faq/detail/360033525271" target="_blank" rel="noopener">Binance 的强平说明</a>写明：强平发生在标记价格触及强平价时，已实现盈亏则按最新价计算。两条价格回答的不是同一个问题。研究笔记若只贴一张默认K线，抄下来的是成交，不是引擎正在比较的那一列。</p><p>这和本站「现货与合约基差」不是同一件事。基差笔记问的是资金费能否覆盖持有成本；本篇假定强平价已经算好，只问拿哪条行情去比它。也和维持保证金分级不同：分级会在名义价值跨过门槛时改掉强平价本身。这里不重算保证金率，只禁止用最新价冒充标记价格。自动减仓则更靠后：保险基金接不住强平单之后，才轮到减别人的仓。标记价格还没穿过，减仓讨论尚未开始。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：最新价距强平 1.25%，标记价格已经穿过</h2><p>假设一笔多单。界面K线最新价 64000，强平价 63200，看起来还有 800 的距离，缓冲 R = 800 / 64000 = 1.25%。同一时刻标记价格是 62800。偏离 V = |62800 − 64000| / 62800 = 1200 / 62800 ≈ 1.91%。V 大于 R。多单的强平条件是标记价格小于等于强平价：62800 已经低于 63200，仓位按规则可强平，而最新价仍在强平价上方 800。研究者若写下「价格还没碰到强平线」，规则判定失败。下表全部为教学假设。</p>
+            <table><caption>教学案例：同一时刻，最新价与标记价格不是强平的同一列</caption><thead><tr><th scope="col">字段</th><th scope="col">教学值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>最新价</td><td>64000</td><td>K线默认画这条</td></tr><tr><td>标记价格</td><td>62800</td><td>强平引擎读这条</td></tr><tr><td>强平价</td><td>63200</td><td>多单的比较对象</td></tr><tr><td>最新价缓冲 R</td><td>800 / 64000 = 1.25%</td><td>界面看起来还有距离</td></tr><tr><td>偏离 V</td><td>1200 / 62800 ≈ 1.91%</td><td>大于 R，不得写成安全</td></tr><tr><td>多单是否可强平</td><td>62800 ≤ 63200</td><td>是；最新价尚未碰到线</td></tr></tbody></table>
+            <p>1.91% 不是图表渲染错误。最新价可以被本所薄簿上的一笔成交拉开，标记价格仍钉在指数附近。多单危险的方向是标记价格低于最新价：图还在强平价上方，引擎已经在下方。空单反过来：标记价格高于最新价时，图看起来离强平更远，引擎更近。方向抄反，安全缓冲会整列变号。</p></section>
+            <section id="sec-3"><h2>3. 标记价格是指数加平滑基差，不是本所最新价</h2><p><a href="https://www.binance.com/en/support/faq/detail/360033525071" target="_blank" rel="noopener">Binance 的标记价格说明</a>把合约标记价格写成若干报价的中位数，成分里包括价格指数、资金费剩余时间，以及约 30 秒的基差移动平均，而不是直接等于最新成交。<a href="https://www.okx.com/en-us/help/ii-mark-price-and-last-price" target="_blank" rel="noopener">OKX 的标记价格说明</a>写成指数价格加上基差的移动平均，基差取合约中间价相对指数的平滑值。两家公式不同，核验动作相同：打开该所文档，确认强平读的是哪一列，再按那一列取同一时刻的数。</p><p><a href="https://www.okx.com/en-us/help/liquidation-faq" target="_blank" rel="noopener">OKX 的强平说明</a>还补了一刀：持仓上显示的强平价是估计值，真正触发看的是维持保证金率落到门槛时的标记价格。估计强平价若在加仓、调杠杆或跨过保证金分级之后没有重算，它本身就是过期的线。先核对强平价是否仍对应当前仓位，再拿标记价格去比。未重算的估计线，结论停在「强平价未更新」，不得写成已经核验的安全距离。</p><p>指数断供时，有的场所会临时改用受限的最新价充当标记价格。文档若写了这种回退，笔记必须记下「当前处于回退」，不能永远假设引擎在读指数。回退窗口里，最新价和标记价格会靠拢，V 变小并不表示风险消失，只表示两列暂时被绑在一起。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：偏离大于缓冲，不得写成安全</h2><p>教学筛选是：设最新价缓冲 R = |最新价 − 强平价| / 最新价，偏离 V = |标记价格 − 最新价| / 标记价格。若 V &gt; R，禁止根据最新价K线把仓位写成安全。多单另加一条硬条件：标记价格小于等于强平价，即为可强平，不论最新价在哪。空单对称：标记价格大于等于强平价即为可强平。这条线不是物理常数，它只是说：两列的缝已经比你以为还剩的缓冲更宽，继续引用K线是在引用次要项。</p><p>该筛选不回答强平之后谁来接盘，也不回答保证金分级会不会在下一手把强平价抬高。接盘失败走到保险基金和自动减仓；分级改变的是强平价的位置。本篇只回答：在强平价已经给定的这一刻，引擎看到的价格有没有穿过它。通过筛选也不等于下一分钟仍然安全。标记价格按秒更新，单次通过不能外推成「这段行情没有强平风险」。外推时至少给出同一时段标记价格相对强平价的路径，拥挤或插针时段用偏离的 p95，不用均值。均值会被大量平静秒数拉低，把真正穿过的那一秒写成噪声。</p><p>止损单还可能选错触发价类型。止损若设成最新价触发，而强平读标记价格，两套条件独立赛跑。最新价没到止损、标记价格已经强平，或者相反，都成立。笔记要写下止损的触发价类型。没写类型的「本来该先止损」，不能当作强平不该发生的证据。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：场所与合约、多空方向、保证金模式、时间戳、该时刻标记价格原文、最新价原文、强平价或维持保证金率原文、R、V、V 是否大于 R、多单或空单的穿过判定、K线截图的价格类型、止损触发价类型。标记价格与最新价必须同一时刻，相差超过数秒就要分开记账，禁止拼行。成交回报上的强平成交价不是触发价：触发看的是当时的标记价格，成交价是之后订单簿吃到的价，波动里两者可以差一截。</p><p>对账顺序固定为：文档里的强平比较对象 → 同一时刻标记价格 → 是否穿过 → 再看最新价缓冲。最新价与标记价格的偏离先算 V，再决定能不能引用K线。未标明价格类型的截图禁止写进「已核验的安全距离」。需要付费行情归档才能回放历史标记价格时，把数据源等级写进记录。</p></section>
+            <section id="sec-6"><h2>6. 结论：安全距离比的是标记价格，不是K线</h2><p>加密研究的错误句式是「K线还没碰到强平价，仓位是安全的」。更可靠的句子是「标记价格；最新价；强平条件；R；V；穿过与否」。最新价回答本所刚才成交在哪，标记价格回答引擎现在用哪条线强平。两列缺一，安全就是未完成核验的界面。</p><p>本文是分析框架和教学算例，未对任何交易所或行情源做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：回放历史标记价格与最新价时，部分行情归档只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文强平核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">最新价是一笔成交，标记价格是风控价</a></li><li><a href="#sec-2">教学案例：最新价距强平 1.25%，标记价格已经穿过</a></li><li><a href="#sec-3">标记价格是指数加平滑基差，不是本所最新价</a></li><li><a href="#sec-4">筛选线：偏离大于缓冲，不得写成安全</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：安全距离比的是标记价格，不是K线</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://www.binance.com/en/support/faq/detail/360033525271" target="_blank" rel="noopener">Binance：Futures liquidation protocols</a></li><li><a href="https://www.binance.com/en/support/faq/detail/360033525071" target="_blank" rel="noopener">Binance：Mark price and price index</a></li><li><a href="https://www.okx.com/en-us/help/liquidation-faq" target="_blank" rel="noopener">OKX：Liquidation FAQ</a></li><li><a href="https://www.okx.com/en-us/help/ii-mark-price-and-last-price" target="_blank" rel="noopener">OKX：Mark price and last price</a></li></ul><p class="ref-note">资料核对日期：2026年10月9日。算例为教学假设，未对实际账户或行情做实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/spot-futures-basis-trade-risk-guide.html">现货与合约基差交易：年化20%的「无风险」套利，风险到底藏在哪</a></li><li><a href="/research/market/perpetual-margin-tier-threshold-verification-guide.html">永续合约维持保证金分级核验：仓位刚过一个门槛，杠杆上限和保证金率一起变了</a></li><li><a href="/research/market/auto-deleveraging-insurance-fund.html">自动减仓机制：保险基金见底后，谁的仓位会被强制平掉</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=51a91e7f"></script>
+</body>
+</html>
