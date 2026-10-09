@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 数据费核验：钱包 Gas 不等于回执真实成本 - 加密货币研究</title>
+  <meta name="description" content="L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实转账成本。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="L2 数据费核验：钱包 Gas 不等于回执真实成本">
+  <meta property="og:description" content="L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实转账成本。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-09T10:34:55+08:00">
+  <meta property="article:modified_time" content="2026-10-09T10:34:55+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="数据费">
+  <meta property="article:tag" content="l1Fee">
+  <meta property="article:tag" content="L2 Gas">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2数据费核验：钱包执行费三万分之一ETH、回执l1Fee四十二万分之一ETH、合计十五倍">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 数据费核验：钱包 Gas 不等于回执真实成本">
+  <meta name="twitter:description" content="L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实转账成本。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.png">
+  <meta name="twitter:image:alt" content="L2数据费核验：钱包执行费三万分之一ETH、回执l1Fee四十二万分之一ETH、合计十五倍">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html",
+      "name": "L2 数据费核验：钱包 Gas 不等于回执真实成本",
+      "inLanguage": "zh-CN",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://coin.ponr.org/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "协议与基础设施风险",
+          "item": "https://coin.ponr.org/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "L2 数据费核验：钱包 Gas 不等于回执真实成本",
+          "item": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#article",
+      "headline": "L2 数据费核验：钱包 Gas 不等于回执真实成本",
+      "description": "L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实转账成本。",
+      "image": [
+        "https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.png"
+      ],
+      "datePublished": "2026-10-09T10:34:55+08:00",
+      "dateModified": "2026-10-09T10:34:55+08:00",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#webpage"
+      },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["L2数据费核验","l1Fee","钱包Gas","blob基础费","加密货币研究"],
+      "wordCount": 2320,
+      "citation": [
+        "https://docs.optimism.io/stack/transactions/fees",
+        "https://eips.ethereum.org/EIPS/eip-4844",
+        "https://docs.arbitrum.io/how-arbitrum-works/gas-fees",
+        "https://eips.ethereum.org/EIPS/eip-1559"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "钱包上的 Gas 很低，是否等于这笔 L2 转账很便宜？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不一定。多数钱包只展示执行费，也就是 gasUsed 乘以有效 Gas 价格。OP 栈回执里的 l1Fee 是把批次或 blob 发到主网的数据成本，摊到用户头上。两笔相加才是这笔交易从余额里扣掉的总额。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "排序器替用户付了 L1，用户为什么还要付 l1Fee？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "排序器先垫付主网发布成本，再在 L2 回执里向用户收取对应的数据费。垫付不等于免费。研究笔记若只写排序器付了 L1，就把转嫁后的用户成本漏掉了。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "blob 基础费上涨时，L2 执行 Gas 为什么可以仍然很低？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EIP-4844 给 blob 单独做了一条基础费市场，和 L2 执行 Gas 不是同一个价格。执行层可以很闲，blob 市场可以很挤。只看执行 Gas，会把拥挤的数据市场写成便宜的转账。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--cyan">数据费</span></p>
+          <h1>L2 数据费核验：钱包 Gas 不等于回执里的真实成本</h1>
+          <p class="article-summary">L2 钱包上的 Gas 通常只是执行费。把批次或 blob 发到以太坊的成本，在 OP 栈回执里另有一列 l1Fee。下文把两列加总，并给出一条可证伪的占比门槛；全部算例均为教学假设，不指向任何真实链，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-09T10:34:55+08:00">2026-10-09 10:34:55</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide.svg" alt="L2数据费核验图：钱包执行费 0.00003 ETH，回执 l1Fee 0.00042 ETH，合计约 15 倍" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一笔回执读取 gasUsed、effectiveGasPrice 与 l1Fee（或该栈文档里的等价数据费字段）。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>执行费 = gasUsed × effectiveGasPrice；总成本 = 执行费 + 数据费。不得只用钱包上的 Gas。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>若数据费 / 总成本 &gt; 0.5，禁止把钱包 Gas 写成这笔转账的成本。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>报价必须来自该笔回执，不得用十分钟前的估算器；拥挤时段改报 p95，不报均值。</li></ul></div>
+            <section id="sec-1"><h2>1. 钱包 Gas 是执行费，数据费在另一列</h2><p>Rollup 把用户交易先在 L2 执行，再把压缩后的批次或 blob 发到以太坊。<a href="https://docs.optimism.io/stack/transactions/fees" target="_blank" rel="noopener">Optimism 的费用说明</a>把用户支付拆成执行 Gas 与 L1 数据成本：前者按 L2 的 gasUsed 与有效价格计，后者按这笔交易分摊到的主网发布成本计，在回执里常以 <code>l1Fee</code> 出现。钱包若只渲染第一列，研究者抄下来的「这笔只要 0.00003 ETH」就少了第二列。</p><p>这和本站「已确认不等于最终性」不是同一件事。那篇问的是绿勾落在哪一口时钟；本篇问的是同一笔已经上链的回执，扣款到底由哪几列组成。也和交易所提现加价不同：加价比较的是交易所价目表与链上 Gas；这里比较的是 L2 钱包自己的界面与同一条 L2 回执。排序器先垫付主网发布，再向用户收取 <code>l1Fee</code>，垫付不是赠送。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：界面 0.00003 ETH，回执合计约 15 倍</h2><p>假设一笔普通 L2 转账。钱包估算写 Gas 约 0.00003 ETH。同一笔回执：gasUsed = 21000，effectiveGasPrice = 1.4 gwei，执行费 = 0.0000294 ETH；<code>l1Fee</code> = 0.00042 ETH。总成本 = 0.0004494 ETH。数据费占总成本约 93%。研究者若把钱包数字写进「L2 转账成本可忽略」，规则判定失败。下表全部为教学假设。</p>
+            <table><caption>教学案例：同一笔回执，钱包 Gas 与 l1Fee 不是同一列</caption><thead><tr><th scope="col">字段</th><th scope="col">教学值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>钱包展示 Gas</td><td>0.00003 ETH</td><td>只覆盖执行费</td></tr><tr><td>执行费</td><td>21000 × 1.4 gwei = 0.0000294 ETH</td><td>与钱包接近</td></tr><tr><td>回执 l1Fee</td><td>0.00042 ETH</td><td>数据费，界面未展示</td></tr><tr><td>总成本</td><td>0.0004494 ETH</td><td>约为钱包数字的 15 倍</td></tr><tr><td>数据费占比</td><td>0.00042 / 0.0004494 ≈ 93%</td><td>大于 50%，不得把钱包 Gas 写成成本</td></tr></tbody></table>
+            <p>15 倍不是界面渲染错误。执行层可以很闲，数据市场可以很挤。把「L2 很便宜」写成执行 Gas 的同义词，是把一条价格曲线当成两条。正确写法是：执行费 0.0000294 ETH；数据费 0.00042 ETH；合计 0.0004494 ETH。钱包上的 0.00003 ETH 只允许标注为执行费。</p></section>
+            <section id="sec-3"><h2>3. blob 基础费与 L2 执行 Gas 不是同一个市场</h2><p><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844</a> 给 blob 单独做了基础费：目标每个区块若干 blob，超出则基础费按 <a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559</a> 式指数上调。这条曲线不读取 L2 的 gasPrice。因此「L2 Gas 1 gwei」与「blob 基础费已经跳了几个数量级」可以同时为真。只刷新 L2 gas 追踪器，会把拥挤写没。</p><p>字段名不能跨栈硬套。OP 栈回执用 <code>l1Fee</code>（部分升级后还有 operator fee，必须加进同一笔总成本，不能当成可忽略的舍入）。<a href="https://docs.arbitrum.io/how-arbitrum-works/gas-fees" target="_blank" rel="noopener">Arbitrum 的 Gas 说明</a>把 L1 数据定价折进自己的估算，字段名不同，核验动作相同：用成交回执，而不是估算器，把数据分量与执行分量拆开。看不到数据分量的回执，结论停在「未拆费」，不得写成已核验的便宜。</p><p>估算器还有时间问题。blob 基础费按区块更新，十分钟前的「预计 0.00003 ETH」不能贴到现在这笔回执上。研究笔记若把估算器与回执拼成一行，等于用两个市场状态给一笔交易定价。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：数据费过半，钱包 Gas 不得写成成本</h2><p>教学筛选是：设执行费 E、数据费 D（含该栈文档要求计入用户的 operator fee），总成本 T = E + D。若 D / T &gt; 0.5，禁止把钱包展示的 Gas 写成这笔转账的成本；只能写成「执行费 E，数据费 D，合计 T」。0.5 不是物理常数，而是一条可证伪的线：过半说明便宜叙事的主语已经换了，继续引用钱包数字是在引用次要项。</p><p>该筛选不回答交易是否最终确定，也不回答数据能否被取回。最终性是另一口时钟；数据可用性问的是批次能否被重建。本篇只回答扣了多少、扣在哪一列。通过筛选也不等于下一笔同样便宜：blob 市场是按区块重定价的，单笔通过不能外推成「这条 L2 的转账成本」。外推时至少给出同一时段 N 笔回执的 D/T 分布，拥挤时段用 p95，不用均值。均值会被大量闲时交易拉低，把尾部拥挤写成常态便宜。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：L2 链 ID、交易哈希、钱包客户端与它展示的 Gas 原文、gasUsed、effectiveGasPrice、算出的 E、<code>l1Fee</code> 或等价字段原文、operator fee（若有）、T、D/T、是否超过 0.5、报价时刻与回执区块时刻的间隔。RPC 要保存请求与返回，避免用另一次 <code>eth_getTransactionReceipt</code> 拼行。钱包截图不能代替回执字段。</p><p>对账顺序固定为：回执执行费 → 回执数据费 → 占比 → 再对照钱包文案。钱包数字与 E 偏差超过 20% 时，先记下估算器时滞，再谈数据费。未归因的差额禁止写进「已核验的转账成本」。需要付费归档节点才能读历史回执时，把数据源等级写进记录。</p></section>
+            <section id="sec-6"><h2>6. 结论：成本是两列之和，不是钱包上的一列</h2><p>加密研究的错误句式是「L2 转账只要几分钱，Gas 很低」。更可靠的句子是「E；D；T；D/T；钱包文案对应的是 E 还是 T」。钱包 Gas 回答执行层有多闲，<code>l1Fee</code> 回答数据市场有多挤。两列缺一，便宜就是未完成核验的界面。</p><p>本文是分析框架和教学算例，未对任何 Rollup 或钱包做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：稳定读取历史回执与 blob 基础费时，部分归档 RPC 只接受国际卡。可自行查看 <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC 虚拟卡</a> 的开卡与稳定币充值说明，并核对其费率、账单与限额。该入口与本文数据费核验结论无关，也不代表对平台服务作保证。任何开卡与支付须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">钱包 Gas 是执行费，数据费在另一列</a></li><li><a href="#sec-2">教学案例：界面 0.00003 ETH，回执合计约 15 倍</a></li><li><a href="#sec-3">blob 基础费与 L2 执行 Gas 不是同一个市场</a></li><li><a href="#sec-4">筛选线：数据费过半，钱包 Gas 不得写成成本</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：成本是两列之和，不是钱包上的一列</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://docs.optimism.io/stack/transactions/fees" target="_blank" rel="noopener">Optimism：Transaction fees</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844：Shard Blob Transactions</a></li><li><a href="https://docs.arbitrum.io/how-arbitrum-works/gas-fees" target="_blank" rel="noopener">Arbitrum：Gas and fees</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559：Fee market change</a></li></ul><p class="ref-note">资料核对日期：2026年10月9日。算例为教学假设，未对实际 L2 交易做链上实测。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">L2 已确认核验：钱包绿勾不等于主网最终性</a></li><li><a href="/research/protocol/data-availability-layer-verification.html">数据可用性层核验：Rollup 说数据「已发布」，谁验证了它真的可被取回</a></li><li><a href="/research/protocol/layer2-rollup-research-guide.html">Layer2测序器核验：谁在打包你的交易，谁能审查它</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=0ee7e92f"></script>
+</body>
+</html>

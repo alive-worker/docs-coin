@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost</title>
+  <meta name="description" content="Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt. If the data leg is over half the total, do not write the wallet figure as the transfer cost.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost">
+  <meta property="og:description" content="Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt. If the data leg is over half the total, do not write the wallet figure as the transfer cost.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-09T10:34:55+08:00">
+  <meta property="article:modified_time" content="2026-10-09T10:34:55+08:00">
+  <meta property="article:section" content="Protocol and Infrastructure Risk">
+  <meta property="article:tag" content="data fee">
+  <meta property="article:tag" content="l1Fee">
+  <meta property="article:tag" content="L2 gas">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2 data-fee check: wallet execution 0.00003 ETH, receipt l1Fee 0.00042 ETH, total about 15 times">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost">
+  <meta name="twitter:description" content="Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt. If the data leg is over half the total, do not write the wallet figure as the transfer cost.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="L2 data-fee check: wallet execution 0.00003 ETH, receipt l1Fee 0.00042 ETH, total about 15 times">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://rdvcc.com">
+  <link rel="preload" as="image" href="/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html",
+      "name": "L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#breadcrumb"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://coin.ponr.org/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Protocol and Infrastructure Risk",
+          "item": "https://coin.ponr.org/en/research/protocol/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost",
+          "item": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#article",
+      "headline": "L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost",
+      "description": "Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt. If the data leg is over half the total, do not write the wallet figure as the transfer cost.",
+      "image": [
+        "https://coin.ponr.org/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.png"
+      ],
+      "datePublished": "2026-10-09T10:34:55+08:00",
+      "dateModified": "2026-10-09T10:34:55+08:00",
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "ipfsWeb",
+        "url": "https://coin.ponr.org/about.html#author"
+      },
+      "publisher": {
+        "@id": "https://coin.ponr.org/#org"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#webpage"
+      },
+      "articleSection": "Protocol and Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "keywords": ["L2 data fee verification","l1Fee","wallet gas","blob base fee","crypto research methodology"],
+      "wordCount": 1080,
+      "citation": [
+        "https://docs.optimism.io/stack/transactions/fees",
+        "https://eips.ethereum.org/EIPS/eip-4844",
+        "https://docs.arbitrum.io/how-arbitrum-works/gas-fees",
+        "https://eips.ethereum.org/EIPS/eip-1559"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If the wallet gas is tiny, is the L2 transfer cheap?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not necessarily. Most wallets show execution only: gasUsed times the effective gas price. On an OP-stack receipt, l1Fee is the cost of posting the batch or blob to Ethereum, charged back to the user. The debit is the sum of the two."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "If the sequencer pays L1, why does the user pay l1Fee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The sequencer fronts the publication cost, then charges it back on the L2 receipt. Fronting is not a gift. A note that says the sequencer paid L1 and stops there drops the user debit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why can L2 execution gas stay low while the blob base fee spikes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EIP-4844 gives blobs their own base-fee market. It does not read the L2 gas price. Execution can be idle while blobs are congested. Quoting execution gas alone writes a busy data market as a cheap transfer."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research Notes</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--cyan">Data Fee</span></p>
+          <h1>L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost</h1>
+          <p class="article-summary">Gas on an L2 wallet is usually the execution leg. The cost of posting the batch or blob to Ethereum sits in another column, often l1Fee on an OP-stack receipt. Add the columns, then apply a falsifiable share screen. The figures below are hypothetical teaching examples, not observations from a live chain, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-09T10:34:55+08:00">2026-10-09 10:34:55</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-l1-data-fee-vs-wallet-gas-verification-guide-en.svg" alt="L2 data-fee check: wallet execution 0.00003 ETH, receipt l1Fee 0.00042 ETH, total about 15 times the wallet figure" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>From one receipt, read gasUsed, effectiveGasPrice, and l1Fee or the stack’s equivalent data-fee field.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Execution E = gasUsed times effectiveGasPrice. Total T = E plus the data fee. Do not stop at the wallet gas line.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>If the data fee over T is above 0.5, do not write the wallet gas figure as the transfer cost.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Quote the receipt, not an estimator from ten minutes earlier. In congestion, report p95 of the data share, not the mean.</li></ul></div>
+            <section id="sec-1"><h2>1. Wallet gas is execution; the data fee is another column</h2><p>A rollup executes the user transaction on L2, then posts a compressed batch or blob to Ethereum. <a href="https://docs.optimism.io/stack/transactions/fees" target="_blank" rel="noopener">Optimism’s fee note</a> splits what the user pays into execution gas and an L1 data cost. Execution is gasUsed times the effective price. The data leg is that transaction’s share of publication, often the <code>l1Fee</code> field on the receipt. A wallet that renders only the first column lets a research note copy “this cost 0.00003 ETH” and drop the second.</p><p>This is not the site’s note on Confirmed versus finality. That note asks which clock a green tick sits on. This note asks, for a receipt that already exists, which columns make up the debit. It is also not an exchange withdrawal markup: that compares a venue’s tariff with on-chain gas. Here the comparison is the L2 wallet against its own L2 receipt. The sequencer fronts L1 publication and charges <code>l1Fee</code> back. Fronting is not a gift.</p></section>
+            <section id="sec-2"><h2>2. A worked example: the wallet shows 0.00003 ETH, the receipt is about 15 times that</h2><p>Suppose an ordinary L2 transfer. The wallet estimates gas at about 0.00003 ETH. The same receipt: gasUsed = 21000, effectiveGasPrice = 1.4 gwei, so execution = 0.0000294 ETH, and <code>l1Fee</code> = 0.00042 ETH. Total = 0.0004494 ETH. The data leg is about 93 percent of the total. A write-up that files the wallet figure under “L2 transfer cost is negligible” fails the screen. The table is hypothetical.</p>
+            <table><caption>Hypothetical example: wallet gas and l1Fee are different columns of one receipt</caption><thead><tr><th scope="col">Field</th><th scope="col">Teaching value</th><th scope="col">Call</th></tr></thead><tbody><tr><td>Wallet gas</td><td>0.00003 ETH</td><td>Execution only</td></tr><tr><td>Execution fee</td><td>21000 times 1.4 gwei = 0.0000294 ETH</td><td>Close to the wallet</td></tr><tr><td>Receipt l1Fee</td><td>0.00042 ETH</td><td>Data fee, not on the wallet line</td></tr><tr><td>Total</td><td>0.0004494 ETH</td><td>About 15 times the wallet figure</td></tr><tr><td>Data share</td><td>0.00042 / 0.0004494, about 93%</td><td>Above 50%; wallet gas is not the cost</td></tr></tbody></table>
+            <p>The 15 times gap is not a rendering bug. Execution can be idle while the data market is tight. Writing “L2 is cheap” as a synonym for execution gas treats one price curve as two. The correct sentence is: execution 0.0000294 ETH; data fee 0.00042 ETH; total 0.0004494 ETH. The wallet’s 0.00003 ETH may be labelled execution only.</p></section>
+            <section id="sec-3"><h2>3. The blob base fee and L2 execution gas are different markets</h2><p><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844</a> gives blobs their own base fee: a target blob count per block, then an exponential update in the style of <a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559</a>. That curve does not read the L2 gas price. “L2 gas is 1 gwei” and “the blob base fee jumped by orders of magnitude” can both be true. Refreshing only an L2 gas tracker writes the congestion out of the note.</p><p>Field names do not travel across stacks. OP-stack receipts use <code>l1Fee</code>. Some upgrades add an operator fee; it belongs in the same total, not in rounding. <a href="https://docs.arbitrum.io/how-arbitrum-works/gas-fees" target="_blank" rel="noopener">Arbitrum’s gas note</a> prices L1 data inside its own estimator, under different names. The check is the same: use the posted receipt, and split the data component from execution. A receipt with no visible data component stops at “unsplit”. It is not a verified cheap transfer.</p><p>Estimators also have a clock. The blob base fee updates by block. An estimate of 0.00003 ETH from ten minutes ago cannot be pasted onto this receipt. Splicing estimator and receipt into one row prices one transaction with two market states.</p></section>
+            <section id="sec-4"><h2>4. A screen: if the data leg is over half, wallet gas is not the cost</h2><p>The teaching screen sets execution E and data fee D, including any operator fee the stack’s docs say the user pays. Total T = E + D. If D / T is above 0.5, do not write the wallet gas figure as the transfer cost. Write “execution E, data fee D, total T”. One half is not a physical constant. It is a falsifiable line: past it, the subject of the cheap story has changed, and the wallet number is the minor term.</p><p>The screen does not say whether the transaction is finalized, or whether the data can be retrieved. Finality is another clock. Data availability asks whether the batch can be reconstructed. This note only answers how much was debited, and in which column. Passing also does not make the next transfer equally cheap. The blob market reprices by block. A single pass cannot be stretched into “transfers on this L2 cost this much”. For a stretch, report the distribution of D/T over N receipts in the same window. In congestion use the 95th percentile, not the mean. The mean is pulled down by idle transfers and writes the tail as the typical price.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>A minimum record includes L2 chain ID, tx hash, wallet client and the gas string it showed, gasUsed, effectiveGasPrice, computed E, raw <code>l1Fee</code> or the equivalent, operator fee if present, T, D/T, whether 0.5 was crossed, and the gap between the quote time and the receipt’s block time. Store the RPC request and return so two <code>eth_getTransactionReceipt</code> calls are not spliced into one row. A wallet screenshot is not a receipt field.</p><p>Reconcile in a fixed order: receipt execution, receipt data fee, share, then the wallet copy. If the wallet figure and E differ by more than 20 percent, record estimator lag before discussing the data fee. An unexplained gap may not be written into a verified transfer cost. If a paid archive node is required to read historical receipts, record that source grade.</p></section>
+            <section id="sec-6"><h2>6. Cost is the sum of two columns, not the wallet’s one column</h2><p>The weak sentence is “an L2 transfer costs pennies; gas is low”. A useful one is “E; D; T; D/T; the wallet copy matches E or T”. Wallet gas answers how idle execution is. <code>l1Fee</code> answers how tight the data market is. Missing either column, cheap is an unverified interface.</p><p>This is a research framework with hypothetical calculations, not a quality opinion on any rollup or wallet, and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Paid archive RPC used to read historical receipts and blob base fees sometimes accept only international cards. You can inspect <a href="https://rdvcc.com/" target="_blank" rel="sponsored nofollow noopener">RDVCC virtual cards</a> for issuance and stablecoin top-up terms, and check fees, statements and limits yourself. The link is separate from this data-fee analysis and does not guarantee the service. Use any card only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Wallet gas is execution; the data fee is another column</a></li><li><a href="#sec-2">A worked example: the wallet shows 0.00003 ETH, the receipt is about 15 times that</a></li><li><a href="#sec-3">The blob base fee and L2 execution gas are different markets</a></li><li><a href="#sec-4">A screen: if the data leg is over half, wallet gas is not the cost</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Cost is the sum of two columns, not the wallet’s one column</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://docs.optimism.io/stack/transactions/fees" target="_blank" rel="noopener">Optimism: Transaction fees</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener">EIP-4844: Shard Blob Transactions</a></li><li><a href="https://docs.arbitrum.io/how-arbitrum-works/gas-fees" target="_blank" rel="noopener">Arbitrum: Gas and fees</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559: Fee market change</a></li></ul><p class="ref-note">Sources checked on 9 October 2026. The calculations are hypothetical; no live L2 transaction was measured on-chain.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">L2 Confirmed Check: A Wallet Tick Is Not L1 Finality</a></li><li><a href="/en/research/protocol/data-availability-layer-verification.html">Data Availability Layer Verification: Sampling Passed Doesn't Mean Data Is Retrievable</a></li><li><a href="/en/research/protocol/layer2-rollup-research-guide.html">Verifying the Layer2 Sequencer: Who Packages Your Transaction, and Who Can Censor It</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=0ee7e92f"></script>
+</body>
+</html>

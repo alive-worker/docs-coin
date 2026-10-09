@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'l2-confirmed-vs-l1-finality-verification-guide',
-  publishedISO: '2026-09-21T14:24:51+08:00',
-  tagColor: 'teal',
+  slug: 'l2-l1-data-fee-vs-wallet-gas-verification-guide',
+  publishedISO: '2026-10-09T10:34:55+08:00',
+  tagColor: 'cyan',
   topic: 'protocol',
 
   zh: {
-    h1: "L2 已确认核验：钱包绿勾不等于主网最终性",
-    tagLabel: "软确认",
-    cardDesc: "钱包两秒显示已确认，只是排序器软确认。对照L1批次入块与信标最终性，把已结算写成可复核的时钟。",
+    h1: "L2 数据费核验：钱包 Gas 不等于回执里的真实成本",
+    tagLabel: "数据费",
+    cardDesc: "L2钱包展示的Gas只算执行费。同一笔回执把l1Fee与执行费加总，l1Fee占比过半时不得把界面数字写成真实成本。",
   },
   en: {
-    h1: "L2 Confirmed Check: A Wallet Tick Is Not L1 Finality",
-    tagLabel: "Soft Confirm",
-    cardDesc: "A wallet tick in two seconds is sequencer soft confirmation. Compare L1 batch inclusion and beacon finality.",
+    h1: "L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost",
+    tagLabel: "Data Fee",
+    cardDesc: "Wallet gas on an L2 is usually execution only. Add l1Fee from the same receipt before calling a transfer cheap.",
   },
 
   existingSlugsNewestFirst: [
+    'l2-confirmed-vs-l1-finality-verification-guide',
     'lending-utilization-available-liquidity-apy-verification-guide',
     'lst-exit-queue-vs-secondary-liquidity-verification-guide',
     'research-dashboard-clock-lag-verification-guide',
