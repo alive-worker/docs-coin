@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 喂价核验：宽限期内 updatedAt 不等于可用 - 加密货币研究</title>
+  <meta name="description" content="排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="L2排序器宽限期,Sequencer Uptime Feed,updatedAt,预言机核验,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="L2 喂价核验：宽限期内 updatedAt 不等于可用">
+  <meta property="og:description" content="排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-13T13:42:00+08:00">
+  <meta property="article:modified_time" content="2026-10-13T13:42:00+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="宽限期">
+  <meta property="article:tag" content="排序器">
+  <meta property="article:tag" content="updatedAt">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2喂价核验：价格更新于12秒前，排序器恢复仅900秒，宽限期3600秒尚未结束">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 喂价核验：宽限期内 updatedAt 不等于可用">
+  <meta name="twitter:description" content="排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide.png">
+  <meta name="twitter:image:alt" content="L2喂价核验：价格更新于12秒前，排序器恢复仅900秒，宽限期3600秒尚未结束">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-l2-sequencer-grace-period-price-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html",
+      "name": "L2 喂价核验：宽限期内 updatedAt 不等于可用",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "协议与基础设施风险", "item": "https://coin.ponr.org/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "L2 喂价核验：宽限期内 updatedAt 不等于可用", "item": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#article",
+      "headline": "L2 喂价核验：宽限期内 updatedAt 不等于可用",
+      "description": "排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。",
+      "image": ["https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide.png"],
+      "datePublished": "2026-10-13T13:42:00+08:00",
+      "dateModified": "2026-10-13T13:42:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#webpage" },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["L2排序器宽限期","Sequencer Uptime Feed","updatedAt","预言机核验","加密货币研究"],
+      "wordCount": 1955,
+      "citation": [
+        "https://docs.chain.link/data-feeds/l2-sequencer-feeds",
+        "https://docs.optimism.io/op-stack/protocol/outages",
+        "https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "价格喂价的 updatedAt 只有十几秒，是否就可以用？",
+          "acceptedAnswer": { "@type": "Answer", "text": "在有排序器的 L2 上，不一定。Chainlink 的示例要求先读排序器状态：answer 为 0 才表示排序器在运行。排序器刚恢复时，还要等消费者合约里的宽限期过去，才接受价格。宽限期内 updatedAt 可以已经刷新，价格仍然不该被写成可用。" }
+        },
+        {
+          "@type": "Question",
+          "name": "answer 等于 0 是宕机吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。在 Sequencer Uptime Feed 里，0 表示排序器在运行，1 表示宕机。这和很多人直觉里的布尔值相反。把 0 抄成宕机，会把正常时段写成不可用，或把宕机写成可用。" }
+        },
+        {
+          "@type": "Question",
+          "name": "宽限期是喂价合约自动执行的吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。宽限期写在读取价格的消费者合约里，Chainlink 示例常用 3600 秒，但具体常量以该合约为准。状态喂价自己仍会返回最新轮次。只读价格聚合器、不读排序器状态，等于没做这项检查。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--violet">宽限期</span></p>
+          <h1>L2 喂价核验：排序器刚恢复，updatedAt 新鲜也不等于可用</h1>
+          <p class="article-summary">L2 上的价格聚合器可以在排序器恢复后很快写出新的 updatedAt。按 Chainlink 的读取示例，消费者还要等宽限期结束，才把这个价格当成可用。下文把两口时钟拆开，并给出可证伪的门槛；算例均为教学假设，不指向任何真实协议或账户，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-13T13:42:00+08:00">2026-10-13 13:42:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-sequencer-grace-period-price-verification-guide.svg" alt="L2喂价核验图：价格更新于 12 秒前，排序器恢复 900 秒，宽限期 3600 秒" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一笔 eth_call 读取排序器状态喂价的 answer、startedAt，以及价格喂价的 answer、updatedAt。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>answer 为 0 表示排序器在运行，为 1 表示宕机。不得把 0 抄成宕机。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>以消费者合约里的宽限期 G 为准。若 answer 不为 0，或恢复后的秒数 ≤ G，禁止把价格写成可用，即使 updatedAt 很新。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>宽限期通过之后，再单独做心跳检查。两口时钟不能互相代替。</li></ul></div>
+            <section id="sec-1"><h2>1. updatedAt 是价格时钟，排序器状态是另一口</h2><p>研究笔记最常见的一句是「updatedAt 距现在 12 秒，喂价是新鲜的」。在以太坊主网上，这通常接着做心跳比较就够了。在有中心化排序器的 L2 上，价格聚合器能更新，并不表示读取它的合约按规范应该接受它。<a href="https://docs.chain.link/data-feeds/l2-sequencer-feeds" target="_blank" rel="noopener">Chainlink 的 L2 排序器状态喂价说明</a>把检查拆成两步：先看排序器是不是在运行，恢复之后再等一段宽限期，然后才去读价格。</p><p>这和本站「预言机延迟」不是同一件事。那篇问的是价格轮次本身有多旧，操纵者能利用几个区块的窗口。本篇假定 updatedAt 已经很新，问的是排序器刚恢复时，这口新鲜时钟是否还被宽限期挡住。也和断路器不同：断路器看的是价格偏离幅度会不会暂停喂价。这里价格可以完全没偏离，仍然不该被使用。也和「钱包已确认不等于主网最终性」不同：那篇比较的是交易落在哪一口确认时钟，本篇比较的是喂价消费者该不该采纳这一轮价格。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：价格 12 秒前更新，宽限期还剩 45 分钟</h2><p>假设消费者合约把宽限期 G 写成 3600 秒，与 Chainlink 示例相同。同一时刻：排序器状态 answer = 0，startedAt 距现在 900 秒，也就是恢复了 15 分钟。价格喂价 updatedAt 距现在 12 秒，心跳 3600 秒，年龄只占心跳的 12/3600。只看价格轮次，会写成「新鲜」。恢复秒数 900 ≤ 3600，按示例应拒绝。研究者若把这笔价格写进清算或净值，规则判定失败。下表全部为教学假设。</p>
+            <table><caption>教学案例：价格时钟已刷新，宽限期尚未结束</caption><thead><tr><th scope="col">字段</th><th scope="col">教学值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>排序器 answer</td><td>0</td><td>在运行，不是宕机</td></tr><tr><td>恢复后秒数</td><td>900</td><td>startedAt 距现在</td></tr><tr><td>宽限期 G</td><td>3600 秒</td><td>来自消费者合约，不是面板</td></tr><tr><td>900 与 G</td><td>900 ≤ 3600</td><td>宽限期未结束，价格不可用</td></tr><tr><td>价格 updatedAt</td><td>12 秒前</td><td>看起来很新</td></tr><tr><td>相对心跳</td><td>12 / 3600</td><td>心跳通过，不能覆盖宽限期</td></tr></tbody></table>
+            <p>12 秒不是喂价坏了。排序器恢复后，聚合器可以马上写出新轮次，管道里仍可能留着宕机期间的状态。宽限期把「轮次新」和「允许使用」拆开。宕机方向更直接：answer = 1 时，哪怕 updatedAt 是 30 秒前，也不得写成可用。0 与 1 的含义和日常布尔相反，抄反一次，结论整列变号。</p></section>
+            <section id="sec-3"><h2>3. 宽限期在消费者合约里，不在价格面板上</h2><p>状态喂价返回的是最新轮次，它不会替借贷或永续合约执行宽限期。示例里的判断是：answer 不为 0 就拒绝；answer 为 0 时，用 <code>block.timestamp - startedAt</code>，结果小于等于 G 也拒绝。G 写在调用方。有的协议用 3600，有的改成 1800 或 7200。笔记必须读该合约的常量，不能把文档示例当成所有部署的事实。</p><p><a href="https://docs.optimism.io/op-stack/protocol/outages" target="_blank" rel="noopener">OP Stack 的停机说明</a>和 <a href="https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer" target="_blank" rel="noopener">Arbitrum 的排序器说明</a>都承认排序器是交易进入 L2 的入口。排序器停下时，用户交易进不去，但链上已有的存储仍可被读到。所以「RPC 还能返回一个价格」和「这个价格按规范可用」可以同时成立。Arbitrum 上 startedAt 为 0 还有一层含义：状态合约尚未初始化。Chainlink 写明这种 0 只出现在未初始化阶段，其他 L2 在构造时就会把 startedAt 设为区块时间。看到 0，先判定未初始化，不要把它当成「刚刚恢复、秒数为 0、因此宽限期刚好开始」以外的另一种故事，更不能把它当成已经运行了很久。</p><p>消费者若根本没有读取排序器状态，发现本身就是结论：价格轮次可以新鲜，规范要求的第二口时钟缺失。这时不得写成「已按 Chainlink 示例核验通过」，只能写成「该合约未实现排序器检查」。实现了但 G 与文档示例不同，要记下实际 G，用实际 G 做小于等于比较。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：宽限期未结束，新鲜 updatedAt 不得写成可用</h2><p>教学筛选按这个顺序，不能跳步。第一，answer 不为 0：不可用。第二，answer 为 0 且恢复秒数 ≤ 消费者合约的 G：不可用。第三，前两步都过了，才比较价格年龄与心跳；年龄大于心跳才是另一类过期。前两步失败时，心跳再漂亮也不改判定。这条线对齐的是示例里的小于等于，不是一个拍出来的 0.5。协议把 G 写成别的数，比较对象跟着改，不等式方向不改。</p><p>该筛选不回答交易有没有在主网上最终确定，也不回答价格偏离会不会触发断路器。最终性是交易的时钟，断路器是偏离的开关，心跳是价格轮次的年龄。本篇只回答：在这一刻，规范是否允许采用这个价格。通过一次也不等于下一小时都可用。排序器可以再次停下，answer 从 0 变成 1，之前的「已过宽限期」立即作废。外推时至少给出这段时间里 answer 与恢复秒数的路径，不能用一次新鲜的 updatedAt 代表整段。</p><p>面板还常把「排序器在线」和「宽限期已过」画成同一个绿点。在线只满足第一行。恢复后的前 3600 秒里，绿点可以是真的，价格仍然不该被清算合约使用。笔记要分开写两行。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：L2 链 ID、排序器状态喂价地址、价格喂价地址、消费者合约地址及其 G 的来源（源码常量或读取到的存储）、同一笔调用的 answer、startedAt、价格 answer、updatedAt、区块时间、恢复秒数、是否 ≤ G、心跳秒数、价格年龄、三步判定各自的结果。两次 RPC 相差数秒就要分开记账。用浏览器里的「最后更新」文案代替 roundData，等于没核验。</p><p>对账顺序固定为：消费者是否读了状态喂价 → answer 含义 → 恢复秒数与 G → 最后才是 updatedAt 与心跳。未读状态喂价的协议，结论停在「检查缺失」。Arbitrum 上 startedAt 为 0 时停在「未初始化」，不计算宽限期比值。需要把 gas 资产换到该 L2 才能自行调用时，把兑换路径记在费用附注里，不要写进价格是否可用的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：可用要过两口时钟，不是 updatedAt 一口</h2><p>加密研究的错误句式是「updatedAt 很新，所以这笔 L2 喂价可以用」。更可靠的句子是「answer；恢复秒数；G；是否 ≤ G；然后才是价格年龄与心跳」。answer 为 0 只说明排序器在运行。运行之后的宽限期，才决定这一轮新鲜价格能不能被采用。两口时钟缺一口，可用就是未完成核验的面板。</p><p>本文是分析框架和教学算例，未对任何 L2、预言机或消费者合约做质量背书，不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己在该 L2 上发起读取，可能需要先把少量 gas 资产换到目标链。可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文宽限期判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">updatedAt 是价格时钟，排序器状态是另一口</a></li><li><a href="#sec-2">教学案例：价格 12 秒前更新，宽限期还剩 45 分钟</a></li><li><a href="#sec-3">宽限期在消费者合约里，不在价格面板上</a></li><li><a href="#sec-4">筛选线：宽限期未结束，新鲜 updatedAt 不得写成可用</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：可用要过两口时钟，不是 updatedAt 一口</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://docs.chain.link/data-feeds/l2-sequencer-feeds" target="_blank" rel="noopener">Chainlink：L2 Sequencer Uptime Feeds</a></li><li><a href="https://docs.optimism.io/op-stack/protocol/outages" target="_blank" rel="noopener">OP Stack：Sequencer outages</a></li><li><a href="https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer" target="_blank" rel="noopener">Arbitrum：The Sequencer</a></li></ul><p class="ref-note">资料核对日期：2026年10月13日。算例为教学假设，未对实际 L2 喂价做链上实测。宽限期以消费者合约常量为准，3600 秒只是示例。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li><li><a href="/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">预言机断路器核验：价格剧烈偏离时，喂价真的会暂停吗</a></li><li><a href="/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">L2 已确认核验：钱包绿勾不等于主网最终性</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=dd39da97"></script>
+</body>
+</html>

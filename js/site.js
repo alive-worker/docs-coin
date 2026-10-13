@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html': '2026-10-13 13:42:00',
+    '/research/protocol/l2-sequencer-grace-period-price-verification-guide.html': '2026-10-13 13:42:00',
     '/en/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html': '2026-10-09 14:04:00',
     '/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html': '2026-10-09 14:04:00',
     '/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html': '2026-10-09 10:34:55',

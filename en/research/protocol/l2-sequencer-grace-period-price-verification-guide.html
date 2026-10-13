@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period</title>
+  <meta name="description" content="After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="L2 sequencer grace period,Sequencer Uptime Feed,updatedAt,oracle verification,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period">
+  <meta property="og:description" content="After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-13T13:42:00+08:00">
+  <meta property="article:modified_time" content="2026-10-13T13:42:00+08:00">
+  <meta property="article:section" content="Protocol and Infrastructure Risk">
+  <meta property="article:tag" content="grace period">
+  <meta property="article:tag" content="sequencer">
+  <meta property="article:tag" content="updatedAt">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="L2 price check: price updated 12 seconds ago, sequencer back for 900 seconds, grace period 3600 seconds still open">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period">
+  <meta name="twitter:description" content="After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="L2 price check: price updated 12 seconds ago, sequencer back for 900 seconds, grace period 3600 seconds still open">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-l2-sequencer-grace-period-price-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html",
+      "name": "L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Protocol and Infrastructure Risk", "item": "https://coin.ponr.org/en/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period", "item": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#article",
+      "headline": "L2 Price Check: Fresh updatedAt Is Not Usable in the Grace Period",
+      "description": "After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.",
+      "image": ["https://coin.ponr.org/img/article-l2-sequencer-grace-period-price-verification-guide-en.png"],
+      "datePublished": "2026-10-13T13:42:00+08:00",
+      "dateModified": "2026-10-13T13:42:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#webpage" },
+      "articleSection": "Protocol and Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "keywords": ["L2 sequencer grace period","Sequencer Uptime Feed","updatedAt","oracle verification","crypto research"],
+      "wordCount": 1416,
+      "citation": [
+        "https://docs.chain.link/data-feeds/l2-sequencer-feeds",
+        "https://docs.optimism.io/op-stack/protocol/outages",
+        "https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If updatedAt is only a few seconds old, is the price usable?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not on an L2 with a sequencer, not by itself. Chainlink's example reads the sequencer status first: answer 0 means the sequencer is up. After it recovers, the consumer still waits out its grace period before accepting the price. updatedAt can refresh during that window. The price is still not usable." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does answer 0 mean the sequencer is down?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. On the Sequencer Uptime Feed, 0 means the sequencer is up and 1 means it is down. That is the reverse of a casual boolean. Copying 0 as downtime flips the whole conclusion." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the price feed enforce the grace period by itself?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The grace period lives in the contract that reads the price. Chainlink's sample uses 3600 seconds, but the constant that matters is the one in that consumer. The status feed still returns its latest round. Reading only the price aggregator skips the check." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/l2-sequencer-grace-period-price-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--violet">Grace Period</span></p>
+          <h1>L2 Price Check: A Fresh updatedAt Is Not Usable in the Grace Period</h1>
+          <p class="article-summary">An L2 price aggregator can write a new updatedAt soon after the sequencer recovers. Chainlink's read example still waits out a grace period before that price counts as usable. The note splits the two clocks and states a falsifiable screen. Every figure is a hypothetical teaching case, not a live protocol or account, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-13T13:42:00+08:00">2026-10-13 13:42:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-l2-sequencer-grace-period-price-verification-guide-en.svg" alt="L2 price check: updated 12 seconds ago, sequencer back for 900 seconds, grace period 3600 seconds" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>In one eth_call, read the sequencer feed's answer and startedAt, and the price feed's answer and updatedAt.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>answer 0 means the sequencer is up. answer 1 means it is down. Do not copy 0 as downtime.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Use the grace period G from the consumer contract. If answer is not 0, or seconds since recovery are at or below G, do not call the price usable, however fresh updatedAt is.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Only after the grace period passes, run the heartbeat check. The two clocks do not stand in for each other.</li></ul></div>
+            <section id="sec-1"><h2>1. updatedAt is the price clock; sequencer status is another</h2><p>The usual sentence in a note is “updatedAt is 12 seconds old, so the feed is fresh.” On Ethereum mainnet, the next step is a heartbeat comparison. On an L2 with a sequencer, an aggregator that can update is not the same thing as a consumer that is allowed to accept the price. <a href="https://docs.chain.link/data-feeds/l2-sequencer-feeds" target="_blank" rel="noopener">Chainlink's L2 sequencer uptime feeds</a> split the read in two: check that the sequencer is up, wait out a grace period after it recovers, and only then read the price.</p><p>This is not the site's oracle-delay note. That one asks how old the price round itself is, and what window a manipulator gets from a few blocks of lag. This one assumes updatedAt is already fresh and asks whether the grace period still blocks it. It is not the circuit-breaker note either: that one asks whether a sharp deviation pauses the feed. Here the price need not have moved at all, and it can still be unusable. It is also not the note on a wallet tick versus L1 finality. That one places a transaction on a confirmation clock. This one asks whether a consumer may adopt this price round.</p></section>
+            <section id="sec-2"><h2>2. A worked example: the price is 12 seconds old, and 45 minutes of grace remain</h2><p>Suppose the consumer sets the grace period G to 3600 seconds, the same constant as Chainlink's sample. At one timestamp the sequencer answer is 0 and startedAt is 900 seconds ago, so the sequencer has been back for 15 minutes. The price feed's updatedAt is 12 seconds ago and the heartbeat is 3600 seconds, so the age is 12/3600 of the heartbeat. On the price round alone, the note would say “fresh.” Seconds since recovery, 900, are at or below 3600, so the sample rejects the price. A researcher who books that price into a liquidation or a net-asset value fails the screen. The table is entirely hypothetical.</p>
+            <table><caption>Worked example: the price clock has refreshed, and the grace period has not ended</caption><thead><tr><th scope="col">Field</th><th scope="col">Teaching value</th><th scope="col">Reading</th></tr></thead><tbody><tr><td>Sequencer answer</td><td>0</td><td>Up, not down</td></tr><tr><td>Seconds since recovery</td><td>900</td><td>Now minus startedAt</td></tr><tr><td>Grace period G</td><td>3600 seconds</td><td>From the consumer, not the panel</td></tr><tr><td>900 against G</td><td>900 ≤ 3600</td><td>Grace still open; price not usable</td></tr><tr><td>Price updatedAt</td><td>12 seconds ago</td><td>Looks fresh</td></tr><tr><td>Against the heartbeat</td><td>12 / 3600</td><td>Heartbeat passes; it does not override grace</td></tr></tbody></table>
+            <p>Twelve seconds does not mean the feed is broken. After the sequencer returns, the aggregator can write a new round while the pipeline still holds state from the outage. The grace period separates “the round is new” from “the round may be used.” The downtime direction is stricter: if answer is 1, an updatedAt of 30 seconds still does not make the price usable. Zero and one mean the reverse of a casual boolean. Invert them once and the column flips sign.</p></section>
+            <section id="sec-3"><h2>3. The grace period lives in the consumer, not on the price panel</h2><p>The status feed returns its latest round. It does not enforce the grace period for a lending market or a perpetual. The sample test is: reject when answer is not 0; when answer is 0, compute <code>block.timestamp - startedAt</code> and reject when that is at or below G. G is the caller's constant. One protocol uses 3600, another 1800 or 7200. The note has to read that contract. The documentation sample is not a fact about every deployment.</p><p><a href="https://docs.optimism.io/op-stack/protocol/outages" target="_blank" rel="noopener">The OP Stack outages page</a> and <a href="https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer" target="_blank" rel="noopener">Arbitrum's sequencer page</a> both treat the sequencer as the entry for transactions onto the L2. When it stops, user transactions do not get in, but storage already on the chain can still be read. “The RPC still returns a price” and “the spec says that price is usable” can both be true at once. On Arbitrum, startedAt of 0 has a further meaning: the uptime contract is not initialized yet. Chainlink says that zero appears only in that uninitialized phase. Other L2s set startedAt to the block timestamp at construction. A zero is uninitialized. Do not treat it as “just recovered, so the grace period has barely started,” and do not treat it as a sequencer that has been up for a long time.</p><p>If the consumer never reads the sequencer feed, that absence is the finding. The price round can be fresh while the second clock the sample requires is missing. Do not write “checked per the Chainlink sample.” Write “this contract does not implement the sequencer check.” If it implements a different G, record that G and compare with at-or-below against that number.</p></section>
+            <section id="sec-4"><h2>4. A screen: while grace is open, a fresh updatedAt is not “usable”</h2><p>The teaching screen is ordered, and steps cannot be skipped. First, if answer is not 0, the price is not usable. Second, if answer is 0 and seconds since recovery are at or below the consumer's G, the price is not usable. Third, only after both pass, compare price age with the heartbeat; age above the heartbeat is a separate kind of staleness. When the first two fail, a pretty heartbeat does not change the result. The inequality matches the sample's at-or-below test. It is not a made-up ratio. If a protocol stores a different G, the threshold changes with it. The direction of the test does not.</p><p>The screen does not say whether a transaction is finalized on L1, and it does not say whether a deviation will trip a circuit breaker. Finality is the transaction's clock. A breaker is a deviation switch. The heartbeat is the age of the price round. This note only asks whether the spec allows this price to be adopted now. Passing once does not make the next hour usable. The sequencer can stop again, answer can move from 0 to 1, and an earlier “grace has passed” expires immediately. A generalization needs the path of answer and seconds-since-recovery over the window, not one fresh updatedAt standing in for the stretch.</p><p>Panels often paint “sequencer up” and “grace period over” as one green dot. Up only satisfies the first line. In the first 3600 seconds after recovery the dot can be honest and the price can still be unfit for a liquidation contract. Write the two lines separately.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>The minimum fields are: L2 chain id, sequencer feed address, price feed address, consumer address and the source of G (a source constant or a storage read), answer, startedAt, price answer, updatedAt from the same call, block timestamp, seconds since recovery, whether they are at or below G, heartbeat seconds, price age, and the result of each of the three steps. If two RPCs are seconds apart, book them as two states. A browser label that says “last updated” is not roundData.</p><p>Reconcile in a fixed order: whether the consumer reads the status feed, what answer means, seconds since recovery against G, and only then updatedAt against the heartbeat. A protocol that never reads the status feed stops at “check missing.” On Arbitrum, startedAt of 0 stops at “uninitialized”; do not compute a grace ratio. If calling the feed yourself means swapping a gas asset onto that L2, put the swap in a fee footnote. It does not belong in the usable-or-not result.</p></section>
+            <section id="sec-6"><h2>6. Usable means both clocks, not updatedAt alone</h2><p>The weak sentence is “updatedAt is fresh, so this L2 price is usable.” A useful one is “answer; seconds since recovery; G; at or below G or not; then price age against the heartbeat.” answer 0 only says the sequencer is up. The grace period after that decides whether this fresh round may be adopted. Missing either clock, usable is an unverified panel.</p><p>This is a research framework with hypothetical calculations, not a quality opinion on any L2, oracle, or consumer, and not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Reading the feeds yourself on that L2 may mean swapping a small amount of gas asset onto the chain first. You can inspect quotes, fees, and limits on <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a>. The link is separate from this grace-period result and does not guarantee the service. Use any swap only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">updatedAt is the price clock; sequencer status is another</a></li><li><a href="#sec-2">A worked example: the price is 12 seconds old, and 45 minutes of grace remain</a></li><li><a href="#sec-3">The grace period lives in the consumer, not on the price panel</a></li><li><a href="#sec-4">A screen: while grace is open, a fresh updatedAt is not “usable”</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Usable means both clocks, not updatedAt alone</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://docs.chain.link/data-feeds/l2-sequencer-feeds" target="_blank" rel="noopener">Chainlink: L2 Sequencer Uptime Feeds</a></li><li><a href="https://docs.optimism.io/op-stack/protocol/outages" target="_blank" rel="noopener">OP Stack: Sequencer outages</a></li><li><a href="https://docs.arbitrum.io/how-arbitrum-works/deep-dives/sequencer" target="_blank" rel="noopener">Arbitrum: The Sequencer</a></li></ul><p class="ref-note">Sources checked on 13 October 2026. The calculations are hypothetical; no live L2 feed was measured. The grace period is the consumer's constant. 3600 seconds is the sample value.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/oracle-price-feed-research-guide.html">Verifying Oracle Prices: A Few Blocks of Feed Delay Is a Manipulator's Window</a></li><li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li><li><a href="/en/research/protocol/l2-confirmed-vs-l1-finality-verification-guide.html">L2 Confirmed Check: A Wallet Tick Is Not L1 Finality</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=dd39da97"></script>
+</body>
+</html>

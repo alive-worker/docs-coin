@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'perp-mark-vs-last-price-liquidation-verification-guide',
-  publishedISO: '2026-10-09T14:04:00+08:00',
-  tagColor: 'steel',
-  topic: 'market',
+  slug: 'l2-sequencer-grace-period-price-verification-guide',
+  publishedISO: '2026-10-13T13:42:00+08:00',
+  tagColor: 'violet',
+  topic: 'protocol',
 
   zh: {
-    h1: "永续强平核验：K线最新价不等于标记价格",
-    tagLabel: "标记价格",
-    cardDesc: "永续强平读标记价格，不读K线最新价。标记价与最新价的偏离大于最新价到强平价的距离时，不得把仓位写成安全。",
+    h1: "L2 喂价核验：排序器刚恢复，updatedAt 新鲜也不等于可用",
+    tagLabel: "宽限期",
+    cardDesc: "排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。",
   },
   en: {
-    h1: "Perp Liquidation Check: Last Price Is Not the Mark",
-    tagLabel: "Mark Price",
-    cardDesc: "Perp liquidation reads the mark, not the last trade on the chart. If the mark-last gap exceeds the distance from last to the liquidation price, do not call the position safe.",
+    h1: "L2 Price Check: A Fresh updatedAt Is Not Usable in the Grace Period",
+    tagLabel: "Grace Period",
+    cardDesc: "After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.",
   },
 
   existingSlugsNewestFirst: [
+    'perp-mark-vs-last-price-liquidation-verification-guide',
     'l2-l1-data-fee-vs-wallet-gas-verification-guide',
     'l2-confirmed-vs-l1-finality-verification-guide',
     'lending-utilization-available-liquidity-apy-verification-guide',
