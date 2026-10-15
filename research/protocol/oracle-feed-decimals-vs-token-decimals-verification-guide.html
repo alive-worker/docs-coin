@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>喂价小数位核验：代币精度不等于价格刻度 - 加密货币研究</title>
+  <meta name="description" content="价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="喂价小数位,Chainlink decimals,代币精度,answer刻度,预言机核验,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="喂价小数位核验：代币精度不等于价格刻度">
+  <meta property="og:description" content="价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-15T15:07:00+08:00">
+  <meta property="article:modified_time" content="2026-10-15T15:07:00+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="小数位">
+  <meta property="article:tag" content="喂价">
+  <meta property="article:tag" content="decimals">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="喂价小数位核验：同一 answer 按 10 的 8 次方得 30309.14，按代币 10 的 18 次方得另一个数量级">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="喂价小数位核验：代币精度不等于价格刻度">
+  <meta name="twitter:description" content="价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.png">
+  <meta name="twitter:image:alt" content="喂价小数位核验：同一 answer 按 10 的 8 次方得 30309.14，按代币 10 的 18 次方得另一个数量级">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html",
+      "name": "喂价小数位核验：代币精度不等于价格刻度",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "协议与基础设施风险", "item": "https://coin.ponr.org/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "喂价小数位核验：代币精度不等于价格刻度", "item": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#article",
+      "headline": "喂价小数位核验：代币精度不等于价格刻度",
+      "description": "价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。",
+      "image": ["https://coin.ponr.org/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.png"],
+      "datePublished": "2026-10-15T15:07:00+08:00",
+      "dateModified": "2026-10-15T15:07:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#webpage" },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["喂价小数位","Chainlink decimals","代币精度","answer刻度","预言机核验","加密货币研究"],
+      "wordCount": 2046,
+      "citation": [
+        "https://docs.chain.link/data-feeds/getting-started",
+        "https://docs.chain.link/data-feeds/api-reference",
+        "https://eips.ethereum.org/EIPS/eip-20#decimals"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "BTC/USD 示例里的 8 位小数，能否用到所有喂价？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不能。Chainlink 入门说明写明每个喂价的小数位数可以不同，8 只是该 BTC/USD 示例的刻度。可读价格必须用这一次调用读到的 decimals()，不能把另一口喂价的 8 抄过来。" }
+        },
+        {
+          "@type": "Question",
+          "name": "代币 decimals 和喂价 decimals 都是 8，是否可以只读代币？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不可以。两者相等只说明这一对碰巧相同。下一对可能是 18 对 8，或 6 对 8。省略喂价 decimals() 之后，模板仍会跑，价格会差一个 10 的幂。" }
+        },
+        {
+          "@type": "Question",
+          "name": "updatedAt 很新，这笔价格是否可用？",
+          "acceptedAnswer": { "@type": "Answer", "text": "刻度还没核对时不可用。updatedAt 只说明轮次新，不说明除数用的是喂价刻度还是代币精度。心跳、宽限期和断路器都修不好一个错的 10 的幂。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--cyan">小数位</span></p>
+          <h1>喂价小数位核验：代币 decimals 不等于 answer 的刻度</h1>
+          <p class="article-summary">Chainlink 的 latestRoundData 返回的 answer 是定点整数，小数点不在这个整数里。刻度来自喂价自己的 decimals()，不是抵押代币的 decimals()。用错 10 的幂，updatedAt 再新，价格也会差一个数量级。下文用文档里的 BTC/USD 示例和一组教学假设把除数拆开；算例不指向任何实时协议或账户，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-15T15:07:00+08:00">2026-10-15 15:07:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-oracle-feed-decimals-vs-token-decimals-verification-guide.svg" alt="喂价小数位核验图：answer 3030914000000，喂价刻度 10 的 8 次方得 30309.14，代币精度 10 的 18 次方得到另一个数量级" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一区块读取喂价的 decimals()、latestRoundData 的 answer，以及代币的 decimals()。不得用代币精度代替喂价刻度。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>可读价格等于 answer 除以 10 的喂价 decimals 次方。answer 小于或等于 0 时停止，不要写成价格。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>若笔记用代币 decimals 做除数，且两个整数不同，价格记为不可用。updatedAt 新鲜、宽限期已过、断路器未触发，都不改变这一判定。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>两个 decimals 碰巧相等，仍要分别记账。相等不是省略喂价 decimals() 的理由。</li></ul></div>
+            <section id="sec-1"><h2>1. 两套 decimals 问的不是同一件事</h2><p>研究笔记里常见的句子是「updatedAt 只有十几秒，价格可用」。在定点喂价上，这句话还缺一口单位。<a href="https://docs.chain.link/data-feeds/getting-started" target="_blank" rel="noopener">Chainlink 的数据喂价入门</a>写明，latestRoundData 返回的 answer 是整数，小数点不在这个整数里。文中的 BTC/USD 示例使用 8 位小数：answer 为 3030914000000 时，可读价格是 30309.14。同一段写明，每个喂价使用的小数位数可以不同。<a href="https://docs.chain.link/data-feeds/api-reference" target="_blank" rel="noopener">接口参考</a>把 decimals() 定义成所存 answer 的定点精度，也就是响应里的小数位数。</p><p>这和代币精度不是同一口单位。<a href="https://eips.ethereum.org/EIPS/eip-20#decimals" target="_blank" rel="noopener">ERC-20 的 decimals</a>规定如何把代币余额换成可读数量：返回 8，表示余额要除以 100000000 才是用户看到的枚数。它回答「这一枚代币有多少」，不回答「这一口价格的小数点在哪」。本篇不重复喂价延迟、排序器宽限期或断路器。那些检查都假定刻度已经正确。这里假定轮次很新，问除数有没有用错。也和池子储备的精度换算不同：那是先把两种代币余额换成数量，再谈隐含价格；这里是价格 answer 本身还没换成可读价格。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：同一个整数，两个除数，两个数量级</h2><p>先按文档把示例算对。3030914000000 除以 10 的 8 次方，等于 30309.14。若笔记沿用抵押代币的 decimals，而该代币返回 18，同一整数除以 10 的 18 次方，得到 0.000003030914。倍数是 10 的 (18 减 8) 次方，即 100 亿。价格被写成另一个数量级，不是四舍五入能解释的差距。下表第一行是文档示例，第二行是把该示例除以 18 位代币精度的教学推演。</p>
+            <table><caption>同一 answer：喂价刻度与代币精度</caption><thead><tr><th scope="col">字段</th><th scope="col">数值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>文档示例 answer</td><td>3030914000000</td><td>定点整数，小数点不在其中</td></tr><tr><td>喂价 decimals</td><td>8</td><td>该 BTC/USD 示例的刻度</td></tr><tr><td>正确可读价格</td><td>30309.14</td><td>answer 除以 10 的 8 次方</td></tr><tr><td>代币 decimals</td><td>18</td><td>教学假设，不是喂价的返回值</td></tr><tr><td>误用后的价格</td><td>0.000003030914</td><td>answer 除以 10 的 18 次方</td></tr><tr><td>误差倍数</td><td>100 亿</td><td>10 的 (18 减 8) 次方，价格被缩小</td></tr></tbody></table>
+            <p>方向可以反过来。另一组教学假设不指向任何真实喂价：喂价 decimals 为 8，代币 decimals 为 6，answer 为 99990000。除以 10 的 8 次方得 0.9999；除以 10 的 6 次方得 99.99。倍数是 100，价格被放大。规则因此要写成方向，而不是一句「小数位搞错了会偏一点」：代币精度大于喂价刻度时，误用代币精度会缩小价格；代币精度小于喂价刻度时，会放大价格。</p><p>最容易漏掉的是两者都返回 8。这时误用代币精度，可读价格碰巧相同。笔记若把这次碰巧写成模板，下一对变成 18 对 8，或 6 对 8，模板照跑，updatedAt 照样很新。抵押估值、健康因子和净值会跟着差同一个 10 的幂。1 个已经按代币精度换算好的单位，乘上正确价格约等于 30309.14 个报价单位；乘上错误价格约等于 0.000003030914。差的不是滑点，是另一口市场。</p></section>
+            <section id="sec-3"><h2>3. 刻度在这一口喂价上，不在另一页的 8</h2><p>入门说明强调每个喂价的小数位可以不同。把 BTC/USD 示例的 8 抄到别的交易对，或抄到一次新部署，这一列还没核验。decimals() 必须和 latestRoundData 落在同一区块。代理后面的聚合器可以更换。description 能帮助核对交易对名称，但不能代替这次读到的整数。有人把「USD 报价一般都是 8 位」写成常量，下一口以另一种资产报价的喂价就可能不是 8。常量一旦写死，新鲜的 updatedAt 会给错误刻度盖章。</p><p>answer 的类型是有符号整数。小于或等于 0 时停止，不要把非正数除完再写成价格。正确的刻度也不代替新鲜度：心跳、宽限期、断路器仍按各自的笔记做。反过来，那些检查全部通过，也修不好一个错的 10 的幂。面板上的可读价格是另一层风险。把已经换成 30309.14 的数字再除以 10 的 8 次方，是二次缩放；把原始 answer 直接当成美元，则是把价格放大了 10 的 8 次方。记录必须写明手上的整数是原始 answer，还是已经缩放的结果。两个长得像价格的数字，可以一个是这口喂价的可读结果，一个是另一口喂价的原始整数。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：除数用错，新鲜 updatedAt 不得写成可用</h2><p>教学筛选按这个顺序，不能跳步。第一，answer 小于或等于 0：不是可用价格。第二，可读价格只允许用喂价 decimals 作除数。若笔记用了代币 decimals，且两个整数不同：不可用。第三，两个整数相同：两个都记下来，然后继续。相同是这一对的结果，不是省略喂价读取的理由。第四，前三步通过之后，才把 updatedAt、宽限期和偏离交给其他筛选。前两步失败时，心跳再漂亮也不改判定。</p><p>误差倍数写为 10 的 (代币精度减喂价刻度) 次方。差为 0 时倍数是 1，但前提是两个整数都在同一区块读过。只看到面板上的人类可读价格、没有原始 answer 和 decimals()，这一列记为未核验，而不是记为通过。该筛选不回答轮次有多旧，不回答排序器宽限期是否结束，也不回答偏离会不会触发断路器。它只回答：这个可读价格的小数点，是不是按这口喂价自己的刻度放上去的。通过一次也不等于下一笔仍是同一刻度。聚合器更换后要重读 decimals()，不能沿用上次笔记里的 8。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：链 ID、区块号与哈希、喂价地址、代币地址、喂价 decimals、代币 decimals、answer、按喂价刻度得到的可读价格、若有人用代币精度除过则记下那个数和倍数、answer 是否为正、updatedAt。updatedAt 留档，不代替刻度。若有人把 8 写死，记下这个 8 来自哪一页、哪一口喂价。两次 RPC 相差一个区块就要分开记账，避免用新的 answer 配旧的 decimals。</p><p>对账顺序固定为：先读两个 decimals，再看 answer 的符号，再除以喂价刻度，再对照任何使用代币精度的算法，最后才是新鲜度、宽限期和断路器。未读喂价 decimals() 的笔记，结论停在「刻度缺失」，不得写成「价格已核验」。需要持有少量该代币才能复现一笔仓位估值时，把兑换记在费用附注里，不要写进刻度是否正确的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：可用价格要先放对小数点</h2><p>加密研究的错误句式是「updatedAt 很新，所以这笔价格可以用」。更可靠的句子是「喂价 decimals；代币 decimals；answer；可读价格等于 answer 除以 10 的喂价刻度次方；若除数用了代币精度且两者不同，则不可用」。心跳、宽限期和断路器都不能修补刻度。两个 decimals 碰巧相等，只说明这一对现在相同，不说明模板可以省略其中一口。</p><p>本文是分析框架。BTC/USD 的 3030914000000 与 30309.14 来自 Chainlink 入门说明中的示例，其余行是教学假设，未对任何实时喂价做链上实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己持有少量该代币，以便复现一笔仓位的估值，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文小数位判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">两套 decimals 问的不是同一件事</a></li><li><a href="#sec-2">教学案例：同一个整数，两个除数，两个数量级</a></li><li><a href="#sec-3">刻度在这一口喂价上，不在另一页的 8</a></li><li><a href="#sec-4">筛选线：除数用错，新鲜 updatedAt 不得写成可用</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：可用价格要先放对小数点</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://docs.chain.link/data-feeds/getting-started" target="_blank" rel="noopener">Chainlink：Consuming Data Feeds</a></li><li><a href="https://docs.chain.link/data-feeds/api-reference" target="_blank" rel="noopener">Chainlink：Data Feeds API Reference</a></li><li><a href="https://eips.ethereum.org/EIPS/eip-20#decimals" target="_blank" rel="noopener">EIP-20：decimals</a></li></ul><p class="ref-note">资料核对日期：2026年10月15日。BTC/USD 的整数与 8 位小数来自 Chainlink 入门说明中的示例。其余行为教学假设，未对实时喂价做链上实测。每个喂价的 decimals 以当次调用为准。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/oracle-price-feed-research-guide.html">预言机价格核验：喂价延迟的几个区块，就是操纵者的窗口期</a></li><li><a href="/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">L2 喂价核验：排序器刚恢复，updatedAt 新鲜也不等于可用</a></li><li><a href="/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">预言机断路器核验：价格剧烈偏离时，喂价真的会暂停吗</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=307edff5"></script>
+</body>
+</html>

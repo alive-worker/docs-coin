@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'l2-sequencer-grace-period-price-verification-guide',
-  publishedISO: '2026-10-13T13:42:00+08:00',
-  tagColor: 'violet',
+  slug: 'oracle-feed-decimals-vs-token-decimals-verification-guide',
+  publishedISO: '2026-10-15T15:07:00+08:00',
+  tagColor: 'cyan',
   topic: 'protocol',
 
   zh: {
-    h1: "L2 喂价核验：排序器刚恢复，updatedAt 新鲜也不等于可用",
-    tagLabel: "宽限期",
-    cardDesc: "排序器恢复后的宽限期内，价格喂价的 updatedAt 可以很新。宽限期未结束或排序器仍宕机时，不得把该价格写成可用。",
+    h1: "喂价小数位核验：代币 decimals 不等于 answer 的刻度",
+    tagLabel: "小数位",
+    cardDesc: "价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。",
   },
   en: {
-    h1: "L2 Price Check: A Fresh updatedAt Is Not Usable in the Grace Period",
-    tagLabel: "Grace Period",
-    cardDesc: "After an L2 sequencer recovers, a price feed's updatedAt can look fresh. Do not call that price usable until the consumer's grace period has passed, or while the sequencer is down.",
+    h1: "Feed Scale Check: Token decimals Are Not the Answer's Scale",
+    tagLabel: "Feed Scale",
+    cardDesc: "A price feed's decimals scale the answer, not the collateral token. The wrong power of ten writes a different order of magnitude even when updatedAt is fresh.",
   },
 
   existingSlugsNewestFirst: [
+    'l2-sequencer-grace-period-price-verification-guide',
     'perp-mark-vs-last-price-liquidation-verification-guide',
     'l2-l1-data-fee-vs-wallet-gas-verification-guide',
     'l2-confirmed-vs-l1-finality-verification-guide',
