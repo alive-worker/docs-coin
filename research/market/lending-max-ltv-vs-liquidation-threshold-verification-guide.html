@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>借贷核验：最大可借不等于清算线 - 加密货币研究</title>
+  <meta name="description" content="最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="借贷LTV,清算阈值,健康因子,getUserAccountData,借贷核验,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="借贷核验：最大可借不等于清算线">
+  <meta property="og:description" content="最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-19T10:07:00+08:00">
+  <meta property="article:modified_time" content="2026-10-19T10:07:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="清算线">
+  <meta property="article:tag" content="LTV">
+  <meta property="article:tag" content="健康因子">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="借贷核验：最大可借 8000，欠款 8200，清算线 8500，健康因子仍大于 1">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="借贷核验：最大可借不等于清算线">
+  <meta name="twitter:description" content="最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.png">
+  <meta name="twitter:image:alt" content="借贷核验：最大可借 8000，欠款 8200，清算线 8500，健康因子仍大于 1">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html",
+      "name": "借贷核验：最大可借不等于清算线",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "借贷核验：最大可借不等于清算线", "item": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#article",
+      "headline": "借贷核验：最大可借不等于清算线",
+      "description": "最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。",
+      "image": ["https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.png"],
+      "datePublished": "2026-10-19T10:07:00+08:00",
+      "dateModified": "2026-10-19T10:07:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["借贷LTV","清算阈值","健康因子","getUserAccountData","借贷核验","加密货币研究"],
+      "wordCount": 2135,
+      "citation": [
+        "https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md",
+        "https://aave.com/help/borrowing/liquidations",
+        "https://aave.com/docs/aave-v3/smart-contracts/pool"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "不能再借，是不是已经可以被清算？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不一定。LTV 决定还能借多少。清算看的是更高的清算阈值，以及健康因子是否低于 1。欠款落在两条线之间时，可借余额可以为 0，健康因子仍然大于 1。" }
+        },
+        {
+          "@type": "Question",
+          "name": "健康因子用 LTV 还是清算阈值？",
+          "acceptedAnswer": { "@type": "Answer", "text": "用清算阈值。Aave 的风险参数说明把健康因子写成抵押品价值乘清算阈值，再除以总借款。把 LTV 代进去，会把仍高于 1 的头寸算成已经可清算。" }
+        },
+        {
+          "@type": "Question",
+          "name": "返回值 8000 是 8000% 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "在 getUserAccountData 这套返回值里，LTV 和清算阈值按 4 位小数的百分比理解，8000 表示 80.00%，8500 表示 85.00%。健康因子按 18 位小数理解，要和 10 的 18 次方比较，不能和整数 1 比较。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">清算线</span></p>
+          <h1>借贷核验：超过最大可借，不等于已经可被清算</h1>
+          <p class="article-summary">最大可借和清算资格是两条线。LTV 决定还能借多少，清算阈值决定健康因子的分子。欠款落在两条线之间时，可借余额可以为 0，健康因子仍然大于 1。下文用 Aave 文档里的定义和一组教学数字把这两条线拆开；数字不指向任何真实市场或账户，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-19T10:07:00+08:00">2026-10-19 10:07:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide.svg" alt="借贷核验图：最大可借 8000，欠款 8200，清算线 8500，健康因子仍大于 1" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>同一次 getUserAccountData 读取抵押、欠款、剩余可借、清算阈值、LTV 和健康因子。不要只用其中一个百分比。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>计价金额按 8 位小数，LTV 和清算阈值按 4 位小数的百分比，健康因子按 18 位小数。8000 是 80.00%，不是 8000%。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>健康因子的分子用清算阈值，不用 LTV。欠款高于最大可借、低于清算线时，写成「不能再借，尚未可清算」。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>只有健康因子低于 10 的 18 次方，才写成可清算。清算折扣和单次可偿还比例是过线之后的问题。</li></ul></div>
+            <section id="sec-1"><h2>1. 最大可借和清算资格不是同一条线</h2><p>研究笔记里常有一句「已经借满了，再跌一点就会被清算」。这句话把两道闸合成了一道。<a href="https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md" target="_blank" rel="noopener">Aave 的风险参数说明</a>把它们分开：LTV 是用某项抵押最多能借到的比例；清算阈值是头寸被定义成抵押不足的比例。两者之间的差额被写成给借款人留出的安全垫。健康因子的分子是抵押品价值乘以清算阈值，不是乘以 LTV。文档写明，健康因子小于 1 时，头寸才可能被清算。<a href="https://aave.com/help/borrowing/liquidations" target="_blank" rel="noopener">Aave 的清算说明</a>用的是同一条公式：总抵押价值乘加权清算阈值，再除以总借款。</p><p>本站先前的清算文问的是另一件事：预言机延迟如何让许多头寸一起跨过门槛，以及跨过之后清算折扣和 close factor 怎样分配。那篇的算例用一个抵押率同时表示可借上限和健康因子，并只在旁边注明有的协议会把两个参数拆开。本篇假定价格刻度已经核对过，专门问这个被拆开的缺口：欠款可以已经超过最大可借，健康因子却仍大于 1。也和利用率那篇不同。利用率问的是展示 APY 对应的池子还够不够你的规模；这里问的是同一笔头寸上的两道闸，哪一道才决定「可清算」。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：欠款 8200，卡在 8000 和 8500 之间</h2><p>教学头寸只有一种抵押、一种借款，参数是为了落进缺口而设的，不是某个市场上当前的治理数值。抵押计价价值 10000。LTV 为 80%，最大可借是 8000。清算阈值为 85%，清算线是 8500。当前欠款 8200。8200 大于 8000，所以剩余可借为 0，新的借款过不了 LTV 这道闸。8200 小于 8500，健康因子等于 8500 除以 8200，约为 1.0366，大于 1。按文档，这还不是可清算。</p>
+            <table><caption>教学头寸：超过最大可借，尚未碰到清算线</caption><thead><tr><th scope="col">字段</th><th scope="col">教学值</th><th scope="col">判定</th></tr></thead><tbody><tr><td>抵押计价价值</td><td>10000</td><td>单一抵押，已经换成计价单位</td></tr><tr><td>LTV</td><td>80%</td><td>最大可借 8000</td></tr><tr><td>清算阈值</td><td>85%</td><td>清算线 8500</td></tr><tr><td>当前欠款</td><td>8200</td><td>落在 8000 与 8500 之间</td></tr><tr><td>健康因子</td><td>约 1.0366</td><td>8500 / 8200，大于 1</td></tr><tr><td>若误用 LTV</td><td>约 0.9756</td><td>8000 / 8200，小于 1，判定反了</td></tr></tbody></table>
+            <p>同一套接口里的原始整数要一起记账。按 Aave V3 的刻度，计价金额是 8 位小数，所以 10000 写成 1000000000000，8200 写成 820000000000。LTV 和清算阈值是 4 位小数的百分比，80% 写成 8000，85% 写成 8500。健康因子是 18 位小数。用抵押乘阈值再按 wad 去除欠款，得到 1036585365853658537，大于 10 的 18 次方。若有人把 8000 代进分子，得到 975609756097560976，小于 10 的 18 次方。同一个头寸，两条公式，两个相反的布尔值。面板上的红字如果来自第二条，研究笔记跟着写成「已可清算」，就是把安全垫涂掉了。</p><p>要让清算线降到刚好碰到 8200，抵押计价价值需要降到约 9647，相对 10000 大约下跌 3.53%。在这 3.53% 里面，借款已经停了，清算还没有开始。这正是风险参数说明里那个差额要留住的区间。笔记若把「不能再借」写成「已经在清算」，这个区间的宽度就变成 0。</p></section>
+            <section id="sec-3"><h2>3. 六个返回值在同一次调用里，刻度各不相同</h2><p><a href="https://aave.com/docs/aave-v3/smart-contracts/pool" target="_blank" rel="noopener">Pool 的 getUserAccountData</a> 一次返回总抵押、总欠款、剩余可借、当前清算阈值、LTV 和健康因子。账户层面的清算阈值已经是各项抵押按价值加权之后的结果。头寸里有两种抵押时，不能拿其中一种资产的配置阈值，去代替这次返回的 currentLiquidationThreshold。资产配置页上的一对参数，和账户此刻的一对参数，可以不同。</p><p>刻度也不能混。8000 不是 8000%。拿它直接乘抵押，会把可借额度放大一百倍。健康因子的原始整数要和 10 的 18 次方比，不和整数 1 比；和 1 比的话，几乎所有正常头寸都会被写成已经小于 1。剩余可借为 0 只说明 LTV 这道闸已经顶满，或者价格移动后欠款超过了最大可借。它不读取清算阈值，因此不能代替健康因子。没有欠款时，健康因子会返回一个极大整数，表示这条除法没有分母。那个极大值不是「风险无限大」，而是「没有借款可清算」。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：落在两条线之间，不得写成可清算</h2><p>教学筛选按这个顺序。第一，同一次调用里必须同时有 LTV 和清算阈值。只有一个百分比的协议，记为「缺口不可观察」，不要替它编出一条安全垫。第二，先按各自的小数位换算，再做比较。第三，欠款高于抵押乘 LTV、低于抵押乘清算阈值，并且健康因子大于或等于 10 的 18 次方：写成不能再借，尚未可清算。第四，只有健康因子低于 10 的 18 次方，才写成可清算。文档用的是小于 1，等于 1 还没有过线。用 LTV 算出的那个 0.9756 不得覆盖第四步。</p><p>过线之后才轮到清算折扣和单次可偿还比例。那些参数决定清算人能处理多少、按什么折扣拿走抵押，不决定头寸是否已经过线。把 50% 的 close factor 倒推成「所以清算线应该更低」，是另一类错误。本站的清算文负责过线之后的折扣、机器人和连锁。本篇的筛选在过线之前停住。价格刻度错了，两条线会一起平移，那是喂价小数位那篇的问题，不能靠把 LTV 和阈值再读一遍来补救。反过来，刻度正确也不能把两条线合成一条。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：链 ID、区块号与哈希、Pool 地址、用户地址、六项原始返回值、换算后的抵押、欠款、LTV、清算阈值、健康因子、剩余可借，以及判定用的是阈值还是 LTV。两次读取隔了一个区块，就分成两行，避免用新的欠款配旧的阈值。多种抵押时，再附上每种资产自己的配置阈值，并写明账户返回值才是加权结果。</p><p>对账顺序固定为：六项是否同一次读出，三项刻度是否分开，欠款落在哪两条线之间，健康因子与 10 的 18 次方的大小，最后才是过线之后的折扣和 close factor。只抄了前端一句「借款已达上限」的笔记，停在「两条线未分开」。需要准备少量债务资产才能自己复现一笔还款对健康因子的影响时，兑换记在费用附注里，不进入可清算与否的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：可清算只看清算阈值那一条</h2><p>错误句式是「已经不能再借，所以这笔头寸可被清算」。更可靠的句子是「LTV；清算阈值；欠款落在哪一侧；健康因子的原始整数是否低于 10 的 18 次方」。LTV 关掉的是新增借款。清算阈值才进入健康因子。两条线之间的那段，是参数故意留下的缓冲，不是面板上的红字可以涂掉的舍入误差。</p><p>本文是分析框架。LTV、清算阈值和健康因子的定义来自 Aave 的风险参数、清算说明和 Pool 接口。8000、8500、8200 以及由此算出的健康因子是教学假设，未对任何实时市场或账户做链上实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己准备少量债务资产，以便复现一笔还款对健康因子的影响，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文两条线的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">最大可借和清算资格不是同一条线</a></li><li><a href="#sec-2">教学案例：欠款 8200，卡在 8000 和 8500 之间</a></li><li><a href="#sec-3">六个返回值在同一次调用里，刻度各不相同</a></li><li><a href="#sec-4">筛选线：落在两条线之间，不得写成可清算</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：可清算只看清算阈值那一条</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md" target="_blank" rel="noopener">Aave：Risk parameters</a></li><li><a href="https://aave.com/help/borrowing/liquidations" target="_blank" rel="noopener">Aave：Health Factor and Liquidations</a></li><li><a href="https://aave.com/docs/aave-v3/smart-contracts/pool" target="_blank" rel="noopener">Aave V3 Pool：getUserAccountData</a></li></ul><p class="ref-note">资料核对日期：2026年10月19日。定义来自上述文档。8000、8500 与 8200 为教学假设，未对实时市场做链上实测。健康因子原始整数按 wad 除法四舍五入到 1036585365853658537。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/lending-liquidation-research-guide.html">借贷清算机制核验：一次预言机延迟，如何触发连锁清算</a></li><li><a href="/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">借贷利用率核验：展示 APY 不等于可按该规模进场</a></li><li><a href="/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">喂价小数位核验：代币 decimals 不等于 answer 的刻度</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6563ff76"></script>
+</body>
+</html>

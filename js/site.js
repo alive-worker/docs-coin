@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html': '2026-10-19 10:07:00',
+    '/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html': '2026-10-19 10:07:00',
     '/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html': '2026-10-15 15:07:00',
     '/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html': '2026-10-15 15:07:00',
     '/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html': '2026-10-13 13:42:00',

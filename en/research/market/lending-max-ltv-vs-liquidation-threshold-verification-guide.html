@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lending Check: Max LTV Is Not the Liquidation Line</title>
+  <meta name="description" content="Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="lending LTV,liquidation threshold,health factor,getUserAccountData,lending verification,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Lending Check: Max LTV Is Not the Liquidation Line">
+  <meta property="og:description" content="Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-19T10:07:00+08:00">
+  <meta property="article:modified_time" content="2026-10-19T10:07:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Liquidation Line">
+  <meta property="article:tag" content="LTV">
+  <meta property="article:tag" content="health factor">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Lending check: max borrow 8000, debt 8200, liquidation line 8500, health factor still above 1">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lending Check: Max LTV Is Not the Liquidation Line">
+  <meta name="twitter:description" content="Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Lending check: max borrow 8000, debt 8200, liquidation line 8500, health factor still above 1">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html",
+      "name": "Lending Check: Max LTV Is Not the Liquidation Line",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Lending Check: Max LTV Is Not the Liquidation Line", "item": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#article",
+      "headline": "Lending Check: Max LTV Is Not the Liquidation Line",
+      "description": "Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.",
+      "image": ["https://coin.ponr.org/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.png"],
+      "datePublished": "2026-10-19T10:07:00+08:00",
+      "dateModified": "2026-10-19T10:07:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["lending LTV","liquidation threshold","health factor","getUserAccountData","lending verification","crypto research"],
+      "wordCount": 1549,
+      "citation": [
+        "https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md",
+        "https://aave.com/help/borrowing/liquidations",
+        "https://aave.com/docs/aave-v3/smart-contracts/pool"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If new borrowing is blocked, is the position already liquidatable?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not necessarily. LTV sets how much more can be borrowed. Liquidation uses a higher threshold and whether the health factor is below 1. Debt between the two lines can leave available borrows at 0 while the health factor stays above 1." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the health factor use LTV or the liquidation threshold?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The liquidation threshold. Aave's risk parameters define the health factor as collateral value times the liquidation threshold, divided by total borrows. Substituting LTV marks a position that is still above 1 as liquidatable." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a returned 8000 mean 8000 percent?",
+          "acceptedAnswer": { "@type": "Answer", "text": "On getUserAccountData, LTV and the liquidation threshold are percentages with 4 decimals. 8000 means 80.00 percent, and 8500 means 85.00 percent. The health factor has 18 decimals. Compare it with 10 to the 18th, not with the integer 1." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Liquidation Line</span></p>
+          <h1>Lending Check: Above Max LTV Is Not Yet Liquidatable</h1>
+          <p class="article-summary">Max borrow and liquidation eligibility are two lines. LTV sets how much more can be borrowed. The liquidation threshold is what enters the health factor. Debt between the lines can leave available borrows at 0 while the health factor stays above 1. The note uses Aave's definitions and a hypothetical position. The figures are not a live market or account, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-19T10:07:00+08:00">2026-10-19 10:07:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-lending-max-ltv-vs-liquidation-threshold-verification-guide-en.svg" alt="Lending check: max borrow 8000, debt 8200, liquidation line 8500, health factor still above 1" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>From one getUserAccountData call, read collateral, debt, available borrows, liquidation threshold, LTV, and health factor. Do not keep only one of the two percentages.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Base amounts use 8 decimals. LTV and the liquidation threshold are percentages with 4 decimals. The health factor has 18 decimals. 8000 means 80.00 percent, not 8000 percent.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The health factor's numerator uses the liquidation threshold, not LTV. When debt is above max borrow and below the liquidation line, write "borrowing blocked, not yet liquidatable."</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Call the position liquidatable only when the health factor is below 10 to the 18th. The bonus and the close factor are questions for after that line.</li></ul></div>
+            <section id="sec-1"><h2>1. Max borrow and liquidation eligibility are not the same line</h2><p>A common sentence in a note is "the borrow is maxed, so the next dip liquidates it." That sentence welds two gates into one. <a href="https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md" target="_blank" rel="noopener">Aave's risk-parameter notes</a> separate them. LTV is the maximum that can be borrowed against a collateral. The liquidation threshold is the percentage at which the position is defined as undercollateralised. The gap between them is described as a safety buffer for the borrower. The health factor's numerator is collateral value times the liquidation threshold, not times LTV. The same page says a position may be liquidated when the health factor is below 1. <a href="https://aave.com/help/borrowing/liquidations" target="_blank" rel="noopener">Aave's liquidation page</a> uses the same formula: total collateral value times the weighted liquidation threshold, divided by total borrows.</p><p>The site's earlier liquidation note asks something else: how an oracle delay can push many positions over the line together, and how the bonus and the close factor split the position once it is over. That worked example uses one collateral factor for both the borrow cap and the health factor, and only mentions in passing that some protocols store two parameters. This note assumes the price scale has already been checked, and asks about the gap those two parameters open. Debt can already exceed max borrow while the health factor is still above 1. It is also not the utilization note. That one asks whether the displayed APY still has pool capacity at your size. This one asks which of two gates on the same position decides "liquidatable."</p></section>
+            <section id="sec-2"><h2>2. A worked example: debt of 8200 sits between 8000 and 8500</h2><p>The teaching position has one collateral and one debt. The parameters are chosen so the debt falls in the gap. They are not a live market's current governance values. Collateral is worth 10000 in the quote unit. LTV is 80 percent, so max borrow is 8000. The liquidation threshold is 85 percent, so the liquidation line is 8500. Current debt is 8200. Because 8200 is above 8000, available borrows are 0 and a new borrow fails the LTV gate. Because 8200 is below 8500, the health factor is 8500 divided by 8200, about 1.0366, which is above 1. Under the documented rule, that is not yet liquidatable.</p>
+            <table><caption>Teaching position: above max borrow, still short of the liquidation line</caption><thead><tr><th scope="col">Field</th><th scope="col">Teaching value</th><th scope="col">Reading</th></tr></thead><tbody><tr><td>Collateral value</td><td>10000</td><td>One collateral, already in quote units</td></tr><tr><td>LTV</td><td>80 percent</td><td>Max borrow 8000</td></tr><tr><td>Liquidation threshold</td><td>85 percent</td><td>Liquidation line 8500</td></tr><tr><td>Current debt</td><td>8200</td><td>Between 8000 and 8500</td></tr><tr><td>Health factor</td><td>about 1.0366</td><td>8500 / 8200, above 1</td></tr><tr><td>If LTV is substituted</td><td>about 0.9756</td><td>8000 / 8200, below 1, the boolean flips</td></tr></tbody></table>
+            <p>The raw integers from the same call belong in the record. On Aave V3's scales, base amounts have 8 decimals, so 10000 is 1000000000000 and 8200 is 820000000000. LTV and the liquidation threshold are percentages with 4 decimals: 80 percent is 8000, and 85 percent is 8500. The health factor has 18 decimals. Collateral times the threshold, divided by debt in wad math, is 1036585365853658537, which is above 10 to the 18th. Substituting 8000 in the numerator produces 975609756097560976, which is below 10 to the 18th. One position, two formulas, two opposite booleans. If the red label on a panel comes from the second formula, a note that copies "liquidatable" has painted over the buffer.</p><p>For the liquidation line to fall exactly onto 8200, collateral value has to fall to about 9647, roughly 3.53 percent below 10000. Inside that 3.53 percent, new borrowing has already stopped and liquidation has not started. That interval is the gap the risk parameters say they keep. A note that rewrites "cannot borrow more" as "already in liquidation" sets the width of the interval to zero.</p></section>
+            <section id="sec-3"><h2>3. Six return values, one call, three scales</h2><p><a href="https://aave.com/docs/aave-v3/smart-contracts/pool" target="_blank" rel="noopener">Pool.getUserAccountData</a> returns total collateral, total debt, available borrows, the current liquidation threshold, LTV, and the health factor together. The account-level threshold is already the value-weighted average of the collateral assets. When the position holds two collaterals, do not replace currentLiquidationThreshold with the configured threshold of only one asset. The pair on an asset's configuration page and the pair on the account at this block can differ.</p><p>The scales do not mix. 8000 is not 8000 percent. Multiplying collateral by that raw integer inflates borrow capacity a hundredfold. Compare the raw health factor with 10 to the 18th, not with the integer 1. Compared with 1, almost every healthy position looks already below the line. Available borrows of 0 only say the LTV gate is full, or that price moves have pushed debt past max borrow. That field does not read the liquidation threshold, so it cannot stand in for the health factor. With no debt, the health factor comes back as a very large integer, meaning the division has no denominator. That large value is "nothing to liquidate," not "risk is unbounded."</p></section>
+            <section id="sec-4"><h2>4. A screen: debt between the lines is not "liquidatable"</h2><p>The teaching screen is ordered. First, the same call has to contain both LTV and the liquidation threshold. A protocol that stores only one percentage is recorded as "gap not observable." Do not invent a buffer the contract does not have. Second, scale each field before comparing. Third, when debt is above collateral times LTV, below collateral times the liquidation threshold, and the health factor is at or above 10 to the 18th, write that borrowing is blocked and the position is not yet liquidatable. Fourth, call it liquidatable only when the health factor is below 10 to the 18th. The docs use strictly below 1. Equal to 1 has not crossed. The 0.9756 produced by substituting LTV does not override the fourth step.</p><p>The liquidation bonus and the fraction that can be repaid in one call come after the line. They decide how much a liquidator can clear and at what discount. They do not decide whether the position has crossed. Reading a 50 percent close factor backwards as "so the liquidation line should sit lower" is a different mistake. The site's liquidation note covers the bonus, the keepers, and the cascade after the cross. This screen stops before the cross. A wrong price scale moves both lines together. That is the feed-decimals note, and rereading LTV next to the threshold does not repair it. A correct scale also does not merge the two lines.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>The minimum fields are: chain id, block number and hash, Pool address, user address, the six raw return values, scaled collateral, debt, LTV, liquidation threshold, health factor, and available borrows, plus which percentage entered the health factor. Two reads a block apart are two rows. Do not pair a new debt with an old threshold. With several collaterals, also store each asset's configured threshold, and state that the account return is the weighted result.</p><p>Reconcile in a fixed order: whether all six fields came from one read, whether the three scales were kept apart, which side of the two lines the debt is on, how the health factor compares with 10 to the 18th, and only then the bonus and the close factor. A note that only copies a front-end sentence "borrow limit reached" stops at "the two lines were not separated." If reproducing a repayment's effect on the health factor means acquiring a small amount of the debt asset, put the swap in a fee footnote. It does not belong in the liquidatable-or-not result.</p></section>
+            <section id="sec-6"><h2>6. Liquidatable refers to the threshold line only</h2><p>The weak sentence is "new borrowing is blocked, so this position can be liquidated." A useful one is "LTV; liquidation threshold; which side the debt is on; whether the raw health factor is below 10 to the 18th." LTV closes new borrowing. The liquidation threshold is what enters the health factor. The stretch between the lines is a buffer the parameters are built to keep. It is not a rounding error a red label can erase.</p><p>This is a research framework. The definitions of LTV, the liquidation threshold, and the health factor come from Aave's risk parameters, liquidation page, and Pool interface. The figures 8000, 8500, 8200, and the health factor computed from them are hypothetical. No live market or account was measured, and this is not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Preparing a small amount of the debt asset in order to reproduce how a repayment moves the health factor may mean a swap. You can inspect quotes, fees, and limits on <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a>. The link is separate from this two-line result and does not guarantee the service. Use any swap only for genuine, lawful research spend.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Max borrow and liquidation eligibility are not the same line</a></li><li><a href="#sec-2">A worked example: debt of 8200 sits between 8000 and 8500</a></li><li><a href="#sec-3">Six return values, one call, three scales</a></li><li><a href="#sec-4">A screen: debt between the lines is not "liquidatable"</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Liquidatable refers to the threshold line only</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/aave/risk-v3/blob/main/asset-risk/risk-parameters.md" target="_blank" rel="noopener">Aave: Risk parameters</a></li><li><a href="https://aave.com/help/borrowing/liquidations" target="_blank" rel="noopener">Aave: Health Factor and Liquidations</a></li><li><a href="https://aave.com/docs/aave-v3/smart-contracts/pool" target="_blank" rel="noopener">Aave V3 Pool: getUserAccountData</a></li></ul><p class="ref-note">Sources checked on 19 October 2026. The definitions are from those pages. 8000, 8500, and 8200 are hypothetical; no live market was measured. The raw health factor, rounded as wad division, is 1036585365853658537.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/lending-liquidation-research-guide.html">Verifying Lending Liquidation: How One Oracle Delay Triggers a Cascade</a></li><li><a href="/en/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">Lending Utilization Check: Displayed APY Is Not Capacity at Your Size</a></li><li><a href="/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">Feed Scale Check: Token decimals Are Not the Answer's Scale</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6563ff76"></script>
+</body>
+</html>

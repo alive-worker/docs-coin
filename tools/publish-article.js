@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'oracle-feed-decimals-vs-token-decimals-verification-guide',
-  publishedISO: '2026-10-15T15:07:00+08:00',
-  tagColor: 'cyan',
-  topic: 'protocol',
+  slug: 'lending-max-ltv-vs-liquidation-threshold-verification-guide',
+  publishedISO: '2026-10-19T10:07:00+08:00',
+  tagColor: 'amber',
+  topic: 'market',
 
   zh: {
-    h1: "喂价小数位核验：代币 decimals 不等于 answer 的刻度",
-    tagLabel: "小数位",
-    cardDesc: "价格喂价的 decimals 是 answer 的定点刻度，不是抵押代币的精度。刻度用错时，updatedAt 再新也会把价格写成另一个数量级。",
+    h1: "借贷核验：超过最大可借，不等于已经可被清算",
+    tagLabel: "清算线",
+    cardDesc: "最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。",
   },
   en: {
-    h1: "Feed Scale Check: Token decimals Are Not the Answer's Scale",
-    tagLabel: "Feed Scale",
-    cardDesc: "A price feed's decimals scale the answer, not the collateral token. The wrong power of ten writes a different order of magnitude even when updatedAt is fresh.",
+    h1: "Lending Check: Above Max LTV Is Not Yet Liquidatable",
+    tagLabel: "Liquidation Line",
+    cardDesc: "Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.",
   },
 
   existingSlugsNewestFirst: [
+    'oracle-feed-decimals-vs-token-decimals-verification-guide',
     'l2-sequencer-grace-period-price-verification-guide',
     'perp-mark-vs-last-price-liquidation-verification-guide',
     'l2-l1-data-fee-vs-wallet-gas-verification-guide',
