@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'lending-max-ltv-vs-liquidation-threshold-verification-guide',
-  publishedISO: '2026-10-19T10:07:00+08:00',
-  tagColor: 'amber',
+  slug: 'perp-funding-interval-vs-annualized-rate-verification-guide',
+  publishedISO: '2026-10-21T14:21:00+08:00',
+  tagColor: 'gold',
   topic: 'market',
 
   zh: {
-    h1: "借贷核验：超过最大可借，不等于已经可被清算",
-    tagLabel: "清算线",
-    cardDesc: "最大可借用的是 LTV，清算用的是更高的清算阈值。欠款落在两条线之间时，不能再借，但健康因子仍可以大于 1。",
+    h1: "资金费核验：页面上的 0.01%，不等于同一种年化",
+    tagLabel: "结算间隔",
+    cardDesc: "页面上的资金费率通常是一个结算间隔的支付比例。间隔从 8 小时改成 1 小时后，同一个 0.01% 的年化可以差 8 倍。",
   },
   en: {
-    h1: "Lending Check: Above Max LTV Is Not Yet Liquidatable",
-    tagLabel: "Liquidation Line",
-    cardDesc: "Max borrow uses LTV. Liquidation uses a higher threshold. Debt between the two lines blocks new borrowing while the health factor can still sit above 1.",
+    h1: "Funding Check: A Printed 0.01% Is Not One Annualized Rate",
+    tagLabel: "Funding Interval",
+    cardDesc: "A printed funding rate is usually the payment for one settlement interval. The same 0.01% annualizes eightfold differently at 8 hours than at 1 hour.",
   },
 
   existingSlugsNewestFirst: [
+    'lending-max-ltv-vs-liquidation-threshold-verification-guide',
     'oracle-feed-decimals-vs-token-decimals-verification-guide',
     'l2-sequencer-grace-period-price-verification-guide',
     'perp-mark-vs-last-price-liquidation-verification-guide',
