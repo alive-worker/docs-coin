@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html': '2026-10-22 15:20:00',
+    '/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html': '2026-10-22 15:20:00',
     '/en/research/market/perp-funding-interval-vs-annualized-rate-verification-guide.html': '2026-10-21 14:21:00',
     '/research/market/perp-funding-interval-vs-annualized-rate-verification-guide.html': '2026-10-21 14:21:00',
     '/en/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html': '2026-10-19 10:07:00',

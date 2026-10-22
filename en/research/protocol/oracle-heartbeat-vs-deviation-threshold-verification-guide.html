@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feed Check: Elapsed Time Is Not the Deviation - Crypto Research Notes</title>
+  <meta name="description" content="A heartbeat is the longest gap before the next update. A deviation threshold is how far price must move to update early. Fifty minutes elapsed is not fifty sixtieths of that threshold.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="oracle heartbeat,deviation threshold,updatedAt,Chainlink,feed freshness,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Feed Check: Elapsed Time Is Not the Deviation">
+  <meta property="og:description" content="A heartbeat is the longest gap before the next update. A deviation threshold is how far price must move to update early. Fifty minutes elapsed is not fifty sixtieths of that threshold.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-22T15:20:00+08:00">
+  <meta property="article:modified_time" content="2026-10-22T15:20:00+08:00">
+  <meta property="article:section" content="Protocol and Infrastructure Risk">
+  <meta property="article:tag" content="Heartbeat">
+  <meta property="article:tag" content="Deviation Threshold">
+  <meta property="article:tag" content="Price Feed">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Feed check: inside the heartbeat the error band stays 0.5% wide, and past the heartbeat that cap no longer holds">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Feed Check: Elapsed Time Is Not the Deviation">
+  <meta name="twitter:description" content="A heartbeat is the longest gap before the next update. A deviation threshold is how far price must move to update early. Fifty minutes elapsed is not fifty sixtieths of that threshold.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Feed check: inside the heartbeat the error band stays 0.5% wide, and past the heartbeat that cap no longer holds">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html",
+      "name": "Feed Check: Elapsed Time Is Not the Deviation",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Protocol and Infrastructure Risk", "item": "https://coin.ponr.org/en/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "Feed Check: Elapsed Time Is Not the Deviation", "item": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#article",
+      "headline": "Feed Check: Elapsed Time Is Not the Deviation",
+      "description": "A heartbeat is the longest gap before the next update. A deviation threshold is how far price must move to update early. Fifty minutes elapsed is not fifty sixtieths of that threshold.",
+      "image": ["https://coin.ponr.org/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.png"],
+      "datePublished": "2026-10-22T15:20:00+08:00",
+      "dateModified": "2026-10-22T15:20:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#webpage" },
+      "articleSection": "Protocol and Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "keywords": ["oracle heartbeat","deviation threshold","updatedAt","Chainlink","feed freshness","crypto research"],
+      "wordCount": 1704,
+      "citation": [
+        "https://docs.chain.link/architecture-overview/architecture-decentralized-model",
+        "https://chain.link/blog/analyze-decentralized-oracles-in-real-time",
+        "https://data.chain.link/feeds"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If half the heartbeat has elapsed, has half the deviation been used?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The deviation threshold is a price distance from the last on-chain answer. It does not scale with elapsed time. In the teaching parameters, with a 3600-second heartbeat, a 0.5% threshold, and an answer of 3000, an off-chain price of 3014 still need not open a deviation round at 3000 seconds. Writing 3012.5 from the time ratio shrinks the allowed gap." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the heartbeat has passed and the answer has not changed, is the error still about 0.5%?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The 0.5% figure is the trigger while nodes are still publishing. It is not a clamp after the timer. In the teaching case, 3601 seconds with the answer still at 3000 can sit next to an off-chain price of 3300. The note should say the cap is void, not that the error is still about 0.5%." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a fresh update mean the price just moved by the whole deviation threshold?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Only the change in the answer says that. A heartbeat also writes a new round when the price has barely moved. In the teaching case an answer moving from 3000 to 3002 is a change of about 0.0667%. That row is a heartbeat update, not a 0.5% deviation trigger." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--cyan">Heartbeat</span></p>
+          <h1>Feed Check: Time Inside the Heartbeat Is Not a Slice of the Deviation</h1>
+          <p class="article-summary">A Chainlink aggregator opens a new round on whichever comes first: the deviation threshold or the heartbeat. The threshold is the distance from the last on-chain answer. The heartbeat is the longest wait since that update. Halfway through the timer, the allowed price gap is still the whole threshold. The note uses the documented triggers and a teaching set of figures. The figures are not a live contract or account, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-22T15:20:00+08:00">2026-10-22 15:20:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-oracle-heartbeat-vs-deviation-threshold-verification-guide-en.svg" alt="Feed check: inside the heartbeat the error band stays a full 0.5% wide, and past the heartbeat that cap is void" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>At one timestamp, read this feed's own deviation threshold and heartbeat. Do not reuse 0.5% or 3600 seconds from another feed.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>While updatedAt is still inside the heartbeat, the allowed gap is the whole deviation threshold. Do not multiply the threshold by elapsed time over heartbeat.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Once updatedAt is past the heartbeat and the answer has not moved, the threshold is no longer a price cap. Write that the cap is void.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>After a new answer lands, subtract the two answers. If the change is under the threshold, record a heartbeat update, not a deviation trigger.</li></ul></div>
+            <section id="sec-1"><h2>1. The first condition to be met opens the round</h2><p>A common sentence in a note is "updatedAt is 50 minutes old, the heartbeat is one hour, so the price is about five sixths of the threshold away." That sentence welds two different rulers together. <a href="https://docs.chain.link/architecture-overview/architecture-decentralized-model" target="_blank" rel="noopener">Chainlink's decentralized data model</a> says the aggregator receives a new round only when the deviation threshold or the heartbeat triggers one, and the first condition met starts the update. The deviation threshold is a node seeing off-chain values move by more than the configured percentage from the on-chain value. The heartbeat is a set amount of time since the last update. Both answer "when may a new answer be written." Neither says the current error equals a function of time.</p><p>The same page adds a gate that notes often drop. A round needs responses from at least the minimum number of oracles for that feed, or the latest answer is not updated. Off-chain price can be past the deviation threshold while <code>updatedAt</code> stays put. Writing "the market was quiet, so nothing updated" turns an unfinished aggregation into a claim that price did not move. The response count is a separate field. The data page shows the minimum for that feed.</p><p>This is not the site's other three feed notes. The decimals note asks which power of ten divides the answer. The circuit-breaker note asks whether a consumer pauses the feed when the price jumps. The sequencer-grace note asks whether a fresh updatedAt is usable in the window after an L2 sequencer returns. This note assumes the scale is already right and that the protocol has not added its own pause. The question is what "minutes elapsed" can be turned into, inside the heartbeat and past it.</p></section>
+            <section id="sec-2"><h2>2. Teaching case: the error band is a rectangle, not a wedge</h2><p>The teaching parameters are not a live read of one feed on 22 October 2026. The last on-chain answer P is 3000. The deviation threshold D is 0.5%. The heartbeat H is 3600 seconds. The 0.5% figure is the ETH/USD example in Chainlink's own visualization note: the feed updates when the off-chain price deviates 0.5% from the on-chain trusted price. <a href="https://chain.link/blog/analyze-decentralized-oracles-in-real-time" target="_blank" rel="noopener">That note</a> describes the heartbeat as a countdown backup when the deviation condition has not fired. It does not set every feed's heartbeat to 3600 seconds. The 3600 is here so the arithmetic can be checked. Before the numbers enter a research note, replace H and D with the values on that symbol's data page.</p><p>"More than 0.5%" is a distance of 3000 × 0.005 = 15. The upper edge is 3015 and the lower edge is 2985. An off-chain price of 3014 has moved 14/3000 = 0.4667%, which is not yet more than 0.5%, so the deviation condition does not open a round. At 10 seconds or at 3000 seconds, the allowed gap is still that full 15. It is not a slope that widens or narrows with the clock.</p>
+            <table><caption>Teaching case: one band, two readings</caption><thead><tr><th scope="col">Reading</th><th scope="col">Time-ratio reading</th><th scope="col">Trigger reading</th></tr></thead><tbody><tr><td>3000 seconds elapsed, off-chain price 3014</td><td>3000/3600 × 0.5% = 0.4167%, written as about 3012.5</td><td>Still inside the heartbeat. 3014 need not update.</td></tr><tr><td>3601 seconds elapsed, answer still 3000</td><td>One second late, still about 0.5%</td><td>Cap void. Off-chain price can be 3300 (+10%).</td></tr><tr><td>New answer 3002</td><td>Treated as a fresh 0.5% move</td><td>Change is 2/3000 = 0.0667%. Record a heartbeat update.</td></tr></tbody></table>
+            <p>The first row is not a rounding gap. The time-ratio price is 3012.5, which is 1.5 under a price that is still allowed. It also implies the error reaches 0.5% only after another 600 seconds. The specification has no such slope. The second row is what the heartbeat is for: when the timer finishes, a new round should have started. If the answer is still the old one, either too few oracles responded or the push did not land. The 0.5% figure was never a clamp after the timer. An off-chain price of 3300 is 10% from 3000, and that can be true in the same second the note calls "only one second late." The third row shows that an update does not carry the threshold inside it. A heartbeat writes a new answer even when price barely moved. 0.0667% and 0.5% differ by about 7.5 times. An advanced updatedAt is not a license to fill in the threshold.</p></section>
+            <section id="sec-3"><h2>3. The threshold lives on this feed, not in memory</h2><p>A completed update resets the rectangle. It does not spend the error budget down to zero for the rest of the hour. From the new answer, the heartbeat starts again, and the deviation is again a full D measured from that new answer. Ten seconds after an update, off-chain price can travel the whole threshold without opening the next round. "It just updated, so the next hour is accurate" hears the reset as a shrink. What is fresh is that the stored answer matches the round that just aggregated. The next move that has not been written still has the whole D as its budget.</p><p>D is not one number across symbols. On the check date, <a href="https://data.chain.link/feeds" target="_blank" rel="noopener">Chainlink's feed list</a> showed different deviation thresholds on Ethereum mainnet, including 0.5% for ETH/USD, 0.25% for USDT/USD, 2% for SOL/USD, and 2% for BTC/ETH. Copying ETH's 0.5% onto a feed whose row says 2% makes the rectangle four times too narrow. The heartbeat is read the same way, one feed at a time. The teaching value of 3600 seconds does not become a default because an older integration note once used it for ETH/USD. The list changes. A note's D and H need the time they were read.</p></section>
+            <section id="sec-4"><h2>4. A screen: a time ratio cannot be written as the price error</h2><p>The teaching screen is ordered. First, D and H for that feed at that time come from its own data page, not from "major mainnet feeds are usually 0.5% and one hour." Second, subtract updatedAt from the block time. If the difference is under H, an off-chain price that has not been written may be described only as "within D of the current answer." Multiplying by (difference / H) fails the screen. Third, if the difference is at least H and no new round is stored, the price cap on that row is void, and the note records whether the minimum oracle count may have been missed. Fourth, if a new answer exists, compute (new answer − old answer) / old answer, compare it with D, and label the row as a deviation trigger or a heartbeat trigger. A time ratio in the first two steps is a failed note.</p><p>The screen does not say whether a consuming contract pauses on a large jump. That is the circuit-breaker note. It does not say whether a fresh updatedAt is usable during the grace period after a sequencer outage. It does not say which power of ten divides the answer. A wrong scale turns 3000 into another order of magnitude before 0.5% can matter. Passing once does not keep the next read on the same D. The parameter page changes, so the next read copies it again.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>The minimum fields are: network, feed symbol, proxy address, read time with the block time and the zone, answer, that feed's decimals, D, H, the page each came from, updatedAt, the age, whether the age is under H, the phrase "cap = D" when it is under H, the phrase "cap void" when it is not, the minimum oracle responses, and, when a previous answer exists, the answer change and the trigger label (deviation or heartbeat). Two reads that straddle a round are two rows. Do not explain the old gap with the new answer's D.</p><p>Reconcile in a fixed order: whether the scale already used the feed decimals, whether D and H belong to this feed, whether the age is inside or outside the heartbeat, and only then the answer change. A note missing D or H stops at "trigger missing." Moving a small amount of the quote asset in order to compare one off-chain print with the on-chain answer belongs in a fee footnote. It does not belong in the judgment of whether the band is still in force.</p></section>
+            <section id="sec-6"><h2>6. Draw the rectangle before talking about the clock</h2><p>The weak sentence is "the heartbeat is a fraction elapsed, so the price error is that fraction of the threshold." A useful one is "current answer; D; H; age compared with H; if a new answer exists, the actual change." Inside the heartbeat the band does not change width. Past the heartbeat that width is no longer a promise. A landed update only says a new round was stored. How far the price moved is the difference of the answers.</p><p>This is a research framework. The rule that the first of the two conditions opens a round, and that too few oracle responses leave the answer unchanged, comes from the Chainlink page cited above. The ETH/USD 0.5% example comes from the visualization note. The figures 0.5%, 3600 seconds, 3000, 3014, 3012.5, 3002, and 3300 are a teaching conversion. They were not measured on a live feed, and they are not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Comparing one off-chain quote with the on-chain answer may mean holding a small amount of the quote asset. You can inspect quotes, fees, and limits on <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a>. The link is separate from the heartbeat and deviation judgment in this note, and it is not a guarantee of the service. Any swap should be a real, compliant research expense, not an illegal use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The first condition to be met opens the round</a></li><li><a href="#sec-2">Teaching case: the error band is a rectangle, not a wedge</a></li><li><a href="#sec-3">The threshold lives on this feed, not in memory</a></li><li><a href="#sec-4">A screen: a time ratio cannot be written as the price error</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Draw the rectangle before talking about the clock</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://docs.chain.link/architecture-overview/architecture-decentralized-model" target="_blank" rel="noopener">Chainlink: Decentralized Data Model</a></li><li><a href="https://chain.link/blog/analyze-decentralized-oracles-in-real-time" target="_blank" rel="noopener">Chainlink: Price Feed Visualizations (ETH/USD 0.5%)</a></li><li><a href="https://data.chain.link/feeds" target="_blank" rel="noopener">Chainlink: Data Feeds list</a></li></ul><p class="ref-note">Sources checked on 22 October 2026. The two triggers, and the rule that too few responses leave the answer unchanged, come from those pages. The ETH/USD 0.5% figure comes from the visualization note. Deviation thresholds on the list are as shown on the check date, and each feed's heartbeat is its own field. 3000 and 3600 seconds are teaching parameters, not a live measurement.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">Feed Scale Check: Token decimals Are Not the Answer's Scale</a></li><li><a href="/en/research/protocol/oracle-circuit-breaker-price-deviation-verification-guide.html">Oracle Circuit Breaker Verification: Does the Feed Actually Pause on a Sharp Price Deviation</a></li><li><a href="/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">L2 Price Check: A Fresh updatedAt Is Not Usable in the Grace Period</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=3b0eacb9"></script>
+</body>
+</html>
