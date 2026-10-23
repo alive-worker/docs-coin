@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swap Check: Spot Price Is Not the Fill - Crypto Research Notes</title>
+  <meta name="description" content="A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="spot price,execution price,constant product,price impact,Uniswap,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Swap Check: Spot Price Is Not the Fill">
+  <meta property="og:description" content="A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-23T11:38:00+08:00">
+  <meta property="article:modified_time" content="2026-10-23T11:38:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Fill Price">
+  <meta property="article:tag" content="Spot Price">
+  <meta property="article:tag" content="Price Impact">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Swap check: spot stays at 3000 while the fill falls along the curve as size grows">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Swap Check: Spot Price Is Not the Fill">
+  <meta name="twitter:description" content="A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Swap check: spot stays at 3000 while the fill falls along the curve as size grows">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-amm-spot-vs-execution-price-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html",
+      "name": "Swap Check: Spot Price Is Not the Fill",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Swap Check: Spot Price Is Not the Fill", "item": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#article",
+      "headline": "Swap Check: Spot Price Is Not the Fill",
+      "description": "A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.",
+      "image": ["https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide-en.png"],
+      "datePublished": "2026-10-23T11:38:00+08:00",
+      "dateModified": "2026-10-23T11:38:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["spot price","execution price","constant product","price impact","Uniswap","crypto research"],
+      "wordCount": 1512512,
+      "citation": [
+        "https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol",
+        "https://docs.uniswap.org/concepts/protocol/concentrated-liquidity",
+        "https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is spot times size the amount this trade receives?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Spot is the ratio of the two reserves, the price of a vanishingly small trade. In the teaching pool the reserves are 1000 and 3000000, so spot is 3000. Buying 10 and writing 30000 ignores the contract. Uniswap V2 getAmountOut applies a 997/1000 fee and floors the division. The result is 29614." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the 0.3% fee is removed first, is the rest of the gap small enough to ignore?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends how large the trade is relative to the pool. Buying 10 and taking only 0.3% off leaves 29910. The formula returns 29614. The extra 296 is price impact, not the fee. Buying 100, the fee explains 900 and the impact explains 27117. In a deeper pool the same 100 is almost entirely the fee." }
+        },
+        {
+          "@type": "Question",
+          "name": "If two pools both print a spot of 3000, can the fills be written as equal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The shallow reserves are 1000 and 3000000. Buying 100 returns 271983. The deep pool scales both reserves by 100 and still prints a spot of 3000, but the same buy of 100 returns 298802. The gap of 26819 is depth, not the shared spot." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/amm-spot-vs-execution-price-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--orange">Fill Price</span></p>
+          <h1>Swap Check: A Pool's Spot Price Is Not the Fill on This Size</h1>
+          <p class="article-summary">The price on a constant-product pool is the ratio of two reserves. It describes a vanishingly small trade. Multiplying that price by the order size drops both the fee and the price impact. The note uses the integer formula in the Uniswap V2 library and a teaching pair of reserves. The figures are not a live pool or account, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-23T11:38:00+08:00">2026-10-23 11:38:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-amm-spot-vs-execution-price-verification-guide-en.svg" alt="Swap check: spot stays flat at 3000 while the fill price falls as size grows" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Write the spot only as reserve over reserve. Do not multiply spot by size and call that the amount received.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Price the fill with this pool's own fee coefficient and reserves. The V2 library's 997/1000 does not transfer to a pool on another fee.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>When a fee-only figure differs from the formula, record the gap as impact. Do not fold it back into the fee rate.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Two pools with the same spot still need their own reserves. Different depth means the amounts received are not the same figure.</li></ul></div>
+            <section id="sec-1"><h2>1. Spot is the tangent. The fill is the chord</h2><p>A common sentence in a note is "the pool is at 3000, so buying 10 returns 30000." That sentence treats a marginal price as an average. <a href="https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol" target="_blank" rel="noopener">Uniswap V2 getAmountOut</a> does not multiply those two numbers. It multiplies the input by 997, then divides by the input reserve times 1000 plus that fee-adjusted input. The 997/1000 is the 0.3% fee hardcoded in that library, and the division floors. The spot y/x matches the fill only as the input approaches zero. Once the input is a visible fraction of the reserve, the curve bends and the chord lies under the tangent.</p><p>The fee and the impact are not one gap. Taking 0.3% off 30000 still assumes the trade executed at the spot. The denominator also contains the input reserve. A shallower pool moves farther for the same input, the denominator grows, and the output shrinks. Calling the whole gap "the 0.3% fee" erases impact in a shallow pool and invents impact in a deep one.</p><p>This is not the site's other three execution notes. The cross-venue note asks how much of a quoted spread survives slippage and a transfer. The transfer-tax note asks whether the buy path and the sell path use the same tax. The routing note asks which costs sit outside a "best path" quote. This note assumes the path is already chosen and the token tax is recorded elsewhere. The question is whether this pool's spot can be multiplied into this trade's output.</p></section>
+            <section id="sec-2"><h2>2. Teaching case: writing 30000, the formula returns 29614</h2><p>The teaching reserves are not a live pool on 23 October 2026. In the shallow pool the input reserve x is 1000 and the output reserve y is 3000000, so the spot y/x is 3000. These integers are already the units the formula divides. If the tokens also have a decimals field, align the scale first; a mixed scale makes the gap meaningless. The deep pool multiplies both reserves by 100. The spot is still 3000. It exists so depth can be compared.</p><p>Buying 10: the numerator is 10 × 997 × 3000000 = 29910000000, the denominator is 1000 × 1000 + 10 × 997 = 1009970, and the output is 29910000000 / 1009970 = 29614. The remainder is 748420, and the contract drops it. Spot times size is 30000. Fee only is 29910. The formula is 386 under the spot quote. The fee explains 90 of that, and the impact explains 296. The fill price is 29614/10 = 2961.4, not 3000.</p>
+            <table><caption>Teaching case: one spot of 3000, three readings</caption><thead><tr><th scope="col">Reading</th><th scope="col">Shallow, buy 10</th><th scope="col">Shallow, buy 100</th><th scope="col">Deep, buy 100</th></tr></thead><tbody><tr><td>Spot times size</td><td>30000</td><td>300000</td><td>300000</td></tr><tr><td>Fee of 0.3% only</td><td>29910</td><td>299100</td><td>299100</td></tr><tr><td>getAmountOut</td><td>29614</td><td>271983</td><td>298802</td></tr><tr><td>Fill price</td><td>2961.4</td><td>2719.83</td><td>2988.02</td></tr></tbody></table>
+            <p>On a buy of 100 in the shallow pool, the gap is no longer the fee. 300000 minus 271983 is 28017. The 0.3% fee is 900 of that, and the impact is 27117. The fee explains about 3% of the miss. The rest is an input of 100 against a reserve of 1000. The same buy of 100 in the deep pool returns 298802. That is only 298 under the fee-only figure of 299100, so the fee is again the larger part of the gap. One sentence, "the price is 3000, buying 100," differs by 298802 − 271983 = 26819 across the two pools. The difference is the reserves, not the shared 3000 on the screen.</p></section>
+            <section id="sec-3"><h2>3. The spot after the trade is still not the fill</h2><p>After the shallow pool buys 10, the input reserve is 1010 and the output reserve is 3000000 − 29614 = 2970386. The new spot is 2970386/1010 = 2940.98. The fill of 2961.4 sits between the old spot of 3000 and the new spot of 2940.98, and it equals neither. Reading the reserve ratio after the trade and writing that new spot as "the price I just paid" makes the trade look worse than it was. The fill is output divided by input. The spot is the tangent that remains.</p><p>The fee coefficient is not a global constant either. <a href="https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees" target="_blank" rel="noopener">Uniswap's note on how fees evolved</a> describes V2 as a single fee and V3 as separate pools at 0.05%, 0.30%, and 1.0%. The 997 in the V2 library belongs to pools that call that getAmountOut. Using 997 on a 0.05% pool multiplies the fee by about six. Concentrated liquidity also means the token balance is not the reserve. <a href="https://docs.uniswap.org/concepts/protocol/concentrated-liquidity" target="_blank" rel="noopener">Uniswap's concentrated-liquidity note</a> says V2 spreads liquidity from zero to infinity, and that about 0.50% of the DAI/USDC capital sits in the 0.99 to 1.01 range where trading actually happens. A V3 balance can sit outside the current price. Feeding the pool's token balance into the V2 formula counts inventory this trade never touches, and the impact comes out too small.</p></section>
+            <section id="sec-4"><h2>4. A screen: spot times size cannot be written as the amount received</h2><p>The teaching screen is ordered. First, the fee coefficient comes from this pool, not from "AMMs charge 0.3%." Second, the reserves in the formula are the reserves this trade actually walks: getReserves in the right direction for V2, and the inventory offered inside the current range for concentrated liquidity, not the contract's whole token balance. Third, the amount received is the floored formula. Spot times size, and spot times size times one minus the fee, are comparison columns. They are not the fill. Fourth, two pools are subtracted only after each has passed the first three steps. Writing a spread of zero because the spots match fails the screen.</p><p>The screen does not say how much of a cross-venue spread a transfer fee consumes. That is the arbitrage note. It does not say what a token contract deducts on transfer. It does not say which extra layers an aggregator adds after it chains several pools. A formula that holds for one pool can still worsen on the next hop. Passing once does not keep the reserves at these figures. The next trade reads them again.</p></section>
+            <section id="sec-5"><h2>5. Keep a record another researcher can replay</h2><p>The minimum fields are: venue, pool address, both tokens and their decimals, the reserves or in-range liquidity at the read, the fee coefficient (997/1000 or that pool's tier, written out), input size, numerator, denominator and remainder, floored output, spot, the fee-only comparison, fill price as output over input, and the new spot after the trade. A two-pool comparison adds the same fields for the other pool. If input and output are not in the same unit, the row stops at "scale not aligned."</p><p>Reconcile in a fixed order: whether the units match, whether the fee coefficient belongs to this pool, whether the reserves are the inventory this trade uses, and only then the spot-times-size column and the fee-only column. A note missing reserves or the fee stops at "formula incomplete." Holding a small amount of the token in order to compare a displayed spot with a wallet receipt belongs in a fee footnote. It does not belong in the judgment of whether the formula explains the fill.</p></section>
+            <section id="sec-6"><h2>6. Write the reserves and the fee before talking about the price</h2><p>The weak sentence is "the pool is at 3000, so this trade fills at 3000." A useful one is "spot; fee coefficient; reserves this trade uses; formula output; fill price; new spot after the trade." The tangent, the chord, and the tangent after the trade are three numbers. In a shallow pool the impact can be an order of magnitude above 0.3%. In a deep pool the same order can shrink until the fee is what remains. An equal spot only says the two tangents have the same slope.</p><p>This is a research framework. The 997/1000 coefficient and the floor division come from the V2 library cited above. The V3 fee tiers, and the statement that about 0.50% of capital sits between 0.99 and 1.01, come from the Uniswap pages cited above. The figures 1000, 3000000, 29614, 271983, and 298802 are a teaching conversion. They were not measured on a live pool, and they are not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Comparing a displayed spot with the amount a wallet receives may mean holding a small amount of the token. You can inspect quotes, fees, and limits on <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a>. The link is separate from the spot and fill judgment in this note, and it is not a guarantee of the service. Any swap should be a real, compliant research expense, not an illegal use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Spot is the tangent. The fill is the chord</a></li><li><a href="#sec-2">Teaching case: writing 30000, the formula returns 29614</a></li><li><a href="#sec-3">The spot after the trade is still not the fill</a></li><li><a href="#sec-4">A screen: spot times size cannot be written as the amount received</a></li><li><a href="#sec-5">Keep a record another researcher can replay</a></li><li><a href="#sec-6">Write the reserves and the fee before talking about the price</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol" target="_blank" rel="noopener">Uniswap V2: UniswapV2Library.getAmountOut</a></li><li><a href="https://docs.uniswap.org/concepts/protocol/concentrated-liquidity" target="_blank" rel="noopener">Uniswap: Concentrated Liquidity</a></li><li><a href="https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees" target="_blank" rel="noopener">Uniswap: Dynamic Fees (on the V2 fee and the V3 tiers)</a></li></ul><p class="ref-note">Sources checked on 23 October 2026. The 997/1000 coefficient and the integer division come from that library as published. The capital-range figure and the V3 fee tiers come from the pages above. The teaching reserves are not a live read.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">Cross-Exchange Arbitrage Verification: How Much Slippage Eats Into the Quoted Spread</a></li><li><a href="/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts</a></li><li><a href="/en/research/market/swap-routing-research-guide.html">Verifying Swap Routing: What Costs Hide Behind the “Best Path” Quote</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=d6096211"></script>
+</body>
+</html>

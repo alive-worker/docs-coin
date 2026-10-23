@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'oracle-heartbeat-vs-deviation-threshold-verification-guide',
-  publishedISO: '2026-10-22T15:20:00+08:00',
-  tagColor: 'cyan',
-  topic: 'protocol',
+  slug: 'amm-spot-vs-execution-price-verification-guide',
+  publishedISO: '2026-10-23T11:38:00+08:00',
+  tagColor: 'orange',
+  topic: 'market',
 
   zh: {
-    h1: "喂价核验：心跳走了多久，不等于价格偏了多少",
-    tagLabel: "心跳",
-    cardDesc: "心跳是距上次更新最多能隔多久，偏离阈值是价格相对链上答案移动多少才会提前更新。过了 50 分钟，不代表误差已经是阈值的 50/60。",
+    h1: "兑换核验：池子现货价，不等于这笔的成交价",
+    tagLabel: "成交价",
+    cardDesc: "池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。",
   },
   en: {
-    h1: "Feed Check: Time Inside the Heartbeat Is Not a Slice of the Deviation",
-    tagLabel: "Heartbeat",
-    cardDesc: "A heartbeat is the longest gap before the next update. A deviation threshold is how far price must move to update early. Fifty minutes elapsed is not fifty sixtieths of that threshold.",
+    h1: "Swap Check: A Pool's Spot Price Is Not the Fill on This Size",
+    tagLabel: "Fill Price",
+    cardDesc: "A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.",
   },
 
   existingSlugsNewestFirst: [
+    'oracle-heartbeat-vs-deviation-threshold-verification-guide',
     'perp-funding-interval-vs-annualized-rate-verification-guide',
     'lending-max-ltv-vs-liquidation-threshold-verification-guide',
     'oracle-feed-decimals-vs-token-decimals-verification-guide',
@@ -783,14 +784,14 @@ async function main() {
   updateSitemap();
   // 公开计数、JSON-LD position、RSS、旧 URL 桩、virtual-card noindex
   // 一律以 slug_topic_map.json 为准，避免再出现 127 vs 128 分叉。
-  execSync('node tools/verify-publish.js --fix', { cwd: root, stdio: 'inherit' });
+  execSync(`"${process.execPath}" tools/verify-publish.js --fix`, { cwd: root, stdio: 'inherit' });
   rebuildHomepageCarouselAndGrid('zh');
   rebuildHomepageCarouselAndGrid('en');
   updateSiteJsDates();
   propagateHashesIfChanged();
-  execSync('node tools/generate-topic-hubs.js', { cwd: root, stdio: 'inherit' });
+  execSync(`"${process.execPath}" tools/generate-topic-hubs.js`, { cwd: root, stdio: 'inherit' });
   await pingIndexNow();
-  execSync('node tools/verify-publish.js', { cwd: root, stdio: 'inherit' });
+  execSync(`"${process.execPath}" tools/verify-publish.js`, { cwd: root, stdio: 'inherit' });
   console.log('\nDone. Now: (1) fix the TODO-cardDesc placeholder(s) in index.html/en/index.html left where the');
   console.log('previously-featured article got demoted into the grid, (2) spot-check JSON-LD validity and tag');
   console.log('balance on the touched files, (3) verify in the browser.');

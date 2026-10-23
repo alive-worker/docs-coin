@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>兑换核验：现货价不等于成交价 - 加密货币研究</title>
+  <meta name="description" content="池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="现货价,成交价,恒定乘积,价格冲击,Uniswap,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="兑换核验：现货价不等于成交价">
+  <meta property="og:description" content="池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-23T11:38:00+08:00">
+  <meta property="article:modified_time" content="2026-10-23T11:38:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="成交价">
+  <meta property="article:tag" content="现货价">
+  <meta property="article:tag" content="价格冲击">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="兑换核验：现货价 3000 是切线，10 个单位的成交价约 2961，100 个单位约 2720">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="兑换核验：现货价不等于成交价">
+  <meta name="twitter:description" content="池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide.png">
+  <meta name="twitter:image:alt" content="兑换核验：现货价 3000 是切线，10 个单位的成交价约 2961，100 个单位约 2720">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-amm-spot-vs-execution-price-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html",
+      "name": "兑换核验：现货价不等于成交价",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "兑换核验：现货价不等于成交价", "item": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#article",
+      "headline": "兑换核验：现货价不等于成交价",
+      "description": "池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。",
+      "image": ["https://coin.ponr.org/img/article-amm-spot-vs-execution-price-verification-guide.png"],
+      "datePublished": "2026-10-23T11:38:00+08:00",
+      "dateModified": "2026-10-23T11:38:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["现货价","成交价","恒定乘积","价格冲击","Uniswap","加密货币研究"],
+      "wordCount": 1933933,
+      "citation": [
+        "https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol",
+        "https://docs.uniswap.org/concepts/protocol/concentrated-liquidity",
+        "https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/amm-spot-vs-execution-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "池子现货价乘上数量，就是这笔能换到的金额吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。现货价是两种储备相除，对应无限小的一笔。教学池储备 1000 和 3000000，现货价 3000。买入 10 个若写成 30000，而 Uniswap V2 的 getAmountOut 用 997/1000 的手续费做整数除法，结果是 29614。" }
+        },
+        {
+          "@type": "Question",
+          "name": "先扣掉 0.3% 手续费，剩下的差额是不是可以忽略？",
+          "acceptedAnswer": { "@type": "Answer", "text": "要看这笔相对池子有多深。同样买 10 个，只扣 0.3% 得到 29910，公式是 29614，多出来的 296 是价格冲击，不是手续费。买 100 个时，手续费只解释 900，冲击解释 27117。池子变深之后，同样的 100 个几乎只剩下手续费。" }
+        },
+        {
+          "@type": "Question",
+          "name": "两个池的现货价都是 3000，成交额可以写成一样吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不可以。浅池储备 1000 与 3000000，买入 100 个得到 271983。深池储备放大 100 倍、现货价仍是 3000，同样买入 100 个得到 298802。差额 26819 来自深度，不来自现货价。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/amm-spot-vs-execution-price-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--orange">成交价</span></p>
+          <h1>兑换核验：池子现货价，不等于这笔的成交价</h1>
+          <p class="article-summary">恒定乘积池页面上的价格，是两种储备相除，只描述无限小的一笔。把这个价格乘上买入数量，会同时漏掉手续费和价格冲击。下文用 Uniswap V2 库里的整数公式和一组教学储备把这两项拆开；数字不指向任何实时池子或账户，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-23T11:38:00+08:00">2026-10-23 11:38:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-amm-spot-vs-execution-price-verification-guide.svg" alt="兑换核验图：现货价停在 3000，买入规模变大后成交价沿曲线下降" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>现货价只写成储备相除。不得把现货价乘上买入数量，记成这笔的到账。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>成交用该池自己的手续费系数和储备做公式。V2 库里的 997/1000 不得套到另一个费率的池。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>只扣手续费、不扣冲击的数字，和公式结果不同时，差额记为冲击，不记成「大约还是这个费率」。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>两个池现货价相同，仍要各算各的储备。深度不同，到账不得写成一样。</li></ul></div>
+            <section id="sec-1"><h2>1. 现货价是切线，成交价是这一段的弦</h2><p>研究笔记里常有一句「池子价格 3000，买 10 个就是 30000」。这句话把边际价当成了平均价。<a href="https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol" target="_blank" rel="noopener">Uniswap V2 的 getAmountOut</a>并不做这个乘法。它先把输入乘 997，再除以「输入侧储备乘 1000，加上这个已扣费的输入」。997/1000 是这套库写死的 0.3% 手续费，除法是向下取整。现货价 y/x 只在输入趋近于 0 时和成交价重合。输入一旦占到储备的一个可见比例，曲线就弯了，弦低于切线。</p><p>手续费和冲击不是同一个缺口。只把 30000 乘 0.997，得到的是「仍按现货价成交、只少掉费率」的数。公式的分母里还有输入侧储备。池子越浅，同一笔输入把储备推得越远，分母越大，输出越小。把整个缺口都叫成「0.3% 手续费」，会在浅池里把冲击算没，也会在深池里把手续费说成冲击。</p><p>这和本站另外三篇不是同一件事。跨所搬砖问的是两家报价相减之后，滑点和转账还剩多少；转账税问的是买入到账和卖出到账是否同一套税率；聚合路由问的是「最优路径」报价外面还堆了哪些费用。本篇假定路径已经选定、税率另记，问的是：这一口池子的现货价，能不能乘出这一笔的到账。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：30000 写成到账时，公式给 29614</h2><p>教学储备不声称是 2026 年 10 月 23 日任何实时池。浅池输入侧储备 x = 1000，输出侧 y = 3000000，现货价 y/x = 3000。这些整数已经是公式使用的同一单位。若代币还有单独的 decimals，先按喂价那篇把刻度对齐，再代入；单位不一致时，下面的差额没有意义。深池把两侧储备各乘 100，现货价仍是 3000，用来对照深度。</p><p>买入 10 个：分子 = 10 × 997 × 3000000 = 29910000000，分母 = 1000 × 1000 + 10 × 997 = 1009970，输出 = 29910000000 / 1009970 = 29614，余数 748420，合约会丢掉这个余数。现货乘数量是 30000。只扣 0.3% 是 29910。公式比现货报价少 386，其中费率解释 90，冲击解释 296。成交价是 29614/10 = 2961.4，不是 3000。</p>
+            <table><caption>教学案例：同一现货价 3000，三种读法</caption><thead><tr><th scope="col">读法</th><th scope="col">浅池买 10</th><th scope="col">浅池买 100</th><th scope="col">深池买 100</th></tr></thead><tbody><tr><td>现货价乘数量</td><td>30000</td><td>300000</td><td>300000</td></tr><tr><td>只扣 0.3%</td><td>29910</td><td>299100</td><td>299100</td></tr><tr><td>getAmountOut</td><td>29614</td><td>271983</td><td>298802</td></tr><tr><td>成交价</td><td>2961.4</td><td>2719.83</td><td>2988.02</td></tr></tbody></table>
+            <p>浅池买 100 个时，缺口几乎不再是费率。300000 减 271983 等于 28017。其中 0.3% 只占 900，冲击占 27117。费率解释了缺口的大约 3%，其余是这笔输入相对 1000 的储备太厚。深池买同样的 100 个，输出是 298802。和只扣费率的 299100 只差 298，费率重新变成缺口里的大头。同一句「价格 3000，买 100 个」，在两个池里相差 298802 − 271983 = 26819。这个差来自储备，不来自页面上那个相同的 3000。</p></section>
+            <section id="sec-3"><h2>3. 成交之后的现货价，仍不是刚才的成交价</h2><p>浅池买完 10 个，输入侧储备变成 1010，输出侧变成 3000000 − 29614 = 2970386。新的现货价是 2970386/1010 = 2940.98。成交价 2961.4 落在旧现货 3000 和新现货 2940.98 之间，等于哪一个都不是。笔记若在成交后读一次储备相除，再把这个新现货写成「我刚才的成交价」，方向是把价格写得更差。成交价是这一段输出除以输入，现货价是成交之后剩下的切线。</p><p>费率本身也不是全球常数。<a href="https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees" target="_blank" rel="noopener">Uniswap 对费率演进的说明</a>把 V2 写成单一费率，把 V3 写成 0.05%、0.30%、1.0% 几档分开的池。V2 库里的 997 只属于调用这套 getAmountOut 的池。拿到 0.05% 的池仍乘 997，会把费率放大约 6 倍。集中流动性则连储备都不能直接拿余额来当。<a href="https://docs.uniswap.org/concepts/protocol/concentrated-liquidity" target="_blank" rel="noopener">Uniswap 的集中流动性说明</a>写过：V2 的 DAI/USDC 把流动性铺在 0 到无穷，其中大约 0.50% 的资本才落在 0.99 到 1.01 的成交区间。V3 的余额可以堆在当前价格之外。用池子代币余额代入 V2 公式，等于把没参与这一笔的库存算进深度，冲击会被写得过小。</p></section>
+            <section id="sec-4"><h2>4. 筛选线：现货乘数量不得写成到账</h2><p>教学筛选按这个顺序。第一，这笔的费率系数来自该池，不来自「AMM 都是 0.3%」。第二，代入公式的两侧储备，是这一笔实际走过的储备：V2 用 getReserves 的对应方向；集中流动性用当前区间里真正在卖的库存，不用整个合约的代币余额。第三，到账取公式的向下取整结果。现货乘数量、以及只乘 (1 − 费率) 的数，都只能当对照列，不能当到账。第四，两个池要比较时，各自完成前三步再相减。现货价相同就写差为 0，判定失败。</p><p>这条线不回答跨所转账和提现费吃掉多少价差，那是搬砖那篇的问题。它也不回答代币合约在转账时另外扣了多少税。它也不回答聚合器把多口池串起来之后，路径报价里还有哪些层。一口池的公式通过了，整条路径仍可能在下一跳变差。通过一次也不等于储备还是这组数，下一笔要重读。</p></section>
+            <section id="sec-5"><h2>5. 一份别人能复现的记录</h2><p>最低字段包括：场所、池地址、两侧代币与各自 decimals、读取时的储备或当前区间流动性、费率系数（写明 997/1000 或该池的档）、输入数量、公式分子分母与余数、向下取整后的输出、现货价、只扣费率的对照值、成交价（输出/输入）、成交后的新现货价。两个池的比较再加一列对方的同一组字段。输入输出不在同一单位时，这一行停在「刻度未对齐」。</p><p>对账顺序固定为：单位是否同一套，费率系数是否属于这一口，储备是否是这一笔用到的库存，然后才是现货乘数量和只扣费率两列对照。未读储备或费率的笔记停在「公式缺项」。需要自备少量代币，才能对照页面现货价和钱包到账时，把兑换记在费用附注里，不要写进到账是否可用公式解释的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：先写储备和费率，再谈价格</h2><p>错误句式是「池子价格 3000，所以这笔按 3000 成交」。更可靠的句子是「现货价；费率系数；这一笔用到的储备；公式输出；成交价；成交后的新现货价」。切线、弦、成交之后的新切线是三个数。浅池里冲击可以比 0.3% 大一个数量级；深池里同一笔又可以小到只剩费率。现货价相同，只说明两条切线的斜率相同。</p><p>本文是分析框架。997/1000 与向下取整来自上面引用的 V2 库。V3 的分档费率和「约 0.50% 资本落在 0.99 到 1.01」来自上述 Uniswap 文档。1000、3000000、29614、271983、298802 是教学换算，未对任何实时池做实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量代币，以便对照页面上的现货价和钱包里的到账，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文现货价或成交公式的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">现货价是切线，成交价是这一段的弦</a></li><li><a href="#sec-2">教学案例：30000 写成到账时，公式给 29614</a></li><li><a href="#sec-3">成交之后的现货价，仍不是刚才的成交价</a></li><li><a href="#sec-4">筛选线：现货乘数量不得写成到账</a></li><li><a href="#sec-5">一份别人能复现的记录</a></li><li><a href="#sec-6">结论：先写储备和费率，再谈价格</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol" target="_blank" rel="noopener">Uniswap V2：UniswapV2Library.getAmountOut</a></li><li><a href="https://docs.uniswap.org/concepts/protocol/concentrated-liquidity" target="_blank" rel="noopener">Uniswap：Concentrated Liquidity</a></li><li><a href="https://docs.uniswap.org/contracts/v4/concepts/dynamic-fees" target="_blank" rel="noopener">Uniswap：Dynamic Fees（述及 V2 单一费率与 V3 分档）</a></li></ul><p class="ref-note">资料核对日期：2026年10月23日。997/1000 与整数除法来自该库的当前源码。约 0.50% 的资本区间与 V3 费率分档来自上述文档。教学储备不是实时池的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/cross-exchange-arbitrage-execution-slippage-verification-guide.html">跨交易所搬砖套利核验：报价和实际成交之间，滑点吃掉了多少利润</a></li><li><a href="/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">代币转账税核验：买路径到账不等于卖路径到账</a></li><li><a href="/research/market/swap-routing-research-guide.html">跨链聚合路由核验：「最优路径」报价之外，隐藏了哪些成本</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=d6096211"></script>
+</body>
+</html>
