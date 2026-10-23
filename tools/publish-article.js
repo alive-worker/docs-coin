@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'amm-spot-vs-execution-price-verification-guide',
-  publishedISO: '2026-10-23T11:38:00+08:00',
-  tagColor: 'orange',
-  topic: 'market',
+  slug: 'eip1559-max-fee-vs-effective-gas-price-verification-guide',
+  publishedISO: '2026-10-23T16:05:00+08:00',
+  tagColor: 'mint',
+  topic: 'protocol',
 
   zh: {
-    h1: "兑换核验：池子现货价，不等于这笔的成交价",
-    tagLabel: "成交价",
-    cardDesc: "池子现货价是储备相除的边际价。按它乘上数量，教学池里的 10 个单位会写成 30000，合约公式只给出 29614。同一现货价，深度不同，成交可以差 26819。",
+    h1: "Gas 核验：你设的封顶，不等于这笔的实付",
+    tagLabel: "实付",
+    cardDesc: "EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。",
   },
   en: {
-    h1: "Swap Check: A Pool's Spot Price Is Not the Fill on This Size",
-    tagLabel: "Fill Price",
-    cardDesc: "A pool spot is the reserve ratio, the price of a vanishingly small trade. Multiplying it by size writes 30000 where the contract formula returns 29614. The same spot in a deeper pool fills 298802, not 271983.",
+    h1: "Gas Check: The Max Fee You Set Is Not What This Transaction Pays",
+    tagLabel: "Paid Fee",
+    cardDesc: "An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.",
   },
 
   existingSlugsNewestFirst: [
+    'amm-spot-vs-execution-price-verification-guide',
     'oracle-heartbeat-vs-deviation-threshold-verification-guide',
     'perp-funding-interval-vs-annualized-rate-verification-guide',
     'lending-max-ltv-vs-liquidation-threshold-verification-guide',

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gas 核验：封顶不等于实付 - 加密货币研究</title>
+  <meta name="description" content="EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="EIP-1559,maxFeePerGas,有效 Gas 价格,基础费,小费,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="Gas 核验：封顶不等于实付">
+  <meta property="og:description" content="EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-23T16:05:00+08:00">
+  <meta property="article:modified_time" content="2026-10-23T16:05:00+08:00">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="实付">
+  <meta property="article:tag" content="EIP-1559">
+  <meta property="article:tag" content="基础费">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Gas 核验：封顶 50 里实付 14，其中 12 销毁、2 是小费，其余封顶退回">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gas 核验：封顶不等于实付">
+  <meta name="twitter:description" content="EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.png">
+  <meta name="twitter:image:alt" content="Gas 核验：封顶 50 里实付 14，其中 12 销毁、2 是小费，其余封顶退回">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html",
+      "name": "Gas 核验：封顶不等于实付",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "协议与基础设施风险", "item": "https://coin.ponr.org/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "Gas 核验：封顶不等于实付", "item": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#article",
+      "headline": "Gas 核验：封顶不等于实付",
+      "description": "EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。",
+      "image": ["https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.png"],
+      "datePublished": "2026-10-23T16:05:00+08:00",
+      "dateModified": "2026-10-23T16:05:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#webpage" },
+      "articleSection": "协议与基础设施风险",
+      "isAccessibleForFree": true,
+      "keywords": ["EIP-1559","maxFeePerGas","有效 Gas 价格","基础费","小费","加密货币研究"],
+      "wordCount": 2119,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-1559",
+        "https://ethereum.org/developers/docs/gas/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "已用 Gas 乘 maxFee，是这笔的实付吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。EIP-1559 参考实现里，实付单价是有效 Gas 价格：小费取 min(小费上限, maxFee 减基础费)，再加上基础费。教学交易封顶 50、基础费 12、小费上限 2，有效价格是 14。普通转账用掉 21000 Gas，实付 294000 gwei。21000 乘 50 得到 1050000 gwei，是实付的 25/7 倍。" }
+        },
+        {
+          "@type": "Question",
+          "name": "小费上限写成 2，验证者就一定收到 2 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不一定。参考实现先让基础费占满封顶以内的空间，小费只能用剩下的部分。基础费 49、封顶 50、小费上限 2 时，小费被裁成 1，有效价格等于封顶 50。21000 Gas 里验证者收到 21000 gwei，销毁 1029000 gwei。基础费高于封顶时，这笔不能进块。" }
+        },
+        {
+          "@type": "Question",
+          "name": "旧式交易的 gasPrice 写成 50，和 0x02 交易的 maxFee 写成 50，实付一样吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不一样。参考实现把旧式 gasPrice 同时填进 maxFee 和小费上限。基础费 12 时，有效价格仍是 50，21000 Gas 实付 1050000 gwei，其中验证者拿到 798000 gwei。同一基础费下，0x02 交易若小费上限只有 2，实付是 294000 gwei。两种 50 不是同一个字段。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/" aria-current="page">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--mint">实付</span></p>
+          <h1>Gas 核验：你设的封顶，不等于这笔的实付</h1>
+          <p class="article-summary">EIP-1559 的 maxFeePerGas 是发送者愿意为每单位 Gas 支付的上限。回执上的单价是有效 Gas 价格，等于基础费加上被封顶裁过的小费。下文用该 EIP 参考实现里的整数式，把「乘封顶」「只乘小费」和旧式 gasPrice 拆开。数字是教学值，不是 2026 年 10 月 23 日某个区块的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-23T16:05:00+08:00">2026-10-23 16:05:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide.svg" alt="Gas 核验：封顶 50 的长条里，实付只占 14，其中 12 销毁、2 是小费" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>先看交易类型。0x02 才分开写 maxFee 和小费上限。旧式交易的 gasPrice 会被同时填进这两个字段。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>实付单价写成 min(小费上限, maxFee − 基础费) + 基础费。不得用已用 Gas 乘 maxFee 代替这一行。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>maxFee 低于所在区块的基础费时，参考实现判这笔无效。不得记成「已经按封顶付过」。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>下一区块基础费用父块的整数公式，增加时分母是 8，并且至少走 1。父块基础费 100 且父块打满，增量是 12，不是 12.5。</li></ul></div>
+            <section id="sec-1"><h2>1. 封顶是余额条件，实付是有效价格</h2><p>钱包确认页上最容易被抄进笔记的，是一个很大的「最高费用」。对 <a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559</a> 的 0x02 交易，那个数通常来自 gasLimit 乘 maxFeePerGas。参考实现确实用它做余额断言：签名者在扣掉转账金额之后，余额仍须不少于 gasLimit 乘 maxFeePerGas。这是「付得起最坏情况」的条件，不是回执上的费用。</p><p>同一段参考实现接着写实付。小费单价等于 min(maxPriorityFeePerGas, maxFeePerGas − baseFeePerGas)，有效 Gas 价格等于这个小费再加上基础费。伪代码按 gasLimit 乘有效价格扣款，再把没用掉的 Gas 按同一个有效价格退回。净额因此是 gasUsed 乘有效价格。基础费烧掉，验证者只收到 gasUsed 乘小费单价。GASPRICE（0x3a）必须返回这个有效价格：合约里读到的也不是用户填的 50。</p><p>所以一笔记账里至少有三行，不能并成一行。余额条件是 gasLimit 乘封顶。净费用是 gasUsed 乘有效价格。验证者收入是净费用里扣掉销毁之后的那一截。只保存钱包弹窗，三行里一行都还没算。</p></section>
+            <section id="sec-2"><h2>2. 教学案例：乘 50 得到 1050000，公式得到 294000</h2><p>教学交易不是 2026 年 10 月 23 日的链上读数。0x02 字段取整数 gwei：maxFeePerGas = 50，maxPriorityFeePerGas = 2，所在区块 baseFeePerGas = 12。1 gwei = 10^9 wei，下面全部先在 gwei 里算完再谈换算。gasLimit = 100000，一笔普通转账 gasUsed = 21000。<a href="https://ethereum.org/developers/docs/gas/" target="_blank" rel="noopener">ethereum.org 的 Gas 说明</a>把普通转账记为 21000，并给过一个未顶到封顶的例子：21000 × (10 + 2) = 252000 gwei。那个例子里封顶没有把小费裁短。本文的 50、12、2 是另一组数，用来同时摆出裁短和不裁短。</p><p>不裁短时，小费 = min(2, 50 − 12) = 2，有效价格 = 14。21000 × 14 = 294000 gwei。其中销毁 21000 × 12 = 252000 gwei，验证者收到 21000 × 2 = 42000 gwei。若把已用 Gas 乘封顶，21000 × 50 = 1050000 gwei。1050000 / 294000 = 25/7。笔记写成「这笔 Gas 花了 1050000 gwei」，把实付放大到 25/7 倍。只乘小费同样错：21000 × 2 = 42000 gwei，294000 / 42000 = 7，实付被写成七分之一，基础费整段消失。</p>
+            <table><caption>教学案例：三种读法，单位 gwei</caption><thead><tr><th scope="col">读法</th><th scope="col">0x02，基础费 12</th><th scope="col">0x02，基础费 49</th><th scope="col">旧式 gasPrice = 50，基础费 12</th></tr></thead><tbody><tr><td>每 Gas 实付</td><td>14</td><td>50</td><td>50</td></tr><tr><td>21000 Gas 的净费用</td><td>294000</td><td>1050000</td><td>1050000</td></tr><tr><td>验证者收到</td><td>42000</td><td>21000</td><td>798000</td></tr><tr><td>销毁</td><td>252000</td><td>1029000</td><td>252000</td></tr></tbody></table>
+            <p>余额条件是另一行。100000 × 50 = 5000000 gwei。它和净费用 294000 的比是 2500/147，约 17.01。把弹窗里的 5000000 记成「已经花掉」，错的不是百分比估算，而是把一笔尚未消耗的 Gas 上限当成了消耗。参考实现退回的是未使用 Gas 乘有效价格：(100000 − 21000) × 14 = 1106000 gwei。若有人按封顶退未使用 Gas，会写成 79000 × 50 = 3950000 gwei。两条路径可以在最后都回到净额 294000，但中间任何单独一行都不能当实付。核对时只认净额：gasUsed × 有效价格。</p></section>
+            <section id="sec-3"><h2>3. 小费会被封顶裁短，基础费高于封顶则进不了块</h2><p>同一笔 0x02，把基础费改成 49。小费 = min(2, 50 − 49) = 1，有效价格 = 50。封顶被用满，但验证者不是按小费上限 2 收款。21000 × 1 = 21000 gwei 给验证者，21000 × 49 = 1029000 gwei 销毁，净费用 1050000 gwei。有人按「基础费加小费上限」写成 21000 × (49 + 2) = 1071000 gwei，多出来的 21000 gwei 就是被裁掉的那 1 gwei。ethereum.org 写过「max fee 须高于基础费与小费之和，差额退回」。那句话描述的是小费没有被裁短的情形。参考实现的进块条件是 maxFeePerGas ≥ baseFeePerGas，小费再用封顶里的剩余部分。50 并不高于 49 + 2，这笔仍然有效，只是小费变成 1。</p><p>基础费再高到 51，断言失败：maxFeePerGas 已经小于 baseFeePerGas。参考实现不把这笔放进区块，也不存在「按 50 付过」的回执。笔记若在交易未进块时抄下封顶，记的是一个被拒绝的上限。下一笔要重读它所在区块的基础费，不能沿用 12 或 49。</p><p>基础费本身也不是百分比口头账。<a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">参考实现</a>里 BASE_FEE_MAX_CHANGE_DENOMINATOR = 8，ELASTICITY_MULTIPLIER = 2。父块用气量高于目标时，增量是 max(父块基础费 × 超出量 // 目标 // 8, 1)。父块打满时超出量等于目标，增量就是 max(父块基础费 // 8, 1)。父块基础费 100，增量是 12，下一区块基础费是 112。文档页上的 12.5% 表写成 112.5，那是百分数示例，不是这段整数除法的输出。父块基础费只有 12 且父块打满时，12 // 8 = 1，再被下限抬到 1，下一区块是 13，不是 12 × 1.125 = 13.5。父块基础费 7 且父块是空块时，减少那一支没有「至少为 1」：7 // 8 = 0，基础费停在 7。把「每块都涨 12.5%」写进费用，会在小基数上凭空造出小数 gwei。</p></section>
+            <section id="sec-4"><h2>4. 旧式 gasPrice 会把整个 50 付掉</h2><p>参考实现把旧式交易规范化时，maxPriorityFeePerGas 和 maxFeePerGas 都等于 gasPrice。基础费 12、gasPrice 50 时，小费 = min(50, 50 − 12) = 38，有效价格 = 50。发送者付的是整个 gasPrice，不是「基础费加一个另写的 2」。21000 × 50 = 1050000 gwei，验证者收到 21000 × 38 = 798000 gwei，销毁仍是 252000 gwei。和第一节那笔 0x02 相比，字段里都出现了 50，净费用却是 1050000 对 294000，仍是 25/7。EIP 自己写明：旧式交易不会直接享受新计价，gasPrice 会被基础费和小费分完。</p><p>因此「页面上的 50 gwei」要先问类型。0x02 的 50 可以是封顶，实付可以是 14。旧式的 50 就是实付单价。把旧式回执的有效价格代进 0x02 的公式，或者把 0x02 的封顶代进旧式，都会得到另一笔交易的费用。本文不计算类型 3 的 blob gas。那是另一条计费，和 L2 数据费那篇要回答的「钱包 Gas 行是不是回执全成本」也不是同一问。本文只核对执行 Gas 的封顶和有效价格。</p></section>
+            <section id="sec-5"><h2>5. 筛选线：先对齐类型和所在区块，再乘数量</h2><p>教学筛选按这个顺序。第一，读交易类型。0x02 记下 maxFeePerGas 和 maxPriorityFeePerGas；旧式只记下 gasPrice，并按参考实现把它填进两个字段。第二，读这笔所在区块的 baseFeePerGas，不是前一块的口头涨幅，也不是钱包对下一区块的预测。第三，若 maxFee 小于该基础费，停在「未进块」，不要写实付。第四，算出小费单价和有效价格，再乘 gasUsed。gasLimit 乘封顶只放在余额条件一列。第五，销毁和验证者收入分开：销毁是 gasUsed 乘基础费，验证者是 gasUsed 乘小费单价，两者之和应等于净费用。</p><p>这条线不回答交易所以外的报价滑点，也不回答交易所提现页面上的固定费用比链上 Gas 贵几倍。跨链到账和官网提现各有自己的对照。它也不把 L2 排序器给出的 Gas 行当成主网回执。通过一次，只说明这笔执行 Gas 的净额能用有效价格解释。下一块基础费会变，下一笔要重读。</p><p>可复现的最低字段是：交易哈希、类型、gasLimit、gasUsed、maxFeePerGas、maxPriorityFeePerGas 或旧式 gasPrice、所在区块号和 baseFeePerGas、小费单价、有效价格、净费用、销毁、验证者收入、余额条件 gasLimit × maxFee。单位停在 gwei 或 wei 的一种，不混用。缺基础费或缺类型的笔记停在「公式缺项」。若要自备少量 ETH，才能对照钱包弹窗和回执净额，把那次支出记在费用附注里，不要写进有效价格是否成立的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：先写类型、基础费和两个上限</h2><p>错误句式是「我设了 50 gwei，所以这笔按 50 付」。更可靠的句子是「类型；maxFee；小费上限或 gasPrice；所在区块基础费；有效价格；gasUsed；净费用；其中多少销毁、多少给验证者」。封顶、有效价格、验证者实际收到的小费，是三个数。在 12 和 2 这组里，三者是 50、14、2。基础费抬到 49，三者变成 50、50、1。旧式 gasPrice 为 50 时，有效价格才回到 50，而且验证者拿走 38 而不是 2。</p><p>本文是分析框架。进块条件、有效价格、GASPRICE 的返回值、旧式交易的规范化，以及基础费增量分母 8，来自 EIP-1559 公布的参考实现。21000 这个普通转账用气量，以及 21000 × (10 + 2) = 252000 gwei 的未裁短例子，来自 ethereum.org 的 Gas 说明。50、12、2、49、7、294000 和 1050000 是教学换算，未对任何实时区块做实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量 ETH，以便对照钱包里的封顶和回执里的实付，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文有效价格的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">封顶是余额条件，实付是有效价格</a></li><li><a href="#sec-2">教学案例：乘 50 得到 1050000，公式得到 294000</a></li><li><a href="#sec-3">小费会被封顶裁短，基础费高于封顶则进不了块</a></li><li><a href="#sec-4">旧式 gasPrice 会把整个 50 付掉</a></li><li><a href="#sec-5">筛选线：先对齐类型和所在区块，再乘数量</a></li><li><a href="#sec-6">结论：先写类型、基础费和两个上限</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559：Fee market change for ETH 1.0 chain</a></li><li><a href="https://ethereum.org/developers/docs/gas/" target="_blank" rel="noopener">ethereum.org：Gas and fees</a></li></ul><p class="ref-note">资料核对日期：2026年10月23日。有效价格、余额断言和基础费分母 8 来自 EIP-1559 参考实现。21000 与 252000 gwei 的例子来自 ethereum.org。教学用的 50、12、2 不是实时区块的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">L2 数据费核验：钱包 Gas 不等于回执里的真实成本</a></li><li><a href="/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">交易所提现手续费核验：官网收的固定费用，比链上真实Gas贵了多少倍</a></li><li><a href="/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">跨链兑换实操核验：报价滑点和到账金额，真的对得上吗</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f565935c"></script>
+</body>
+</html>

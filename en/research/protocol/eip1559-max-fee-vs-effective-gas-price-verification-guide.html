@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gas Check: The Max Fee Is Not the Price Paid - Crypto Research Notes</title>
+  <meta name="description" content="An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="EIP-1559,maxFeePerGas,effective gas price,base fee,priority fee,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Gas Check: The Max Fee Is Not the Price Paid">
+  <meta property="og:description" content="An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-23T16:05:00+08:00">
+  <meta property="article:modified_time" content="2026-10-23T16:05:00+08:00">
+  <meta property="article:section" content="Protocol and Infrastructure Risk">
+  <meta property="article:tag" content="Paid Fee">
+  <meta property="article:tag" content="EIP-1559">
+  <meta property="article:tag" content="Base Fee">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Gas check: of a cap of 50, the receipt pays 14, of which 12 is burned and 2 is the tip">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gas Check: The Max Fee Is Not the Price Paid">
+  <meta name="twitter:description" content="An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Gas check: of a cap of 50, the receipt pays 14, of which 12 is burned and 2 is the tip">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html",
+      "name": "Gas Check: The Max Fee Is Not the Price Paid",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Protocol and Infrastructure Risk", "item": "https://coin.ponr.org/en/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "Gas Check: The Max Fee Is Not the Price Paid", "item": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#article",
+      "headline": "Gas Check: The Max Fee Is Not the Price Paid",
+      "description": "An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.",
+      "image": ["https://coin.ponr.org/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.png"],
+      "datePublished": "2026-10-23T16:05:00+08:00",
+      "dateModified": "2026-10-23T16:05:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#webpage" },
+      "articleSection": "Protocol and Infrastructure Risk",
+      "isAccessibleForFree": true,
+      "keywords": ["EIP-1559","maxFeePerGas","effective gas price","base fee","priority fee","crypto research"],
+      "wordCount": 2003,
+      "citation": [
+        "https://eips.ethereum.org/EIPS/eip-1559",
+        "https://ethereum.org/developers/docs/gas/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is gas used times the max fee the amount this transaction pays?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. In the EIP-1559 reference implementation the price paid is the effective gas price. The tip is min(tip cap, max fee minus base fee), then the base fee is added. With a cap of 50, a base fee of 12 and a tip cap of 2, the effective price is 14. A simple transfer uses 21000 gas and pays 294000 gwei. Multiplying 21000 by 50 produces 1050000 gwei, which is 25/7 of the receipt." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the tip cap is 2, does the validator always receive 2 per gas?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The reference implementation fills the base fee first and leaves the tip only what remains under the cap. With a base fee of 49, a cap of 50 and a tip cap of 2, the tip is cut to 1 and the effective price equals the cap. On 21000 gas the validator receives 21000 gwei and 1029000 gwei is burned. If the base fee is above the cap, the transaction is not included." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a legacy gasPrice of 50 pay the same amount as a type-2 max fee of 50?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The reference implementation copies a legacy gasPrice into both the max fee and the tip cap. With a base fee of 12 the effective price stays 50, so 21000 gas costs 1050000 gwei and the validator receives 798000 gwei. A type-2 transaction with the same cap but a tip cap of 2 pays 294000 gwei. The two fifties are not the same field." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--mint">Paid Fee</span></p>
+          <h1>Gas Check: The Max Fee You Set Is Not What This Transaction Pays</h1>
+          <p class="article-summary">On an EIP-1559 transaction, maxFeePerGas is the most the sender will pay per unit of gas. The price on the receipt is the effective gas price: the base fee plus a tip that the cap can cut short. The note uses the integer rules in that EIP's reference implementation to separate "times the cap," "times the tip alone," and a legacy gasPrice. The figures are a teaching case, not a block read on 23 October 2026, and not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-23T16:05:00+08:00">2026-10-23 16:05:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-eip1559-max-fee-vs-effective-gas-price-verification-guide-en.svg" alt="Gas check: inside a cap of 50, only 14 is paid, of which 12 burns and 2 is the tip" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Read the type first. Only a 0x02 transaction stores a max fee and a tip cap as separate fields. A legacy gasPrice is copied into both.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Write the price paid as min(tip cap, max fee minus base fee) plus the base fee. Do not replace that line with gas used times the max fee.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>If the max fee is below the block's base fee, the reference implementation rejects the transaction. Do not record it as paid at the cap.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The next base fee is an integer step from the parent. The increase divides by 8 and is at least 1. A full parent at 100 moves by 12, not by 12.5.</li></ul></div>
+            <section id="sec-1"><h2>1. The cap is a balance test. The receipt uses the effective price</h2><p>The number a confirmation screen invites into a note is a large "max fee." For an <a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559</a> type 0x02 transaction, that figure is usually gasLimit times maxFeePerGas. The reference implementation does use it as a balance assertion: after the transferred value is deducted, the signer must still hold at least gasLimit times maxFeePerGas. That is a test that the worst case is affordable. It is not the fee on the receipt.</p><p>The same implementation then prices the gas. The priority fee per gas is min(maxPriorityFeePerGas, maxFeePerGas minus baseFeePerGas). The effective gas price is that tip plus the base fee. The pseudocode debits gasLimit times the effective price and refunds unused gas at the same effective price, so the net is gasUsed times the effective price. The base fee is burned. The validator receives only gasUsed times the tip. The GASPRICE opcode (0x3a) must return this effective price, so a contract that reads it does not see the 50 the user typed.</p><p>A usable note therefore keeps three lines. The balance test is gasLimit times the cap. The net fee is gasUsed times the effective price. The validator's income is what remains after the burn. Saving only the wallet popup leaves all three uncomputed.</p></section>
+            <section id="sec-2"><h2>2. Teaching case: times 50 writes 1050000, the formula returns 294000</h2><p>The teaching transaction is not a chain read from 23 October 2026. The 0x02 fields are integers in gwei: maxFeePerGas is 50, maxPriorityFeePerGas is 2, and the including block's baseFeePerGas is 12. One gwei is 10^9 wei, and every product below is finished in gwei before any conversion. gasLimit is 100000. A simple transfer uses 21000 gas. <a href="https://ethereum.org/developers/docs/gas/" target="_blank" rel="noopener">ethereum.org's gas page</a> states that 21000 figure and works an unbound example, 21000 times (10 + 2) = 252000 gwei, in which the cap does not cut the tip. The set 50, 12, 2 is a different set, chosen so the cut and the uncut cases can sit side by side.</p><p>While the cap does not bind, the tip is min(2, 50 minus 12) = 2 and the effective price is 14. Then 21000 times 14 = 294000 gwei. Of that, 21000 times 12 = 252000 gwei is burned and the validator receives 21000 times 2 = 42000 gwei. Gas used times the cap is 21000 times 50 = 1050000 gwei. The ratio 1050000 / 294000 is 25/7. A note that says the gas cost 1050000 gwei has written the receipt 25/7 times too high. Multiplying by the tip alone is the other error: 21000 times 2 = 42000 gwei, and 294000 / 42000 = 7, so the receipt is written as one seventh of itself and the base fee disappears.</p>
+            <table><caption>Teaching case: three readings, in gwei</caption><thead><tr><th scope="col">Reading</th><th scope="col">0x02, base fee 12</th><th scope="col">0x02, base fee 49</th><th scope="col">Legacy gasPrice 50, base fee 12</th></tr></thead><tbody><tr><td>Price paid per gas</td><td>14</td><td>50</td><td>50</td></tr><tr><td>Net fee on 21000 gas</td><td>294000</td><td>1050000</td><td>1050000</td></tr><tr><td>Validator receives</td><td>42000</td><td>21000</td><td>798000</td></tr><tr><td>Burned</td><td>252000</td><td>1029000</td><td>252000</td></tr></tbody></table>
+            <p>The balance test is a separate line. 100000 times 50 = 5000000 gwei. Against the net fee of 294000, the ratio is 2500/147, about 17.01. Recording the popup's 5000000 as spent treats gas that was never consumed as consumed. In the reference implementation the unused-gas refund is unused gas times the effective price: (100000 minus 21000) times 14 = 1106000 gwei. Refunding that unused gas at the cap instead writes 79000 times 50 = 3950000 gwei. Both paths can be made to finish at a net of 294000, and neither intermediate line is the fee. The check is the net: gasUsed times the effective price.</p></section>
+            <section id="sec-3"><h2>3. The cap can cut the tip. A base fee above the cap keeps the transaction out</h2><p>Keep the same 0x02 transaction and set the base fee to 49. The tip is min(2, 50 minus 49) = 1, and the effective price is 50. The cap is fully used, but the validator is not paid the tip cap of 2. The validator receives 21000 times 1 = 21000 gwei, 21000 times 49 = 1029000 gwei is burned, and the net is 1050000 gwei. Writing "base fee plus the tip cap," 21000 times (49 + 2) = 1071000 gwei, invents 21000 gwei. That gap is the 1 gwei the cap removed. ethereum.org says the max fee must exceed the base fee plus the tip, and that the difference is refunded. That sentence describes a tip the cap did not cut. The reference implementation includes a transaction when maxFeePerGas is at least the base fee, then shortens the tip to what remains. A cap of 50 does not exceed 49 + 2, and the transaction is still valid. The tip is 1.</p><p>Raise the base fee to 51 and the assertion fails: maxFeePerGas is below baseFeePerGas. The reference implementation does not put the transaction in a block, and there is no receipt that says it paid 50. A note that copies the cap from a transaction that never landed has recorded a rejected ceiling. The next attempt reads the base fee of the block that actually includes it. It does not reuse 12 or 49.</p><p>The base fee's own next step is integer arithmetic, not a spoken percentage. In the <a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">reference implementation</a>, BASE_FEE_MAX_CHANGE_DENOMINATOR is 8 and ELASTICITY_MULTIPLIER is 2. When the parent used more gas than its target, the delta is max(parent base fee times the excess divided, in integers, by the target and then by 8, or 1). A full parent has an excess equal to the target, so the delta is max(parent base fee floor-divided by 8, 1). A parent base fee of 100 moves by 12, and the next base fee is 112. The 12.5 percent table that prints 112.5 is a percentage illustration, not the output of that integer division. A full parent whose base fee is 12 moves by max(12 floor-divided by 8, 1) = 1, so the next base fee is 13, not 12 times 1.125 = 13.5. An empty parent whose base fee is 7 takes the decrease branch, which has no floor of 1: 7 floor-divided by 8 is 0, and the base fee stays 7. Writing "every block moves 12.5 percent" invents fractional gwei on a small base.</p></section>
+            <section id="sec-4"><h2>4. A legacy gasPrice pays the whole 50</h2><p>When the reference implementation normalizes a legacy transaction, both maxPriorityFeePerGas and maxFeePerGas become the gasPrice. With a base fee of 12 and a gasPrice of 50, the tip is min(50, 50 minus 12) = 38 and the effective price is 50. The sender pays the whole gasPrice, not the base fee plus some separately typed 2. Then 21000 times 50 = 1050000 gwei, the validator receives 21000 times 38 = 798000 gwei, and the burn is still 252000 gwei. Set beside the type 0x02 transaction from the first section, both notes contain a 50, and the nets are 1050000 against 294000, again 25/7. The EIP says legacy transactions do not benefit directly from the new pricing, because the gasPrice is consumed between the base fee and the priority fee.</p><p>A printed 50 gwei therefore needs a type before it needs a multiplier. On a 0x02 transaction, 50 can be the cap while the price paid is 14. On a legacy transaction, 50 is the price paid. Substituting a legacy effective price into the 0x02 formula, or a 0x02 cap into a legacy receipt, prices a different transaction. This note does not price type-3 blob gas. That is a separate meter, and it is also a different question from whether an L2 wallet's gas row is the whole receipt. The check here is the execution-gas cap against the effective price.</p></section>
+            <section id="sec-5"><h2>5. A screen: match the type and the block, then multiply</h2><p>The teaching screen is ordered. First, read the type. For 0x02, record maxFeePerGas and maxPriorityFeePerGas. For a legacy transaction, record gasPrice and copy it into both fields the way the reference implementation does. Second, read baseFeePerGas from the block that included the transaction, not a spoken increase from the parent and not a wallet's forecast of the next block. Third, if the max fee is below that base fee, stop at "not included" and do not write a price paid. Fourth, compute the tip and the effective price, then multiply by gasUsed. Gas limit times the cap stays in the balance-test column. Fifth, split the burn from the validator: the burn is gasUsed times the base fee, the validator receives gasUsed times the tip, and the two must sum to the net.</p><p>The screen does not say whether a cross-chain quote matches the amount that arrives, and it does not say how many times an exchange's posted withdrawal fee exceeds on-chain gas. Those notes have their own columns. It also does not treat an L2 sequencer's gas row as a mainnet receipt. Passing once means this transaction's execution-gas net is explained by the effective price. The next block has its own base fee, and the next transaction reads it again.</p><p>The minimum fields another researcher can replay are: transaction hash, type, gasLimit, gasUsed, maxFeePerGas, maxPriorityFeePerGas or the legacy gasPrice, the including block number and its baseFeePerGas, the tip per gas, the effective price, the net fee, the burn, the validator's income, and the balance test gasLimit times maxFee. Stay in one of gwei or wei. A note missing the base fee or the type stops at "formula incomplete." Holding a small amount of ETH in order to compare a wallet popup with the receipt belongs in a fee footnote. It does not belong in the judgment of whether the effective price explains the net.</p></section>
+            <section id="sec-6"><h2>6. Write the type, the base fee, and both caps before naming a price</h2><p>The weak sentence is "I set 50 gwei, so this transaction paid 50." A useful one is "type; max fee; tip cap or gasPrice; base fee of the including block; effective price; gas used; net fee; how much burned and how much the validator received." The cap, the effective price, and the tip the validator actually receives are three numbers. In the set with a base fee of 12 and a tip cap of 2, they are 50, 14, and 2. Raise the base fee to 49 and they become 50, 50, and 1. Only a legacy gasPrice of 50 brings the effective price back to 50, and the validator then receives 38 rather than 2.</p><p>This is a research framework. The inclusion rule, the effective price, the value GASPRICE returns, the normalization of legacy transactions, and the base-fee denominator of 8 come from the reference implementation published in EIP-1559. The 21000 gas figure for a simple transfer, and the unbound example 21000 times (10 + 2) = 252000 gwei, come from the ethereum.org gas page cited above. The figures 50, 12, 2, 49, 7, 294000, and 1050000 are a teaching conversion. They were not measured on a live block, and they are not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: Comparing a displayed cap with the net on a receipt may mean holding a small amount of ETH. You can inspect quotes, fees, and limits on <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a>. The link is separate from the effective-price judgment in this note, and it is not a guarantee of the service. Any swap should be a real, compliant research expense, not an illegal use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The cap is a balance test. The receipt uses the effective price</a></li><li><a href="#sec-2">Teaching case: times 50 writes 1050000, the formula returns 294000</a></li><li><a href="#sec-3">The cap can cut the tip. A base fee above the cap keeps the transaction out</a></li><li><a href="#sec-4">A legacy gasPrice pays the whole 50</a></li><li><a href="#sec-5">A screen: match the type and the block, then multiply</a></li><li><a href="#sec-6">Write the type, the base fee, and both caps before naming a price</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://eips.ethereum.org/EIPS/eip-1559" target="_blank" rel="noopener">EIP-1559: Fee market change for ETH 1.0 chain</a></li><li><a href="https://ethereum.org/developers/docs/gas/" target="_blank" rel="noopener">ethereum.org: Gas and fees</a></li></ul><p class="ref-note">Sources checked on 23 October 2026. The effective price, the balance assertion, and the base-fee denominator of 8 come from the EIP-1559 reference implementation. The 21000 gas figure and the 252000 gwei example come from ethereum.org. The teaching values 50, 12, and 2 are not a live block.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/protocol/l2-l1-data-fee-vs-wallet-gas-verification-guide.html">L2 Data-Fee Check: Wallet Gas Is Not the Receipt Cost</a></li><li><a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">Exchange Withdrawal Fee Verification: How Many Times the Real Gas Cost Are You Actually Paying</a></li><li><a href="/en/research/protocol/cross-chain-swap-slippage-fee-verification-guide.html">Cross-Chain Swap Verification: Do the Slippage Quote and What Actually Arrives Add Up?</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=f565935c"></script>
+</body>
+</html>
