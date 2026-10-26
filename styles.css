@@ -77,16 +77,16 @@
 [data-theme="dark"] .archive-tag--wine   { background: #331821; color: #e08fa8; }
 [data-theme="dark"] .archive-tag--cobalt { background: #161f3d; color: #93aef0; }
 
-/* --- header theme toggle --- */
+/* --- header tools: language glyph + theme, same ghost icon buttons as ai_worker --- */
 .theme-toggle {
   display: inline-flex; align-items: center; justify-content: center;
-  flex: none; width: 34px; height: 34px; margin-left: 4px; padding: 0;
-  border: 1px solid var(--line-strong); border-radius: 999px;
-  background: var(--panel); color: var(--muted-2); cursor: pointer;
+  flex: none; width: 32px; height: 32px; margin-left: 0; padding: 0;
+  border: 0; border-radius: 999px;
+  background: transparent; color: var(--muted); cursor: pointer;
   font-family: inherit;
-  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+  transition: background-color .15s ease, color .15s ease;
 }
-.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .theme-icon-sun { display: none; }
 .theme-icon-moon { display: inline-flex; }
 [data-theme="dark"] .theme-icon-sun { display: inline-flex; }
@@ -197,11 +197,19 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
 }
 .site-nav a:hover { color: var(--accent); background: var(--accent-soft); }
 .lang-switch {
-  margin-left: 4px; padding: 6px 11px !important;
-  border: 1px solid var(--line-strong); border-radius: 999px !important;
-  font-size: 12.5px !important; font-weight: 700 !important;
+  --lang-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 6 6'/%3E%3Cpath d='m4 14 6-6 2-3'/%3E%3Cpath d='M2 5h12'/%3E%3Cpath d='M7 2h1'/%3E%3Cpath d='m22 22-5-10-5 10'/%3E%3Cpath d='M14 18h6'/%3E%3C/svg%3E");
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: none; width: 32px; height: 32px; margin-left: 2px;
+  padding: 0 !important; border: 0 !important; border-radius: 999px !important;
+  background: transparent; color: var(--muted);
+  font-size: 0 !important; line-height: 0 !important; font-weight: 400 !important;
 }
-.lang-switch:hover { border-color: var(--accent); }
+.lang-switch::before {
+  content: ""; width: 16px; height: 16px; background-color: currentColor;
+  -webkit-mask: var(--lang-icon) center / contain no-repeat;
+  mask: var(--lang-icon) center / contain no-repeat;
+}
+.site-nav a.lang-switch:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .site-nav a.active, .site-nav a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
 
 /* --- layout: left article sidebar + main --- */
@@ -937,7 +945,7 @@ body.home .sidebar-search-input, body.archive .sidebar-search-input { padding: 1
      visible padding is tight on small screens — min-height does the work, the
      flex centering keeps the label looking the same size as before. */
   .site-nav a { padding: 7px 10px; font-size: 14px; min-height: 44px; }
-  .theme-toggle { width: 44px; height: 44px; }
+  .lang-switch, .theme-toggle { width: 44px; height: 44px; }
   .search-bar-inner { padding: 10px 16px; }
   .sidebar-search { max-width: none; }
   .layout { padding: 0 16px; }
