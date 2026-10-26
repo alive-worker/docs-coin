@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>借贷核验：健康因子 1.5 不是还能跌一半 - 加密货币研究</title>
+  <meta name="description" content="Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="健康因子,清算阈值,Aave,价格跌幅,平仓比例,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="借贷核验：健康因子 1.5 不是还能跌一半">
+  <meta property="og:description" content="Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-26T16:34:00+08:00">
+  <meta property="article:modified_time" content="2026-10-26T16:34:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="健康因子">
+  <meta property="article:tag" content="清算线">
+  <meta property="article:tag" content="Aave">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lending-health-factor-vs-price-drop-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="借贷核验：健康因子 1.5 的清算价格在 2000，把 1.5 读成还能跌一半会标到 1500">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="借贷核验：健康因子 1.5 不是还能跌一半">
+  <meta name="twitter:description" content="Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lending-health-factor-vs-price-drop-verification-guide.png">
+  <meta name="twitter:image:alt" content="借贷核验：健康因子 1.5 的清算价格在 2000，把 1.5 读成还能跌一半会标到 1500">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-lending-health-factor-vs-price-drop-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=88551f04">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html",
+      "name": "借贷核验：健康因子 1.5 不是还能跌一半",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-lending-health-factor-vs-price-drop-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "借贷核验：健康因子 1.5 不是还能跌一半", "item": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#article",
+      "headline": "借贷核验：健康因子 1.5 不是还能跌一半",
+      "description": "Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。",
+      "image": ["https://coin.ponr.org/img/article-lending-health-factor-vs-price-drop-verification-guide.png"],
+      "datePublished": "2026-10-26T16:34:00+08:00",
+      "dateModified": "2026-10-26T16:34:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["健康因子","清算阈值","Aave","价格跌幅","平仓比例","加密货币研究"],
+      "wordCount": 2383,
+      "citation": [
+        "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/GenericLogic.sol",
+        "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/ValidationLogic.sol",
+        "https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/LiquidationLogic.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/lending-health-factor-vs-price-drop-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "健康因子 1.5 是不是表示价格还能跌 50%？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。1.5 减 1 得到的 0.5 不是价格跌幅。Aave V3 的健康因子等于抵押品按清算阈值折算后的价值除以债务。教学仓抵押价值 30000、清算阈值 8000 个基点、债务 16000，健康因子是 1.5e18。只让抵押品价格下跌、债务计价不变时，健康因子落到 1e18 的价格是 2000，从 3000 下跌三分之一。跌一半到 1500 时，健康因子已经是 0.75e18。" }
+        },
+        {
+          "@type": "Question",
+          "name": "价格刚好使健康因子等于 1 时，能不能清算？",
+          "acceptedAnswer": { "@type": "Answer", "text": "按 Aave V3 的校验，不能。清算要求健康因子严格小于 1e18。教学价格 2000 时合约结果正好是 1e18，清算校验不通过。价格 1999 时结果是 0.9995e18，才低于这条线。此时平仓比例仍是 50%，16000 的债务一次最多还 8000。" }
+        },
+        {
+          "@type": "Question",
+          "name": "0.95 是清算线吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。0.95e18 是平仓比例的开关。健康因子高于它时，一次最多偿还债务的 50%；不高于它时，一次可以偿还 100%。教学价格 1900 时健康因子正好是 0.95e18，平仓比例切到 100%。能不能进入清算，看的仍是有没有低于 1e18。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/" aria-current="page">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/lending-health-factor-vs-price-drop-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--copper">健康因子</span></p>
+          <h1>借贷核验：健康因子 1.5，不等于价格还能跌一半</h1>
+          <p class="article-summary">Aave V3 把健康因子定义成抵押品按清算阈值折算后的价值，再除以债务。页面上的 1.5 是这个比值。用 1.5 减 1 得到 50%，再把它当成价格还能跌的幅度，清算线会从教学价格 2000 被写成 1500。下文用该仓库参考实现里的整数式把这两条线拆开。数字是教学值，不是 2026 年 10 月 26 日某个账户或某种资产的参数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-26T16:34:00+08:00">2026-10-26 16:34:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-lending-health-factor-vs-price-drop-verification-guide.svg" alt="价格从 3000 往下，健康因子落到 1 的位置在 2000，把 1.5 读成跌一半会标在 1500" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>健康因子用清算阈值折算抵押，再除以债务。不得把健康因子减 1，记成价格还能跌的比例。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>合约里的 1 是 1e18。清算要求严格小于 1e18。等于 1e18 时，清算校验不通过。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>0.95e18 切换平仓比例：高于它一次最多还 50%，不高于它一次可还 100%。它不是清算开关。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>抵押和债务是同一种计价资产时，价格会从分子分母同时约掉。多种抵押要按余额加权清算阈值，不能拿最大的那一档代全部。</li></ul></div>
+            <section id="sec-1"><h2>1. 1.5 减 1，不是价格跌幅</h2><p>借贷页面把健康因子印成 1.50 之后，笔记里常出现下一句：「还有 0.50 的缓冲，价格还能跌一半。」这句把比值的余量当成了价格的百分比。<a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/GenericLogic.sol" target="_blank" rel="noopener">Aave V3 的 GenericLogic</a> 不是这样算的。它先把每种抵押按基础货币计价，再用该抵押的清算阈值做百分比乘法，得到分子；分母是同样换成基础货币的债务。债务为零时，健康因子取 uint256 的最大值，而不是 0。有债务时，健康因子等于这段分子对债务做 wad 除法。</p><p>因此 1.5 回答的是「折算后的抵押是债务的 1.5 倍」。只在一种条件下，它才能改写成价格跌幅：抵押只有一种，债务的计价不跟着这个价格走，清算阈值也不变。这时健康因子和价格成正比，落到 1 需要价格变成现在的 1/1.5，也就是下跌 1 − 1/1.5 = 1/3。1.5 − 1 = 0.5 是另一道减法，它没有出现在公式里。</p><p>这和本站「超过最大可借，不等于已经可被清算」不是同一问。那篇比较的是最大 LTV 和清算阈值：借款可以已经超过最大可借，清算仍要等到健康因子低于 1。本篇假定仓位还在最大可借之内，问的是已经印出来的 1.5，能不能读成价格距离。最大可借用的是 LTV，健康因子用的是清算阈值。把 LTV 代进健康因子，分子会变小，跌幅会被算得过早。</p></section>
+            <section id="sec-2"><h2>2. 教学仓：线在 2000，误读写在 1500</h2><p>教学仓不声称是 2026 年 10 月 26 日任何市场的参数。抵押是 10 个单位，预言机价格 3000，基础货币价值 30000。清算阈值取 8000 个基点，也就是 80%。债务是 16000，并且债务资产的价格不随这 3000 变动。百分比乘法按该库的半个基点进位：(30000 × 8000 + 5000) / 10000 = 24000。wad 除法再把 24000 对 16000 乘上 1e18：(24000 × 1e18 + 8000) / 16000 = 1500000000000000000。页面上的 1.5，在合约里就是这个 1.5e18。把它读成「1.5 × 10^18 倍安全」，数量级就错了。</p><p>只让抵押价格下跌时，健康因子回到 1e18 的价格满足 10 × P × 0.8 = 16000，所以 P = 2000。从 3000 到 2000 是下跌三分之一。把 1.5 当成还能跌一半，会把线画在 3000 × 1/2 = 1500。两条线相差 500，占起始价格的六分之一。价格真的到 1500 时，抵押价值 15000，折算后是 12000，健康因子是 12000 / 16000 = 0.75e18。误读不是「稍微保守」，而是已经站在清算线下面 0.25 的地方。</p>
+            <table><caption>教学仓：同一笔债务，五种价格</caption><thead><tr><th scope="col">读法</th><th scope="col">价格</th><th scope="col">健康因子</th><th scope="col">能否清算</th><th scope="col">一次最多偿还</th></tr></thead><tbody><tr><td>现价</td><td>3000</td><td>1.5e18</td><td>否</td><td>未进入清算</td></tr><tr><td>比值落到 1</td><td>2000</td><td>1e18</td><td>否</td><td>未进入清算</td></tr><tr><td>第一个低于 1 的整数价</td><td>1999</td><td>0.9995e18</td><td>能</td><td>8000</td></tr><tr><td>0.95 整</td><td>1900</td><td>0.95e18</td><td>能</td><td>16000</td></tr><tr><td>把 1.5 读成跌一半</td><td>1500</td><td>0.75e18</td><td>能</td><td>16000</td></tr></tbody></table>
+            <p><a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/ValidationLogic.sol" target="_blank" rel="noopener">ValidationLogic</a> 把 HEALTH_FACTOR_LIQUIDATION_THRESHOLD 定成 1e18，清算要求健康因子严格小于它。价格 2000 时，折算后的抵押正好 16000，wad 除法得到恰好 1e18，清算校验不通过。价格 1999 时抵押价值 19990，折算 (19990 × 8000 + 5000) / 10000 = 15992，再除以 16000 得到 0.9995e18。清算从这里才开始，不是从「公式等于 1」的那个价开始。差 1 个价格单位，在这组整数里就是差在严格小于。</p></section>
+            <section id="sec-3"><h2>3. 0.95 切换的是一次能还多少</h2><p><a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/LiquidationLogic.sol" target="_blank" rel="noopener">LiquidationLogic</a> 另有一条 0.95e18。它不决定能不能清算。健康因子仍高于 0.95e18 时，平仓比例用 DEFAULT_LIQUIDATION_CLOSE_FACTOR，即 0.5e4，一次最多偿还债务的 50%。健康因子不高于 0.95e18 时，平仓比例用 MAX_LIQUIDATION_CLOSE_FACTOR，即 1e4，一次可以偿还 100%。比较符是大于，所以恰好等于 0.95e18 走的是 100% 那一支。</p><p>教学价格 1999 的健康因子是 0.9995e18，高于 0.95e18。16000 的 50% 按同样的百分比乘法是 (16000 × 5000 + 5000) / 10000 = 8000。一次清算最多还 8000，不是整笔 16000。价格落到 1900 时，抵押价值 19000，折算 15200，健康因子恰好 0.95e18，平仓比例切到 100%，16000 可以在一次调用里还完。把 0.95 写成「清算线」，会把 1999 到 1900 这一段说成还不能清算；这一段已经能清算，只是一次只能还一半。</p><p>同一份校验还有价格预言机哨兵。哨兵地址不是零、而且健康因子尚未低于 0.95e18 时，还要再问哨兵是否允许清算。没有配置哨兵时，这条不添加新的价格线，低于 1e18 就进入其余清算校验。笔记若没读到哨兵地址，不能把 0.95 补成第二条清算线，也不能假设哨兵一定开着。</p></section>
+            <section id="sec-4"><h2>4. 价格会约掉，清算阈值也不能拿一档代全部</h2><p>把债务也换成同一种资产，三分之一就消失了。抵押仍是 10 个单位，债务改成 5 个单位，价格仍是 3000。抵押价值 30000，债务价值 15000，折算后 24000，健康因子 24000 / 15000 = 1.6e18。价格改成 6000 时，两边同时乘 2，抵押 60000、债务 30000，折算 48000，比值仍是 1.6e18。健康因子不变，是因为预言机价格在分子分母里各出现一次。这时写「还能跌三分之一」或「还能跌一半」，跌的是一个被约掉的数。真正会推动健康因子的，是债务资产相对抵押资产变贵，或者清算阈值、eMode 档位变了。</p><p>两种抵押也不能共用较大的那个阈值。第一笔基础货币价值 30000、阈值 8000，第二笔 10000、阈值 5000。加权阈值是 (30000 × 8000 + 10000 × 5000) / 40000 = 7250 个基点，不是 8000。债务若是 20000，分子 (40000 × 7250 + 5000) / 10000 = 29000，健康因子是 1.45e18。若整仓误用 80%，分子变成 32000，健康因子被写成 1.6e18，多出 0.15e18。用户处于 eMode 且该储备属于这个档时，GenericLogic 用的是档位上的清算阈值，不是储备页上单独印的那一个。档位不是零却仍抄储备页，加权会从第一步就错。</p><p>债务本身也不是借款回执上的本金。可变利率债务先取 scaledBalance，再乘储备的 normalized debt，然后才乘价格。利息把分母变大之后，健康因子下降，价格可以一行没动。用本金去除折算抵押，会把健康因子算得偏高。稳定利率债务走的是另一条余额，两边都要加进分母。</p></section>
+            <section id="sec-5"><h2>5. 筛选线：先对齐计价，再谈跌幅</h2><p>教学筛选按这个顺序。第一，读合约返回的健康因子原始值，确认单位是 wad，1e18 才是 1。第二，列出每种抵押的基础货币价值和它实际使用的清算阈值；eMode 档位不是零时，用档位阈值。加权阈值等于余额乘阈值之和，再除以抵押总价值。第三，债务用计入指数之后的余额，稳定和可变两边相加，再换成同一基础货币。第四，只有一种抵押价格在动、债务计价不动时，才把 1 − 1/健康因子 写成跌幅。第五，清算与否看是否严格小于 1e18；一次最多偿还多少，再看是否高于 0.95e18。哨兵地址要单列，没有读到就停在「哨兵未知」。</p><p>这条线不回答永续合约的标记价格和 K 线最新价哪一个触发强平，也不回答展示 APY 在这个规模下还有没有额度。那两篇各有自己的分母。它也不把最大 LTV 重新定义成清算阈值。通过一次，只说明这笔健康因子和这个价格之间的距离能用上述整数式解释。指数和价格下一笔都会变，要重读。</p><p>可复现的最低字段是：协议与市场、用户地址、每种抵押的数量与 decimals、预言机价格、基础货币价值、所用清算阈值及它来自储备还是 eMode、债务资产同样的一组、scaled debt、normalized debt、稳定债务余额、健康因子原始值、哨兵地址、按当前健康因子得到的平仓比例和一次最多偿还额。缺阈值来源或债务指数的笔记停在「公式缺项」。若要自备少量资产才能对照页面健康因子和仓位变化，把支出记在费用附注里，不要写进 1.5 是否等于跌幅的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：先写比值落到 1 的价格，再写 0.95 能还多少</h2><p>错误句式是「健康因子 1.5，所以价格还能跌 50%」。更可靠的句子是「wad 健康因子；加权清算阈值；债务是否与抵押同一价格；比值落到 1e18 的价格；第一个严格小于 1e18 的价格；0.95e18 对应的价格，以及那里的平仓比例」。在教学仓里，这五个数是 1.5e18、8000 个基点、债务不跟随、2000、1999、1900 处切到 100%。1500 是误读，落到那里健康因子已经是 0.75e18。</p><p>本文是分析框架。健康因子的分子分母、1e18 与严格小于、0.95e18 与 50% 或 100% 的平仓比例、eMode 对阈值的替换，都来自上面引用的 Aave V3 核心库。30000、16000、8000、2000、1999、1900 和 1500 是教学换算，未对任何实时账户做实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量资产，以便对照页面上的健康因子和仓位变化，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文健康因子或价格跌幅的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">1.5 减 1，不是价格跌幅</a></li><li><a href="#sec-2">教学仓：线在 2000，误读写在 1500</a></li><li><a href="#sec-3">0.95 切换的是一次能还多少</a></li><li><a href="#sec-4">价格会约掉，清算阈值也不能拿一档代全部</a></li><li><a href="#sec-5">筛选线：先对齐计价，再谈跌幅</a></li><li><a href="#sec-6">结论：先写比值落到 1 的价格，再写 0.95 能还多少</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/GenericLogic.sol" target="_blank" rel="noopener">Aave V3：GenericLogic.calculateUserAccountData</a></li><li><a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/ValidationLogic.sol" target="_blank" rel="noopener">Aave V3：ValidationLogic 的健康因子阈值</a></li><li><a href="https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/logic/LiquidationLogic.sol" target="_blank" rel="noopener">Aave V3：LiquidationLogic 的平仓比例</a></li></ul><p class="ref-note">资料核对日期：2026年10月26日。公式与常量来自 aave-v3-core 仓库 master 分支上的上述文件。教学仓的 80% 与 3000 不是某个实时市场的参数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/lending-max-ltv-vs-liquidation-threshold-verification-guide.html">借贷核验：超过最大可借，不等于已经可被清算</a></li><li><a href="/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">借贷利用率核验：展示 APY 不等于可按该规模进场</a></li><li><a href="/research/market/perp-mark-vs-last-price-liquidation-verification-guide.html">永续强平核验：K线最新价不等于标记价格</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=8096dc2f"></script>
+</body>
+</html>

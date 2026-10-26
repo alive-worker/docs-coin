@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'eip1559-max-fee-vs-effective-gas-price-verification-guide',
-  publishedISO: '2026-10-23T16:05:00+08:00',
-  tagColor: 'mint',
-  topic: 'protocol',
+  slug: 'lending-health-factor-vs-price-drop-verification-guide',
+  publishedISO: '2026-10-26T16:34:00+08:00',
+  tagColor: 'copper',
+  topic: 'market',
 
   zh: {
-    h1: "Gas 核验：你设的封顶，不等于这笔的实付",
-    tagLabel: "实付",
-    cardDesc: "EIP-1559 的 maxFee 是每单位 Gas 的上限。教学交易封顶 50、基础费 12、小费上限 2，实付是 14 不是 50。把已用 Gas 乘 50，费用会被写成 25/7 倍。",
+    h1: "借贷核验：健康因子 1.5，不等于价格还能跌一半",
+    tagLabel: "健康因子",
+    cardDesc: "Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。",
   },
   en: {
-    h1: "Gas Check: The Max Fee You Set Is Not What This Transaction Pays",
-    tagLabel: "Paid Fee",
-    cardDesc: "An EIP-1559 max fee is a per-gas ceiling. In the teaching transaction the cap is 50, the base fee is 12 and the tip cap is 2, so the price paid is 14, not 50. Multiplying gas used by 50 writes the fee at 25/7 of the receipt.",
+    h1: "Lending Check: A Health Factor of 1.5 Is Not a 50% Price Cushion",
+    tagLabel: "Health Factor",
+    cardDesc: "In Aave V3 the health factor is collateral weighted by the liquidation threshold, divided by debt. One is 1e18 on chain. At 1.5 the teaching price reaches that line at 2000, not at a 50% drop to 1500. The 0.95 level changes how much debt one call can repay.",
   },
 
   existingSlugsNewestFirst: [
+    'eip1559-max-fee-vs-effective-gas-price-verification-guide',
     'amm-spot-vs-execution-price-verification-guide',
     'oracle-heartbeat-vs-deviation-threshold-verification-guide',
     'perp-funding-interval-vs-annualized-rate-verification-guide',

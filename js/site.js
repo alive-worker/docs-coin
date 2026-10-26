@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/lending-health-factor-vs-price-drop-verification-guide.html': '2026-10-26 16:34:00',
+    '/research/market/lending-health-factor-vs-price-drop-verification-guide.html': '2026-10-26 16:34:00',
     '/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html': '2026-10-23 16:05:00',
     '/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html': '2026-10-23 16:05:00',
     '/en/research/market/amm-spot-vs-execution-price-verification-guide.html': '2026-10-23 11:38:00',
