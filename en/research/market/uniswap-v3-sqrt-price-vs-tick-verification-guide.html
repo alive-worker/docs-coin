@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swap Check: One Division Is Not the Quote - Crypto Research Notes</title>
+  <meta name="description" content="Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="sqrtPriceX96,Uniswap V3,tick,Q64.96,pool quote,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Swap Check: One Division Is Not the Quote">
+  <meta property="og:description" content="Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-28T15:36:00+08:00">
+  <meta property="article:modified_time" content="2026-10-28T15:36:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Sqrt Price">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="tick">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="At tick 200, dividing by 2^96 prints 1.01005; the quote after squaring is 1.02020. 10000 ticks are 2.71815, not 2.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Swap Check: One Division Is Not the Quote">
+  <meta name="twitter:description" content="Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="At tick 200, dividing by 2^96 prints 1.01005; the quote after squaring is 1.02020. 10000 ticks are 2.71815, not 2.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=7773f531">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html",
+      "name": "Swap Check: One Division Is Not the Quote",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Swap Check: One Division Is Not the Quote", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#article",
+      "headline": "Swap Check: One Division Is Not the Quote",
+      "description": "Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.png"],
+      "datePublished": "2026-10-28T15:36:00+08:00",
+      "dateModified": "2026-10-28T15:36:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["sqrtPriceX96","Uniswap V3","tick","Q64.96","pool quote","crypto research"],
+      "wordCount": 1731,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is sqrtPriceX96 divided by 2^96 the pool quote?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. TickMath computes sqrt(1.0001^tick) times 2^96. One division leaves the square root. At teaching tick 200, sqrtPriceX96 is 80024378775772204256025656563. Dividing by 2^96 and truncating to 18 decimals prints 1.010049662092876568. Squaring and truncating to 12 decimals returns 1.020200319893. At tick 0 both sides are 1, so that tick cannot validate the read." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do 10000 ticks mean the price rose 100%?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. One tick multiplies by 1.0001. Many ticks compound. Dividing the tick count by 100 is not a percent move. The contract ratio at 10000 ticks, truncated to 12 decimals, is 2.718145926825, not 2. The gap is 0.718145926825." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are fee 3000 and tick spacing 60 the same number?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The v1.0.0 factory maps fee 3000 to spacing 60. The pool flash path divides fee by 1e6, so 3000 is 0.003. Spacing 60 is the step of initialized ticks. The boundary ratio across those 60 ticks is 1.006017734268, a move of about 0.6018%, which is neither 60% nor the 0.30% fee." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Sqrt Price</span></p>
+          <h1>Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</h1>
+          <p class="article-summary">Uniswap V3 keeps the current price in slot0.sqrtPriceX96. The struct comment calls that field the current price. TickMath computes sqrt(1.0001^tick) times 2^96. One division at teaching tick 200 prints 1.010049662092. Squaring it returns 1.020200319893. A tick count is not a percent either: 10000 ticks ratio to 2.718145926825, not to 2. The figures below follow the integer steps in the v1.0.0 core. They are a teaching set, not a pool read on 28 October 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-28T15:36:00+08:00">2026-10-28 15:36:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide-en.svg" alt="At tick 200, dividing by 2 to the 96 prints 1.01005; squaring that quote prints 1.02020. The line through 2.00000 leaves the contract ratio 2.71815 for 10000 ticks." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Divide sqrtPriceX96 by 2^96, then square. That square is the raw token1/token0 price. The first step alone is the square root.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A tick is an exponent of 1.0001. Many ticks compound. Dividing the tick count by 100 does not write a percent move.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The swap fee, the tick spacing, the current tick, and the in-range sqrtPriceX96 are four fields. Fee 3000 is not spacing 60, and it is not a price.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Scale the raw price by 10 to the power of decimals0 minus decimals1 before calling it token1 per token0 in human units.</li></ul></div>
+            <section id="sec-1"><h2>1. The struct says price. The formula says square root</h2><p>A note often continues from a printed slot0 with the sentence "that number is the price." <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool at v1.0.0</a> does label sqrtPriceX96 as the current price, and the next struct line as the current tick. Stopping at the comment stops before the square. <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">TickMath</a> states the operation: getSqrtRatioAtTick calculates sqrt(1.0001^tick) times 2^96. The return value is the square root of the token1/token0 ratio, as a Q64.96 fixed-point number.</p><p>The quote therefore takes two steps. Divide sqrtPriceX96 by 2^96. That quotient is the square root. Square it. That square is the raw price, token1 per token0 in raw units. A note that keeps only the first step has stored the square root under the name price. At tick 0 the library returns exactly 2^96, which is 79228162514264337593543950336. One division equals 1, and the square is 1 as well. The two readings coincide, so a check that uses only tick 0 will pass a broken decoder. The library also closes its ends: MIN_TICK of −887272 maps to MIN_SQRT_RATIO 4295128739, and MAX_TICK 887272 maps to the MAX_SQRT_RATIO in the same file. Matching the ends does not make one division the quote at a tick in between.</p><p>This is not the question in the spot-versus-fill note. That note compares a constant-product tangent with the chord of one input size. This note has not reached a size yet. It asks whether the slot0 word can be read as a quote at all. A square-root reading makes the later fill comparison meaningless, because neither side is the price. The feed-decimals note compares an oracle answer scale with a token decimals field. Q64.96 is the pool's own fixed point, not that oracle field.</p></section>
+            <section id="sec-2"><h2>2. Teaching tick 200: one division prints tick 100</h2><p>The teaching tick is not a slot0 from 28 October 2026. At tick 200 the library's shifts and rounding return sqrtPriceX96 of 80024378775772204256025656563. Dividing by 2^96 and truncating to 18 decimals prints 1.010049662092876568. Squaring and truncating to 12 decimals prints 1.020200319893. Raising 1.0001 to the 200th power and truncating to the same 12 decimals prints 1.020200319893 as well. The library's rounding does not move this tick off the power at that width.</p><p>The one-division figure 1.010049662092876568 matches the squared price at tick 100 through 18 decimals. The square root halves the exponent, so the unsquared reading of tick 200 lands on the price of tick 100. Treating "divide by 2^96" as the quote writes the halfway tick. Treating 200 ticks as a 2.00% rise writes 1.02. The contract square is 0.000200319893 above that. The gap is the compound step, not a final-digit rounding choice.</p>
+            <table><caption>Teaching reads of one TickMath</caption><thead><tr><th scope="col">Read</th><th scope="col">Input</th><th scope="col">Written as</th><th scope="col">Contract ratio</th></tr></thead><tbody><tr><td>Tick 0, one division</td><td>2^96</td><td>1</td><td>1</td></tr><tr><td>Tick 200, one division</td><td>80024378775772204256025656563</td><td>1.010049662092</td><td>1.020200319893</td></tr><tr><td>Tick 200, print sqrtPriceX96</td><td>same integer</td><td>that integer</td><td>1.020200319893</td></tr><tr><td>200 ticks as plus 2%</td><td>200</td><td>1.02</td><td>1.020200319893</td></tr><tr><td>10000 ticks as plus 100%</td><td>10000</td><td>2</td><td>2.718145926825</td></tr><tr><td>Spacing 60 as plus 60%</td><td>60</td><td>1.60</td><td>1.006017734268</td></tr></tbody></table>
+            <p>The written-as column is the misread. The contract-ratio column squares sqrtPriceX96, divides by 2^192, and truncates to 12 decimals. Tick 1 truncates to 1.000100000000, so a single step really is one basis point. From the second step, basis points no longer add by count.</p></section>
+            <section id="sec-3"><h2>3. A tick count is not a percent</h2><p>1.0001 to the first power, minus one, is 0.0001, one basis point. That identity is only the single step. N ticks price-ratio to 1.0001 to the N, not to one plus N basis points. Tick 100 ratios to 1.010049662092, not to 1.01. The extra is 0.000049662092. Tick 10000 ratios to 2.718145926825. Dividing 10000 by 100 and calling the result "up 100%" writes 2. That drops 0.718145926825. The figure 2.718145926825 is 1.0001 to the 10000, and on this library tick it matches that power through 12 truncated decimals. It is not a separate constant, and a resemblance to 2.71828 is not a reason to collapse it to a doubling.</p><p>A negative tick is not the positive move with the sign flipped. Tick 200 sits 0.020200319893 above 1. Subtracting that from 1 writes 0.979799680107. Tick −200 ratios to 0.980199653440. The two lines differ by 0.000399973333. The downward path is the reciprocal of the power, not the negation of the rise. One division fails on the negative side too: tick −200 divided once truncates to 0.990050328741 at 12 decimals, and the square is 0.980199653440.</p><p>On initialize, the pool recovers the tick with getTickAtSqrtRatio. The comment asks for the greatest tick whose ratio is still less than or equal to the input. slot0.tick is the index of that lower boundary, not a second copy of the price. When the price sits between tick 200 and tick 201, the tick field is 200, while sqrtPriceX96 is still above getSqrtRatioAtTick(200). Replacing the stored square root with the boundary price writes the lower number.</p></section>
+            <section id="sec-4"><h2>4. Fee, spacing, and the current tick do not stand in for each other</h2><p>The <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">UniswapV3Factory constructor at v1.0.0</a> stores three pairs: fee 500 with spacing 10, 3000 with 60, and 10000 with 200. enableFeeAmount can open further pairs later, so a note reads pool.fee, pool.tickSpacing, and the factory mapping. It does not memorize the constructor as a permanent list. The pool keeps fee and tickSpacing as two immutables. slot0.feeProtocol is a different field. Initialize writes it as 0. The comment describes a protocol share taken from the swap fee on withdrawal, as an integer denominator, not the swap fee itself.</p><p>The flash path sends the amount, the fee, and 1e6 into mulDivRoundingUp. With fee 3000 that step is 3000/1000000 = 0.003, or 0.30%. The swap passes that same fee into SwapMath.computeSwapStep. Reading 3000 as a tick, or as a price of 3000, skips this division. Spacing 60 is not the 0.30% either. The boundary ratio across 60 ticks is 1.006017734268, about 0.6017734268% above 1. That move is larger than the 0.30% fee and far smaller than the 1.60 written by reading 60 as 60%. All three numbers can sit on one pool, and they name different fields.</p><p>The current tick need not be a multiple of the spacing. Liquidity boundaries that can be initialized line up on tickSpacing. slot0.tick is the integer tick the price currently occupies. The teaching midpoint of the sqrt prices at tick 200 and tick 201 is 80026379335228862431824497642. It is above the square root at 200 and below the square root at 201, so the recovered tick is 200. One division truncates to 1.010074912703 at 12 decimals, and the square is 1.020251329272. The boundary square at tick 200 is 1.020200319893. Looking the tick up as a boundary understates the quote by 0.000051009379. Size is still zero in this comparison. Once size is not zero, the spot tangent is still not the fill. That is the other note's formula.</p></section>
+            <section id="sec-5"><h2>5. After the square, scale by the two decimal fields</h2><p>The square is token1 per token0 in raw units. Human units multiply by 10 to the power of decimals0 minus decimals1. When both tokens use 18 decimals, the exponent is 0 and the teaching human quote at tick 200 is 1.020200319893. When token0 has 6 decimals and token1 has 18, the same raw price is divided by 10^12. Human token1 per human token0 is 1.020200319893 times 10 to the −12. The other direction, human token0 per human token1, is 10^12 times 2^192 divided by the square of sqrtPriceX96. Integer division returns 980199653440. Writing the unscaled 1.020200319893 as that direction's quote is off by twelve orders of magnitude, not by a last digit.</p><p>The square and the decimal scale are one chain. Skipping either one fails. Scaling decimals without squaring still starts from the square root in the 6-and-18 example. Squaring without the decimals writes 1.020200319893 as if it were already a human quote. The oracle note's answer scale does not replace 10^(decimals0 − decimals1) here. The pool's fixed point is Q64.96 first. Token decimals are a second field on the token contracts.</p><p>The minimum replay fields are the pool address, both tokens and their decimals, slot0.sqrtPriceX96, slot0.tick, the pool fee, the pool tick spacing, the factory spacing for that fee, the one-division square root, the squared raw price, the human token1 per token0 after the power of ten, and the inverse direction when the note needs it. Holding a small balance in order to compare a screen quote with a wallet receipt belongs in a fee footnote. It does not belong in the decision of whether one division equals the quote.</p></section>
+            <section id="sec-6"><h2>6. Square, then scale, and only then talk about tick distance</h2><p>The weak sentences are "sqrtPriceX96 divided by 2^96 is the price" and "the tick moved 10000, so the price rose 100%." A usable sentence lists sqrtPriceX96, the one-division square root, the squared raw price, both decimals, human token1 per token0, fee divided by 1e6, tick spacing, and whether the current tick is sitting on its boundary. In the teaching set those tick-200 figures are 80024378775772204256025656563, 1.010049662092876568, and 1.020200319893. Writing 2 for 10000 ticks meets a contract ratio of 2.718145926825. The spacing-60 boundary ratio is 1.006017734268, and fee 3000 is 0.003 on the flash path.</p><p>This is a research framework. The square root times 2^96, the tick conversion, the factory's three initial pairs, and the flash division by 1e6 come from the v1.0.0 core cited above. The figures 1.010049662092, 1.020200319893, 2.718145926825, 1.006017734268, and 980199653440 are a teaching conversion. They were not measured on a live pool, and they are not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: to hold a small balance and compare a pool screen with a wallet receipt, you can review the quote, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> on your own. That entry has no role in deciding whether one division equals the quote, and it is not a guarantee of the service. Any swap should be a real, lawful research expense.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The struct says price. The formula says square root</a></li><li><a href="#sec-2">Teaching tick 200: one division prints tick 100</a></li><li><a href="#sec-3">A tick count is not a percent</a></li><li><a href="#sec-4">Fee, spacing, and the current tick do not stand in for each other</a></li><li><a href="#sec-5">After the square, scale by the two decimal fields</a></li><li><a href="#sec-6">Square, then scale, and only then talk about tick distance</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">Uniswap V3: TickMath.getSqrtRatioAtTick</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3: pool slot0, fee, and flash</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">Uniswap V3: factory fee and tick spacing</a></li></ul><p class="ref-note">Sources checked on 28 October 2026. The formulas and constants come from the v1.0.0 tag of uniswap v3-core. The teaching ticks are not a live slot0.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/amm-spot-vs-execution-price-verification-guide.html">Swap Check: A Pool's Spot Price Is Not the Fill on This Size</a></li><li><a href="/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">Feed Scale Check: Token decimals Are Not the Answer's Scale</a></li><li><a href="/en/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">Token Transfer Tax: Buy-Path Receipts Are Not Sell-Path Receipts</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ed160114"></script>
+</body>
+</html>

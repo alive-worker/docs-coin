@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'lending-health-factor-vs-price-drop-verification-guide',
-  publishedISO: '2026-10-26T16:34:00+08:00',
-  tagColor: 'copper',
+  slug: 'uniswap-v3-sqrt-price-vs-tick-verification-guide',
+  publishedISO: '2026-10-28T15:36:00+08:00',
+  tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "借贷核验：健康因子 1.5，不等于价格还能跌一半",
-    tagLabel: "健康因子",
-    cardDesc: "Aave V3 的健康因子是抵押按清算阈值折算后除以债务，合约里的 1 是 1e18。教学仓显示 1.5 时，价格落到 2000 才到这条线，不是跌一半到 1500。0.95 切换的是一次能还多少，不是能不能清算。",
+    h1: "兑换核验：开一次方，不等于池子报价",
+    tagLabel: "开方价",
+    cardDesc: "Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。",
   },
   en: {
-    h1: "Lending Check: A Health Factor of 1.5 Is Not a 50% Price Cushion",
-    tagLabel: "Health Factor",
-    cardDesc: "In Aave V3 the health factor is collateral weighted by the liquidation threshold, divided by debt. One is 1e18 on chain. At 1.5 the teaching price reaches that line at 2000, not at a 50% drop to 1500. The 0.95 level changes how much debt one call can repay.",
+    h1: "Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote",
+    tagLabel: "Sqrt Price",
+    cardDesc: "Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.",
   },
 
   existingSlugsNewestFirst: [
+    'lending-health-factor-vs-price-drop-verification-guide',
     'eip1559-max-fee-vs-effective-gas-price-verification-guide',
     'amm-spot-vs-execution-price-verification-guide',
     'oracle-heartbeat-vs-deviation-threshold-verification-guide',

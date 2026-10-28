@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>兑换核验：开一次方不是报价 - 加密货币研究</title>
+  <meta name="description" content="Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="sqrtPriceX96,Uniswap V3,tick,Q64.96,池子报价,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="兑换核验：开一次方不是报价">
+  <meta property="og:description" content="Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-28T15:36:00+08:00">
+  <meta property="article:modified_time" content="2026-10-28T15:36:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="开方价">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="tick">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="tick 200 只除以 2^96 得到 1.01005，再平方才是报价 1.02020；10000 个 tick 不是 2 而是 2.71815">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="兑换核验：开一次方不是报价">
+  <meta name="twitter:description" content="Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.png">
+  <meta name="twitter:image:alt" content="tick 200 只除以 2^96 得到 1.01005，再平方才是报价 1.02020；10000 个 tick 不是 2 而是 2.71815">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=7773f531">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html",
+      "name": "兑换核验：开一次方不是报价",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "兑换核验：开一次方不是报价", "item": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#article",
+      "headline": "兑换核验：开一次方不是报价",
+      "description": "Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.png"],
+      "datePublished": "2026-10-28T15:36:00+08:00",
+      "dateModified": "2026-10-28T15:36:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["sqrtPriceX96","Uniswap V3","tick","Q64.96","池子报价","加密货币研究"],
+      "wordCount": 2031,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "把 sqrtPriceX96 除以 2^96，得到的是池子报价吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。TickMath 计算的是 sqrt(1.0001^tick) 乘 2^96。只除以 2^96 留下平方根。教学 tick 200 的 sqrtPriceX96 是 80024378775772204256025656563，只除一次截断到小数点后 18 位是 1.010049662092876568，再平方截断到 12 位才是 1.020200319893。tick 0 时两边都是 1，只除一次碰巧相等，不能用这一档验收。" }
+        },
+        {
+          "@type": "Question",
+          "name": "10000 个 tick 是不是价格涨了 100%？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。一个 tick 的乘子是 1.0001，多个 tick 要连乘，不能把 tick 数除以 100 当成百分比。10000 个 tick 的合约比值截断到 12 位是 2.718145926825，不是 2。差 0.718145926825。" }
+        },
+        {
+          "@type": "Question",
+          "name": "手续费 3000 和 tick 间距 60 是同一个数吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。v1.0.0 工厂把手续费 3000 映射到间距 60。池子的 flash 路径把 fee 除以 1e6，3000 是 0.003。间距 60 是可初始化 tick 的步长，跨过这一步的边界价格是 1.006017734268，约移动 0.6018%，既不是 60%，也不是 0.30% 的手续费。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/" aria-current="page">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">开方价</span></p>
+          <h1>兑换核验：开一次方，不等于池子报价</h1>
+          <p class="article-summary">Uniswap V3 把当前价格放在 slot0.sqrtPriceX96 里，结构体注释写的是 the current price。TickMath 的公式却是 sqrt(1.0001^tick) 乘 2^96。只除以 2^96，教学 tick 200 得到 1.010049662092；再平方才是 1.020200319893。tick 个数也不是百分比：10000 个 tick 的比值是 2.718145926825，不是 2。下文用 v1.0.0 核心库的整数式把这三层拆开。数字是教学值，不是 2026 年 10 月 28 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-28T15:36:00+08:00">2026-10-28 15:36:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-sqrt-price-vs-tick-verification-guide.svg" alt="tick 200 只除以 2 的 96 次方得到 1.01005，再平方才是报价 1.02020；10000 个 tick 划掉 2.00000，合约比值是 2.71815" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>sqrtPriceX96 先除以 2^96，再平方，才是 token1/token0 的 raw 价格。只做前一步，留下的是平方根。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>tick 是 1.0001 的指数。多个 tick 连乘，不能把 tick 数除以 100 写成涨跌百分比。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>手续费、tick 间距、当前 tick、区间内的 sqrtPriceX96 是四个字段。fee 3000 不是间距 60，也不是价格。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>raw 价格还要乘 10 的 (decimals0 − decimals1) 次方，才是人类单位的 token1 每 token0。两种代币小数位不同时，这一步不能省。</li></ul></div>
+            <section id="sec-1"><h2>1. 结构体写着价格，公式写着平方根</h2><p>池子页面或脚本把 slot0 的第一个返回值印出来之后，笔记里常出现下一句：「这就是当前价格。」<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> 的 Slot0 注释确实把 sqrtPriceX96 标成 the current price，下一行才是 the current tick。注释停在这里，读数就会停在开方之前。<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">TickMath</a> 把同一件事写成可计算的式子：getSqrtRatioAtTick 计算 sqrt(1.0001^tick) 乘 2^96，返回值是两种资产 token1/token0 之比的平方根，定点格式是 Q64.96。</p><p>因此报价要走两步。第一步把 sqrtPriceX96 除以 2^96，得到平方根。第二步把这个平方根再平方，得到 raw 价格，也就是原始单位下 token1 比 token0。只做第一步，笔记里的「价格」其实是价格的平方根。tick 为 0 时，getSqrtRatioAtTick 返回恰好 2^96，也就是 79228162514264337593543950336。只除一次等于 1，再平方仍是 1。两条线重合，验收样本若只含这一档，错误会被放行。库对最小和最大 tick 也闭合：MIN_TICK −887272 对应 MIN_SQRT_RATIO 4295128739，MAX_TICK 887272 对应注释里的 MAX_SQRT_RATIO。边界能对上，不表示中间某一档只除一次也是报价。</p><p>这和本站「池子现货价，不等于这笔的成交价」不是同一问。那篇比较的是恒定乘积里现货切线和一笔输入的成交弦。本篇还没进入成交数量，问的是 slot0 上这个数能不能先被读成报价。开方读错之后，再去比成交，两边都不是价格。喂价小数位那篇比较的是预言机 answer 的刻度和代币 decimals。Q64.96 是池子自己的定点，不是喂价的 decimals 字段。</p></section>
+            <section id="sec-2"><h2>2. 教学 tick 200：只除一次，读到的是 tick 100</h2><p>教学档不声称是 2026 年 10 月 28 日任何池子的 slot0。取 tick 200，按该库的位移与进位，sqrtPriceX96 是 80024378775772204256025656563。除以 2^96，截断到小数点后 18 位是 1.010049662092876568。再平方，截断到小数点后 12 位是 1.020200319893。同一套整数除法下，1.0001 的 200 次方截断到 12 位也是 1.020200319893。库的进位没有在这 12 位上把乘方改掉。</p><p>只除一次的那个 1.010049662092876568，和 tick 100 的平方价格在小数点后 18 位上相同。平方根取的是指数的一半，所以 tick 200 的开方结果落到 tick 100 的价格上。笔记若把「除以 2^96」当成还原报价，写下来的是半程 tick，不是这一档。把 200 个 tick 当成上涨 2.00%，会写成 1.02。合约平方比它多 0.000200319893。差不在四舍五入的最后一位，而在连乘比加法多出来的那一截。</p>
+            <table><caption>教学读法：同一套 TickMath，六种写法</caption><thead><tr><th scope="col">读法</th><th scope="col">输入</th><th scope="col">写成</th><th scope="col">合约比值</th></tr></thead><tbody><tr><td>tick 0，只除一次</td><td>2^96</td><td>1</td><td>1</td></tr><tr><td>tick 200，只除一次</td><td>80024378775772204256025656563</td><td>1.010049662092</td><td>1.020200319893</td></tr><tr><td>tick 200，直接印 sqrtPriceX96</td><td>同上</td><td>那个整数</td><td>1.020200319893</td></tr><tr><td>200 个 tick 当成涨 2%</td><td>200</td><td>1.02</td><td>1.020200319893</td></tr><tr><td>10000 个 tick 当成涨 100%</td><td>10000</td><td>2</td><td>2.718145926825</td></tr><tr><td>间距 60 当成涨 60%</td><td>60</td><td>1.60</td><td>1.006017734268</td></tr></tbody></table>
+            <p>表里的「写成」一列是误读，「合约比值」一列是 sqrtPriceX96 平方后除以 2^192，再截断到小数点后 12 位。tick 1 的比值截断后是 1.000100000000，单步确实是 1 个基点。从第二步起，基点不能再按个数相加。</p></section>
+            <section id="sec-3"><h2>3. tick 个数不是百分比</h2><p>1.0001 的一次方减 1，等于 0.0001，也就是 1 个基点。这只说明单步。N 个 tick 的价格比是 1.0001 的 N 次方，不是 1 加上 N 个基点。tick 100 的比值是 1.010049662092，不是 1.01，多出 0.000049662092。tick 10000 的比值是 2.718145926825。把 10000 除以 100 当成「涨了 100%」，价格写成 2。少写 0.718145926825。2.718145926825 来自 1.0001 的 10000 次方，在该库这一档上与乘方截断到同一 12 位。它不是另设的自然常数，也不该因为看起来接近 2.71828 就被收成翻倍。</p><p>负 tick 也不能把涨幅改号。tick 200 的价格比 1 多出 0.020200319893。用减法写成 1 − 0.020200319893 = 0.979799680107。tick −200 的合约比值是 0.980199653440。两条线相差 0.000399973333。负向走的是乘方的倒数，不是涨幅取负。只除一次在负 tick 上同样不是报价：tick −200 只除一次截断到 12 位是 0.990050328741，平方后才是 0.980199653440。</p><p>初始化时，池子用 getTickAtSqrtRatio 从 sqrtPriceX96 反推 tick。注释写的是：使该 tick 的比值仍小于或等于输入比值的最大 tick。所以 slot0.tick 是下边界的编号，不是第二份价格。价格若正落在 tick 200 与 tick 201 之间，tick 字段是 200，但 sqrtPriceX96 大于 getSqrtRatioAtTick(200)。用边界价格代替 slot0 里的平方根，报价会被写成更低的那一档。</p></section>
+            <section id="sec-4"><h2>4. 手续费、间距、当前 tick，不能互相代替</h2><p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">UniswapV3Factory v1.0.0</a> 的构造函数写入三档：手续费 500 对间距 10，3000 对 60，10000 对 200。之后 enableFeeAmount 仍可再打开新档，所以笔记要读池子上的 fee、tickSpacing，以及工厂里的 feeAmountTickSpacing，不能把这三行背成永久清单。池子把 fee 和 tickSpacing 做成两份不可变状态。slot0 里的 feeProtocol 是另一字段，初始化时写成 0，注释说的是提取时从手续费里按分母拿走的协议费，不是兑换手续费本身。</p><p>flash 路径把金额、fee 和 1e6 送进 mulDivRoundingUp。fee 为 3000 时，这一步是 3000/1000000 = 0.003，也就是 0.30%。兑换把同一个 fee 传进 SwapMath.computeSwapStep。把 3000 读成 tick，或读成价格 3000，用的都不是这个除法。间距 60 也不是这 0.30%。跨过 60 个 tick 的边界比值是 1.006017734268，相对 1 移动约 0.6017734268%。它大于手续费的 0.30%，也远小于把 60 当成 60% 时写成的 1.60。三个数同时出现在一笔池子上，角色不同。</p><p>当前 tick 也不必是间距的倍数。可初始化的流动性边界按 tickSpacing 对齐，slot0.tick 是价格落在哪一个整数 tick 上。教学中间价取 tick 200 与 tick 201 两个 sqrtPriceX96 的整数中点，80026379335228862431824497642。它大于 tick 200 的平方根，小于 tick 201 的平方根，所以反推 tick 为 200。只除一次截断到 12 位是 1.010074912703，平方是 1.020251329272。边界 tick 200 的平方价格是 1.020200319893。用 tick 字段回查边界，少写 0.000051009379。这一档还没谈到成交量。数量一旦不为零，现货切线仍不等于成交弦，那是另一篇的公式。</p></section>
+            <section id="sec-5"><h2>5. 平方之后，还要按两种小数位缩放</h2><p>平方得到的是原始单位下 token1 比 token0。人类单位还要乘 10 的 (decimals0 − decimals1) 次方。两种代币都是 18 位小数时，指数是 0，教学 tick 200 的人类报价就是 1.020200319893。token0 是 6 位、token1 是 18 位时，同一 raw 价格要除以 10^12，人类单位的 token1 每 token0 是 1.020200319893 乘 10 的 −12 次方。倒过来，人类单位的 token0 每 token1，用 10^12 乘 2^192 再除以 sqrtPriceX96 的平方，整数除法得到 980199653440。把未缩放的 1.020200319893 写成这个方向的报价，差的是 12 个数量级，不是最后一位。</p><p>这一步和开方是连着的，省任何一步都不对。只做小数位、不平方，6 位和 18 位的例子里仍然先错在平方根。只平方、不看小数位，raw 价格 1.020200319893 会被当成已经是人类报价。预言机那篇的刻度不能拿来代替这里的 10^(decimals0 − decimals1)，因为池子的定点先是 Q64.96，小数位是代币合约上的另一个字段。</p><p>可复现的最低字段是：池子地址、token0 与 token1 及各自 decimals、slot0.sqrtPriceX96、slot0.tick、池子 fee、池子 tickSpacing、工厂里该 fee 对应的间距、只除 2^96 的结果、平方后的 raw 价格、10^(decimals0 − decimals1) 之后的人类报价，以及需要时的倒数方向。若要自备少量资产才能对照页面报价和钱包到账，把支出记在费用附注里，不要写进开方是否等于报价的判定。</p></section>
+            <section id="sec-6"><h2>6. 结论：先平方，再缩放，最后才谈 tick 距离</h2><p>错误句式是「sqrtPriceX96 除以 2^96 就是价格」，以及「tick 走了 10000，所以涨了 100%」。更可靠的句子是「sqrtPriceX96；只除一次的平方根；平方后的 raw 价格；两种 decimals；人类单位的 token1 每 token0；fee 除以 1e6；tickSpacing；当前 tick 是否落在边界上」。教学档里，tick 200 的这组数是 80024378775772204256025656563、1.010049662092876568、1.020200319893。10000 个 tick 写成 2 时，合约比值是 2.718145926825。间距 60 的边界比值是 1.006017734268，手续费 3000 在 flash 路径上是 0.003。</p><p>本文是分析框架。平方根乘 2^96、tick 与 sqrtPrice 的互推、工厂三档初始映射、flash 的 fee/1e6，都来自上面引用的 v1.0.0 核心库。1.010049662092、1.020200319893、2.718145926825、1.006017734268 和 980199653440 是教学换算，未对任何实时池子做实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量资产，以便对照池子页面上的报价和钱包到账，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与本文开方或 tick 的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">结构体写着价格，公式写着平方根</a></li><li><a href="#sec-2">教学 tick 200：只除一次，读到的是 tick 100</a></li><li><a href="#sec-3">tick 个数不是百分比</a></li><li><a href="#sec-4">手续费、间距、当前 tick，不能互相代替</a></li><li><a href="#sec-5">平方之后，还要按两种小数位缩放</a></li><li><a href="#sec-6">结论：先平方，再缩放，最后才谈 tick 距离</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">Uniswap V3：TickMath.getSqrtRatioAtTick</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3：池子 slot0、fee 与 flash</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">Uniswap V3：工厂的手续费与 tick 间距</a></li></ul><p class="ref-note">资料核对日期：2026年10月28日。公式与常量来自 uniswap v3-core 的 v1.0.0 标签。教学 tick 不是某个实时池子的 slot0。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/amm-spot-vs-execution-price-verification-guide.html">兑换核验：池子现货价，不等于这笔的成交价</a></li><li><a href="/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">喂价小数位核验：代币 decimals 不等于 answer 的刻度</a></li><li><a href="/research/market/token-transfer-tax-buy-sell-path-verification-guide.html">代币转账税核验：买路径到账不等于卖路径到账</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=ed160114"></script>
+</body>
+</html>
