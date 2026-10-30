@@ -108,23 +108,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-sqrt-price-vs-tick-verification-guide',
-  publishedISO: '2026-10-28T15:36:00+08:00',
-  tagColor: 'amber',
+  slug: 'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
+  publishedISO: '2026-10-30T17:47:00+08:00',
+  tagColor: 'bronze',
   topic: 'market',
 
   zh: {
-    h1: "兑换核验：开一次方，不等于池子报价",
-    tagLabel: "开方价",
-    cardDesc: "Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。",
+    h1: "仓位核验：仓位上的流动性，不等于代币余额",
+    tagLabel: "仓位",
+    cardDesc: "Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。",
   },
   en: {
-    h1: "Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote",
-    tagLabel: "Sqrt Price",
-    cardDesc: "Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.",
+    h1: "Position Check: Stored Liquidity Is Not the Token Balance",
+    tagLabel: "Position",
+    cardDesc: "A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-sqrt-price-vs-tick-verification-guide',
     'lending-health-factor-vs-price-drop-verification-guide',
     'eip1559-max-fee-vs-effective-gas-price-verification-guide',
     'amm-spot-vs-execution-price-verification-guide',

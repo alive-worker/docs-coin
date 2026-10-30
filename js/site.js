@@ -219,6 +219,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html': '2026-10-30 17:47:00',
+    '/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html': '2026-10-30 17:47:00',
     '/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html': '2026-10-28 15:36:00',
     '/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html': '2026-10-28 15:36:00',
     '/en/research/market/lending-health-factor-vs-price-drop-verification-guide.html': '2026-10-26 16:34:00',

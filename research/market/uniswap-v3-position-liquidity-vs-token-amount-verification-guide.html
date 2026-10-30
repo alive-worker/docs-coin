@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>仓位核验：流动性不是代币余额 - 加密货币研究</title>
+  <meta name="description" content="Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,流动性,仓位,token0,token1,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="仓位核验：流动性不是代币余额">
+  <meta property="og:description" content="Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-30T17:47:00+08:00">
+  <meta property="article:modified_time" content="2026-10-30T17:47:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="仓位">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="流动性">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="流动性 10 的 18 次方被划掉。价格在 tick 0 时 token0 是 9949671258790518，token1 是 0。区间仍是 tick 0 到 tick 200。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="仓位核验：流动性不是代币余额">
+  <meta name="twitter:description" content="Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.png">
+  <meta name="twitter:image:alt" content="流动性 10 的 18 次方被划掉。价格在 tick 0 时 token0 是 9949671258790518，token1 是 0。区间仍是 tick 0 到 tick 200。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=7773f531">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html",
+      "name": "仓位核验：流动性不是代币余额",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "仓位核验：流动性不是代币余额", "item": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#article",
+      "headline": "仓位核验：流动性不是代币余额",
+      "description": "Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.png"],
+      "datePublished": "2026-10-30T17:47:00+08:00",
+      "dateModified": "2026-10-30T17:47:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","流动性","仓位","token0","token1","加密货币研究"],
+      "wordCount": 2192,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol",
+        "https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "仓位上的流动性等于这个区间里的代币数量吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不等于。v1.0.0 的 Position.Info 保存 liquidity、手续费增长检查点和 tokensOwed。代币库存要另用当前平方根价格和两条边界计算。教学流动性 10^18、区间 tick 0 到 200、价格正好在下沿时，token0 是 9949671258790518，token1 是 0。" }
+        },
+        {
+          "@type": "Question",
+          "name": "当前 tick 等于下沿，是不是仓位里只有 token0？",
+          "acceptedAnswer": { "@type": "Answer", "text": "只有平方根价格也正好落在下沿时，token1 才是 0。平方根再增加 79228162514，token1 仍是 0，token0 已经少了 1。再增加 1，变成 79228162515 时，token1 变成 1。这个平方根仍小于 tick 1 的平方根，所以反推出来的 tick 还是 0。" }
+        },
+        {
+          "@type": "Question",
+          "name": "两边各想存入 10^18，仓位就会持有这些数量吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不会。价格在下沿时，流动性只由 token0 决定，算出 100505833206951600031。外围库向下取整会写成 token0 少 1，池子对正的流动性增量向上取整，实际收取的 token0 是 1000000000000000000，token1 仍是 0。想存入的 token1 整笔都不会被拿走。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/" aria-current="page">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--bronze">仓位</span></p>
+          <h1>仓位核验：仓位上的流动性，不等于代币余额</h1>
+          <p class="article-summary">Uniswap V3 的仓位结构体里有 liquidity，没有 token0 余额，也没有 token1 余额。tokensOwed 的注释写的是应付给仓位主人的手续费。教学流动性取 10^18，边界取 tick 0 和 tick 200。价格的平方根正好落在下沿时，token0 是 9949671258790518，token1 是 0。同一流动性移到上沿，两边对调。下文用 v1.0.0 外围库的向下取整和核心库铸造时的向上取整把库存拆开。数字是教学值，不是 2026 年 10 月 30 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-10-30T17:47:00+08:00">2026-10-30 17:47:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide.svg" alt="流动性 10 的 18 次方被划掉。价格贴在 tick 0 时 token0 是 9949671258790518，token1 是 0。区间仍从 tick 0 画到 tick 200。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>仓位保存的是流动性，加上手续费检查点。代币库存不在这个结构体里，要用当前平方根价格和两条边界另算。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>同一流动性在下沿、区间中点和上沿，token0 与 token1 的组合不同。两边相加也回不到流动性本身。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>当前 tick 等于下沿，只说明价格还没走到下一个 tick。平方根已经离开边界时，token1 可以不是 0。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>想存入的两种数量先取能支持的较小流动性。池子对正的增量向上取整，所以外围库向下取整的预览会少写 1。</li></ul></div>
+            <section id="sec-1"><h2>1. 结构体里没有代币余额</h2><p>头寸页面常把一个大整数标成「我在这个区间里的币」。<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol" target="_blank" rel="noopener">Position v1.0.0</a> 的 Info 只有五样东西：liquidity，两种资产各自的 feeGrowthInsideLast，以及 tokensOwed0、tokensOwed1。liquidity 的注释是这个仓位拥有的流动性数量。tokensOwed 的注释是应付给仓位主人的手续费，单位才是 token0 或 token1。手续费和本金用的是不同的字段，本金根本没有字段。</p><p>所以静态读出 positions 映射，只能看到流动性、上次结算手续费时的增长值，以及当时已经记到账上的手续费。价格后来怎么走、库存因此换成哪一种代币，都不会写回这个结构体。流动性在没有 mint 或 burn 时保持不变，库存却会变。把没变的那个数当成余额，价格一动，笔记就停在旧的组合上。</p><p>这和本站「开一次方，不等于池子报价」不是同一问。那篇问的是 slot0.sqrtPriceX96 能不能先被读成价格。本篇假定平方根已经按那篇的两步还原，接着问仓位上的流动性是不是代币数量。报价读错之后，库存公式的输入就错了，因为公式吃的是平方根，不是流动性本身。现货价和成交价那篇比较的是一笔输入的弦。本篇的数量还是仓位边界里的存量，不是这一笔兑换的成交量。</p></section>
+            <section id="sec-2"><h2>2. 同一流动性，三种价格，三种库存</h2><p>教学档不声称是 2026 年 10 月 30 日任何池子的仓位。流动性取 10^18。下沿 tick 0 的平方根是 2^96，也就是 79228162514264337593543950336。上沿 tick 200 的平方根按 TickMath 的位移与进位是 80024378775772204256025656563。<a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol" target="_blank" rel="noopener">LiquidityAmounts v1.0.0</a> 的 getAmountsForLiquidity 按当前平方根落在区间的哪一段，决定算哪一种代币。当前平方根小于或等于下沿时，只算 token0。严格小于上沿、又高于下沿时，两种都算。否则只算 token1。除法向下取整。</p><p>价格正好在下沿：token0 是 9949671258790518，token1 是 0。价格正好在上沿：token0 是 0，token1 是 10049662092876568。流动性没有改，库存从「只有 token0」换成「只有 token1」。两条边界的平方根取整数中点 79626270645018270924784803449，仍落在区间内。这时 token0 是 4949962902125938，token1 是 5024831046438284。两者相加是 9974793948564222，既不是 10^18，也不是下沿那个 token0。流动性不是两种代币的和，也不是其中任何一种。</p>
+            <table><caption>教学流动性 10^18，区间 tick 0 到 tick 200</caption><thead><tr><th scope="col">当前平方根</th><th scope="col">token0</th><th scope="col">token1</th></tr></thead><tbody><tr><td>下沿，79228162514264337593543950336</td><td>9949671258790518</td><td>0</td></tr><tr><td>下沿再加 1</td><td>9949671258790518</td><td>0</td></tr><tr><td>下沿再加 79228162515</td><td>9949671258790517</td><td>1</td></tr><tr><td>两边界的整数中点</td><td>4949962902125938</td><td>5024831046438284</td></tr><tr><td>上沿，80024378775772204256025656563</td><td>0</td><td>10049662092876568</td></tr></tbody></table>
+            <p>把 10^18 同时写成两种代币的余额，token0 多写了 990050328741209482，token1 多写了整整 10^18。差不在最后一位。下沿那个 token0 大约是流动性的一百分之一，而且另一种代币是 0，连「按比例拆开」都不是。</p></section>
+            <section id="sec-3"><h2>3. tick 还停在下沿时，token1 可以已经是 1</h2><p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> 的 _modifyPosition 用的是当前 tick，不是外围库那条平方根比较。tick 小于下沿时，只向用户收取 token0。tick 小于上沿时走区间内部，两种都可能收。否则只收 token1。tick 正好等于下沿时，第一条不成立，走的是内部。内部再把当前平方根送进 <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">SqrtPriceMath</a>。平方根若仍等于下沿的平方根，token1 的价差是 0，库存仍是 0。tick 相等，只在这一档上和「只有 token0」重合。</p><p>平方根比下沿大 1 时，token1 的乘积还除不尽 2^96，向下取整仍是 0，token0 也还是 9949671258790518。要让 token1 至少为 1，平方根至少要比下沿大 79228162515。少 1，也就是大 79228162514 时，token1 仍是 0，token0 却已经少了 1，变成 9949671258790517。到 79228162515 时，token1 变成 1，token0 仍是 9949671258790517。tick 1 的平方根是 79232123823359799118286999568。79228162515 这个增量远小于两档平方根的间距，所以 getTickAtSqrtRatio 仍返回 0。笔记若写「tick 等于下沿，所以仓位里没有 token1」，这一档会把已经出现的 1 个原始单位抹掉，同时把 token0 多写 1。</p><p>上沿的误读是另一条公式。有人用平方后的价格减 1，再乘流动性，当作上沿的 token1。按这条区间的平方价格，那个乘积向下取整是 20200319893934137。合约的 token1 是 10049662092876568。多写 10150657801057569。库存用的是两条平方根的差，不是价格本身的差。上一篇里 tick 200 只除一次再减 1，得到的是平方根相对 1 的超出部分。两种代币都是 18 位小数时，上沿 token1 的人类读数是 0.010049662092876568，和那个超出部分对齐。平方后的价格相对 1 超出约 0.020200319893，大约是两倍，不能拿来乘流动性。</p></section>
+            <section id="sec-4"><h2>4. 想存入的数量，先被较小的流动性裁掉</h2><p><a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/base/LiquidityManagement.sol" target="_blank" rel="noopener">LiquidityManagement v1.0.0</a> 先读 slot0 的平方根，再用两条边界的 TickMath 平方根，调用 getLiquidityForAmounts。价格在下沿或更低时，流动性只由 token0 的想存入量决定，token1 的想存入量不进入这个函数。教学里两种都想存 10^18，下沿得到的流动性是 100505833206951600031。再用 getAmountsForLiquidity 向下取整，token0 是 999999999999999999，token1 是 0。想存入的 token1 整笔留下，token0 的预览还少 1。</p><p>池子铸造时对正的流动性增量向上取整。同一流动性、同一对边界，SqrtPriceMath 向上取整的 token0 是 1000000000000000000，token1 仍是 0。外围库的预览和池子实际收取的本金差 1 个原始单位，方向是预览更小。用预览去填 amount0Min，比池子要收的少 1，铸造会在滑点检查处停下。这个 1 不是手续费，fee 还没进入这条路径。</p><p>价格改到两边界平方根的整数中点，两种想存入量都参与，流动性取两边算出的较小值，得到 199011666413903200063。向下取整后的本金是 token0 985100365839083542、token1 999999999999999999。相对各 10^18 的想存入量，token0 留下 14899634160916458，token1 留下 1。限制来自 token1 那一侧。笔记若写「两种都按想存入的数量进了仓」，token0 会多记 14899634160916458，token1 会多记 1。</p></section>
+            <section id="sec-5"><h2>5. 手续费检查点、间距和小数位，都还在流动性外面</h2><p>Position.update 用手续费增长的增量乘当时的流动性，再除以 2^128，向下取整后加进 tokensOwed。流动性仍是 10^18、增长增量取教学值 2^96 时，这一步是 232830643。它要等 update 跑过才写进存储。更新前去读 tokensOwed，看到的仍是旧值；旧值若是 0，未结算的 232830643 不会出现。把 0 读成「没有手续费」，漏的是这个增量。把 232830643 读成下沿的 token0 本金，又和 9949671258790518 对不上。手续费和库存是两笔账。</p><p>区间本身还要能在这个池子上初始化。池子在 tick 被翻转时把 tickSpacing 传进 tickBitmap.flipTick。v1.0.0 工厂里手续费 500 对应间距 10，200 能被 10 整除。手续费 3000 对应间距 60，200 除以 60 余 20。同一对边界不能从 500 的池子抄到 3000 的池子上仍当作已对齐的仓位。间距是池子的不可变状态，要和 fee 一起读，不能从流动性的数值里看出来。</p><p>算出来的 token0、token1 仍是原始单位。两种代币都是 18 位小数时，下沿 token0 的人类读数是 0.009949671258790518，不是把 10^18 去掉 18 位小数后的 1。token0 改成 6 位小数、流动性仍是 10^18 时，同一个原始整数 9949671258790518 要除以 10^6，人类读数是 9949671258.790518。小数位换了，人类单位可以差几个数量级，流动性字段却一个字都不用改。预言机那篇的 answer 刻度不能代替这里的代币 decimals，因为库存先来自平方根和流动性，小数位是代币合约上的另一个字段。</p></section>
+            <section id="sec-6"><h2>6. 结论：先分开流动性、库存和已入账手续费</h2><p>错误句式是「流动性等于这个区间里的代币」，以及「tick 还在下沿，所以没有 token1」。更可靠的句子是「liquidity；下沿与上沿的平方根；当前 sqrtPriceX96 和当前 tick；按取整方向算出的 token0 与 token1；想存入量里没被选中的那一侧；tokensOwed 是否已经由 update 写入；tickSpacing 是否整除两条边界；两种 decimals」。教学档里，10^18 在下沿是 token0 9949671258790518 和 token1 0，在上沿是 token0 0 和 token1 10049662092876568。平方根再离开下沿 79228162515，tick 仍是 0，token1 已经是 1。</p><p>本文是分析框架。仓位字段、getAmountsForLiquidity 的分支、铸造时的向上取整、update 里除以 2^128，都来自上面引用的 v1.0.0 库。9949671258790518、10049662092876568、79228162515、100505833206951600031 和 232830643 是教学换算，未对任何实时池子做实测，也不构成投资建议。</p></section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量资产，以便对照仓位页面上的数量和钱包到账，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与流动性是否等于代币余额的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">结构体里没有代币余额</a></li><li><a href="#sec-2">同一流动性，三种价格，三种库存</a></li><li><a href="#sec-3">tick 还停在下沿时，token1 可以已经是 1</a></li><li><a href="#sec-4">想存入的数量，先被较小的流动性裁掉</a></li><li><a href="#sec-5">手续费检查点、间距和小数位，都还在流动性外面</a></li><li><a href="#sec-6">结论：先分开流动性、库存和已入账手续费</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol" target="_blank" rel="noopener">Uniswap V3：Position.Info 与 update</a></li><li><a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol" target="_blank" rel="noopener">Uniswap V3：LiquidityAmounts</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3：池子按 tick 分支收取本金</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap V3：SqrtPriceMath 的取整方向</a></li></ul><p class="ref-note">资料核对日期：2026年10月30日。公式来自 uniswap v3-core 与 v3-periphery 的 v1.0.0 标签。教学流动性不是某个实时仓位。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li><li><a href="/research/market/amm-spot-vs-execution-price-verification-guide.html">兑换核验：池子现货价，不等于这笔的成交价</a></li><li><a href="/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">喂价小数位核验：代币 decimals 不等于 answer 的刻度</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a014ba26"></script>
+</body>
+</html>

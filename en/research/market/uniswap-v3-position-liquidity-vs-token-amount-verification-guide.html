@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Position Check: Liquidity Is Not the Token Balance - Crypto Research Notes</title>
+  <meta name="description" content="A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,liquidity,position,token0,token1,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Position Check: Liquidity Is Not the Token Balance">
+  <meta property="og:description" content="A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">
+  <meta property="article:published_time" content="2026-10-30T17:47:00+08:00">
+  <meta property="article:modified_time" content="2026-10-30T17:47:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Position">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="Liquidity">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Liquidity of 10 to the 18 is struck out. On tick 0, token0 is 9949671258790518 and token1 is 0. The range still runs from tick 0 to tick 200.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Position Check: Liquidity Is Not the Token Balance">
+  <meta name="twitter:description" content="A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Liquidity of 10 to the 18 is struck out. On tick 0, token0 is 9949671258790518 and token1 is 0. The range still runs from tick 0 to tick 200.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=7773f531">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "alternateName": "加密货币研究",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html",
+      "name": "Position Check: Liquidity Is Not the Token Balance",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Position Check: Liquidity Is Not the Token Balance", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#article",
+      "headline": "Position Check: Liquidity Is Not the Token Balance",
+      "description": "A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.png"],
+      "datePublished": "2026-10-30T17:47:00+08:00",
+      "dateModified": "2026-10-30T17:47:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","liquidity","position","token0","token1","crypto research"],
+      "wordCount": 1737,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol",
+        "https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is the liquidity on a position the token amount inside the range?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Position.Info at v1.0.0 stores liquidity, fee-growth checkpoints, and tokensOwed. Token inventory is computed from the current square-root price and the two boundaries. At teaching liquidity 10^18, ticks 0 to 200, and price exactly on the lower boundary, token0 is 9949671258790518 and token1 is 0." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the current tick equals the lower tick, is the position only token0?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Only when the square-root price is also exactly on that boundary. After the square root rises by 79228162514, token1 is still 0 and token0 is already 1 smaller. At 79228162515, token1 becomes 1. That square root is still below the square root of tick 1, so the recovered tick is still 0." }
+        },
+        {
+          "@type": "Question",
+          "name": "If both desired deposits are 10^18, does the position hold those amounts?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. On the lower boundary, liquidity is computed from token0 only and equals 100505833206951600031. The periphery floors token0 to 999999999999999999. The pool rounds a positive liquidity delta up and charges token0 of 1000000000000000000. Token1 stays 0, so the desired token1 is not taken." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+    <div class="ticker-tape" id="ticker-tape"><div class="ticker-track" id="ticker-track"></div></div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--bronze">Position</span></p>
+          <h1>Position Check: Stored Liquidity Is Not the Token Balance</h1>
+          <p class="article-summary">A Uniswap V3 position struct stores liquidity. It does not store a token0 balance or a token1 balance. The tokensOwed comment names fees owed to the position owner. The teaching liquidity is 10^18, and the boundaries are tick 0 and tick 200. When the square-root price sits exactly on the lower boundary, token0 is 9949671258790518 and token1 is 0. The same liquidity moved to the upper boundary swaps the two sides. The figures below use the v1.0.0 periphery floor and the core's round-up on a positive mint. They are a teaching set, not a position read on 30 October 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-10-30T17:47:00+08:00">2026-10-30 17:47:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-position-liquidity-vs-token-amount-verification-guide-en.svg" alt="Liquidity of 10 to the 18 is struck out. With price on tick 0, token0 is 9949671258790518 and token1 is 0. The range still runs from tick 0 to tick 200." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>A position stores liquidity plus fee checkpoints. Token inventory is not in that struct. It is computed from the current square-root price and the two boundaries.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The same liquidity at the lower tick, at the midpoint, and at the upper tick holds different token0 and token1 amounts. Adding the two tokens does not recover the liquidity.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A current tick equal to the lower tick only says the price has not reached the next tick. Once the square root has left the boundary, token1 can be nonzero.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Desired amounts are cut down to the smaller liquidity they can support. A positive mint rounds up, so the floored periphery preview is short by 1.</li></ul></div>
+            <section id="sec-1"><h2>1. The struct has no token balance</h2><p>A position screen often labels one large integer as the tokens sitting in the range. <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol" target="_blank" rel="noopener">Position at v1.0.0</a> stores five fields: liquidity, feeGrowthInside0Last, feeGrowthInside1Last, tokensOwed0, and tokensOwed1. The liquidity comment says this is the liquidity owned by the position. The tokensOwed comment says these are the fees owed to the position owner, denominated in token0 or token1. Fees and principal use different fields. Principal has no field at all.</p><p>A static read of the positions mapping therefore returns liquidity, the fee-growth values from the last settlement, and the fees already credited then. Later price movement, and the inventory shift that follows it, is not written back into the struct. Liquidity stays put until a mint or a burn. Inventory does not. Treating the unchanged word as a balance freezes the note on an old mix of tokens.</p><p>This is not the question in the square-root note. That note asks whether slot0.sqrtPriceX96 can be read as a price. This note assumes the square root has already been recovered in those two steps, then asks whether the liquidity word is a token amount. A bad quote still breaks the inventory, because the inventory formula consumes the square root, not the liquidity word. The spot-versus-fill note compares the chord of one input size. The amounts here are the stock inside the position boundaries, not the fill of one swap.</p></section>
+            <section id="sec-2"><h2>2. One liquidity, three prices, three inventories</h2><p>The teaching position is not a live position from 30 October 2026. Liquidity is 10^18. The square root at tick 0 is 2^96, which is 79228162514264337593543950336. The square root at tick 200, from TickMath's shifts and rounding, is 80024378775772204256025656563. <a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol" target="_blank" rel="noopener">LiquidityAmounts at v1.0.0</a> chooses which token to compute from where the current square root sits. At or below the lower boundary it computes token0 only. Strictly below the upper boundary, and above the lower one, it computes both. Otherwise it computes token1 only. Division floors.</p><p>Price exactly on the lower boundary: token0 is 9949671258790518 and token1 is 0. Price exactly on the upper boundary: token0 is 0 and token1 is 10049662092876568. Liquidity did not change. Inventory moved from only token0 to only token1. The integer midpoint of the two boundary square roots is 79626270645018270924784803449, still inside the range. There token0 is 4949962902125938 and token1 is 5024831046438284. Their sum is 9974793948564222. That sum is not 10^18, and it is not the lower-boundary token0 either. Liquidity is not the sum of the two tokens, and it is not either token alone.</p>
+            <table><caption>Teaching liquidity 10^18, ticks 0 through 200</caption><thead><tr><th scope="col">Current square root</th><th scope="col">token0</th><th scope="col">token1</th></tr></thead><tbody><tr><td>Lower, 79228162514264337593543950336</td><td>9949671258790518</td><td>0</td></tr><tr><td>Lower plus 1</td><td>9949671258790518</td><td>0</td></tr><tr><td>Lower plus 79228162515</td><td>9949671258790517</td><td>1</td></tr><tr><td>Integer midpoint of the boundaries</td><td>4949962902125938</td><td>5024831046438284</td></tr><tr><td>Upper, 80024378775772204256025656563</td><td>0</td><td>10049662092876568</td></tr></tbody></table>
+            <p>Writing 10^18 as both balances overstates token0 by 990050328741209482 and overstates token1 by the whole 10^18. The gap is not a last digit. The lower-boundary token0 is about one hundredth of the liquidity, and the other token is 0, so the position is not a proportional split of that integer either.</p></section>
+            <section id="sec-3"><h2>3. Token1 can already be 1 while the tick is still the lower tick</h2><p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool at v1.0.0</a> branches _modifyPosition on the current tick, not on the periphery's square-root comparison. Below the lower tick, the pool collects token0 only. Below the upper tick, it takes the inside branch and may collect both. Otherwise it collects token1 only. When the tick equals the lower tick, the first test fails and the inside branch runs. That branch then passes the current square root into <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">SqrtPriceMath</a>. If the square root is still the lower boundary's square root, the token1 gap is 0 and the inventory is still 0. Equality of the tick matches an all-token0 position only on that one reading.</p><p>One unit above the lower square root, the token1 product still does not clear 2^96. The floor stays 0, and token0 stays 9949671258790518. Token1 reaches 1 only when the square root is at least 79228162515 above the boundary. One less, a rise of 79228162514, still leaves token1 at 0, while token0 has already fallen by 1 to 9949671258790517. At 79228162515, token1 becomes 1 and token0 stays 9949671258790517. The square root of tick 1 is 79232123823359799118286999568. The increment 79228162515 is far smaller than the gap between those two square roots, so getTickAtSqrtRatio still returns 0. A note that says the position holds no token1 because the tick equals the lower tick erases that 1 raw unit and overstates token0 by 1.</p><p>The upper boundary has a second bad formula. Multiplying liquidity by the squared price minus one, and calling the product token1, floors to 20200319893934137 on this range. The contract token1 is 10049662092876568. The extra is 10150657801057569. Inventory uses the difference of square roots, not the difference of prices. In the previous note, one division at tick 200, minus one, is the square root's excess over 1. With both tokens at 18 decimals, the human reading of upper-boundary token1 is 0.010049662092876568, which lines up with that excess. The squared price sits about 0.020200319893 above 1, roughly twice as far, and that distance is not what gets multiplied by liquidity.</p></section>
+            <section id="sec-4"><h2>4. Desired amounts are cut to the smaller liquidity</h2><p><a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/base/LiquidityManagement.sol" target="_blank" rel="noopener">LiquidityManagement at v1.0.0</a> reads the square root from slot0, takes TickMath at both boundaries, and calls getLiquidityForAmounts. At or below the lower boundary, liquidity comes only from the desired token0. The desired token1 never enters that call. Teaching deposits of 10^18 on each side produce liquidity 100505833206951600031. getAmountsForLiquidity then floors token0 to 999999999999999999 and token1 to 0. The entire desired token1 stays out, and the token0 preview is short by 1.</p><p>The pool rounds a positive liquidity delta up when it mints. For this liquidity and these boundaries, SqrtPriceMath's round-up token0 is 1000000000000000000 and token1 is still 0. The periphery preview and the principal the pool actually charges differ by 1 raw unit, and the preview is the smaller one. Setting amount0Min from the preview, 1 below what the pool charges, stops the mint at the slippage check. That 1 is not a fee. The fee has not entered this path.</p><p>Move the price to the integer midpoint of the two boundary square roots and both desired amounts participate. Liquidity is the minimum of the two sides, 199011666413903200063. The floored principal is token0 985100365839083542 and token1 999999999999999999. Against desired amounts of 10^18 each, token0 leaves 14899634160916458 behind and token1 leaves 1. The binding side is token1. A note that says both deposits entered in full overstates token0 by 14899634160916458 and token1 by 1.</p></section>
+            <section id="sec-5"><h2>5. Fee checkpoints, spacing, and decimals sit outside liquidity</h2><p>Position.update multiplies the fee-growth increment by the liquidity then in the position, divides by 2^128, floors, and adds the result to tokensOwed. With liquidity still 10^18 and a teaching growth increment of 2^96, that step is 232830643. It is written to storage only when update runs. A read before that call still returns the old tokensOwed. If the old value is 0, the uncheckpointed 232830643 is invisible. Reading 0 as no fees drops that increment. Reading 232830643 as the lower-boundary token0 principal misses 9949671258790518. Fees and inventory are separate accounts.</p><p>The range also has to be initializable on that pool. When a tick flips, the pool passes tickSpacing into tickBitmap.flipTick. In the v1.0.0 factory, fee 500 maps to spacing 10, and 200 is divisible by 10. Fee 3000 maps to spacing 60, and 200 divided by 60 leaves 20. The same boundaries cannot be copied from a 500 pool onto a 3000 pool and still be treated as an aligned position. Spacing is an immutable on the pool. It is read with the fee. It is not visible in the liquidity integer.</p><p>The computed token0 and token1 are still raw units. When both tokens use 18 decimals, the human reading of lower-boundary token0 is 0.009949671258790518, not the 1 obtained by shifting 10^18 by 18 decimals. If token0 instead has 6 decimals and liquidity stays 10^18, the same raw integer 9949671258790518 is divided by 10^6 and the human reading is 9949671258.790518. Changing decimals moves the human unit by orders of magnitude without changing the liquidity field. The oracle note's answer scale does not replace token decimals here. Inventory comes from the square root and the liquidity first. Decimals are a second field on the token contracts.</p></section>
+            <section id="sec-6"><h2>6. Separate liquidity, inventory, and credited fees</h2><p>The weak sentences are "liquidity equals the tokens in the range" and "the tick is still on the lower boundary, so there is no token1." A usable sentence lists liquidity, the square roots of both boundaries, the current sqrtPriceX96 and the current tick, token0 and token1 after the rounding direction, the desired side that was not selected, whether update has written tokensOwed, whether tick spacing divides both boundaries, and both decimals. In the teaching set, 10^18 on the lower boundary is token0 9949671258790518 and token1 0. On the upper boundary it is token0 0 and token1 10049662092876568. Once the square root is 79228162515 above the lower boundary, the tick is still 0 and token1 is already 1.</p><p>This is a research framework. The position fields, the getAmountsForLiquidity branches, the round-up on a positive mint, and the division by 2^128 inside update come from the v1.0.0 libraries cited above. The figures 9949671258790518, 10049662092876568, 79228162515, 100505833206951600031, and 232830643 are a teaching conversion. They were not measured on a live pool, and they are not investment advice.</p></section>
+            <aside class="callout" aria-label="Promotional information"><p>Promotional information: to hold a small balance and compare a position screen with a wallet receipt, you can review the quote, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> on your own. That entry has no role in deciding whether liquidity equals a token balance, and it is not a guarantee of the service. Any swap should be a real, lawful research expense.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The struct has no token balance</a></li><li><a href="#sec-2">One liquidity, three prices, three inventories</a></li><li><a href="#sec-3">Token1 can already be 1 while the tick is still the lower tick</a></li><li><a href="#sec-4">Desired amounts are cut to the smaller liquidity</a></li><li><a href="#sec-5">Fee checkpoints, spacing, and decimals sit outside liquidity</a></li><li><a href="#sec-6">Separate liquidity, inventory, and credited fees</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Position.sol" target="_blank" rel="noopener">Uniswap V3: Position.Info and update</a></li><li><a href="https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/LiquidityAmounts.sol" target="_blank" rel="noopener">Uniswap V3: LiquidityAmounts</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3: the pool collects principal by tick</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap V3: SqrtPriceMath rounding direction</a></li></ul><p class="ref-note">Sources checked on 30 October 2026. The formulas come from the v1.0.0 tags of uniswap v3-core and v3-periphery. The teaching liquidity is not a live position.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li><li><a href="/en/research/market/amm-spot-vs-execution-price-verification-guide.html">Swap Check: A Pool's Spot Price Is Not the Fill on This Size</a></li><li><a href="/en/research/protocol/oracle-feed-decimals-vs-token-decimals-verification-guide.html">Feed Scale Check: Token decimals Are Not the Answer's Scale</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a014ba26"></script>
+</body>
+</html>
