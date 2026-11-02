@@ -49,6 +49,14 @@
   }
   syncStickyOffset();
   window.addEventListener('resize', syncStickyOffset);
+  var siteHeader = document.querySelector('.site-header');
+  if (siteHeader) {
+    var markHeaderStuck = function() {
+      siteHeader.classList.toggle('is-stuck', window.scrollY > 4);
+    };
+    markHeaderStuck();
+    window.addEventListener('scroll', markHeaderStuck, { passive: true });
+  }
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(syncStickyOffset);
   }
@@ -60,6 +68,7 @@
   if (heroStatNums.length) {
     var reduceMotionStats = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     heroStatNums.forEach(function (el) {
+      if (el.closest && el.closest('.lede')) return;
       var target = parseInt(el.textContent, 10);
       if (isNaN(target)) return; // the ∞ entity
       if (reduceMotionStats) return;
@@ -75,69 +84,6 @@
       }
       requestAnimationFrame(step);
     });
-  }
-
-  var tickerTrack = document.getElementById('ticker-track');
-  if (tickerTrack) {
-    var COINS = [
-      { id: 'bitcoin', sym: 'BTC' },
-      { id: 'ethereum', sym: 'ETH' },
-      { id: 'binancecoin', sym: 'BNB' },
-      { id: 'solana', sym: 'SOL' },
-      { id: 'ripple', sym: 'XRP' },
-      { id: 'dogecoin', sym: 'DOGE' },
-      { id: 'cardano', sym: 'ADA' }
-    ];
-    var fmtPrice = function(n) {
-      if (n >= 1) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return n.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-    };
-    var renderTicker = function(data) {
-      var itemsHtml = COINS.map(function(c) {
-        var d = data[c.id];
-        if (!d) return '';
-        var price = d.usd;
-        var chg = d.usd_24h_change || 0;
-        var up = chg >= 0;
-        var chgText = (up ? '▲' : '▼') + ' ' + (up ? '+' : '') + chg.toFixed(2) + '%';
-        return '<a class="ticker-item" href="https://www.coingecko.com/en/coins/' + c.id + '" target="_blank" rel="noopener noreferrer"><span class="ticker-sym">' + c.sym + '</span>' +
-          '<span class="ticker-price">$' + fmtPrice(price) + '</span>' +
-          '<span class="ticker-chg ' + (up ? 'ticker-up' : 'ticker-down') + '">' + chgText + '</span></a>';
-      }).join('');
-      tickerTrack.innerHTML = itemsHtml;
-      var setWidth = tickerTrack.getBoundingClientRect().width || 1;
-      var repeatCount = Math.max(2, Math.ceil((window.innerWidth * 1.5) / setWidth));
-      var block = new Array(repeatCount).fill(itemsHtml).join('');
-      tickerTrack.innerHTML = block + block;
-    };
-    var CACHE_KEY = 'ticker-price-cache';
-    var CACHE_TTL = 90000;
-    var readCache = function() {
-      try {
-        var raw = localStorage.getItem(CACHE_KEY);
-        if (!raw) return null;
-        return JSON.parse(raw);
-      } catch (e) { return null; }
-    };
-    var writeCache = function(data) {
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) {}
-    };
-    var loadTicker = function() {
-      var cached = readCache();
-      if (cached && (Date.now() - cached.ts) < CACHE_TTL) {
-        renderTicker(cached.data);
-        return;
-      }
-      var ids = COINS.map(function(c) { return c.id; }).join(',');
-      fetch('https://api.coingecko.com/api/v3/simple/price?ids=' + ids + '&vs_currencies=usd&include_24hr_change=true')
-        .then(function(r) { if (!r.ok) throw new Error('bad status'); return r.json(); })
-        .then(function(data) { writeCache(data); renderTicker(data); })
-        .catch(function() {
-          if (cached) renderTicker(cached.data);
-        });
-    };
-    loadTicker();
-    setInterval(loadTicker, CACHE_TTL);
   }
 
   // Reusable client-side paginator: shows `pageSize` items per page and builds controls in

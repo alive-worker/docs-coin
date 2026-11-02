@@ -68,9 +68,8 @@
 //     defined in styles.css) right after the lede paragraph, before the first
 //     h2 — a short "核验清单 / Verification checklist" of 3-4 concrete claims the
 //     article checks, each as an `<li>` inside `.article-verify-list` with an
-//     `.article-verify-check` circle. This is the article-page counterpart to the
-//     homepage hero-hud and is what makes a verification-style article visually
-//     distinct from a generic blog post — don't skip it for new articles.
+//     `.article-verify-check` circle. The checklist is the article's own
+//     contents, not a homepage decoration — don't skip it for new articles.
 //     Existing articles are intentionally left alone (73 files, out of scope).
 //
 // Idempotent: safe to re-run — each step early-outs if the new slug is already present.
@@ -439,7 +438,6 @@ function rebuildHomepageCarouselAndGrid(lang) {
   const carouselItems = items.slice(0, 5);
   const hotpicksItems = items.slice(5, 9); // next 4, no overlap with the carousel
   const gridVisible = items.slice(9, 18); // next 9, no overlap with carousel or hotpicks
-  const label = lang === 'en' ? '— FEATURED' : '— 置顶阅读';
   const readMore = lang === 'en' ? 'Read more →' : '阅读详情 →';
   const readLabel = lang === 'en' ? 'Read more' : '阅读详情';
   const coverAlt = lang === 'en' ? 'cover image' : '封面图';
@@ -453,7 +451,6 @@ function rebuildHomepageCarouselAndGrid(lang) {
                 <img class="featured-cover" src="${it.cover}" width="480" height="240" alt="${it.h1} ${coverAlt}"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
               </span>
               <span class="featured-body">
-                <span class="featured-label">${label}</span>
                 <span class="featured-title-row">
                   <span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span>
                   <span class="featured-title">${it.h1}</span>
@@ -471,7 +468,7 @@ function rebuildHomepageCarouselAndGrid(lang) {
     `          <button type="button" class="carousel-dot${i === 0 ? ' is-active' : ''}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" aria-label="${lang === 'en' ? 'Slide' : '第'} ${i + 1}${lang === 'en' ? '' : '项'}"></button>`
   ).join('\n');
 
-  const hotpicksLabel = lang === 'en' ? '🔥 Hot Picks' : '🔥 热门精选';
+  const hotpicksLabel = lang === 'en' ? 'Read next' : '接着读';
   const hotpicksAriaLabel = lang === 'en' ? 'Hot picks' : '热门精选';
   const hotpicksHtml = hotpicksItems.map((it, i) => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
@@ -529,12 +526,12 @@ ${hotpicksHtml}
   // reading-paths category count (see countDistinctTopics) — NOT bumped here.
   const topicCount = countDistinctTopics(lang);
   t = t.replace(
-    /(<span class="hero-stat-num">)\d+(<\/span><span class="hero-stat-label">(?:篇文章|Articles))/,
+    /(<span class="hero-stat-num">)\d+(<\/span>\s*<span class="hero-stat-label">(?:篇文章|articles))/,
     `$1${items.length}$2`
   );
   if (topicCount !== null) {
     t = t.replace(
-      /(<span class="hero-stat-num">)\d+(<\/span><span class="hero-stat-label">(?:个主题|Topics))/,
+      /(<span class="hero-stat-num">)\d+(<\/span>\s*<span class="hero-stat-label">(?:个主题|topics))/,
       `$1${topicCount}$2`
     );
   }
