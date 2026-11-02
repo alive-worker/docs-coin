@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fee Check: Pool Fee Tier Is Not the LP Cut - Crypto Research Notes</title>
+  <meta name="description" content="Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,fee,feeProtocol,liquidity provider,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Fee Check: Pool Fee Tier Is Not the LP Cut">
+  <meta property="og:description" content="Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-02T10:01:00+08:00">
+  <meta property="article:modified_time" content="2026-11-02T10:01:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Fee">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="Liquidity provider">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Gross fee 3000. With feeProtocol 100, denominator 4 leaves LPs 2250 and denominator 6 leaves 2500.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fee Check: Pool Fee Tier Is Not the LP Cut">
+  <meta name="twitter:description" content="Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Gross fee 3000. With feeProtocol 100, denominator 4 leaves LPs 2250 and denominator 6 leaves 2500.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=9ed7ad71">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/en/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html",
+      "name": "Fee Check: Pool Fee Tier Is Not the LP Cut",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Fee Check: Pool Fee Tier Is Not the LP Cut", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#article",
+      "headline": "Fee Check: Pool Fee Tier Is Not the LP Cut",
+      "description": "Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.png"],
+      "datePublished": "2026-11-02T10:01:00+08:00",
+      "dateModified": "2026-11-02T10:01:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","fee","feeProtocol","liquidity provider","crypto research"],
+      "wordCount": 1635,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is the printed 0.30% the fee liquidity providers receive?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. In v1.0.0, fee 3000 is the gross fee in millionths. The protocol then integer-divides that fee by the slot0.feeProtocol denominator. At denominator 4, the protocol takes 750 of 3000 and LP fee growth records 2250. The full 3000 stays with LPs only when the denominator is 0." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a feeProtocol reading of 100 mean a 100% protocol fee?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. setFeeProtocol(4, 6) stores 4 in the low nibble and 6 in the high nibble, so the uint8 is 100. A price-decreasing swap uses 100 modulo 16, which is 4. A price-increasing swap uses 100 shifted right by 4, which is 6. The stored 100 is not a percentage." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do swap fees and flash fees use the same formula?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Once a swap step has reached its target price, the fee is amountIn times fee, divided by 1000000 minus fee, then rounded up. A flash loan uses the borrowed amount times fee, divided by 1000000, then rounded up. At 997001 and fee 3000, the swap fee is 3001 and the flash fee is 2992." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--gold">Fee</span></p>
+          <h1>Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</h1>
+          <p class="article-summary">A Uniswap v3 pool's fee tier is the gross fee in millionths, not the liquidity provider's share. In v1.0.0, setFeeProtocol(4, 6) packs both denominators into slot0.feeProtocol and stores 100. A price-decreasing swap uses denominator 4. A price-increasing swap uses denominator 6. On a teaching gross fee of 3000, LPs keep 2250 one way and 2500 the other. The protocol takes 750 and 500. The figures come from the contract's integer division and round-up. They are not a pool reading from 2 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-02T10:01:00+08:00">2026-11-02 10:01:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide-en.svg" alt="Gross fee 3000. With feeProtocol 100, denominator 4 leaves 2250 and denominator 6 leaves 2500." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>fee is the gross fee in millionths. Liquidity providers are credited only with what remains after the protocol's integer division.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The low nibble and the high nibble of slot0.feeProtocol are two denominators. A reading of 100 is not 100%.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A swap step that has reached its target price divides by 1000000 minus fee. A flash loan divides by 1000000. The same input can differ by 9.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The protocol's share rounds down. A fee of 1 divided by 4 is 0, and that 1 still enters LP fee growth only when liquidity is above 0.</li></ul></div>
+            <section id="sec-1"><h2>1. The printed 0.30% has not been split yet</h2><p>A pool page prints fee 3000 as 0.30%, and that label is easy to read as the liquidity provider's yield. In the v1.0.0 pool, 3000 means the fee is cut from the input at 3000 per million. That cut still passes through slot0.feeProtocol. When the denominator is above 0, the protocol takes the integer quotient and only the remainder is added to feeGrowthGlobal. <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> subtracts amountIn plus feeAmount from the remaining input before it splits the fee. The swapper pays the gross fee. The LP checkpoint sees the remainder.</p><p>So "0.30% all goes to LPs" is true only when the denominator is 0. At denominator 4, the protocol takes 750 of a 3000 fee and the growth accumulator adds 2250. Writing 3000 as the LP fee overstates it by 750, one third of the remainder. At denominator 6 the protocol takes 500 and the remainder is 2500, so the overstatement is 500. The two mistakes are not one percentage applied twice. They are two denominators.</p><p>This is not the question in the position article. That one asks whether the liquidity field is a token balance. This one assumes the inventory has already been separated, and asks whether the fee tier is the cut LPs keep. Quote, inventory, and fee are three ledgers. Multiplying the fee tier by the inventory produces a swap fee that has not happened. It is not the amount already written into tokensOwed.</p></section>
+            <section id="sec-2"><h2>2. One byte holds two denominators. 100 is not a percent</h2><p>setFeeProtocol accepts 0, or a value from 4 through 10. The require treats those values as denominators, not percentages. 4 means the protocol takes one fourth, not 4%. 0 means that side takes no protocol fee. The two arguments are the token0 direction and the token1 direction. Storage is the low nibble plus the high nibble shifted left by 4: feeProtocol0 + (feeProtocol1 &lt;&lt; 4). The teaching pair 4 and 6 stores 4 + 96 = 100. The uint8 read back from the chain is 100.</p><p>A swap unpacks that byte by direction. The price-decreasing path, which sells token0, uses 100 % 16 and gets 4. The price-increasing path uses 100 &gt;&gt; 4 and gets 6. Flash settlement splits the same way: paid0 uses the low nibble, paid1 uses the high nibble. Reading 100 as "the protocol takes 100%" writes 0 for LPs. Reading 100 as one denominator for both directions writes the same remainder twice. 100 is not an allowed denominator. It is what 4 and 6 look like after they share a byte.</p>
+            <table><caption>Gross fee 3000, slot0.feeProtocol = 100</caption><thead><tr><th scope="col">Direction</th><th scope="col">Denominator</th><th scope="col">Protocol takes</th><th scope="col">LPs keep</th></tr></thead><tbody><tr><td>Price down, low nibble</td><td>4</td><td>750</td><td>2250</td></tr><tr><td>Price up, high nibble</td><td>6</td><td>500</td><td>2500</td></tr><tr><td>Denominator read as 0</td><td>0</td><td>0</td><td>3000</td></tr><tr><td>100 read as a percent</td><td>misread</td><td>3000</td><td>0</td></tr></tbody></table>
+            <p>The same 3000 differs by 250 across the two legal directions. 250 is 750 minus 500, not a rounding dust. A note that copies only the printed 0.30% writes 3000 for both directions, overstating one by 750 and the other by 500.</p></section>
+            <section id="sec-3"><h2>3. After the target price is reached, round up, then divide</h2><p>When the step has already reached its target price, <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">SwapMath v1.0.0</a> does not compute the fee as amountIn times 3000 divided by 1000000. The denominator is 1000000 minus fee, which is 997000, and <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">FullMath.mulDivRoundingUp</a> rounds up. At amountIn 997000 and fee 3000, 997000 times 3000 divides 997000 exactly, so the fee is 3000. The input on that step is 997000 plus 3000, which is 1000000. The printed 0.30% of 1000000 is also 3000. The match is this input only. It does not make the two formulas the same.</p><p>At amountIn 997001, the product 2991003000 divided by 997000 has quotient 3000 and a non-zero remainder, so the rounded-up fee is 3001. Protocol denominator 4 divides 3001 down to 750 and records 2251 in the growth accumulator. Denominator 6 divides down to 500 and records 2501. Rounding 3001 back to 3000 before the split keeps the protocol share at 750 or 500 and drops 1 from the LP remainder. That 1 is the round-up, not the protocol denominator.</p><p>The branch that has not reached the target price uses a different expression: the fee is the remaining input minus amountIn. The teaching fees 3000 and 3001 both use the branch that has reached the target, so the two rounding rules are not mixed into one number.</p></section>
+            <section id="sec-4"><h2>4. A flash loan divides by 1000000. The same input can differ by 9</h2><p>flash multiplies the borrowed amount by fee, divides by 1000000, and rounds up. That result is the minimum the callback must repay above the principal. Borrowing 1000000 at fee 3000 produces 3000, the same as the swap fee in the previous section. Borrowing 997001 produces quotient 2991 from 2991003000 divided by 1000000, then rounds up to 2992. The swap fee at amountIn 997001 is 3001. The formulas differ by 9. Using the flash divisor on the swap's amountIn understates the fee by 9. Using the swap divisor on the flash principal overstates it by 9.</p><p>If the callback repays exactly 2992, paid0 is 2992. With low-nibble denominator 4, the protocol takes 748, which is 2992 divided by 4, and LP growth records 2244. Filling the flash protocol fee with the swap's 3001 overstates the protocol fee by 2 and the growth by 7. The gross gap of 9 does not land on one side. Settlement requires the balance to rise by at least fee. Any extra repayment is part of paid and is divided by the same denominator. A note that writes the minimum fee as the actual paid drops that extra.</p></section>
+            <section id="sec-5"><h2>5. A fee of 1 can leave the protocol with 0</h2><p>A flash loan of 1 at fee 3000 divides 1 times 3000 by 1000000, gets quotient 0, and rounds up to 1 because the remainder is not 0. The printed 0.30% of 1 is below one unit, and rounding it down writes 0. The contract asks the callback for 1. At denominator 4 or 6, integer division of 1 is 0, so the protocol fee does not increase and the whole unit stays in the remainder. Writing "the protocol takes one fourth" as 0.25 still leaves the protocol-fee field at 0. Integer division does not keep the 0.25.</p><p>Inside the swap loop, the growth accumulator is updated only when liquidity is above 0. At liquidity 0 the protocol fee is still accumulated, and the remainder is not added to feeGrowthGlobal. Teaching gross fee 3000, denominator 4, liquidity 0: protocol fees increase by 750 and the growth accumulator does not move. The swapper has already paid the gross 3000. Reading a growth reading of 0 as "no fee was charged" misses 3000 already paid into the pool. 750 sits in protocol fees. 2250 was never written onto a position checkpoint. Later liquidity does not backfill that interval.</p></section>
+            <section id="sec-6"><h2>6. Read both denominators, then round up and divide</h2><p>The failing sentences are "0.30% is the LP fee" and "a feeProtocol reading of 100 means a 100% cut." The sentence that can be checked is "fee; the low nibble and the high nibble of slot0.feeProtocol; whether this step reached the target price; whether the divisor is the swap's 997000 or the flash loan's 1000000; the gross fee after rounding up; the protocol fee after integer division; whether a liquidity of 0 kept the remainder out of the growth accumulator." In the teaching case, feeProtocol 100 and a gross fee of 3000 leave 2250 one way and 2500 the other. When amountIn and the borrowed amount are both 997001, the swap fee is 3001 and the flash fee is 2992.</p><p>This is an analytical frame. The split order, the packed denominators, and the two round-ups come from the v1.0.0 sources cited above. 3000, 2250, 2500, 3001, 2992, and 1 are teaching conversions. They were not measured on a live pool, and they are not investment advice.</p></section>
+            <section id="faq"><h2>7. Misreadings that keep coming back</h2>
+              <h3>Is the printed 0.30% the fee liquidity providers receive?</h3>
+              <p>No. In v1.0.0, fee 3000 is the gross fee in millionths. The protocol then integer-divides that fee by the slot0.feeProtocol denominator. At denominator 4, the protocol takes 750 of 3000 and LP fee growth records 2250. The full 3000 stays with LPs only when the denominator is 0.</p>
+              <h3>Does a feeProtocol reading of 100 mean a 100% protocol fee?</h3>
+              <p>No. setFeeProtocol(4, 6) stores 4 in the low nibble and 6 in the high nibble, so the uint8 is 100. A price-decreasing swap uses 100 modulo 16, which is 4. A price-increasing swap uses 100 shifted right by 4, which is 6. The stored 100 is not a percentage.</p>
+              <h3>Do swap fees and flash fees use the same formula?</h3>
+              <p>No. Once a swap step has reached its target price, the fee is amountIn times fee, divided by 1000000 minus fee, then rounded up. A flash loan uses the borrowed amount times fee, divided by 1000000, then rounded up. At 997001 and fee 3000, the swap fee is 3001 and the flash fee is 2992.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to hold a small amount for comparing a pool page's fee tier with one swap, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether the fee tier equals the LP cut, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The printed 0.30% has not been split yet</a></li><li><a href="#sec-2">One byte holds two denominators. 100 is not a percent</a></li><li><a href="#sec-3">After the target price is reached, round up, then divide</a></li><li><a href="#sec-4">A flash loan divides by 1000000. The same input can differ by 9</a></li><li><a href="#sec-5">A fee of 1 can leave the protocol with 0</a></li><li><a href="#sec-6">Read both denominators, then round up and divide</a></li><li><a href="#faq">Misreadings that keep coming back</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: protocol split and setFeeProtocol</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">Uniswap v3: SwapMath.computeSwapStep</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">Uniswap v3: FullMath round-up</a></li></ul><p class="ref-note">Sources checked on 2 November 2026. The formulas are from the v1.0.0 tag of uniswap v3-core. The teaching fees are not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">Position Check: Stored Liquidity Is Not the Token Balance</a></li><li><a href="/en/research/market/amm-spot-vs-execution-price-verification-guide.html">Swap Check: A Pool's Spot Price Is Not the Fill on This Size</a></li><li><a href="/en/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">Gas Check: The Max Fee You Set Is Not What This Transaction Pays</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9cbffee3"></script>
+</body>
+</html>

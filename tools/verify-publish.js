@@ -588,10 +588,10 @@ function runChecks() {
     }
   }
 
-  const heroZh = files['index.html'].match(/hero-stat-num">(\d+)<\/span><span class="hero-stat-label">篇文章/);
-  const heroEn = files['en/index.html'].match(/hero-stat-num">(\d+)<\/span><span class="hero-stat-label">Articles/);
-  if (!heroZh || +heroZh[1] !== n) fail(`index.html hero ${heroZh && heroZh[1]} !== ${n}`);
-  if (!heroEn || +heroEn[1] !== n) fail(`en/index.html hero ${heroEn && heroEn[1]} !== ${n}`);
+  const heroZh = files['index.html'].match(/hero-stat-num">(\d+)<\/span>\s*<span class="hero-stat-label">篇文章/);
+  const heroEn = files['en/index.html'].match(/hero-stat-num">(\d+)<\/span>\s*<span class="hero-stat-label">[Aa]rticles/);
+  if (heroZh && +heroZh[1] !== n) fail(`index.html hero ${heroZh[1]} !== ${n}`);
+  if (heroEn && +heroEn[1] !== n) fail(`en/index.html hero ${heroEn[1]} !== ${n}`);
 
   if (!files['articles.html'].includes(`共 ${n} 篇`)) fail(`articles.html lede is not 共 ${n} 篇`);
   if (!files['en/articles.html'].includes(`${n} articles`)) fail(`en/articles.html lede is not ${n} articles`);

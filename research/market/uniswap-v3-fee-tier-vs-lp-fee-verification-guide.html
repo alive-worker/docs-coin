@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>手续费核验：池子费率不等于 LP 留下的手续费 - 加密货币研究</title>
+  <meta name="description" content="Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,手续费,feeProtocol,流动性提供者,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="手续费核验：池子费率不等于 LP 留下的手续费">
+  <meta property="og:description" content="Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-02T10:01:00+08:00">
+  <meta property="article:modified_time" content="2026-11-02T10:01:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="手续费">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="流动性提供者">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="整笔手续费 3000。feeProtocol 为 100 时，分母 4 的方向流动性提供者留下 2250，分母 6 的方向留下 2500。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="手续费核验：池子费率不等于 LP 留下的手续费">
+  <meta name="twitter:description" content="Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.png">
+  <meta name="twitter:image:alt" content="整笔手续费 3000。feeProtocol 为 100 时，分母 4 的方向流动性提供者留下 2250，分母 6 的方向留下 2500。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=9ed7ad71">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html",
+      "name": "手续费核验：池子费率不等于 LP 留下的手续费",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "手续费核验：池子费率不等于 LP 留下的手续费", "item": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#article",
+      "headline": "手续费核验：池子费率不等于 LP 留下的手续费",
+      "description": "Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.png"],
+      "datePublished": "2026-11-02T10:01:00+08:00",
+      "dateModified": "2026-11-02T10:01:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","手续费","feeProtocol","流动性提供者","加密货币研究"],
+      "wordCount": 3616,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "池子页面上的 0.30% 就是流动性提供者拿到的费率吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。v1.0.0 里 fee 为 3000 表示整笔手续费按百万分之 3000 计。协议再按 slot0.feeProtocol 的分母从这笔里整除。分母为 4 时，3000 里协议拿走 750，流动性提供者的增长只记 2250。分母为 0 时才整笔留下。" }
+        },
+        {
+          "@type": "Question",
+          "name": "slot0.feeProtocol 读成 100，是不是收 100% 的协议费？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。setFeeProtocol(4, 6) 把 4 放在低 4 位、6 放在高 4 位，存进去的 uint8 是 100。价格下降的兑换用 100 除以 16 的余数 4，价格上升的兑换用右移 4 位得到的 6。100 不是百分比。" }
+        },
+        {
+          "@type": "Question",
+          "name": "兑换手续费和闪电贷手续费是同一个公式吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。兑换在已经碰到目标价时，用 amountIn 乘 fee，再除以 1000000 减 fee，然后向上取整。闪电贷用借出量乘 fee，再除以 1000000，然后向上取整。amountIn 与借出量都是 997001、fee 为 3000 时，兑换手续费是 3001，闪电贷手续费是 2992。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--gold">手续费</span></p>
+          <h1>手续费核验：池子上的费率，不等于流动性提供者留下的那一截</h1>
+          <p class="article-summary">Uniswap V3 池子的 fee 是整笔手续费的百万分率，不是流动性提供者的分成。v1.0.0 的 setFeeProtocol(4, 6) 把两个分母压进 slot0.feeProtocol，存出来的数是 100。价格下降的兑换用分母 4，价格上升的兑换用分母 6。教学里整笔手续费是 3000 时，一边留给流动性提供者 2250，另一边留下 2500。协议分别拿走 750 和 500。数字来自合约里的整除和向上取整，不是 2026 年 11 月 2 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-02T10:01:00+08:00">2026-11-02 10:01:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-fee-tier-vs-lp-fee-verification-guide.svg" alt="整笔手续费 3000。feeProtocol 为 100 时，分母 4 留下 2250，分母 6 留下 2500。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>fee 是整笔手续费的百万分率。流动性提供者只记协议整除之后的余数。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>slot0.feeProtocol 的低 4 位和高 4 位是两个分母。100 不是 100%。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>兑换碰到目标价时，手续费用 1000000 减 fee 作分母。闪电贷用 1000000。同一输入可以差 9。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>协议分成是向下整除。1 个单位的手续费除以 4 得 0，这 1 个单位仍进流动性提供者的增长，前提是当时流动性大于 0。</li></ul></div>
+            <section id="sec-1"><h2>1. 页面上的 0.30%，还没经过协议分成</h2><p>池子页面把 fee 3000 印成 0.30%，读的人很容易把它当成流动性提供者的收益率。v1.0.0 的池子里，3000 的意思是手续费按百万分之 3000 从输入里切出来。切出来的这一笔还要再过 slot0.feeProtocol。分母大于 0 时，协议拿走整笔除以分母的商，余数才加进 feeGrowthGlobal。<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> 在兑换循环里先把 amountIn 加 feeAmount 从剩余输入里扣掉，然后才做协议分成。兑换者付的是分成前的整笔。流动性提供者的检查点只看见分成后的余数。</p><p>所以「0.30% 都归 LP」只在分母为 0 时成立。分母为 4 时，整笔 3000 里协议拿走 750，增长累加器只加 2250。把 3000 写成流动性提供者的手续费，多写 750，相当于把余数放大了三分之一。分母为 6 时，协议拿走 500，余数是 2500，多写的是 500。两个错误的绝对数不同，因为分母不同，不是同一个百分比打个折。</p><p>这和本站仓位那篇不是同一问。那篇问的是 liquidity 字段是不是代币余额。本篇假定库存已经按那篇分开，接着问手续费档是不是流动性提供者留下的那一截。报价、库存和手续费是三本账。把手续费档乘在库存上，得到的是另一笔还没发生的兑换费用，不是这个仓位已经记入 tokensOwed 的数。</p></section>
+            <section id="sec-2"><h2>2. 一个字节里有两个分母，100 不是百分比</h2><p>setFeeProtocol 只接受 0，或者 4 到 10。注释和 require 写的是分母，不是百分数。4 表示协议拿走四分之一，不是拿走 4%。0 表示这一侧不抽协议费。两个参数分别是 token0 方向和 token1 方向，存进 slot0 时是低 4 位加高 4 位左移：feeProtocol0 + (feeProtocol1 &lt;&lt; 4)。教学取值 4 和 6，4 + 96 = 100。链上读出来的 uint8 就是 100。</p><p>兑换开始时按方向拆这一个字节。价格下降、卖出 token0 的路径用 100 % 16，得到 4。价格上升的路径用 100 &gt;&gt; 4，得到 6。闪电贷结算时同样拆开：paid0 用低 4 位，paid1 用高 4 位。把 100 读成「协议抽成 100%」，整笔手续费会被写成 0 给流动性提供者。把 100 读成两边同一个分母，两个方向的余数会被写成同一个数。合约允许的分母里没有 100 这一档，100 只是 4 和 6 叠在一个字节里的样子。</p>
+            <table><caption>整笔手续费 3000，slot0.feeProtocol = 100</caption><thead><tr><th scope="col">方向</th><th scope="col">分母</th><th scope="col">协议拿走</th><th scope="col">LP 留下</th></tr></thead><tbody><tr><td>价格下降，低 4 位</td><td>4</td><td>750</td><td>2250</td></tr><tr><td>价格上升，高 4 位</td><td>6</td><td>500</td><td>2500</td></tr><tr><td>分母读成 0</td><td>0</td><td>0</td><td>3000</td></tr><tr><td>把 100 当成百分比</td><td>误读</td><td>3000</td><td>0</td></tr></tbody></table>
+            <p>同一笔 3000，两个合法方向相差 250。250 不是舍入误差，是 750 减 500。笔记若只抄页面上的 0.30%，两个方向都会被写成 3000，一边多 750，一边多 500。</p></section>
+            <section id="sec-3"><h2>3. 碰到目标价时，先向上取整，再整除</h2><p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">SwapMath v1.0.0</a> 在这一步已经碰到目标价时，手续费不是 amountIn 乘 3000 再除以 1000000。分母是 1000000 减 fee，也就是 997000，然后再按 <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">FullMath.mulDivRoundingUp</a> 向上取整。amountIn 取 997000、fee 取 3000 时，997000 乘 3000 正好被 997000 整除，手续费是 3000。兑换者这一步的输入是 997000 加 3000，等于 1000000。用页面上的 0.30% 乘 1000000，也得到 3000。这一档碰巧对齐，还不能据此说两条公式相同。</p><p>amountIn 改成 997001，乘积 2991003000 除以 997000 的商是 3000，余数不为 0，向上取整后手续费是 3001。协议分母 4 时，3001 整除得到 750，余数 2251 进增长累加器。分母 6 时，商是 500，余数是 2501。有人把 3001 按四舍五入写成 3000，协议分成仍是 750 或 500，流动性提供者少记 1。这个 1 来自向上取整，不是协议分母。</p><p>还没碰到目标价的那条分支用另一条式子：手续费等于剩余输入减去 amountIn。本篇的 3000 和 3001 都走已经碰到目标价的分支，避免把两条分支的取整混成一个数。</p></section>
+            <section id="sec-4"><h2>4. 闪电贷的分母是 1000000，同一输入可以差 9</h2><p>flash 先用借出量乘 fee 再除以 1000000，同样向上取整，得到回调至少要补上的手续费。借出 1000000、fee 为 3000 时，结果是 3000，和上一节兑换的 3000 相同。借出 997001 时，2991003000 除以 1000000 的商是 2991，余数不为 0，向上取整是 2992。兑换在 amountIn 为 997001 时的手续费是 3001。两条公式差 9。把闪电贷的除数套到兑换的 amountIn 上，会少写 9；反过来套，会多写 9。</p><p>回调若正好补上 2992，paid0 就是 2992。低 4 位分母为 4 时，协议拿走 2992 整除 4 的 748，流动性提供者的增长记 2244。用兑换那条 3001 去填闪电贷的协议费，协议费多写 2，增长多写 7。差从整笔的 9 拆开，不会只出现在其中一边。结算要求余额至少增加 fee，多付的部分也进 paid，再按同一个分母整除。笔记若把「至少要付的 fee」写成「实际 paid」，多付的那一截不会出现。</p></section>
+            <section id="sec-5"><h2>5. 1 个单位的手续费，协议分成可以是 0</h2><p>闪电贷借出 1、fee 为 3000 时，1 乘 3000 再除以 1000000 的商是 0，余数不为 0，向上取整后手续费是 1。页面上的 0.30% 乘 1 不到 1 个单位，向下取整会写成 0。合约向回调要的是 1。分母为 4 或 6 时，1 整除分母都是 0，协议费不加，这 1 个单位全部留在 paid 减协议费的余数里。把「协议拿四分之一」写成 0.25，合约的协议费字段仍是 0。整数除法不保留这 0.25。</p><p>兑换循环里，增长累加器只在当时流动性大于 0 时才加上余数。流动性为 0 时，协议费仍按分母累加，余数不加进 feeGrowthGlobal。教学整笔 3000、分母 4、流动性 0：协议费增加 750，增长累加器不变。兑换者已经按分成前的 3000 支付。把增长累加器的 0 读成「没有手续费」，漏掉的是已经付进池子的 3000，其中 750 在协议费里，2250 没有进入任何仓位的检查点。流动性恢复之后，这段增长也不会补记。</p></section>
+            <section id="sec-6"><h2>6. 结论：先读两个分母，再做向上取整和整除</h2><p>错误句式是「0.30% 就是 LP 的费率」，以及「feeProtocol 读数 100 表示抽成 100%」。更可靠的句子是「fee；slot0.feeProtocol 的低 4 位和高 4 位；这一步有没有碰到目标价；兑换用 997000 还是闪电贷用 1000000；向上取整后的整笔；整除后的协议费；余数是否因为流动性为 0 而没有写入增长累加器」。教学档里，feeProtocol 为 100、整笔为 3000 时，一个方向留下 2250，另一个方向留下 2500。amountIn 与借出量同为 997001 时，兑换手续费是 3001，闪电贷手续费是 2992。</p><p>本文是分析框架。分成顺序、两个分母的打包、两条向上取整，都来自上面引用的 v1.0.0 源码。3000、2250、2500、3001、2992 和 1 是教学换算，未对任何实时池子做实测，也不构成投资建议。</p></section>
+            <section id="faq"><h2>7. 常见误读</h2>
+              <h3>池子页面上的 0.30% 就是流动性提供者拿到的费率吗？</h3>
+              <p>不是。v1.0.0 里 fee 为 3000 表示整笔手续费按百万分之 3000 计。协议再按 slot0.feeProtocol 的分母从这笔里整除。分母为 4 时，3000 里协议拿走 750，流动性提供者的增长只记 2250。分母为 0 时才整笔留下。</p>
+              <h3>slot0.feeProtocol 读成 100，是不是收 100% 的协议费？</h3>
+              <p>不是。setFeeProtocol(4, 6) 把 4 放在低 4 位、6 放在高 4 位，存进去的 uint8 是 100。价格下降的兑换用 100 除以 16 的余数 4，价格上升的兑换用右移 4 位得到的 6。100 不是百分比。</p>
+              <h3>兑换手续费和闪电贷手续费是同一个公式吗？</h3>
+              <p>不是。兑换在已经碰到目标价时，用 amountIn 乘 fee，再除以 1000000 减 fee，然后向上取整。闪电贷用借出量乘 fee，再除以 1000000，然后向上取整。amountIn 与借出量都是 997001、fee 为 3000 时，兑换手续费是 3001，闪电贷手续费是 2992。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量资产，以便对照池子页面上的费率和一笔实际兑换，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与手续费档是否等于流动性提供者所得的判定无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">页面上的 0.30%，还没经过协议分成</a></li><li><a href="#sec-2">一个字节里有两个分母，100 不是百分比</a></li><li><a href="#sec-3">碰到目标价时，先向上取整，再整除</a></li><li><a href="#sec-4">闪电贷的分母是 1000000，同一输入可以差 9</a></li><li><a href="#sec-5">1 个单位的手续费，协议分成可以是 0</a></li><li><a href="#sec-6">结论：先读两个分母，再做向上取整和整除</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3：协议分成与 setFeeProtocol</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">Uniswap V3：SwapMath.computeSwapStep</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">Uniswap V3：FullMath 的向上取整</a></li></ul><p class="ref-note">资料核对日期：2026年11月2日。公式来自 uniswap v3-core 的 v1.0.0 标签。教学手续费不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">仓位核验：仓位上的流动性，不等于代币余额</a></li><li><a href="/research/market/amm-spot-vs-execution-price-verification-guide.html">兑换核验：池子现货价，不等于这笔的成交价</a></li><li><a href="/research/protocol/eip1559-max-fee-vs-effective-gas-price-verification-guide.html">Gas 核验：你设的封顶，不等于这笔的实付</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=9cbffee3"></script>
+</body>
+</html>

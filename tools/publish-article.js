@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
-  publishedISO: '2026-10-30T17:47:00+08:00',
-  tagColor: 'bronze',
+  slug: 'uniswap-v3-fee-tier-vs-lp-fee-verification-guide',
+  publishedISO: '2026-11-02T10:01:00+08:00',
+  tagColor: 'gold',
   topic: 'market',
 
   zh: {
-    h1: "仓位核验：仓位上的流动性，不等于代币余额",
-    tagLabel: "仓位",
-    cardDesc: "Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。",
+    h1: "手续费核验：池子上的费率，不等于流动性提供者留下的那一截",
+    tagLabel: "手续费",
+    cardDesc: "Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。",
   },
   en: {
-    h1: "Position Check: Stored Liquidity Is Not the Token Balance",
-    tagLabel: "Position",
-    cardDesc: "A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.",
+    h1: "Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep",
+    tagLabel: "Fee",
+    cardDesc: "Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
     'uniswap-v3-sqrt-price-vs-tick-verification-guide',
     'lending-health-factor-vs-price-drop-verification-guide',
     'eip1559-max-fee-vs-effective-gas-price-verification-guide',
