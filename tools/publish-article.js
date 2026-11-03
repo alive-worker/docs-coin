@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-fee-tier-vs-lp-fee-verification-guide',
-  publishedISO: '2026-11-02T10:01:00+08:00',
-  tagColor: 'gold',
+  slug: 'uniswap-v3-twap-tick-vs-price-average-verification-guide',
+  publishedISO: '2026-11-03T14:51:00+08:00',
+  tagColor: 'azure',
   topic: 'market',
 
   zh: {
-    h1: "手续费核验：池子上的费率，不等于流动性提供者留下的那一截",
-    tagLabel: "手续费",
-    cardDesc: "Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。",
+    h1: "时间加权核验：链上的平均 tick，不等于两端价格的平均数",
+    tagLabel: "时间加权",
+    cardDesc: "Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。",
   },
   en: {
-    h1: "Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep",
-    tagLabel: "Fee",
-    cardDesc: "Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.",
+    h1: "TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices",
+    tagLabel: "TWAP",
+    cardDesc: "Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-fee-tier-vs-lp-fee-verification-guide',
     'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
     'uniswap-v3-sqrt-price-vs-tick-verification-guide',
     'lending-health-factor-vs-price-drop-verification-guide',

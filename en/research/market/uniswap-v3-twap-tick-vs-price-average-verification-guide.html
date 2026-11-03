@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TWAP Check: The Average Tick Is Not the Average Price - Crypto Research Notes</title>
+  <meta name="description" content="Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,TWAP,tick,time-weighted average,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="TWAP Check: The Average Tick Is Not the Average Price">
+  <meta property="og:description" content="Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-03T14:51:00+08:00">
+  <meta property="article:modified_time" content="2026-11-03T14:51:00+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="TWAP">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="Tick">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="One hundred seconds at tick 0, then one hundred at tick 10000. Mean tick 5000 prices at 1.648680055931. The average of the two prices is 1.859072963412.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TWAP Check: The Average Tick Is Not the Average Price">
+  <meta name="twitter:description" content="Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="One hundred seconds at tick 0, then one hundred at tick 10000. Mean tick 5000 prices at 1.648680055931. The average of the two prices is 1.859072963412.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=69a6a288">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html",
+      "name": "TWAP Check: The Average Tick Is Not the Average Price",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "TWAP Check: The Average Tick Is Not the Average Price", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#article",
+      "headline": "TWAP Check: The Average Tick Is Not the Average Price",
+      "description": "Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.png"],
+      "datePublished": "2026-11-03T14:51:00+08:00",
+      "dateModified": "2026-11-03T14:51:00+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","TWAP","tick","time-weighted average","crypto research"],
+      "wordCount": 1939,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol",
+        "https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is the time-weighted price the two endpoint prices added and divided by 2?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The v1.0.0 accumulator adds tick times seconds. One hundred seconds at tick 0 and one hundred at tick 10000 average to tick 5000. Raised as a power of 1.0001 and truncated to 12 decimals, the ratio is 1.648680055931. The two prices added and divided by 2 are 1.859072963412." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the cumulative delta is -201 over 2 seconds, is the mean tick -100?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. consult first truncates toward zero and gets -100. When the delta is negative and does not divide evenly, it subtracts 1 and writes -101. The ratio at tick -100 is 0.990050328741. The ratio at tick -101 is 0.989951333607." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the window is older than the oldest observation, does observe return the spot tick?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. observe reverts with OLD when the target is older than the oldest observation. It does not return slot0.tick, and it does not return 0. consult reverts with BP when secondsAgo is 0, which is a different call from observe using 0 to mean the current cumulative." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--azure">TWAP</span></p>
+          <h1>TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</h1>
+          <p class="article-summary">A Uniswap v3 oracle accumulates tick times elapsed seconds, not price times seconds. consult divides the cumulative delta by the seconds, then steps a negative remainder toward negative infinity. In the teaching window, 100 seconds at tick 0 and 100 seconds at tick 10000 average to tick 5000, and the price ratio truncated to 12 decimals is 1.648680055931. Adding the two prices and dividing by 2 gives 1.859072963412. Under the same truncation, that average sits between tick 6201 and tick 6202. The figures are a teaching conversion, not a pool reading from 3 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-03T14:51:00+08:00">2026-11-03 14:51:00</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide-en.svg" alt="One hundred seconds at tick 0, then one hundred at tick 10000. Mean tick 5000 prices at 1.648680055931. Adding the two prices and dividing by 2 gives 1.859072963412." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>The accumulator adds tick times seconds. The price ratio is 1.0001 raised to the mean tick, not the average of the endpoint prices.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>When the cumulative delta is negative and does not divide evenly, consult truncates toward zero and then subtracts 1. -201 divided by 2 is written as -101, not -100.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>When secondsAgo is 0, observe extends the latest observation to the current time. consult reverts with BP. A window older than the oldest observation reverts with OLD.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Liquidity is a harmonic mean. One hundred seconds at 1000 and one hundred at 3000 write 1500. A stretch at liquidity 0 uses 1 as the divisor.</li></ul></div>
+            <section id="sec-1"><h2>1. The accumulator adds ticks, not prices</h2><p>A pool page often prints a TWAP as one price. <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Oracle v1.0.0</a> has no price field on Observation. The comment on tickCumulative says it is the tick times the time elapsed since the pool was initialized. transform adds the active tick times the timestamp delta to the previous cumulative. Two equal stretches, tick 0 and tick 10000, add 0×100 + 10000×100 = 1000000. Over 200 seconds, 1000000 / 200 = 5000. The average is a tick.</p><p>The price ratio uses the truncation from the square-root article on this site: 1.0001 raised to the tick, cut off at 12 decimal places. Tick 10000 is 2.718145926825, the same figure as that article. Tick 0 is 1. Tick 5000 is 1.648680055931. Adding the two already truncated prices and dividing by 2 gives 1.8590729634125, which cuts off at 12 decimals as 1.859072963412. That is 0.210392907481 above 1.648680055931.</p><p>The gap is not rounding error. A power of 1.0001 is convex. Averaging the ticks and then raising the power is not the same number as raising each power and then averaging the prices. Reading 1.859072963412 back as the greatest tick whose ratio does not exceed it: tick 6201 ratios to 1.859056306853, and tick 6202 ratios to 1.859242212484. The arithmetic average sits between those two ticks, so the lower tick is 6201. The distance from 5000 to 6201 is 1201 ticks. A note that writes the time-weighted price as the average of the endpoint prices overstates the tick by 1201 and the ratio by 0.210392907481.</p><p>This is not the question in the square-root article, and it is not the question in the spot-versus-fill article. The square-root article asks whether one division of the sqrt price is already the quote. The spot article asks whether reserve divided by reserve can be multiplied out into this swap's output. This article assumes the single-tick ratio is already computed that way, and asks whether the mean tick over an interval is the average of the prices at the ends. <a href="https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol" target="_blank" rel="noopener">OracleLibrary v1.3.0</a> getQuoteAtTick quotes from the square root at the mean tick, not from the arithmetic average price. Feeding 1.859072963412 into the quote moves the tick to 6201.</p>
+            <table><caption>Teaching window of 200 seconds: 100 seconds at tick 0, then 100 at tick 10000</caption><thead><tr><th scope="col">Reading</th><th scope="col">Tick</th><th scope="col">Price ratio, truncated to 12 decimals</th></tr></thead><tbody><tr><td>Cumulative delta divided by seconds</td><td>5000</td><td>1.648680055931</td></tr><tr><td>Endpoint prices added, then divided by 2</td><td>Lower tick 6201</td><td>1.859072963412</td></tr><tr><td>Gap between the two readings</td><td>1201</td><td>0.210392907481</td></tr></tbody></table>
+            </section>
+            <section id="sec-2"><h2>2. A negative window steps one tick toward negative infinity</h2><p>Division in consult truncates toward zero. The comment says the result always rounds toward negative infinity. A zero remainder is left alone. A negative cumulative delta that does not divide evenly is then reduced by 1. A positive window does not show that extra step.</p><p>Take a teaching delta of 201 over 2 seconds. 201 / 2 = 100, remainder 1. The delta is positive, so the contract writes 100. Truncation toward zero is also 100. This pair cannot prove that the negative pair behaves the same way.</p><p>Change the delta to -201. Truncation toward zero is -100. The remainder is not zero, so the contract subtracts 1 and writes -101. The ratio at tick -100 is 0.990050328741. The ratio at tick -101 is 0.989951333607. The missing tick is a ratio gap of 0.000098995134. Copying the toward-zero result writes the higher ratio at -100, not the contract's -101.</p>
+            <table><caption>The same division is not symmetric</caption><thead><tr><th scope="col">Cumulative delta</th><th scope="col">Seconds</th><th scope="col">Toward zero</th><th scope="col">consult</th></tr></thead><tbody><tr><td>201</td><td>2</td><td>100</td><td>100</td></tr><tr><td>-201</td><td>2</td><td>-100</td><td>-101</td></tr></tbody></table>
+            <p>The two signs are not mirrors. 201 leaves 100, and -201 leaves -101. Both drop a remainder of 1. Only the negative delta moves one more tick. If the window divides evenly, a delta of -200 over 2 seconds has remainder 0, and the contract writes -100 without the extra subtraction. The extra step depends on the remainder, not on the sign by itself.</p></section>
+            <section id="sec-3"><h2>3. The open interval still accumulates, and an early window reverts</h2><p>write stores at most one observation per block. Between writes, the latest tickCumulative in the array stays at the last stored value. When secondsAgo is 0 and the stored timestamp is not the current time, observe runs transform and adds the current tick times that open interval. The open interval is the ordinary case, not an edge case.</p><p>Teaching case: the only observation is at time 0 with cumulative 0. The active tick stays at 200, and nothing writes a new observation. At time 200, observe with secondsAgo 0 transforms the cumulative to 0 + 200×200 = 40000. Reading the stored 0 writes the mean tick of those 200 seconds as 0. Dividing after the transform, the mean tick is 200. The missing piece is the whole 40000, not a rounding dust.</p><p>If the window is older than the oldest observation, getSurroundingObservations requires the target to be at or after that observation and reverts with OLD. initialize sets cardinality to 1, so the array holds that single observation. A secondsAgo longer than the age of that observation makes observe revert. It does not return slot0.tick, and it does not return 0. Reading the revert as "the TWAP is 0" or "the TWAP equals the spot tick" writes a number after the call has already failed.</p><p>consult has a separate gate. secondsAgo of 0 fails the require and reverts with BP. observe allows 0, and that 0 means "extend to now." consult does not. Putting the spot tick in as the answer to a zero-second consult does not make the function return that tick. Check whether the seconds are 0, then whether the window is older than the oldest observation, and only then divide the cumulative delta.</p></section>
+            <section id="sec-4"><h2>4. Between two observations, divide first and multiply second</h2><p>When the target time falls between two observations, observeSingle does not multiply the cumulative delta by the time fraction and then divide. It divides the cumulative delta by the observation interval first, then multiplies by the seconds from the left observation to the target. The remainder is dropped before the multiplication.</p><p>Teaching case: cumulative 0 on the left, 5 on the right, an interval of 3 seconds, and a target 2 seconds from the left. 5 / 3 = 1, times 2, is 2. Multiplying first gives 5×2 / 3 = 3. The contract is short by 1. That 1 is the interpolated cumulative, not the mean tick itself. On a short window, the missing 1 can move the mean tick by a full step. Writing the formula as multiply-then-divide puts the step back, and that result is not what the contract stores.</p></section>
+            <section id="sec-5"><h2>5. Liquidity is a harmonic mean, and 0 is divided as 1</h2><p>The same oracle also stores secondsPerLiquidityCumulativeX128. transform adds the time delta shifted left by 128, divided by liquidity. When liquidity is 0, the divisor is 1. consult turns that delta into a harmonic mean: seconds times 2 to the 160, minus 1, divided by the cumulative delta shifted left by 32. That is not the two liquidities added and divided by 2.</p><p>Teaching case: 100 seconds at liquidity 1000, then 100 seconds at liquidity 3000. After transform's integer division and consult's division, the harmonic mean is 1500. The arithmetic mean (1000+3000)/2 is 2000. Using 2000 as the depth of this window overstates it by 500, which is one third of 1500. The harmonic mean sits closer to the thinner stretch. The 1000 weighs more in the denominator, so 1500 is nearer to 1000 than to 3000.</p><p>One hundred seconds at liquidity 0, then one hundred at 3000, use 1 as the divisor, and the contract's harmonic mean is 1. Averaging 0 and 3000 writes 1500, which overstates the contract by 1499. The real weighted harmonic mean that uses divisor 1 is 6000/3001, truncated to 12 decimals as 1.999333555481. The contract's integer division writes 1, short of that real value by less than 1. The shortfall is the division, not a decision to treat liquidity 0 as 1500.</p><p>In the fee article, liquidity 0 means the growth accumulator does not add the remainder. This oracle still accumulates seconds with divisor 1. The two ledgers move in opposite directions when liquidity is 0: fee growth stops, and the time-weighted liquidity divisor becomes 1. Copying a 0 from one ledger into the other misstates both the fee and the depth.</p></section>
+            <section id="sec-6"><h2>6. Divide the accumulator, then raise 1.0001 to that tick</h2><p>The failing sentences are "the time-weighted price is the average of the two prices" and "an OLD revert means the price is 0." The sentence that can be checked is "the cumulative delta; the seconds; whether a negative remainder subtracted 1; whether seconds of 0 went to observe or to consult; whether the window is older than the oldest observation; whether the interpolation divided first; whether liquidity 0 used divisor 1." In the teaching window, mean tick 5000 ratios to 1.648680055931, and the average of the endpoint prices is 1.859072963412. -201 divided by 2 is written as -101. Liquidity 1000 and 3000 for 100 seconds each harmonic-mean to 1500, not 2000.</p><p>This is an analytical frame. The accumulator, transform, the OLD revert, and the divide-then-multiply interpolation come from Oracle at v1.0.0. The round toward negative infinity, the BP revert, the harmonic mean, and the quote at the mean tick come from OracleLibrary at v1.3.0. 1.648680055931, 1.859072963412, 0.210392907481, 6201, -101, 1500, and 1 are teaching conversions. They were not measured on a live pool, and they are not investment advice.</p></section>
+            <section id="faq"><h2>7. Misreadings that keep coming back</h2>
+              <h3>Is the time-weighted price the two endpoint prices added and divided by 2?</h3>
+              <p>No. The v1.0.0 accumulator adds tick times seconds. One hundred seconds at tick 0 and one hundred at tick 10000 average to tick 5000. Raised as a power of 1.0001 and truncated to 12 decimals, the ratio is 1.648680055931. The two prices added and divided by 2 are 1.859072963412.</p>
+              <h3>If the cumulative delta is -201 over 2 seconds, is the mean tick -100?</h3>
+              <p>No. consult first truncates toward zero and gets -100. When the delta is negative and does not divide evenly, it subtracts 1 and writes -101. The ratio at tick -100 is 0.990050328741. The ratio at tick -101 is 0.989951333607.</p>
+              <h3>If the window is older than the oldest observation, does observe return the spot tick?</h3>
+              <p>No. observe reverts with OLD when the target is older than the oldest observation. It does not return slot0.tick, and it does not return 0. consult reverts with BP when secondsAgo is 0, which is a different call from observe using 0 to mean the current cumulative.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to hold a small amount for comparing a pool page's time-weighted price with one swap, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether the mean tick equals the average of the prices, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The accumulator adds ticks, not prices</a></li><li><a href="#sec-2">A negative window steps one tick toward negative infinity</a></li><li><a href="#sec-3">The open interval still accumulates, and an early window reverts</a></li><li><a href="#sec-4">Between two observations, divide first and multiply second</a></li><li><a href="#sec-5">Liquidity is a harmonic mean, and 0 is divided as 1</a></li><li><a href="#sec-6">Divide the accumulator, then raise 1.0001 to that tick</a></li><li><a href="#faq">Misreadings that keep coming back</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Uniswap v3: Oracle accumulation and observe</a></li><li><a href="https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol" target="_blank" rel="noopener">Uniswap v3: OracleLibrary.consult</a></li></ul><p class="ref-note">Sources checked on 3 November 2026. Accumulation and the revert come from the v1.0.0 tag of uniswap v3-core. consult's rounding and the harmonic mean come from the v1.3.0 tag of v3-periphery. The teaching window is not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li><li><a href="/en/research/market/amm-spot-vs-execution-price-verification-guide.html">Swap Check: A Pool's Spot Price Is Not the Fill on This Size</a></li><li><a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a68f3c55"></script>
+</body>
+</html>

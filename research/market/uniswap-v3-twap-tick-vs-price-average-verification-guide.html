@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>时间加权核验：平均 tick 不等于价格的平均数 - 加密货币研究</title>
+  <meta name="description" content="Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,TWAP,tick,时间加权,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="时间加权核验：平均 tick 不等于价格的平均数">
+  <meta property="og:description" content="Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-03T14:51:00+08:00">
+  <meta property="article:modified_time" content="2026-11-03T14:51:00+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="时间加权">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="TWAP">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="前 100 秒 tick 0、后 100 秒 tick 10000。平均 tick 5000 的价格比是 1.648680055931，两端价格的平均数是 1.859072963412。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="时间加权核验：平均 tick 不等于价格的平均数">
+  <meta name="twitter:description" content="Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.png">
+  <meta name="twitter:image:alt" content="前 100 秒 tick 0、后 100 秒 tick 10000。平均 tick 5000 的价格比是 1.648680055931，两端价格的平均数是 1.859072963412。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=69a6a288">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html",
+      "name": "时间加权核验：平均 tick 不等于价格的平均数",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "时间加权核验：平均 tick 不等于价格的平均数", "item": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#article",
+      "headline": "时间加权核验：平均 tick 不等于价格的平均数",
+      "description": "Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.png"],
+      "datePublished": "2026-11-03T14:51:00+08:00",
+      "dateModified": "2026-11-03T14:51:00+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","TWAP","tick","时间加权","加密货币研究"],
+      "wordCount": 4075,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol",
+        "https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "时间加权价格是两端价格加起来除以 2 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。v1.0.0 的累加器加的是 tick 乘以秒数。前 100 秒 tick 为 0、后 100 秒 tick 为 10000 时，平均 tick 是 5000。按 1.0001 的次方截断到 12 位，价格比是 1.648680055931。两端价格相加再除以 2 是 1.859072963412。" }
+        },
+        {
+          "@type": "Question",
+          "name": "累加器差是 -201、窗口是 2 秒时，平均 tick 是 -100 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。consult 先向零取整得到 -100。差为负且除不尽时再减 1，写下 -101。tick -100 的价格比是 0.990050328741，tick -101 是 0.989951333607。" }
+        },
+        {
+          "@type": "Question",
+          "name": "窗口早于最老的观察记录时，返回的是现货 tick 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。observe 在目标时间早于最老记录时回退，错误码是 OLD。它不返回 slot0.tick，也不返回 0。consult 在秒数为 0 时另以 BP 回退，和 observe 允许用 0 表示当前累加值不是同一件事。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--azure">时间加权</span></p>
+          <h1>时间加权核验：链上的平均 tick，不等于两端价格的平均数</h1>
+          <p class="article-summary">Uniswap V3 的预言机累加的是 tick 乘以经过的秒数，不是价格乘以秒数。consult 把累加器的差除以秒数，负数余数再向负无穷收一格。教学窗口前 100 秒 tick 为 0、后 100 秒 tick 为 10000，平均 tick 是 5000，价格比截断到 12 位是 1.648680055931。两端价格加起来除以 2 是 1.859072963412。按同一截断回推，这个平均数落在 tick 6201 和 6202 之间。数字是教学换算，不是 2026 年 11 月 3 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-03T14:51:00+08:00">2026-11-03 14:51:00</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-twap-tick-vs-price-average-verification-guide.svg" alt="前 100 秒 tick 0，后 100 秒 tick 10000。平均 tick 5000 的价格比是 1.648680055931，两端价格相加除以 2 是 1.859072963412。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>累加器加的是 tick 乘秒。价格比用 1.0001 的平均 tick 次方，不先把两端价格平均。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>累加器差为负且除不尽时，consult 在向零取整之后再减 1。-201 除以 2 写成 -101，不是 -100。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>secondsAgo 为 0 时，observe 把最后一条记录补到当前时间。consult 以 BP 回退。窗口早于最老记录，回退码是 OLD。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>流动性用调和平均。100 秒 1000 接 100 秒 3000，合约写出 1500。流动性为 0 的那一段，除数按 1 计。</li></ul></div>
+            <section id="sec-1"><h2>1. 累加的是 tick，不是价格</h2><p>预言机页面常把 TWAP 印成一个价格。<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Oracle v1.0.0</a> 的 Observation 里没有价格字段。tickCumulative 的注释写的是 tick 乘以自池子初始化以来经过的时间。transform 用上一笔记录的累加值，加上当时的 tick 乘以两个时间戳的差。秒数相同的两段，tick 0 和 tick 10000，累加器增加 0×100 + 10000×100 = 1000000。窗口 200 秒，1000000 / 200 = 5000。被平均的是 tick。</p><p>价格比沿用本站开方价那篇的截断：1.0001 的 tick 次方，小数直接截断到 12 位。tick 10000 是 2.718145926825，和那篇相同。tick 0 是 1。tick 5000 是 1.648680055931。两端已经截断的价格加起来再除以 2，得到 1.8590729634125，再截断到 12 位是 1.859072963412。它比 1.648680055931 大 0.210392907481。</p><p>这个差不是舍入。1.0001 的次方是凸的。先平均 tick 再取次方，和先取次方再平均价格，不是同一个数。把 1.859072963412 按「比值不超过它的最大 tick」回推：tick 6201 的比值是 1.859056306853，tick 6202 是 1.859242212484。算术平均落在这两档之间，下沿 tick 是 6201。5000 和 6201 相差 1201。笔记若把时间加权写成两端价格的平均数，tick 多写 1201，价格比多写 0.210392907481。</p><p>这和开方价那篇、现货价那篇不是同一问。开方价问的是一个 tick 的比值要不要再平方。现货价问的是储备相除能不能乘出这一笔的到账。本篇假定单点比值已经按开方价那篇算出，接着问一段时间内的平均 tick 是不是两端价格的平均数。<a href="https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol" target="_blank" rel="noopener">OracleLibrary v1.3.0</a> 的 getQuoteAtTick 用的是这个平均 tick 的平方根价，不是算术平均价格。报价沿 tick 走。把 1.859072963412 送进报价，等于换到 6201 这一档。</p>
+            <table><caption>教学窗口 200 秒：前 100 秒 tick 0，后 100 秒 tick 10000</caption><thead><tr><th scope="col">读法</th><th scope="col">tick</th><th scope="col">价格比，截断到 12 位</th></tr></thead><tbody><tr><td>累加器差除以秒数</td><td>5000</td><td>1.648680055931</td></tr><tr><td>两端价格相加再除以 2</td><td>下沿 6201</td><td>1.859072963412</td></tr><tr><td>两读之差</td><td>1201</td><td>0.210392907481</td></tr></tbody></table>
+            </section>
+            <section id="sec-2"><h2>2. 负数窗口向负无穷收一格</h2><p>consult 的除法向零截断。注释写的是始终向负无穷取整。余数为 0 时不再减。累加器差为负、且除不尽时，结果再减 1。正数窗口看不出这多出来的一格。</p><p>教学差取 201，秒数取 2。201 / 2 = 100，余数 1。差是正的，合约写下 100。向零取整也是 100。这一档两条规则重合，不能用来证明负数也重合。</p><p>差改成 -201。向零取整是 -100。余数不为 0，合约再减 1，写下 -101。tick -100 的价格比是 0.990050328741。tick -101 是 0.989951333607。少写的这一格对应 0.000098995134。把负数窗口按向零取整抄下来，价格比会写成更高的 -100，而不是合约的 -101。</p>
+            <table><caption>同一条除法，正负不对称</caption><thead><tr><th scope="col">累加器差</th><th scope="col">秒数</th><th scope="col">向零取整</th><th scope="col">consult</th></tr></thead><tbody><tr><td>201</td><td>2</td><td>100</td><td>100</td></tr><tr><td>-201</td><td>2</td><td>-100</td><td>-101</td></tr></tbody></table>
+            <p>正负不是镜像。201 留下 100，-201 留下 -101。两条都丢掉余数 1，只有负数会再挪一格。窗口若正好整除，例如差 -200、秒数 2，余数为 0，合约写下 -100，不再减。少减的条件是余数，不是符号本身。</p></section>
+            <section id="sec-3"><h2>3. 没写进数组的空档也在累加，窗口太早则回退</h2><p>write 每个区块最多写一次。两次写入之间，数组里最新一条的 tickCumulative 停在上一次的值。observe 在 secondsAgo 为 0、且记录时间不等于当前时间时，用 transform 把当前 tick 乘上这段空档补进去。空档是常态，不是例外。</p><p>教学：唯一一条记录在时间 0，累加值 0。之后活跃 tick 一直是 200，中间没有新的写入。时间 200 调用 observe，秒数参数为 0，补上的累加值是 0 + 200×200 = 40000。直接读数组里的 0，会把这 200 秒的平均 tick 写成 0。补完再除，平均 tick 是 200。漏掉的不是舍入，是整段 40000。</p><p>窗口如果早于最老的记录，getSurroundingObservations 要求目标时间不早于最老记录，失败时回退，错误码是 OLD。池子 initialize 时 cardinality 是 1，数组里只有这一条。要回看的秒数大于这条记录到现在的秒数，observe 回退。它不返回 slot0.tick，也不返回 0。把回退读成「时间加权价格是 0」或「时间加权价格等于现货」，都是在回退之后另写了一个数。</p><p>consult 自己还有一道门。秒数为 0 时 require 失败，回退码是 BP。observe 允许 0，表示补到当前。consult 不允许 0。把现货 tick 填进「0 秒的 consult」，函数不会返回这个 tick。先问秒数是不是 0，再问窗口有没有早于最老记录，然后才是累加器的差。</p></section>
+            <section id="sec-4"><h2>4. 落在两条记录中间时，先除后乘</h2><p>目标时间落在两条记录中间时，observeSingle 不把累加差乘上时间比例再除。它先用观察间隔去除累加差，再乘上目标离左端的秒数。除法在前，余数先被丢掉。</p><p>教学：左端累加值 0，右端 5，间隔 3 秒，目标离左端 2 秒。5 / 3 = 1，再乘 2，得到 2。先乘后除是 5×2 / 3 = 3。合约少写 1。这个 1 是插值得到的累计值，不是平均 tick 本身。窗口很短时，少掉的 1 可以占掉平均 tick 的一格。把公式写成先乘后除，会把这一格补回去，和合约不一致。</p></section>
+            <section id="sec-5"><h2>5. 流动性是调和平均，0 按 1 来除</h2><p>同一条预言机还有 secondsPerLiquidityCumulativeX128。transform 加的是时间差左移 128 位，再除以流动性。流动性为 0 时，除数用 1。consult 把它还原成调和平均：秒数乘上 2 的 160 次方减 1，再除以累加差左移 32 位之后的数。这不是两段流动性相加再除以 2。</p><p>教学：100 秒流动性 1000，接着 100 秒流动性 3000。按 transform 的整除先累加，再按 consult 的公式整除，结果是 1500。算术平均 (1000+3000)/2 = 2000。用 2000 当作这段的深度，多写 500，相当于把 1500 放大三分之一。调和平均更接近较浅的那一段。浅的 1000 在分母里占的权重更大，所以 1500 离 1000 比离 3000 更近。</p><p>流动性为 0 的 100 秒，再接流动性 3000 的 100 秒。除数按 1 计，合约的调和平均是 1。把 0 和 3000 做算术平均会写成 1500，多写 1499。按除数 1 计算的实数调和平均是 6000/3001，截断到 12 位是 1.999333555481。合约整除得到 1，比这个实数少了不到 1。少的是整除，不是把流动性 0 当成了 1500。</p><p>手续费那篇里，流动性为 0 时增长累加器不加余数。本篇的预言机仍按除数 1 累加秒数。两本账在流动性为 0 时走向相反：手续费增长停住，时间加权的流动性分母改用 1。把其中一本的 0 抄到另一本，手续费和深度会同时写错。</p></section>
+            <section id="sec-6"><h2>6. 结论：先除累加器，再取 1.0001 的次方</h2><p>错误句式是「时间加权价格等于两端价格的平均数」，以及「回退 OLD 表示价格是 0」。更可靠的句子是「累加器的差；秒数；差为负时有没有再减 1；秒数为 0 走的是 observe 还是 consult；窗口有没有早于最老记录；插值是先除后乘；流动性为 0 时除数是不是 1」。教学窗口里，平均 tick 5000 的价格比是 1.648680055931，两端价格的平均数是 1.859072963412。-201 除以 2，合约写下 -101。1000 和 3000 各 100 秒，调和平均是 1500，不是 2000。</p><p>本文是分析框架。累加、transform、OLD 和先除后乘来自 v1.0.0 的 Oracle。向负无穷取整、BP、调和平均和按 tick 报价来自 v1.3.0 的 OracleLibrary。1.648680055931、1.859072963412、0.210392907481、6201、-101、1500 和 1 是教学换算，未对任何实时池子做实测，也不构成投资建议。</p></section>
+            <section id="faq"><h2>7. 常见误读</h2>
+              <h3>时间加权价格是两端价格加起来除以 2 吗？</h3>
+              <p>不是。v1.0.0 的累加器加的是 tick 乘以秒数。前 100 秒 tick 为 0、后 100 秒 tick 为 10000 时，平均 tick 是 5000。按 1.0001 的次方截断到 12 位，价格比是 1.648680055931。两端价格相加再除以 2 是 1.859072963412。</p>
+              <h3>累加器差是 -201、窗口是 2 秒时，平均 tick 是 -100 吗？</h3>
+              <p>不是。consult 先向零取整得到 -100。差为负且除不尽时再减 1，写下 -101。tick -100 的价格比是 0.990050328741，tick -101 是 0.989951333607。</p>
+              <h3>窗口早于最老的观察记录时，返回的是现货 tick 吗？</h3>
+              <p>不是。observe 在目标时间早于最老记录时回退，错误码是 OLD。它不返回 slot0.tick，也不返回 0。consult 在秒数为 0 时另以 BP 回退，和 observe 允许用 0 表示当前累加值不是同一件事。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自备少量资产，以便对照池子页面上的时间加权价和一笔实际兑换，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与平均 tick 是否等于两端价格的平均数无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">累加的是 tick，不是价格</a></li><li><a href="#sec-2">负数窗口向负无穷收一格</a></li><li><a href="#sec-3">没写进数组的空档也在累加，窗口太早则回退</a></li><li><a href="#sec-4">落在两条记录中间时，先除后乘</a></li><li><a href="#sec-5">流动性是调和平均，0 按 1 来除</a></li><li><a href="#sec-6">结论：先除累加器，再取 1.0001 的次方</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Uniswap V3：Oracle 的累加与 observe</a></li><li><a href="https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/OracleLibrary.sol" target="_blank" rel="noopener">Uniswap V3：OracleLibrary.consult</a></li></ul><p class="ref-note">资料核对日期：2026年11月3日。累加与回退来自 uniswap v3-core 的 v1.0.0 标签。consult 的取整和调和平均来自 v3-periphery 的 v1.3.0 标签。教学窗口不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li><li><a href="/research/market/amm-spot-vs-execution-price-verification-guide.html">兑换核验：池子现货价，不等于这笔的成交价</a></li><li><a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a68f3c55"></script>
+</body>
+</html>
