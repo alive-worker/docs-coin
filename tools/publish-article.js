@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-twap-tick-vs-price-average-verification-guide',
-  publishedISO: '2026-11-03T14:51:00+08:00',
-  tagColor: 'azure',
+  slug: 'uniswap-v3-tick-spacing-vs-min-tick-verification-guide',
+  publishedISO: '2026-11-04T10:28:49+08:00',
+  tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "时间加权核验：链上的平均 tick，不等于两端价格的平均数",
-    tagLabel: "时间加权",
-    cardDesc: "Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。",
+    h1: "档距核验：费率 3000 的间距是 60，最外一档也不是 -887272",
+    tagLabel: "档距",
+    cardDesc: "费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。",
   },
   en: {
-    h1: "TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices",
-    tagLabel: "TWAP",
-    cardDesc: "Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.",
+    h1: "Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid",
+    tagLabel: "Spacing",
+    cardDesc: "Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-twap-tick-vs-price-average-verification-guide',
     'uniswap-v3-fee-tier-vs-lp-fee-verification-guide',
     'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
     'uniswap-v3-sqrt-price-vs-tick-verification-guide',
@@ -691,11 +692,12 @@ function updateSiteJsDates() {
   let t = fs.readFileSync(p, 'utf-8');
   if (t.includes(`${CONFIG.slug}.html`)) { console.log('[8/9] site.js DATES already updated, skip'); return; }
   const pubDisplay = CONFIG.publishedISO.replace('T', ' ').replace(/\+.*/, '');
-  const zhAnchor = `  var DATES = {\n    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`;
+  const nl = t.includes('\r\n') ? '\r\n' : '\n';
+  const zhAnchor = `  var DATES = {${nl}    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`;
   const enAnchor = `    '/${enPath(CONFIG.existingSlugsNewestFirst[0])}':`;
   if (!t.includes(zhAnchor) || !t.includes(enAnchor)) { console.log('[8/9] SKIP (anchor not found in site.js)'); return; }
-  t = t.replace(zhAnchor, `  var DATES = {\n    '/${zhPath(CONFIG.slug)}': '${pubDisplay}',\n    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`);
-  t = t.replace(enAnchor, `'/${enPath(CONFIG.slug)}': '${pubDisplay}',\n    '/${enPath(CONFIG.existingSlugsNewestFirst[0])}':`);
+  t = t.replace(zhAnchor, `  var DATES = {${nl}    '/${zhPath(CONFIG.slug)}': '${pubDisplay}',${nl}    '/${zhPath(CONFIG.existingSlugsNewestFirst[0])}':`);
+  t = t.replace(enAnchor, `'/${enPath(CONFIG.slug)}': '${pubDisplay}',${nl}    '/${enPath(CONFIG.existingSlugsNewestFirst[0])}':`);
   fs.writeFileSync(p, t, 'utf-8');
   console.log('[8/9] site.js DATES updated');
 }

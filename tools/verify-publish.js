@@ -446,14 +446,15 @@ function stripSitemapUrl(xml, loc) {
 function ensureDates(js, items) {
   let out = js;
   let added = 0;
+  const nl = out.includes('\r\n') ? '\r\n' : '\n';
+  const needle = `  var DATES = {${nl}`;
   for (const lang of ['zh', 'en']) {
     for (const it of items[lang]) {
       const key = archiveHref(it.slug, lang);
       if (out.includes(`'${key}':`)) continue;
       const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
-      const needle = '  var DATES = {\n';
       if (!out.includes(needle)) { fail('DATES object not found in js/site.js'); return out; }
-      out = out.replace(needle, `${needle}    '${key}': '${pubDisplay}',\n`);
+      out = out.replace(needle, `${needle}    '${key}': '${pubDisplay}',${nl}`);
       added++;
     }
   }

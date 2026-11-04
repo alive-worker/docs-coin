@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spacing Check: A 0.3% Pool Cannot Use Tick -887272 - Crypto Research Notes</title>
+  <meta name="description" content="Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,tick spacing,MIN_TICK,fee tier,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Spacing Check: A 0.3% Pool Cannot Use Tick -887272">
+  <meta property="og:description" content="Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-04T10:28:49+08:00">
+  <meta property="article:modified_time" content="2026-11-04T10:28:49+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Spacing">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="Tick">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Fee 3000 stores spacing 60. MIN_TICK -887272 modulo 60 leaves -52. The lowest usable tick is -887220, and the 52-tick price ratio is 1.005213282127.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spacing Check: A 0.3% Pool Cannot Use Tick -887272">
+  <meta name="twitter:description" content="Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Fee 3000 stores spacing 60. MIN_TICK -887272 modulo 60 leaves -52. The lowest usable tick is -887220, and the 52-tick price ratio is 1.005213282127.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=69a6a288">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html",
+      "name": "Spacing Check: A 0.3% Pool Cannot Use Tick -887272",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Spacing Check: A 0.3% Pool Cannot Use Tick -887272", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#article",
+      "headline": "Spacing Check: A 0.3% Pool Cannot Use Tick -887272",
+      "description": "Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.png"],
+      "datePublished": "2026-11-04T10:28:49+08:00",
+      "dateModified": "2026-11-04T10:28:49+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","tick spacing","MIN_TICK","fee tier","crypto research"],
+      "wordCount": 2452,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does fee 3000 mean the tick spacing is 3000?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The v1.0.0 constructor calls enableFeeAmount(3000, 60). 3000/1000000 = 0.003, which is the fee taken from the input. Spacing is the other argument, and it is 60. The function does not divide the fee by 50. Once that fee slot is filled, the same call cannot overwrite it with 3000." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a 0.3% pool place liquidity on tick -887272?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Tick -887272 modulo 60 is -52, not 0. flipTick requires tick % tickSpacing == 0, and that require has no error string. The lowest usable tick is -887220 and the highest is 887220. Tick -887280 is divisible by 60, but it is below MIN_TICK, so checkTicks reverts with TLM." }
+        },
+        {
+          "@type": "Question",
+          "name": "If the tick is -59 and the spacing is 60, is the compressed index 0?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Truncation toward zero gives -59/60 = 0, with remainder -59. The tick is negative and the remainder is not 0, so the contract subtracts 1 and writes -1. Multiplying back by the spacing starts the search at tick -60. Leaving the index at 0 starts at tick 0, 60 ticks higher, a price ratio of 1.006017734268." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Spacing</span></p>
+          <h1>Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</h1>
+          <p class="article-summary">Uniswap v3 stores the fee tier and the tick spacing as two fields. The factory does not derive one from the other. The v1.0.0 constructor writes three pairs: 500 with 10, 3000 with 60, and 10000 with 200. Fee 3000 is 3000/1000000 of the input, which is 0.003, or 0.3%. The spacing is 60 ticks, not 3000. TickMath sets MIN_TICK to -887272 and MAX_TICK to 887272. checkTicks accepts that absolute bound. flipTick still requires the tick to be divisible by the spacing, and that require carries no error string. Tick -887272 modulo 60 is -52, so the lowest tick that can hold liquidity on a 0.3% pool is -887220 and the highest is 887220. Each end leaves a gap of 52 ticks. Under the truncation used in the square-root note on this site, 1.0001 to the 52nd power, cut off at 12 decimal places, is 1.005213282127. The next aligned tick further out, -887280, is divisible by 60 and still reverts with TLM because it sits below MIN_TICK. Negative compression is a separate asymmetry. At tick -59 with spacing 60, truncation toward zero yields 0. The remainder is not 0, so the contract subtracts 1, the compressed index is -1, and the search starts at tick -60. These ratios are a teaching conversion, not a pool reading from 4 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-04T10:28:49+08:00">2026-11-04 10:28:49</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.svg" alt="Fee 3000 stores spacing 60. MIN_TICK -887272 leaves remainder -52. The lowest usable tick is -887220, and the 52-tick price ratio is 1.005213282127." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Read feeAmountTickSpacing(3000) on the factory, or tickSpacing on the pool. Expect 60. A reading of 3000 is not the tier created by the v1.0.0 constructor.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Take -887272 modulo the spacing. Spacing 60 leaves -52. The usable bounds are -887220 and 887220. Tick -887280 is divisible by 60 and still reverts with TLM.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The 52-tick price ratio is 1.0001 to the 52nd power, cut off at 12 decimals: 1.005213282127. The gap is not a price of 52.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>At tick -59 with spacing 60, truncation toward zero is 0. The remainder is not 0 and the tick is negative, so the compressed index subtracts 1 and becomes -1, which starts at tick -60.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. Fee 3000 and spacing 3000 occupy two slots</h2>
+              <p>The <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">UniswapV3Factory v1.0.0</a> constructor calls enableFeeAmount(500, 10), then enableFeeAmount(3000, 60), then enableFeeAmount(10000, 200). The first argument is the fee, in millionths. 3000/1000000 = 0.003, which is 0.3% of the input. The second argument is tickSpacing, counted in ticks. 60 is not another name for 3000. The two numbers only happen to sit next to each other in one call.</p>
+              <p>enableFeeAmount does not compute fee/50. It checks that the caller is the owner, that fee is below 1000000, that tickSpacing is greater than 0 and below 16384, and that the slot for this fee is still empty. A spacing of 3000 would pass the upper bound, so that bound alone does not stop someone from copying the fee into the spacing. The constructor does not pass 3000 as the second argument. It passes 60. Once the slot holds 60, enableFeeAmount(3000, 3000) reverts because the slot is taken. A wrong spacing cannot be painted over by calling the same function again.</p>
+              <p>500/50 = 10, 3000/50 = 60, and 10000/50 = 200. Those three pairs divide evenly. The function body contains no such division. Writing "spacing equals fee divided by 50" as a contract rule is only an after-the-fact description of these three calls. This note checks those three constructor arguments. Where the fee ends up is the question in <a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a>. This note asks whether the 3000 printed on a page is the fee or the spacing.</p>
+              <table>
+                <caption>The three pairs written by the v1.0.0 constructor. Fee is in millionths</caption>
+                <thead><tr><th scope="col">fee</th><th scope="col">fee / 1000000</th><th scope="col">tickSpacing</th></tr></thead>
+                <tbody>
+                  <tr><td>500</td><td>0.0005</td><td>10</td></tr>
+                  <tr><td>3000</td><td>0.003</td><td>60</td></tr>
+                  <tr><td>10000</td><td>0.01</td><td>200</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-2">
+              <h2>2. The absolute bound passes checkTicks and fails divisibility</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">TickMath v1.0.0</a> sets MIN_TICK to -887272 and MAX_TICK to its negation, 887272. checkTicks has three requires. The lower tick must be below the upper tick, or the call reverts with TLU. The lower tick must not be below MIN_TICK, or it reverts with TLM. The upper tick must not be above MAX_TICK, or it reverts with TUM. Using -887272 as the lower tick and 887272 as the upper tick passes all three. A reader who stops at TickMath will treat those two ticks as a legal full range on every pool.</p>
+              <p>The bitmap is the gate that fails. <a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">TickBitmap v1.0.0</a> flipTick requires tick % tickSpacing == 0 before it flips the bit. The require has no error string, so the revert reason is empty. The first time a bound moves from zero liquidity to non-zero liquidity, the call enters flipTick. A non-zero remainder means the bound is never written into the bitmap, and the position does not open. Every initialized tick came through that path, so the bitmap does not keep a bound that the spacing does not divide.</p>
+              <p>Take -887272 modulo 60. 887272 = 60×14787 + 52, so the positive remainder is 52. The remainder takes the sign of the dividend, and -887272 % 60 = -52. It is not 8, and it is not 0. The lowest usable tick pulls those 52 ticks back inside the range and lands on -887220. That tick is still at least MIN_TICK, and -887220 % 60 = 0. The next aligned tick further out is -887280. It is divisible by 60, and it is 8 ticks below MIN_TICK, so checkTicks reverts with TLM. The two neighboring failures are different failures. -887272 dies on divisibility. -887280 dies on the lower bound. The upper side mirrors this. 887272 % 60 = 52, so the highest usable tick is 887220. 887280 is above MAX_TICK and reverts with TUM.</p>
+              <p>At spacing 10, -887272 % 10 = -2. The usable bounds are -887270 and 887270, a gap of 2 ticks. At spacing 200 the remainder is -72, the usable bounds are -887200 and 887200, and the gap is 72 ticks. Only a spacing of 1 leaves a remainder of 0, which makes MIN_TICK itself usable. The v1.0.0 constructor does not enable a spacing of 1.</p>
+              <table>
+                <caption>Gap between MIN_TICK and the usable bound at the three default spacings</caption>
+                <thead><tr><th scope="col">Spacing</th><th scope="col">Remainder of -887272</th><th scope="col">Lowest usable</th><th scope="col">Highest usable</th><th scope="col">Gap</th></tr></thead>
+                <tbody>
+                  <tr><td>10</td><td>-2</td><td>-887270</td><td>887270</td><td>2</td></tr>
+                  <tr><td>60</td><td>-52</td><td>-887220</td><td>887220</td><td>52</td></tr>
+                  <tr><td>200</td><td>-72</td><td>-887200</td><td>887200</td><td>72</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. The 52-tick gap prices at 1.005213282127</h2>
+              <p>52 is not a price of 52, and it is not a price difference of 52. <a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a> writes the price ratio at one tick as 1.0001 raised to that tick, cut off at 12 decimal places, with no rounding up. The ratio between two ticks is 1.0001 raised to the difference. Tick -887220 is 52 ticks above -887272, so the ratio is 1.0001 to the 52nd power, truncated to 12 decimals as 1.005213282127. Writing 1 says the two ticks have the same price. Writing 52 treats the tick count as a price.</p>
+              <p>Under the same truncation, the 2-tick gap at spacing 10 is 1.000200010000, and the 72-tick gap at spacing 200 is 1.007225619743. A wider gap means the full range this fee tier can actually use is narrower than the absolute range in TickMath. What gets narrower is the price ratio at the two ends. How liquidity inside a legal range converts into token amounts is the question in <a href="/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">Position Check: Stored Liquidity Is Not the Token Balance</a>. If the bound fails flipTick, that amount formula is never called.</p>
+              <table>
+                <caption>Gap sizes as a power of 1.0001, truncated to 12 decimals</caption>
+                <thead><tr><th scope="col">Spacing</th><th scope="col">Gap in ticks</th><th scope="col">Price ratio</th></tr></thead>
+                <tbody>
+                  <tr><td>10</td><td>2</td><td>1.000200010000</td></tr>
+                  <tr><td>60</td><td>52</td><td>1.005213282127</td></tr>
+                  <tr><td>200</td><td>72</td><td>1.007225619743</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-4">
+              <h2>4. Writing the spacing as 3000 replaces the price of one step</h2>
+              <p>One step on a 0.3% pool is 60 ticks, not 3000. 1.0001 to the 60th power, truncated to 12 decimals, is 1.006017734268. 1.0001 to the 3000th power is 1.349838561195. The exponents differ by 2940, and 1.0001 to the 2940th power is 1.341764180903. Treating 3000 as one step prices that step at 1.341764180903 times the contract's step. An extra zero does not explain the gap. The two steps are 2940 ticks apart.</p>
+              <p>3000 is below 16384, so the upper-bound check does not catch the copy. What catches it is the second argument the constructor actually passed, and the fact that a filled slot cannot be overwritten. The check is to read tickSpacing on the pool, or feeAmountTickSpacing(3000) on the factory, and expect 60. A reading of 3000 means this tier was not created by that v1.0.0 constructor call, and the table of 60 no longer applies.</p>
+              <table>
+                <caption>One step at 60 and at 3000, under the same truncation</caption>
+                <thead><tr><th scope="col">Number used as spacing</th><th scope="col">1.0001 raised to that power</th></tr></thead>
+                <tbody>
+                  <tr><td>60, the value the constructor stored</td><td>1.006017734268</td></tr>
+                  <tr><td>3000, the fee copied into the spacing</td><td>1.349838561195</td></tr>
+                  <tr><td>Exponent gap of 2940</td><td>1.341764180903</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-5">
+              <h2>5. The current tick need not be aligned. Position bounds must be</h2>
+              <p>initialize passes sqrtPriceX96 to getTickAtSqrtRatio and writes the returned tick into slot0. That path does not take the tick modulo tickSpacing. A 0.3% pool can therefore hold a slot0.tick that 60 does not divide, including an opening price whose tick is MIN_TICK. Seeing a current tick that 60 does not divide is not evidence that the pool is broken.</p>
+              <p>Position bounds are what must be aligned. The lower and upper ticks of a mint have to pass flipTick the first time liquidity is written there. The current tick and the bound tick are two fields. Rejecting the current tick because it is not divisible treats a legal opening price as a fault. Treating MIN_TICK as a legal bound on every fee tier produces an empty revert on a spacing-60 pool. Ask whether the tick you read is slot0.tick or the position's tickLower before you take a remainder.</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. A negative tick off the grid subtracts 1 from the compressed index</h2>
+              <p>nextInitializedTickWithinOneWord starts with tick / tickSpacing. Integer division in Solidity truncates toward zero. When the tick is negative and the remainder is not 0, the result subtracts 1, one step toward negative infinity. A zero remainder does not subtract. A positive tick does not subtract either. The extra step is the same kind of asymmetry as the negative window in <a href="/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</a>. A test that only uses positive ticks never shows the extra subtraction.</p>
+              <p>Take tick -59 and spacing 60. Truncation of -59/60 toward zero is 0, and the remainder is -59. The contract writes -1. Multiplying the index back by the spacing, the search starts at tick -60. Truncation alone starts at tick 0. The two starting lines are 60 ticks apart, and the price ratio is 1.006017734268. The function then keeps looking for an initialized bit inside that word. A starting line that is already 60 ticks too high is not repaired by the bit it finds later.</p>
+              <p>Tick -60 is divisible by 60. Truncation toward zero is already -1, the remainder is 0, and there is no further subtraction. It lands on the same index. The extra subtraction depends on the remainder, not on the sign by itself. The positive control is tick 59 with spacing 60. 59/60 truncated toward zero is 0, the remainder is 59, and the tick is not negative, so the index stays 0 and the search starts at tick 0. On this side, truncation toward zero matches the contract. A test that only uses a positive tick such as 59 misses the subtraction at -59.</p>
+              <table>
+                <caption>Compressed index: truncation toward zero, then one more subtraction when the remainder is not 0</caption>
+                <thead><tr><th scope="col">Tick</th><th scope="col">Spacing</th><th scope="col">Toward zero</th><th scope="col">Remainder</th><th scope="col">Contract index</th><th scope="col">Starting tick</th></tr></thead>
+                <tbody>
+                  <tr><td>-59</td><td>60</td><td>0</td><td>-59</td><td>-1</td><td>-60</td></tr>
+                  <tr><td>-60</td><td>60</td><td>-1</td><td>0</td><td>-1</td><td>-60</td></tr>
+                  <tr><td>59</td><td>60</td><td>0</td><td>59</td><td>0</td><td>0</td></tr>
+                  <tr><td>-1</td><td>10</td><td>0</td><td>-1</td><td>-1</td><td>-10</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-7">
+              <h2>7. Read the spacing, then take the bound modulo that spacing</h2>
+              <p>The failing sentences are "fee 3000 means spacing 3000" and "every pool can place liquidity on -887272." The sentence that can be checked is "the second number stored in feeAmountTickSpacing; the remainder of -887272 modulo that number; the tick you land on after pulling a non-zero remainder back inside the range; whether the next aligned tick outside reverts with TLM or TUM; whether the tick you read belongs to slot0 or to a position bound; and whether a negative tick that did not divide evenly subtracted 1 from the compressed index." In the teaching conversion, the usable bounds on a 0.3% pool are -887220 and 887220, and the 52-tick price ratio is 1.005213282127. If the spacing is written as 3000, one step prices at 1.349838561195 rather than 1.006017734268. At tick -59 with spacing 60, the search starts at -60.</p>
+              <p>This is an analytical frame. The three default pairs, the cap at 16384, and the refusal to overwrite a filled slot come from UniswapV3Factory at v1.0.0. MIN_TICK and MAX_TICK come from TickMath at the same tag. The divisibility check and the negative compression come from TickBitmap at the same tag. 1.005213282127, 1.000200010000, 1.007225619743, 1.006017734268, 1.349838561195, and 1.341764180903 are powers of 1.0001 truncated to 12 decimals. They were not measured on a live pool, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>8. Misreadings that keep coming back</h2>
+              <h3>Does fee 3000 mean the tick spacing is 3000?</h3>
+              <p>No. The v1.0.0 constructor calls enableFeeAmount(3000, 60). 3000/1000000 = 0.003, which is the fee taken from the input. Spacing is the other argument, and it is 60. The function does not divide the fee by 50. Once that fee slot is filled, the same call cannot overwrite it with 3000.</p>
+              <h3>Can a 0.3% pool place liquidity on tick -887272?</h3>
+              <p>No. Tick -887272 modulo 60 is -52, not 0. flipTick requires tick % tickSpacing == 0, and that require has no error string. The lowest usable tick is -887220 and the highest is 887220. Tick -887280 is divisible by 60, but it is below MIN_TICK, so checkTicks reverts with TLM.</p>
+              <h3>If the tick is -59 and the spacing is 60, is the compressed index 0?</h3>
+              <p>No. Truncation toward zero gives -59/60 = 0, with remainder -59. The tick is negative and the remainder is not 0, so the contract subtracts 1 and writes -1. Multiplying back by the spacing starts the search at tick -60. Leaving the index at 0 starts at tick 0, 60 ticks higher, a price ratio of 1.006017734268.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to hold a small amount of the two tokens and compare a pool page's tick spacing with one position's bounds, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether -887272 is divisible by 60, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Fee 3000 and spacing 3000 occupy two slots</a></li><li><a href="#sec-2">The absolute bound passes checkTicks and fails divisibility</a></li><li><a href="#sec-3">The 52-tick gap prices at 1.005213282127</a></li><li><a href="#sec-4">Writing the spacing as 3000 replaces the price of one step</a></li><li><a href="#sec-5">The current tick need not be aligned. Position bounds must be</a></li><li><a href="#sec-6">A negative tick off the grid subtracts 1 from the compressed index</a></li><li><a href="#sec-7">Read the spacing, then take the bound modulo that spacing</a></li><li><a href="#faq">Misreadings that keep coming back</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">Uniswap v3: the factory's three fee and spacing pairs</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">Uniswap v3: MIN_TICK and MAX_TICK in TickMath</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">Uniswap v3: divisibility and negative compression in TickBitmap</a></li></ul><p class="ref-note">Sources checked on 4 November 2026. The three pairs, the absolute bounds, the divisibility check, and the negative compression come from the v1.0.0 tag of uniswap v3-core. The price ratios are a teaching conversion, not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li><li><a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a></li><li><a href="/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=54cdd52a"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>档距核验：0.3% 池的最外 tick 不是 -887272 - 加密货币研究</title>
+  <meta name="description" content="费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,tick spacing,MIN_TICK,档距,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="档距核验：0.3% 池的最外 tick 不是 -887272">
+  <meta property="og:description" content="费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-04T10:28:49+08:00">
+  <meta property="article:modified_time" content="2026-11-04T10:28:49+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="档距">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="tick spacing">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="费率 3000 的间距是 60。MIN_TICK -887272 对 60 的余数是 -52，可用下沿是 -887220，52 档的价格比是 1.005213282127。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="档距核验：0.3% 池的最外 tick 不是 -887272">
+  <meta name="twitter:description" content="费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.png">
+  <meta name="twitter:image:alt" content="费率 3000 的间距是 60。MIN_TICK -887272 对 60 的余数是 -52，可用下沿是 -887220，52 档的价格比是 1.005213282127。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=69a6a288">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html",
+      "name": "档距核验：0.3% 池的最外 tick 不是 -887272",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "档距核验：0.3% 池的最外 tick 不是 -887272", "item": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#article",
+      "headline": "档距核验：0.3% 池的最外 tick 不是 -887272",
+      "description": "费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.png"],
+      "datePublished": "2026-11-04T10:28:49+08:00",
+      "dateModified": "2026-11-04T10:28:49+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","tick spacing","MIN_TICK","档距","加密货币研究"],
+      "wordCount": 5540,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "费率 3000 是不是表示 tick 间距为 3000？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。v1.0.0 构造函数写的是 enableFeeAmount(3000, 60)。3000/1000000 = 0.003，是手续费比例。间距是另一个参数，值为 60。函数不拿费率除以 50 来推导间距。这个费率槽写过后，不能再用同一次调用改成 3000。" }
+        },
+        {
+          "@type": "Question",
+          "name": "0.3% 池子能不能把流动性挂在 tick -887272？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不能。-887272 对 60 的余数是 -52，不是 0。flipTick 要求 tick % tickSpacing == 0，这条 require 没有错误字符串。能用的最低 tick 是 -887220，最高是 887220。-887280 能被 60 整除，但小于 MIN_TICK，checkTicks 以 TLM 回退。" }
+        },
+        {
+          "@type": "Question",
+          "name": "tick 为 -59、间距为 60 时，压缩下标是 0 吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。向零截断的 -59/60 是 0，余数是 -59。tick 为负且余数不为 0 时，合约再减 1，下标是 -1，乘回间距是 tick -60。留下 0 会从 tick 0 起算，比合约高 60 档，价格比 1.006017734268。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">档距</span></p>
+          <h1>档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</h1>
+          <p class="article-summary">Uniswap V3 把手续费档和 tick 间距分成两个字段，工厂合约不会用其中一个推算另一个。v1.0.0 构造函数写下的三对是 500 与 10、3000 与 60、10000 与 200。费率 3000 是输入金额的 3000/1000000，等于 0.003，也就是 0.3%；间距是 60 个 tick，不是 3000。TickMath 把 MIN_TICK 定为 -887272、MAX_TICK 定为 887272。checkTicks 放行这个绝对边界，flipTick 却要求 tick 能被间距整除，而且这条 require 没有错误字符串。-887272 对 60 的余数是 -52，所以 0.3% 池能挂上流动性的最低 tick 是 -887220，最高是 887220，两端各空出 52 档。沿用本站开方价那篇的截断，1.0001 的 52 次方切到小数点后 12 位是 1.005213282127。再往外一格、且能被 60 整除的 -887280，则因为小于 MIN_TICK，以 TLM 回退。负向压缩是另一处不对称：当前 tick 为 -59、间距为 60 时，向零截断得到 0，合约因余数不是 0 再减 1，压缩下标是 -1，起算 tick 是 -60。这些比值是教学换算，不是 2026 年 11 月 4 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-04T10:28:49+08:00">2026-11-04 10:28:49</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.svg" alt="费率 3000 的间距是 60。MIN_TICK -887272 的余数是 -52，可用下沿 -887220，52 档的价格比是 1.005213282127。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>读工厂的 feeAmountTickSpacing(3000)，或读池子的 tickSpacing。期待 60。读到 3000，就不是 v1.0.0 构造函数创建的那一档。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>对 -887272 按间距取余。间距 60 的余数是 -52。可用下沿是 -887220，可用上沿是 887220。-887280 能被 60 整除，但会以 TLM 回退。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>52 档的价格比用 1.0001 的 52 次方，小数直接截断到 12 位，得到 1.005213282127。不要把 52 本身当成价格。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>tick 为 -59、间距为 60 时，向零截断是 0。余数非 0 且 tick 为负，压缩下标再减 1，得到 -1，起算 tick 是 -60。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 费率 3000 和间距 3000 写在两个槽里</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">UniswapV3Factory v1.0.0</a> 的构造函数依次调用 enableFeeAmount(500, 10)、enableFeeAmount(3000, 60)、enableFeeAmount(10000, 200)。第一个参数是费率，单位是百万分之一。3000/1000000 = 0.003，也就是这笔输入的 0.3%。第二个参数是 tickSpacing，单位是 tick 的格数。60 不是 3000 的别名，两个数字只是碰巧出现在同一次调用的两个位置上。</p>
+              <p>enableFeeAmount 不计算 fee/50。它检查调用者是 owner，fee 小于 1000000，tickSpacing 大于 0 且小于 16384，并且这个 fee 的槽还是空的。3000 作为间距也能通过「小于 16384」这一条，所以单靠上界拦不住把费率抄进间距。构造函数没有把 3000 传进第二个参数，它传的是 60。槽一旦写成 60，再调用 enableFeeAmount(3000, 3000) 会因为槽非空而回退。写错的间距不能靠再调一次同一个函数盖掉。</p>
+              <p>500/50 = 10、3000/50 = 60、10000/50 = 200，这三对碰巧能整除。函数体里没有这道除法。把「间距等于费率除以 50」写成合约规则，只是对这三次调用的事后观察。本篇只核这三对构造参数。手续费最终进了谁的口袋，是<a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a>那篇的问题。本篇只问页面上的 3000 到底是费率还是间距。</p>
+              <table>
+                <caption>v1.0.0 构造函数写下的三对，费率单位是百万分之一</caption>
+                <thead><tr><th scope="col">fee</th><th scope="col">fee / 1000000</th><th scope="col">tickSpacing</th></tr></thead>
+                <tbody>
+                  <tr><td>500</td><td>0.0005</td><td>10</td></tr>
+                  <tr><td>3000</td><td>0.003</td><td>60</td></tr>
+                  <tr><td>10000</td><td>0.01</td><td>200</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-2">
+              <h2>2. 绝对边界过得了 checkTicks，过不了整除</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">TickMath v1.0.0</a> 把 MIN_TICK 定为 -887272，MAX_TICK 定为它的相反数 887272。checkTicks 有三条 require：下沿必须小于上沿，否则 TLU；下沿不得小于 MIN_TICK，否则 TLM；上沿不得大于 MAX_TICK，否则 TUM。-887272 作为下沿、887272 作为上沿，过得了这三关。只读 TickMath 的人会据此认为每个池子都能把全区间挂在这两档上。</p>
+              <p>过不了的是位图。<a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">TickBitmap v1.0.0</a> 的 flipTick 在改位之前要求 tick % tickSpacing == 0。这条 require 没有错误字符串，失败时回退原因是空的。第一次把某个边界从零流动性写成非零，就会走进 flipTick。余数不是 0，这个边界不会被写进位图，仓位也打不开。已经初始化的 tick 都是从这条路走过来的，所以位图里不会留下一个不能被间距整除的边界。</p>
+              <p>-887272 对 60 取余。887272 = 60×14787 + 52，正余数是 52。余数的符号跟被除数走，所以 -887272 % 60 = -52，不是 8，也不是 0。最低可用 tick 要把这 52 档往回收，得到 -887220。-887220 大于等于 MIN_TICK，并且 -887220 % 60 = 0。再往外一格的对齐 tick 是 -887280。它能被 60 整除，但比 MIN_TICK 小 8，checkTicks 以 TLM 回退。两个相邻的失败不是同一种失败：-887272 死在整除，-887280 死在下界。上沿对称。887272 % 60 = 52，最高可用 tick 是 887220。887280 大于 MAX_TICK，回退码是 TUM。</p>
+              <p>间距 10 时，-887272 % 10 = -2，可用边界是 -887270 和 887270，缺口 2 档。间距 200 时，余数是 -72，可用边界是 -887200 和 887200，缺口 72 档。只有间距为 1 时余数才是 0，MIN_TICK 本身可用。v1.0.0 的构造函数没有启用间距 1。</p>
+              <table>
+                <caption>三档默认间距下，MIN_TICK 与可用边界的缺口</caption>
+                <thead><tr><th scope="col">间距</th><th scope="col">-887272 的余数</th><th scope="col">最低可用</th><th scope="col">最高可用</th><th scope="col">缺口</th></tr></thead>
+                <tbody>
+                  <tr><td>10</td><td>-2</td><td>-887270</td><td>887270</td><td>2</td></tr>
+                  <tr><td>60</td><td>-52</td><td>-887220</td><td>887220</td><td>52</td></tr>
+                  <tr><td>200</td><td>-72</td><td>-887200</td><td>887200</td><td>72</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. 52 档的价格比是 1.005213282127</h2>
+              <p>52 不是价格 52，也不是价格差 52。<a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a>把单个 tick 的价格比写成 1.0001 的 tick 次方，小数直接截断到 12 位，不四舍五入。两个 tick 之间的价格比等于 1.0001 的 tick 差次方。-887220 比 -887272 高 52 档，价格比是 1.0001 的 52 次方，截断到 12 位是 1.005213282127。写成 1，等于说这两档价格相同。写成 52，等于把档数当成了价格。</p>
+              <p>同一截断下，间距 10 的 2 档缺口是 1.000200010000，间距 200 的 72 档缺口是 1.007225619743。缺口越大，这个费率档真正能挂到的全区间，就比 TickMath 的绝对全区间更窄。窄掉的是两端的价格比。中间那段流动性怎么换成代币数量，是<a href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">仓位核验：仓位上的流动性，不等于代币余额</a>的问题。边界如果过不了 flipTick，那篇的数量公式不会被调用。</p>
+              <table>
+                <caption>缺口档数换成 1.0001 的次方，截断到 12 位</caption>
+                <thead><tr><th scope="col">间距</th><th scope="col">缺口档数</th><th scope="col">价格比</th></tr></thead>
+                <tbody>
+                  <tr><td>10</td><td>2</td><td>1.000200010000</td></tr>
+                  <tr><td>60</td><td>52</td><td>1.005213282127</td></tr>
+                  <tr><td>200</td><td>72</td><td>1.007225619743</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-4">
+              <h2>4. 把间距写成 3000，一格的价格比会换一套</h2>
+              <p>0.3% 池的一格是 60 个 tick，不是 3000 个。1.0001 的 60 次方截断到 12 位是 1.006017734268。1.0001 的 3000 次方是 1.349838561195。指数相差 2940，1.0001 的 2940 次方是 1.341764180903。用 3000 当作一格，一格的价格增幅是合约一格的 1.341764180903 倍。这不是多写了一个零就能解释的舍入，两格之间差了 2940 个 tick。</p>
+              <p>3000 小于 16384，所以上界检查拦不住这个抄写。拦住它的是构造函数实际传入的第二个参数，以及槽被占用后不能改写。核验时读池子的 tickSpacing，或者读工厂的 feeAmountTickSpacing(3000)，期待 60。读到 3000，说明这不是 v1.0.0 那次构造调用创建的档位，笔记不该再沿用 60 这张表。</p>
+              <table>
+                <caption>同一套截断下，60 与 3000 各自的一格</caption>
+                <thead><tr><th scope="col">当作间距的数</th><th scope="col">1.0001 的该次方</th></tr></thead>
+                <tbody>
+                  <tr><td>60，构造函数写入的值</td><td>1.006017734268</td></tr>
+                  <tr><td>3000，费率被抄进间距</td><td>1.349838561195</td></tr>
+                  <tr><td>指数差 2940</td><td>1.341764180903</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-5">
+              <h2>5. 当前 tick 不必对齐，仓位边界必须对齐</h2>
+              <p>initialize 把 sqrtPriceX96 交给 getTickAtSqrtRatio，再把返回的 tick 写进 slot0。这条路径没有对 tickSpacing 取余。因此一个 0.3% 池的 slot0.tick 可以落在不能被 60 整除的档上，包括开盘价刚好对应 MIN_TICK 的情形。页面上看到当前 tick 不能被 60 整除，不能当成池子坏了。</p>
+              <p>必须对齐的是仓位边界。mint 的下沿和上沿在第一次写入流动性时要能通过 flipTick。当前 tick 和边界 tick 是两个字段。用「必须整除」去拒绝当前 tick，会把合法开盘价判成故障。用「MIN_TICK 在每个费率档都是合法边界」去挂全区间，会在间距 60 的池子上得到空回退。先问读到的是 slot0.tick 还是仓位的 tickLower，再决定要不要取余。</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. 负 tick 不在格子上时，压缩下标再减 1</h2>
+              <p>nextInitializedTickWithinOneWord 先算 tick / tickSpacing。Solidity 的整数除法向零截断。tick 为负且余数不是 0 时，结果再减 1，向负无穷靠一格。余数为 0 时不减。正 tick 也不减。这一格和<a href="/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">时间加权核验：链上的平均 tick，不等于两端价格的平均数</a>里的负数窗口是同一类不对称：只用正数做测试，看不出多出来的那一次减法。</p>
+              <p>教学数取 tick -59、间距 60。-59/60 向零是 0，余数是 -59。合约写下 -1。下标乘回间距，起算 tick 是 -60。只做向零截断会从 tick 0 起算。两条起算线相差 60 档，价格比就是 1.006017734268。函数接着还会在这个字里寻找已经初始化的位。起算线已经高了 60 档，后面找到的位不会把这 60 档补回来。</p>
+              <p>tick -60 能被 60 整除，向零截断已经是 -1，余数为 0，不再减，和下标 -1 重合。多减的条件是余数，不是符号本身。正的对照：tick 59、间距 60，59/60 向零是 0，余数 59，但 tick 不小于 0，下标保持 0，起算 tick 是 0。这一侧向零截断和合约一致。只拿 59 这种正 tick 做测试，会把 -59 那一次减 1 漏掉。</p>
+              <table>
+                <caption>压缩下标：向零截断，和余数不为 0 时的再减 1</caption>
+                <thead><tr><th scope="col">tick</th><th scope="col">间距</th><th scope="col">向零</th><th scope="col">余数</th><th scope="col">合约下标</th><th scope="col">起算 tick</th></tr></thead>
+                <tbody>
+                  <tr><td>-59</td><td>60</td><td>0</td><td>-59</td><td>-1</td><td>-60</td></tr>
+                  <tr><td>-60</td><td>60</td><td>-1</td><td>0</td><td>-1</td><td>-60</td></tr>
+                  <tr><td>59</td><td>60</td><td>0</td><td>59</td><td>0</td><td>0</td></tr>
+                  <tr><td>-1</td><td>10</td><td>0</td><td>-1</td><td>-1</td><td>-10</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-7">
+              <h2>7. 先读间距，再对边界取余</h2>
+              <p>错误句式是「费率 3000 表示间距 3000」，以及「每个池子都能把流动性挂在 -887272」。更可靠的句子是「feeAmountTickSpacing 里的第二个数；-887272 对这个数的余数；余数不为 0 时往区间内收到的那一档；往外一格的对齐 tick 触发的是 TLM 还是 TUM；读到的 tick 属于 slot0 还是仓位边界；负 tick 除不尽时压缩下标有没有再减 1」。教学换算里，0.3% 池的可用边界是 -887220 和 887220，52 档的价格比是 1.005213282127。间距若被写成 3000，一格的价格比是 1.349838561195，而不是 1.006017734268。tick -59、间距 60，起算 tick 是 -60。</p>
+              <p>本文是分析框架。三对默认参数、16384 的上界和槽不可改写来自 v1.0.0 的 UniswapV3Factory。MIN_TICK、MAX_TICK 来自同一标签的 TickMath。整除检查和负向压缩来自同一标签的 TickBitmap。1.005213282127、1.000200010000、1.007225619743、1.006017734268、1.349838561195 和 1.341764180903 是按 1.0001 的整数次方截断到 12 位得到的教学值，未对任何实时池子做实测，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>8. 常见误读</h2>
+              <h3>费率 3000 是不是表示 tick 间距为 3000？</h3>
+              <p>不是。v1.0.0 构造函数写的是 enableFeeAmount(3000, 60)。3000/1000000 = 0.003，是手续费比例。间距是另一个参数，值为 60。函数不拿费率除以 50 来推导间距。这个费率槽写过后，不能再用同一次调用改成 3000。</p>
+              <h3>0.3% 池子能不能把流动性挂在 tick -887272？</h3>
+              <p>不能。-887272 对 60 的余数是 -52，不是 0。flipTick 要求 tick % tickSpacing == 0，这条 require 没有错误字符串。能用的最低 tick 是 -887220，最高是 887220。-887280 能被 60 整除，但小于 MIN_TICK，checkTicks 以 TLM 回退。</p>
+              <h3>tick 为 -59、间距为 60 时，压缩下标是 0 吗？</h3>
+              <p>不是。向零截断的 -59/60 是 0，余数是 -59。tick 为负且余数不为 0 时，合约再减 1，下标是 -1，乘回间距是 tick -60。留下 0 会从 tick 0 起算，比合约高 60 档，价格比 1.006017734268。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己准备少量代币，以便对照池子页面上的 tickSpacing 和一笔仓位的上下沿，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与 -887272 能否被 60 整除无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">费率 3000 和间距 3000 写在两个槽里</a></li><li><a href="#sec-2">绝对边界过得了 checkTicks，过不了整除</a></li><li><a href="#sec-3">52 档的价格比是 1.005213282127</a></li><li><a href="#sec-4">把间距写成 3000，一格的价格比会换一套</a></li><li><a href="#sec-5">当前 tick 不必对齐，仓位边界必须对齐</a></li><li><a href="#sec-6">负 tick 不在格子上时，压缩下标再减 1</a></li><li><a href="#sec-7">先读间距，再对边界取余</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">Uniswap V3：工厂合约的三对费率与间距</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol" target="_blank" rel="noopener">Uniswap V3：TickMath 的 MIN_TICK 与 MAX_TICK</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">Uniswap V3：TickBitmap 的整除与负向压缩</a></li></ul><p class="ref-note">资料核对日期：2026年11月4日。三对参数、绝对边界、整除检查和负向压缩来自 uniswap v3-core 的 v1.0.0 标签。价格比是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li><li><a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a></li><li><a href="/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">时间加权核验：链上的平均 tick，不等于两端价格的平均数</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=54cdd52a"></script>
+</body>
+</html>
