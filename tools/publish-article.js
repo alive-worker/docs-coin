@@ -439,8 +439,8 @@ function rebuildHomepageCarouselAndGrid(lang) {
   }
 
   const carouselItems = items.slice(0, 5);
-  const hotpicksItems = items.slice(5, 9); // next 4, no overlap with the carousel
-  const gridVisible = items.slice(9, 18); // next 9, no overlap with carousel or hotpicks
+  const hotpicksItems = items.slice(5, 10); // next 5, no overlap with the carousel
+  const gridVisible = items.slice(10, 19); // next 9, no overlap with carousel or hotpicks
   const readMore = lang === 'en' ? 'Read more →' : '阅读详情 →';
   const readLabel = lang === 'en' ? 'Read more' : '阅读详情';
   const coverAlt = lang === 'en' ? 'cover image' : '封面图';
