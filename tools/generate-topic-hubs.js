@@ -188,11 +188,11 @@ ${linkList}
       <div class="site-foot-col site-foot-col--friends">
         <h3>${isEn ? 'Friends' : '友情链接'}</h3>
         <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">${isEn ? "deskbyai" : "AI做系统"}</a></li>
           <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
           <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
           <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
           <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
-          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">${isEn ? "deskbyai" : "AI做系统"}</a></li>
         </ul>
       </div>
     </div>
