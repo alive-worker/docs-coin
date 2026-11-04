@@ -37,7 +37,7 @@
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide.svg" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
-  <link rel="stylesheet" href="/styles.css?v=29bed61d">
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -255,7 +255,7 @@
                   <span class="archive-tag archive-tag--amber">档距</span>
                   <span class="featured-title">档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</span>
                 </span>
-                <span class="featured-desc">费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。</span>
+                <span class="featured-desc">Uniswap V3 把手续费档和 tick 间距分成两个字段，工厂合约不会用其中一个推算另一个。v1.0.0 构造函数写下的三对是 500 与 10、3000 与 60、10000 与 200。费率 3000 是输入金额的 3000/1000000，等于 0.003，也就是 0.3%；间距是 60 个 tick，不是 3000。TickMath 把 MIN_TICK 定为 -887272、MAX_TICK 定为 887272。checkTicks 放行这个绝对边界，flipTick 却要求 tick 能被间距整除，而且这条 require 没有错误字符串。-887272 对 60 的余数是 -52，所以 0.3% 池能挂上流动性的最低 tick 是 -887220，最高是 887220，两端各空出 52 档。沿用本站开方价那篇的截断，1.0001 的 52 次方切到小数点后 12 位是 1.005213282127。再往外一格、且能被 60 整除的 -887280，则因为小于 MIN_TICK，以 TLM 回退。负向压缩是另一处不对称：当前 tick 为 -59、间距为 60 时，向零截断得到 0，合约因余数不是 0 再减 1，压缩下标是 -1，起算 tick 是 -60。这些比值是教学换算，不是 2026 年 11 月 4 日某个池子的读数，也不构成投资建议。</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-04T10:28:49+08:00">2026-11-04 10:28:49</time>
                   <span class="featured-more">阅读详情 →</span>
@@ -271,7 +271,7 @@
                   <span class="archive-tag archive-tag--azure">时间加权</span>
                   <span class="featured-title">时间加权核验：链上的平均 tick，不等于两端价格的平均数</span>
                 </span>
-                <span class="featured-desc">Uniswap V3 对 tick 做时间平均。100 秒在 tick 0、100 秒在 10000，平均 tick 是 5000，价格比 1.648680055931，不是 1.859072963412。</span>
+                <span class="featured-desc">Uniswap V3 的预言机累加的是 tick 乘以经过的秒数，不是价格乘以秒数。consult 把累加器的差除以秒数，负数余数再向负无穷收一格。教学窗口前 100 秒 tick 为 0、后 100 秒 tick 为 10000，平均 tick 是 5000，价格比截断到 12 位是 1.648680055931。两端价格加起来除以 2 是 1.859072963412。按同一截断回推，这个平均数落在 tick 6201 和 6202 之间。数字是教学换算，不是 2026 年 11 月 3 日某个池子的读数，也不构成投资建议。</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-03T14:51:00+08:00">2026-11-03 14:51:00</time>
                   <span class="featured-more">阅读详情 →</span>
@@ -287,7 +287,7 @@
                   <span class="archive-tag archive-tag--gold">手续费</span>
                   <span class="featured-title">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</span>
                 </span>
-                <span class="featured-desc">Uniswap V3 的手续费档 3000 是整笔费用。slot0.feeProtocol 写成 100 时，一个方向分母是 4，另一个方向分母是 6。同一笔 3000，流动性提供者一边留下 2250，另一边留下 2500。</span>
+                <span class="featured-desc">Uniswap V3 池子的 fee 是整笔手续费的百万分率，不是流动性提供者的分成。v1.0.0 的 setFeeProtocol(4, 6) 把两个分母压进 slot0.feeProtocol，存出来的数是 100。价格下降的兑换用分母 4，价格上升的兑换用分母 6。教学里整笔手续费是 3000 时，一边留给流动性提供者 2250，另一边留下 2500。协议分别拿走 750 和 500。数字来自合约里的整除和向上取整，不是 2026 年 11 月 2 日某个池子的读数，也不构成投资建议。</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-02T10:01:00+08:00">2026-11-02 10:01:00</time>
                   <span class="featured-more">阅读详情 →</span>
@@ -303,7 +303,7 @@
                   <span class="archive-tag archive-tag--bronze">仓位</span>
                   <span class="featured-title">仓位核验：仓位上的流动性，不等于代币余额</span>
                 </span>
-                <span class="featured-desc">Uniswap V3 的仓位记录流动性，不记录代币余额。教学流动性 10^18、区间 tick 0 到 200、价格正在下沿时，token0 是 9949671258790518，token1 是 0。把流动性读成两种代币各有 10^18，两边都对不上。</span>
+                <span class="featured-desc">Uniswap V3 的仓位结构体里有 liquidity，没有 token0 余额，也没有 token1 余额。tokensOwed 的注释写的是应付给仓位主人的手续费。教学流动性取 10^18，边界取 tick 0 和 tick 200。价格的平方根正好落在下沿时，token0 是 9949671258790518，token1 是 0。同一流动性移到上沿，两边对调。下文用 v1.0.0 外围库的向下取整和核心库铸造时的向上取整把库存拆开。数字是教学值，不是 2026 年 10 月 30 日某个池子的读数，也不构成投资建议。</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-10-30T17:47:00+08:00">2026-10-30 17:47:00</time>
                   <span class="featured-more">阅读详情 →</span>
@@ -319,7 +319,7 @@
                   <span class="archive-tag archive-tag--amber">开方价</span>
                   <span class="featured-title">兑换核验：开一次方，不等于池子报价</span>
                 </span>
-                <span class="featured-desc">Uniswap V3 的 sqrtPriceX96 是价格平方根乘上 2^96。教学 tick 200 只除一次得到 1.010049662092，平方后才是 1.020200319893。把 10000 个 tick 当成涨 100%，会写成 2，合约比值是 2.718145926825。</span>
+                <span class="featured-desc">Uniswap V3 把当前价格放在 slot0.sqrtPriceX96 里，结构体注释写的是 the current price。TickMath 的公式却是 sqrt(1.0001^tick) 乘 2^96。只除以 2^96，教学 tick 200 得到 1.010049662092；再平方才是 1.020200319893。tick 个数也不是百分比：10000 个 tick 的比值是 2.718145926825，不是 2。下文用 v1.0.0 核心库的整数式把这三层拆开。数字是教学值，不是 2026 年 10 月 28 日某个池子的读数，也不构成投资建议。</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-10-28T15:36:00+08:00">2026-10-28 15:36:00</time>
                   <span class="featured-more">阅读详情 →</span>

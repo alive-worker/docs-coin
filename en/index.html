@@ -36,7 +36,7 @@
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-spacing-vs-min-tick-verification-guide-en.svg" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media=&#39;all&#39;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
-  <link rel="stylesheet" href="/styles.css?v=29bed61d">
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -254,7 +254,7 @@
                   <span class="archive-tag archive-tag--amber">Spacing</span>
                   <span class="featured-title">Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</span>
                 </span>
-                <span class="featured-desc">Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.</span>
+                <span class="featured-desc">Uniswap v3 stores the fee tier and the tick spacing as two fields. The factory does not derive one from the other. The v1.0.0 constructor writes three pairs: 500 with 10, 3000 with 60, and 10000 with 200. Fee 3000 is 3000/1000000 of the input, which is 0.003, or 0.3%. The spacing is 60 ticks, not 3000. TickMath sets MIN_TICK to -887272 and MAX_TICK to 887272. checkTicks accepts that absolute bound. flipTick still requires the tick to be divisible by the spacing, and that require carries no error string. Tick -887272 modulo 60 is -52, so the lowest tick that can hold liquidity on a 0.3% pool is -887220 and the highest is 887220. Each end leaves a gap of 52 ticks. Under the truncation used in the square-root note on this site, 1.0001 to the 52nd power, cut off at 12 decimal places, is 1.005213282127. The next aligned tick further out, -887280, is divisible by 60 and still reverts with TLM because it sits below MIN_TICK. Negative compression is a separate asymmetry. At tick -59 with spacing 60, truncation toward zero yields 0. The remainder is not 0, so the contract subtracts 1, the compressed index is -1, and the search starts at tick -60. These ratios are a teaching conversion, not a pool reading from 4 November 2026, and they are not investment advice.</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-04T10:28:49+08:00">2026-11-04 10:28:49</time>
                   <span class="featured-more">Read more →</span>
@@ -270,7 +270,7 @@
                   <span class="archive-tag archive-tag--azure">TWAP</span>
                   <span class="featured-title">TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</span>
                 </span>
-                <span class="featured-desc">Uniswap v3 TWAP averages ticks, not prices. One hundred seconds at tick 0 and one hundred at 10000 give tick 5000 and ratio 1.648680055931, not 1.859072963412.</span>
+                <span class="featured-desc">A Uniswap v3 oracle accumulates tick times elapsed seconds, not price times seconds. consult divides the cumulative delta by the seconds, then steps a negative remainder toward negative infinity. In the teaching window, 100 seconds at tick 0 and 100 seconds at tick 10000 average to tick 5000, and the price ratio truncated to 12 decimals is 1.648680055931. Adding the two prices and dividing by 2 gives 1.859072963412. Under the same truncation, that average sits between tick 6201 and tick 6202. The figures are a teaching conversion, not a pool reading from 3 November 2026, and they are not investment advice.</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-03T14:51:00+08:00">2026-11-03 14:51:00</time>
                   <span class="featured-more">Read more →</span>
@@ -286,7 +286,7 @@
                   <span class="archive-tag archive-tag--gold">Fee</span>
                   <span class="featured-title">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</span>
                 </span>
-                <span class="featured-desc">Uniswap v3 fee tier 3000 is the gross fee. Packed feeProtocol 100 uses denominators 4 and 6, so one 3000 fee leaves LPs 2250 one way and 2500 the other.</span>
+                <span class="featured-desc">A Uniswap v3 pool's fee tier is the gross fee in millionths, not the liquidity provider's share. In v1.0.0, setFeeProtocol(4, 6) packs both denominators into slot0.feeProtocol and stores 100. A price-decreasing swap uses denominator 4. A price-increasing swap uses denominator 6. On a teaching gross fee of 3000, LPs keep 2250 one way and 2500 the other. The protocol takes 750 and 500. The figures come from the contract's integer division and round-up. They are not a pool reading from 2 November 2026, and they are not investment advice.</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-02T10:01:00+08:00">2026-11-02 10:01:00</time>
                   <span class="featured-more">Read more →</span>
@@ -302,7 +302,7 @@
                   <span class="archive-tag archive-tag--bronze">Position</span>
                   <span class="featured-title">Position Check: Stored Liquidity Is Not the Token Balance</span>
                 </span>
-                <span class="featured-desc">A Uniswap V3 position records liquidity, not token balances. At teaching liquidity 10^18 from tick 0 to 200, with price on the lower tick, token0 is 9949671258790518 and token1 is 0.</span>
+                <span class="featured-desc">A Uniswap V3 position struct stores liquidity. It does not store a token0 balance or a token1 balance. The tokensOwed comment names fees owed to the position owner. The teaching liquidity is 10^18, and the boundaries are tick 0 and tick 200. When the square-root price sits exactly on the lower boundary, token0 is 9949671258790518 and token1 is 0. The same liquidity moved to the upper boundary swaps the two sides. The figures below use the v1.0.0 periphery floor and the core's round-up on a positive mint. They are a teaching set, not a position read on 30 October 2026, and they are not investment advice.</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-10-30T17:47:00+08:00">2026-10-30 17:47:00</time>
                   <span class="featured-more">Read more →</span>
@@ -318,7 +318,7 @@
                   <span class="archive-tag archive-tag--amber">Sqrt Price</span>
                   <span class="featured-title">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</span>
                 </span>
-                <span class="featured-desc">Uniswap V3 stores sqrtPriceX96, the square root of the price times 2^96. At teaching tick 200 one division prints 1.010049662092; squaring it returns 1.020200319893. Reading 10000 ticks as a 100% rise writes 2 where the contract ratio is 2.718145926825.</span>
+                <span class="featured-desc">Uniswap V3 keeps the current price in slot0.sqrtPriceX96. The struct comment calls that field the current price. TickMath computes sqrt(1.0001^tick) times 2^96. One division at teaching tick 200 prints 1.010049662092. Squaring it returns 1.020200319893. A tick count is not a percent either: 10000 ticks ratio to 2.718145926825, not to 2. The figures below follow the integer steps in the v1.0.0 core. They are a teaching set, not a pool read on 28 October 2026, and they are not investment advice.</span>
                 <span class="featured-meta">
                   <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-10-28T15:36:00+08:00">2026-10-28 15:36:00</time>
                   <span class="featured-more">Read more →</span>

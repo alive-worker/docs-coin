@@ -435,6 +435,8 @@ function rebuildHomepageCarouselAndGrid(lang) {
     it.href = `/${lang === 'en' ? enPath(it.slug) : zhPath(it.slug)}`;
     const artC = fs.readFileSync(path.join(root, it.href.slice(1)), 'utf-8');
     it.cardDesc = (artC.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
+    it.summary = ((artC.match(/<p class="article-summary">([\s\S]*?)<\/p>/) || [])[1] || '')
+      .replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     it.cover = (artC.match(/<img class="article-cover" src="([^"]*)"/) || [])[1] || '';
   }
 
@@ -458,7 +460,7 @@ function rebuildHomepageCarouselAndGrid(lang) {
                   <span class="archive-tag archive-tag--${it.tagColor}">${it.tagLabel}</span>
                   <span class="featured-title">${it.h1}</span>
                 </span>
-                <span class="featured-desc">${it.cardDesc}</span>
+                <span class="featured-desc">${(it.summary || it.cardDesc).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
                 <span class="featured-meta">
                   ${cal}<time datetime="${it.pub}">${pubDisplay}</time>
                   <span class="featured-more">${readMore}</span>
