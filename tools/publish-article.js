@@ -474,8 +474,8 @@ function rebuildHomepageCarouselAndGrid(lang) {
     `          <button type="button" class="carousel-dot${i === 0 ? ' is-active' : ''}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" aria-label="${lang === 'en' ? 'Slide' : '第'} ${i + 1}${lang === 'en' ? '' : '项'}"></button>`
   ).join('\n');
 
-  const hotpicksLabel = lang === 'en' ? 'Read next' : '接着读';
-  const hotpicksAriaLabel = lang === 'en' ? 'Hot picks' : '热门精选';
+  const hotpicksLabel = lang === 'en' ? 'Hot Picks' : '热门精选';
+  const hotpicksAriaLabel = lang === 'en' ? 'Hot Picks' : '热门精选';
   const hotpicksHtml = hotpicksItems.map((it, i) => {
     const pubDisplay = it.pub.replace('T', ' ').replace(/\+.*/, '');
     return `          <li class="hotpicks-item">
