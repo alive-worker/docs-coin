@@ -429,10 +429,10 @@ function rebuildHomepageCarouselAndGrid(lang) {
   const items = [...listC.matchAll(re)].map(m => ({
     topic: m[1], slug: m[2], tagColor: m[3], tagLabel: m[4], h1: m[5], pub: m[6],
   }));
-  if (items.length < 18) throw new Error(`[homepage-${lang}] only found ${items.length} archive items, expected >=18`);
+  if (items.length < 19) throw new Error(`[homepage-${lang}] only found ${items.length} archive items, expected >=19`);
   if (items[0].slug !== CONFIG.slug) throw new Error(`[homepage-${lang}] newest archive item is "${items[0].slug}", expected "${CONFIG.slug}" — run insertArchiveItem first`);
 
-  for (const it of items.slice(0, 18)) {
+  for (const it of items.slice(0, 19)) {
     it.href = `/${lang === 'en' ? enPath(it.slug) : zhPath(it.slug)}`;
     const artC = fs.readFileSync(path.join(root, it.href.slice(1)), 'utf-8');
     it.cardDesc = (artC.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
