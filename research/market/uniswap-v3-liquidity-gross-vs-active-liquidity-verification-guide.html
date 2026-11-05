@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>流动性核验：四档毛额加总是 2800，池子正在用的是 1000 - 加密货币研究</title>
+  <meta name="description" content="两笔教学流动性在 tick 0 铸入。四档 liquidityGross 加总是 2800，池子的 liquidity 是 1000。向上穿过 tick 60 之后是 1400。tick 停在 90 时，这一档毛额是 0。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,liquidityGross,liquidityNet,池子流动性,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="流动性核验：四档毛额加总是 2800，池子正在用的是 1000">
+  <meta property="og:description" content="两笔教学流动性在 tick 0 铸入。四档 liquidityGross 加总是 2800，池子的 liquidity 是 1000。向上穿过 tick 60 之后是 1400。tick 停在 90 时，这一档毛额是 0。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-05T10:57:41+08:00">
+  <meta property="article:modified_time" content="2026-11-05T10:57:41+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="毛额">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="liquidityGross">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="四档毛额加总 2800 被划掉。tick 0 到 60 的色带里，池子正在用的流动性是 1000。净额分别是 +1000、+400、-1000、-400。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="流动性核验：四档毛额加总是 2800，池子正在用的是 1000">
+  <meta name="twitter:description" content="两笔教学流动性在 tick 0 铸入。四档 liquidityGross 加总是 2800，池子的 liquidity 是 1000。向上穿过 tick 60 之后是 1400。tick 停在 90 时，这一档毛额是 0。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.png">
+  <meta name="twitter:image:alt" content="四档毛额加总 2800 被划掉。tick 0 到 60 的色带里，池子正在用的流动性是 1000。净额分别是 +1000、+400、-1000、-400。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html",
+      "name": "流动性核验：四档毛额加总是 2800，池子正在用的是 1000",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "流动性核验：四档毛额加总是 2800，池子正在用的是 1000", "item": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#article",
+      "headline": "流动性核验：四档毛额加总是 2800，池子正在用的是 1000",
+      "description": "两笔教学流动性在 tick 0 铸入。四档 liquidityGross 加总是 2800，池子的 liquidity 是 1000。向上穿过 tick 60 之后是 1400。tick 停在 90 时，这一档毛额是 0。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.png"],
+      "datePublished": "2026-11-05T10:57:41+08:00",
+      "dateModified": "2026-11-05T10:57:41+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","liquidityGross","liquidityNet","池子流动性","加密货币研究"],
+      "wordCount": 5248,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/interfaces/pool/IUniswapV3PoolState.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "四档 liquidityGross 加总是 2800，池子的 liquidity 是不是也是 2800？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。v1.0.0 的 liquidity() 注释写明，它是当前在区间内、池子可用的流动性，和所有 tick 上的流动性总和没有关系。教学里两笔仓位在 tick 为 0 时铸入，四档毛额 1000、400、1000、400 加总 2800，池子 liquidity 是 1000。" }
+        },
+        {
+          "@type": "Question",
+          "name": "当前 tick 停在 90，读 ticks(90) 的毛额是不是池子正在用的流动性？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。90 不是任何一笔仓位的边界，这一档没有被初始化，毛额是 0。向上穿过 tick 60 且还没穿过 tick 120 时，池子 liquidity 是 1400。" }
+        },
+        {
+          "@type": "Question",
+          "name": "价格从 tick 0 走到 tick 59，可用流动性会不会跟着变？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不会。这两档之间没有初始化的 tick，穿过不会发生。价格比按 1.0001 的 59 次方截断到 12 位是 1.005917142554，池子 liquidity 仍是 1000。可用流动性要等价格从左向右穿过 tick 60，才会加上净额 400，变成 1400。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">毛额</span></p>
+          <h1>流动性核验：四档毛额加总是 2800，池子正在用的是 1000</h1>
+          <p class="article-summary">Uniswap V3 的 liquidity() 注释写明，它是当前在区间内、池子可用的流动性，和所有 tick 上的流动性总和没有关系。ticks() 返回的 liquidityGross 是把这一档当作下沿或上沿的仓位流动性合计。教学里两笔仓位在 tick 为 0 时铸入：一笔 1000，边界 0 和 120；一笔 400，边界 60 和 180。四档毛额是 1000、400、1000、400，加总 2800。池子 liquidity 只有 1000，因为第二笔的下沿还在当前 tick 右边。向上穿过 tick 60 之后变成 1400。当前 tick 停在 90 时，这一档没有被初始化，毛额是 0。数字是教学值，不是 2026 年 11 月 5 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-05T10:57:41+08:00">2026-11-05 10:57:41</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.svg" alt="四档毛额加总 2800 被划掉。tick 0 到 60 之间池子正在用的流动性是 1000，四档净额是 +1000、+400、-1000、-400。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>读池子的 liquidity()，不要把各档 liquidityGross 加总当成它。教学铸入之后，毛额之和是 2800，池子正在用的是 1000。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>下沿的 liquidityNet 是正的，上沿是负的。从左向右穿过时加上这个净额。从右向左穿过时，取反只发生在当次局部变量上，不写回存储。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>铸入时只有当前 tick 落在区间内部，才立刻改池子 liquidity。tick 为 0 时，边界 60 和 180 的那一笔毛额已经写上，池子 liquidity 不加 400。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>当前 tick 停在 90 时，ticks(90) 的毛额是 0。向上穿过 60、还没穿过 120 时，池子 liquidity 是 1400。价格从 0 走到 59，流动性仍是 1000，价格比是 1.005917142554。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 毛额记的是引用了这一档的仓位，一笔记在两档上</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/interfaces/pool/IUniswapV3PoolState.sol" target="_blank" rel="noopener">IUniswapV3PoolState v1.0.0</a> 把 ticks(tick) 的第一个返回值 liquidityGross 注释成：把这一档当作下沿或上沿来用的仓位流动性合计。它不是池子此刻能用来成交的数量。同一接口把 liquidity() 注释成：当前在区间内、池子可用的流动性，并且写明这个值和所有 tick 上的流动性总和没有关系。两条注释已经把后文的 2800 和 1000 拆开了。</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Tick.update v1.0.0</a> 对下沿和上沿各调用一次。upper 为 false 时，liquidityNet 加上 liquidityDelta；upper 为 true 时，liquidityNet 减去 liquidityDelta。liquidityGross 两次都用 LiquidityMath.addDelta，所以一笔 1000 的仓位会在两个边界上各留下毛额 1000。把这两档毛额相加得到 2000，仓位自己的流动性仍是 1000。相加多出来的那一份，是同一笔流动性被记了两次，不是池子又多了一笔。</p>
+              <p>这和<a href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">仓位核验：仓位上的流动性，不等于代币余额</a>不是同一问。那篇问的是一笔仓位的 liquidity 能不能被读成 token0 和 token1。本篇假定那笔流动性数字已经读对，接着问许多档上的毛额能不能被加总成池子正在用的 liquidity。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 教学两笔，在 tick 为 0 时铸入</h2>
+              <p>数字取小，是为了把加减写清楚。池子用 v1.0.0 构造函数里的费率 3000，间距 60，所以边界必须落在 60 的倍数上。这一点<a href="/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</a>已经核过。本篇的四档是 0、60、120、180，都能被 60 整除。</p>
+              <p>仓位 A 的流动性是 1000，下沿 0，上沿 120。仓位 B 的流动性是 400，下沿 60，上沿 180。两笔都在 slot0.tick 等于 0 时铸入。Tick.update 写下的结果是：tick 0 的毛额 1000、净额 +1000；tick 60 的毛额 400、净额 +400；tick 120 的毛额 1000、净额 -1000；tick 180 的毛额 400、净额 -400。四档毛额相加是 2800。没有任何一档的毛额等于 2800，也没有任何一档的净额等于 2800。</p>
+              <p>间距 60 时，Tick.tickSpacingToMaxLiquidityPerTick 先把 MIN_TICK -887272 和 MAX_TICK 887272 收到间距上，得到 -887220 和 887220，档数 29575，单档毛额上限是 11505743598341114571880798222544994。教学用的 1000 和 400 都远低于这个上限，update 不会以 LO 回退。2800 对 1000 的差，不是撞上了单档上限。</p>
+              <table>
+                <caption>tick 为 0 时铸入两笔之后，各档毛额和净额</caption>
+                <thead><tr><th scope="col">tick</th><th scope="col">谁的边界</th><th scope="col">liquidityGross</th><th scope="col">liquidityNet</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>A 的下沿</td><td>1000</td><td>+1000</td></tr>
+                  <tr><td>60</td><td>B 的下沿</td><td>400</td><td>+400</td></tr>
+                  <tr><td>120</td><td>A 的上沿</td><td>1000</td><td>-1000</td></tr>
+                  <tr><td>180</td><td>B 的上沿</td><td>400</td><td>-400</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. 铸入当时，只有落在区间里的那一笔进入池子</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> 的 _modifyPosition 用当前 tick 分三支。tick 小于下沿，只算 token0，不改池子的 liquidity。tick 小于上沿，走区间内部，这时才用 LiquidityMath.addDelta 把 liquidityDelta 加进池子的 liquidity。否则只算 token1。tick 正好等于下沿时，第一条不成立，走内部。tick 正好等于上沿时，走最后一支，池子 liquidity 不加。</p>
+              <p>铸入时 tick 是 0。仓位 A 满足 0 小于 120，而且 0 并不小于下沿 0，所以走内部，池子 liquidity 从 0 变成 1000。仓位 B 的下沿是 60，0 小于 60，走第一支，池子 liquidity 保持 1000。B 的毛额和净额已经写在 tick 60 和 tick 180 上，只是这笔流动性还没进入池子正在用的那个数。把四档毛额加总写成 2800，等于把还没生效的 400、以及每笔都被记了两次的边界，一起算进了当前深度。</p>
+              <p>净额在铸入时就已经写好，但铸入本身不调用 Tick.cross。区间内部那一支直接改池子 liquidity，不会再把下沿的净额加一次。若有人先按内部分支加了 1000，再把 tick 0 的净额 +1000 加一遍，A 会被记成 2000。合约没有这第二步。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. 穿过时加上净额，向左走的取反不写回</h2>
+              <p>Tick.cross 把这一档的 feeGrowthOutside 等外侧累计量用全局值减自身，然后返回存储里的 liquidityNet。它不改 liquidityNet 的符号。swap 在价格向左、也就是 zeroForOne 为真时，把这个返回值取反，取反的是当次的局部变量，随后用 LiquidityMath.addDelta 加进 state.liquidity。向右走时不取反。下一次反向穿过，读到的仍是原来的净额，再按方向决定要不要取反。把取反后的值写回 ticks(tick)，下一次穿过会多翻一次符号。</p>
+              <p>从 tick 0 向右。穿过 tick 60 时净额是 +400，不取反，池子 liquidity 从 1000 变成 1400。穿过 tick 120 时净额是 -1000，变成 400。穿过 tick 180 时净额是 -400，变成 0。四档毛额在这三次穿过里都不变，加总一直是 2800。池子正在用的数依次是 1000、1400、400、0。四个数里没有 2800。</p>
+              <p>已经到了 1400 再向左穿过 tick 60，zeroForOne 把 +400 取成 -400，池子 liquidity 回到 1000。存储里的净额仍是 +400。笔记若写「向左走过之后，tick 60 的净额变成了 -400」，下一次向右穿过会被算成再减 400，池子 liquidity 会少 800。</p>
+              <table>
+                <caption>从左向右穿过已初始化的 tick 之后，池子 liquidity</caption>
+                <thead><tr><th scope="col">刚穿过的 tick</th><th scope="col">用上的净额</th><th scope="col">穿过之后的 liquidity</th><th scope="col">四档毛额之和</th></tr></thead>
+                <tbody>
+                  <tr><td>尚未穿过</td><td>铸入时 A 已在区间内</td><td>1000</td><td>2800</td></tr>
+                  <tr><td>60</td><td>+400</td><td>1400</td><td>2800</td></tr>
+                  <tr><td>120</td><td>-1000</td><td>400</td><td>2800</td></tr>
+                  <tr><td>180</td><td>-400</td><td>0</td><td>2800</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-5">
+              <h2>5. 当前 tick 可以没有毛额，价格先动、流动性后动</h2>
+              <p>向上穿过 tick 60 之后，只要还没碰到 tick 120，池子 liquidity 保持 1400。tick 90 落在这段里。90 不是 60 的倍数，也不是任何一笔仓位的边界，ticks(90) 返回的是默认结构，毛额是 0，initialized 是 false。把这一档的毛额写成池子正在用的流动性，会得到 0。池子 liquidity() 仍是 1400。当前 tick 和某一档被初始化，是两件事。</p>
+              <p>价格可以先变，流动性稍后才变。沿用本站开方价那篇的截断，1.0001 的整数次方切到小数点后 12 位，不四舍五入。tick 0 到 tick 59 的价格比是 1.005917142554。这两档之间没有初始化的 tick，swap 不会调用 cross，池子 liquidity 仍是铸入后的 1000。tick 0 到 tick 60 的价格比是 1.006017734268，只比 59 档多出的那一档，才是净额 +400 被加进去的地方。把 1.005917142554 的价格移动写成「深度已经加上 400」，是把还没发生的穿过提前记了账。</p>
+              <p>再往外的两段价格比是：120 档为 1.012071681663，180 档为 1.018162060104。它们描述的是价格，不是流动性。穿过 tick 120 时流动性从 1400 降到 400，降的是净额的绝对值 1000，不是价格比 1.012071681663。把价格比和 liquidity 放进同一次加减，单位已经不同。</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. 先问读到的是毛额、净额，还是池子的 liquidity</h2>
+              <p>错误句式是「把所有 tick 的 liquidityGross 加起来，就是池子的深度」，以及「当前 tick 的毛额就是正在用的流动性」。更可靠的句子是「liquidity() 的当前值；每一档的 liquidityGross 和 liquidityNet；铸入时 slot0.tick 落在区间内还是区间外；下一次穿过是向左还是向右；取反有没有被写回存储」。教学档里，毛额之和是 2800，铸入之后池子正在用的是 1000，穿过 tick 60 之后是 1400，穿过 tick 120 之后是 400，穿过 tick 180 之后是 0。tick 停在 90 时毛额是 0。tick 0 到 59 的价格比是 1.005917142554，这段价格移动不改变 1000。</p>
+              <p>本文是分析框架。liquidity() 与 ticks() 的注释来自 v1.0.0 的 IUniswapV3PoolState。毛额、净额和 cross 的返回值来自同一标签的 Tick。铸入时按当前 tick 分三支、以及 zeroForOne 时对净额取反，来自同一标签的 UniswapV3Pool。单档上限 11505743598341114571880798222544994 由 Tick.tickSpacingToMaxLiquidityPerTick 对间距 60 算出。1.005917142554、1.006017734268、1.012071681663 和 1.018162060104 是 1.0001 的整数次方截断到 12 位的教学值。这些数不是 2026 年 11 月 5 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>四档 liquidityGross 加总是 2800，池子的 liquidity 是不是也是 2800？</h3>
+              <p>不是。v1.0.0 的 liquidity() 注释写明，它是当前在区间内、池子可用的流动性，和所有 tick 上的流动性总和没有关系。教学里两笔仓位在 tick 为 0 时铸入，四档毛额 1000、400、1000、400 加总 2800，池子 liquidity 是 1000。</p>
+              <h3>当前 tick 停在 90，读 ticks(90) 的毛额是不是池子正在用的流动性？</h3>
+              <p>不是。90 不是任何一笔仓位的边界，这一档没有被初始化，毛额是 0。向上穿过 tick 60 且还没穿过 tick 120 时，池子 liquidity 是 1400。</p>
+              <h3>价格从 tick 0 走到 tick 59，可用流动性会不会跟着变？</h3>
+              <p>不会。这两档之间没有初始化的 tick，穿过不会发生。价格比按 1.0001 的 59 次方截断到 12 位是 1.005917142554，池子 liquidity 仍是 1000。可用流动性要等价格从左向右穿过 tick 60，才会加上净额 400，变成 1400。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己准备少量两种代币，以便对照池子的 liquidity() 和某一档 ticks() 的毛额，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与 2800 和 1000 哪个才是正在用的流动性无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">毛额记的是引用了这一档的仓位，一笔记在两档上</a></li><li><a href="#sec-2">教学两笔，在 tick 为 0 时铸入</a></li><li><a href="#sec-3">铸入当时，只有落在区间里的那一笔进入池子</a></li><li><a href="#sec-4">穿过时加上净额，向左走的取反不写回</a></li><li><a href="#sec-5">当前 tick 可以没有毛额，价格先动、流动性后动</a></li><li><a href="#sec-6">先问读到的是毛额、净额，还是池子的 liquidity</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/interfaces/pool/IUniswapV3PoolState.sol" target="_blank" rel="noopener">Uniswap V3：liquidity() 与 ticks() 的注释</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Uniswap V3：Tick.update 的毛额、净额与 cross</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap V3：铸入分三支，向左穿过时对净额取反</a></li></ul><p class="ref-note">资料核对日期：2026年11月5日。注释、毛额、净额和穿过时的取反来自 uniswap v3-core 的 v1.0.0 标签。1000、400、2800、1400 和四段价格比是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">仓位核验：仓位上的流动性，不等于代币余额</a></li><li><a href="/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</a></li><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=24279444"></script>
+</body>
+</html>

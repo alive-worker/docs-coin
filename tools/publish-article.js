@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-tick-spacing-vs-min-tick-verification-guide',
-  publishedISO: '2026-11-04T10:28:49+08:00',
+  slug: 'uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide',
+  publishedISO: '2026-11-05T10:57:41+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "档距核验：费率 3000 的间距是 60，最外一档也不是 -887272",
-    tagLabel: "档距",
-    cardDesc: "费率 3000 在工厂合约里记下的间距是 60，不是 3000。-887272 对 60 的余数是 -52，0.3% 池最低可用 tick 是 -887220，52 档的价格比是 1.005213282127。",
+    h1: "流动性核验：四档毛额加总是 2800，池子正在用的是 1000",
+    tagLabel: "毛额",
+    cardDesc: "两笔教学流动性在 tick 0 铸入。四档 liquidityGross 加总是 2800，池子的 liquidity 是 1000。向上穿过 tick 60 之后是 1400。tick 停在 90 时，这一档毛额是 0。",
   },
   en: {
-    h1: "Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid",
-    tagLabel: "Spacing",
-    cardDesc: "Fee 3000 stores tick spacing 60, not 3000. Tick -887272 modulo 60 is -52, so the lowest usable tick on a 0.3% pool is -887220, and the 52-tick price ratio is 1.005213282127.",
+    h1: "Liquidity Check: Gross on Four Ticks Sums to 2800, and the Pool Is Using 1000",
+    tagLabel: "Gross",
+    cardDesc: "Two teaching positions are minted at tick 0. Gross on four ticks sums to 2800, and pool liquidity is 1000. After an upward cross of tick 60 it is 1400. At tick 90 that tick's gross is 0.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-tick-spacing-vs-min-tick-verification-guide',
     'uniswap-v3-twap-tick-vs-price-average-verification-guide',
     'uniswap-v3-fee-tier-vs-lp-fee-verification-guide',
     'uniswap-v3-position-liquidity-vs-token-amount-verification-guide',
