@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds - Crypto Research Notes</title>
+  <meta name="description" content="Initialization is at time 1000. After cardinalityNext is raised to 4, cardinality is still 1. Two writes land at 1100 and 1200. Looking back 201 seconds reverts OLD. Looking back 200 seconds reaches the oldest initialized observation.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,observationCardinality,TWAP,oracle,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds">
+  <meta property="og:description" content="Initialization is at time 1000. After cardinalityNext is raised to 4, cardinality is still 1. Two writes land at 1100 and 1200. Looking back 201 seconds reverts OLD. Looking back 200 seconds reaches the oldest initialized observation.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-09T09:56:02+08:00">
+  <meta property="article:modified_time" content="2026-11-09T09:56:02+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Window">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="observationCardinality">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="A ring with a gap. The solid arc marks 1000, 1100 and 1200. The gap holds timestamp 1. 200 seconds stays, and 400 seconds is crossed out.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds">
+  <meta name="twitter:description" content="Initialization is at time 1000. After cardinalityNext is raised to 4, cardinality is still 1. Two writes land at 1100 and 1200. Looking back 201 seconds reverts OLD. Looking back 200 seconds reaches the oldest initialized observation.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="A ring with a gap. The solid arc marks 1000, 1100 and 1200. The gap holds timestamp 1. 200 seconds stays, and 400 seconds is crossed out.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html",
+      "name": "Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#article",
+      "headline": "Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds",
+      "description": "Initialization is at time 1000. After cardinalityNext is raised to 4, cardinality is still 1. Two writes land at 1100 and 1200. Looking back 201 seconds reverts OLD. Looking back 200 seconds reaches the oldest initialized observation.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.png"],
+      "datePublished": "2026-11-09T09:56:02+08:00",
+      "dateModified": "2026-11-09T09:56:02+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","observationCardinality","TWAP","oracle","crypto research"],
+      "wordCount": 2482,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does cardinalityNext of 4 mean the pool can look back across four spans of history?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Growing to 4 writes blockTimestamp 1 into slots 1, 2 and 3, leaves initialized false, and leaves cardinality at 1. The first write, at time 1100, raises cardinality to 4 and fills only index 1. At time 1200 slot 3 is still timestamp 1. The left edge of a successful lookback is the oldest initialized observation, time 1000, not four spans." }
+        },
+        {
+          "@type": "Question",
+          "name": "At time 1200, why does 201 seconds revert while 200 seconds succeeds?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Looking back 200 seconds targets time 1000, the slot initialize wrote. Looking back 201 seconds targets 999, which is older than that blockTimestamp. getSurroundingObservations reverts OLD when the comparison fails. Cardinality is already 4, and that does not change the comparison." }
+        },
+        {
+          "@type": "Question",
+          "name": "If time reaches 1250 with no new write, does secondsAgo of 0 have no reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It has one. When secondsAgo is 0 and the newest observation timestamp is not the current time, observeSingle transforms that observation forward with the current tick. The cumulative goes from 20000 plus 100 times 50, which is 25000. Array length limits queries older than the oldest initialized observation, not the current time." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Window</span></p>
+          <h1>Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds</h1>
+          <p class="article-summary">A Uniswap V3 observation array keeps two lengths. cardinalityNext is the ring length paid for in advance. cardinality is the ring length used for the modulo. In this teaching pool, initialization is at time 1000, the tick is 100, liquidity is 1000000, and the tick cumulative starts at 0. After cardinalityNext is raised to 4, cardinality is still 1. Slots 1, 2 and 3 hold timestamp 1, and initialized is still false. The first write, at time 1100, raises cardinality to 4 in one step, stores a tick cumulative of 10000, and occupies only index 1. The reversing liquidity change in that same block does not store a second observation. The next write, at time 1200, stores 20000 at index 2. Slot 3 is still timestamp 1. Looking back 200 seconds targets 1000 and succeeds. Looking back 201 seconds targets 999 and reverts OLD. Looking back 400 seconds reverts as well. The numbers are a teaching series, not a pool reading from 9 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-09T09:56:02+08:00">2026-11-09 09:56:02</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide-en.svg" alt="A ring with a gap. The solid arc marks 1000, 1100 and 1200. The gap holds timestamp 1. 200 seconds stays, and 400 seconds is crossed out." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>Separate the two lengths. After cardinalityNext is raised to 4, cardinality is still 1. Slots 1, 2 and 3 hold timestamp 1, and initialized is still false.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The write at time 1100, tick 100, liquidity 1000000 before the change, raises cardinality to 4. The tick cumulative is 10000. The seconds-per-liquidity increment is 34028236692093846346337460743176821. A second liquidity change in that block leaves the index at 1.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The write at time 1200 uses index 2 and a tick cumulative of 20000. Slot 3 is still timestamp 1.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>At time 1200, 200 seconds targets 1000. 201 seconds targets 999 and reverts OLD. 400 seconds reverts as well.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. Prepaid slots and recorded history are two numbers</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Oracle.sol v1.0.0</a> stores observations in a ring. A pool starts with array length 1. Anyone can pay the storage cost to raise the maximum. New slots become part of the ring on the next write that lands when the index is at the end of the current length. Once the ring is full, a new observation overwrites the oldest slot. The newest observation can be read by itself: pass 0 as secondsAgo. That read does not require a longer array.</p>
+              <p>initialize fills only slot 0. blockTimestamp is the time passed in, tickCumulative is 0, secondsPerLiquidityCumulativeX128 is 0, and initialized is true. The returned cardinality and cardinalityNext are both 1. Initialization does not multiply the current tick into the cumulative. The tick starts accruing at that instant, and it enters the cumulative on the next transform.</p>
+              <p>grow requires current to be greater than 0, or it reverts with I. If next is not greater than current, it returns current unchanged, so asking to shrink a ring from 4 back to 1 does not shorten it. When next is larger, the function writes slots from current through next minus 1 and sets only blockTimestamp to 1. The comment says this data will not be used, because initialized is still false. The boolean defaults to false, and grow never sets it to true.</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> keeps three values in slot0. observationIndex is the index of the most recently written observation. The comment on observationCardinality calls it the current maximum number of observations being stored. The comment on observationCardinalityNext calls it the next maximum, triggered inside observations.write. increaseObservationCardinalityNext calls grow and stores the return value in next. It does not call write, and it does not change the index. After next is raised to 4, a reader can observe next equal to 4 and cardinality still equal to 1. Treating those two fields as one history length stretches the window.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. From time 1000 to 1200, three of the four slots are observations</h2>
+              <p>The teaching pool is initialized at time 1000. The current tick is 100 and liquidity is 1000000. Slot 0 has timestamp 1000 and a tick cumulative of 0. Next is then raised to 4. Cardinality stays 1. Slots 1, 2 and 3 have timestamp 1, a cumulative of 0, and initialized false. Timestamp 1 does not mean the pool had a price at time 1. It is the placeholder grow writes so the cold storage is paid up front.</p>
+              <p>At time 1100 a position change on ticks 60 and 180 triggers a write. Tick 100 lies inside that range, so _modifyPosition writes an observation before it changes liquidity, using the tick and the liquidity from before the change. write sees that the previous timestamp is 1000, not 1100, and continues. next is greater than cardinality, and the index equals cardinality minus 1. Cardinality therefore becomes 4 in one step, not 2. The new index is (0 + 1) modulo 4, which is 1.</p>
+              <p>The transform delta is 100. The tick cumulative is 0 plus 100 times 100, which is 10000. The seconds-per-liquidity increment is (100 shifted left by 128) divided by 1000000, rounded down, which is 34028236692093846346337460743176821. The remainder 145600 is dropped. The whole 100 seconds is charged at tick 100. The write records the tick from before the liquidity change, not a tick the position change was meant to reach. A mint or a burn does not move the current tick.</p>
+              <p>In the same block the liquidity just added is removed. The second write sees a previous timestamp of 1100 and returns the old index and cardinality at the top of the function. Liquidity can return to 1000000. The array does not gain a second observation with timestamp 1100. History is at most one observation per block, and only when execution actually enters write. A swap writes only when the tick after the swap differs from the tick before it, and the value it writes is still the pre-swap tick. A swap that never crosses a tick does not add an observation just because a trade occurred.</p>
+              <table>
+                <caption>The four slots at time 1200, when the index is 2</caption>
+                <thead><tr><th scope="col">index</th><th scope="col">blockTimestamp</th><th scope="col">tickCumulative</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>1000</td><td>0</td><td>true</td></tr>
+                  <tr><td>1</td><td>1100</td><td>10000</td><td>true</td></tr>
+                  <tr><td>2</td><td>1200</td><td>20000</td><td>true</td></tr>
+                  <tr><td>3</td><td>1</td><td>0</td><td>false</td></tr>
+                </tbody>
+              </table>
+              <p>At time 1200, with liquidity back at 1000000 and the tick still 100, another write runs. The index is 1 and cardinality is already 4, so the index is not 3 and the ring length stays put. The new index is 2. The delta is again 100. The tick cumulative is 10000 plus 10000, which is 20000. Seconds per liquidity increases by the same 34028236692093846346337460743176821. The two steps sum to 68056473384187692692674921486353642. That equals the single floor of a 200-second division, because twice the one-step remainder 145600 is still below 1000000. If a remainder were at least 500000, two separate floors would be 1 short of the combined floor. Equality here is a property of this denominator, not a reason to ignore the floor.</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. 200 seconds lands on 1000. 201 seconds reverts OLD</h2>
+              <p>observe requires cardinality to be greater than 0, or it reverts with I. When secondsAgo is 0 and the newest timestamp is not the current time, the function transforms that slot forward with the current tick and the current liquidity. That is an extrapolation to the present. It does not consume a new slot, and it does not read next.</p>
+              <p>When secondsAgo is greater than 0, the target is the current time minus the seconds. getSurroundingObservations looks at the newest slot first. If the target is not older than that timestamp, the function either returns the slot, when the target equals it, or transforms forward to the target. A successful extrapolation does not mean a stored observation exists at that exact time.</p>
+              <p>If the target is older than the newest observation, the candidate for the oldest slot is self[(index + 1) modulo cardinality]. At time 1200, with index 2 and cardinality 4, that index is 3. Slot 3 is not initialized, so the code uses slot 0 instead: time 1000 and cumulative 0. It then requires the target to be no older than that timestamp, or it reverts OLD. The left edge of a lookback is the oldest initialized observation. It is not next, and it is not cardinality times an imagined block interval.</p>
+              <p>At time 1200, looking back 200 seconds targets 1000, the oldest observation, and the call can succeed. Looking back 201 seconds targets 999, which is older than 1000, and the call reverts OLD. Looking back 400 seconds targets 800 and reverts the same way. Cardinality is already 4. The timestamp 1 in slot 3 is not used as a price from time 1 to fill those 400 seconds. An uninitialized slot only sends the search back to slot 0. It does not extend the window.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. Until the ring is full, the left edge stays at initialization</h2>
+              <p>At time 1200 the newest index is 2. The next write in a different block lands on index 3. The ring length stays 4, and that slot becomes initialized for the first time. The write after that returns to index 0 and overwrites the observation from time 1000. If those writes fall at 1300 and 1400, and the tick is still 100, the cumulative at 1300 is 30000 and the cumulative at 1400 is 40000, stored at index 0. The newest index is then 0. (0 + 1) modulo 4 is 1. Slot 1 is initialized and its timestamp is 1100, so the code no longer falls back to slot 0. The oldest usable time moves from 1000 to 1100. At time 1400, 300 seconds targets 1100 and can succeed. 301 seconds targets 1099 and reverts OLD.</p>
+              <p>Raising next to 4 buys a slower overwrite of those four slots. It does not immediately create four spans of history. Before the ring is full, the left edge stays at the initialization time 1000, and the usable lookback is now minus 1000. After slot 0 is overwritten, the left edge jumps to whichever initialized slot is oldest on the ring. The seconds between slots come from the blocks that actually wrote. A second call in the same block does not insert a slot. A swap that does not change the tick does not insert one either. The contract does not promise a 100-second gap. Multiplying cardinality by an imagined interval turns a storage cap into a duration.</p>
+              <p>After slot 0 is overwritten, timestamp 1 remains only on a slot write has not visited yet. At time 1200 that slot is index 3. Once index 3 has been written, all four slots are initialized and the search no longer falls back because of a false flag. From then on, the left edge is always the slot at (index + 1) modulo cardinality, until someone raises next again and a write at the end of the ring lifts cardinality once more.</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. At time 1250, with no new write, the current reading still exists</h2>
+              <p>Time moves to 1250 and no new write occurs. The newest observation is still index 2, timestamp 1200, tick cumulative 20000. With secondsAgo equal to 0, the transform delta is 50. The tick cumulative is 20000 plus 100 times 50, which is 25000. If current liquidity is still 1000000, seconds per liquidity increases by (50 shifted left by 128) divided by 1000000, rounded down, which is 17014118346046923173168730371588410. Cardinality is unchanged, and the reading exists. Array length blocks queries older than the oldest initialized observation. It does not require a fresh stored slot before the present can be read.</p>
+              <p>Looking back 150 seconds at that same moment targets 1100, which is index 1 and a tick cumulative of 10000. The difference divided by the seconds is (25000 − 10000) / 150 = 100. The quotient is a tick, not a price. Converting 100 and another endpoint tick into powers of 1.0001, then taking an arithmetic mean, produces a different number. That gap is the subject of <a href="/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</a>. This note fixes whether the window exists. If the target were 999, the call would revert OLD before the division. It would not pad the missing history with 0 and return an average that looks complete.</p>
+              <p>When the target falls between two observations, observeSingle divides the cumulative gap by the time gap with integer division, then multiplies by the seconds from the left observation to the target. In this teaching the tick stays at 100, so the cumulative gap divides evenly and the interpolation has no remainder. When a remainder is dropped, the interpolated cumulative is smaller than the real-number proportion. That is rounding. The window does not get longer because of it. Extrapolation uses the current tick passed into the call, not the path the tick actually took between the stored points. A tick that came and went without an observation is not reconstructed.</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. Read three fields, then the timestamp of the oldest slot</h2>
+              <p>Reading only observationCardinalityNext treats reserved length as seconds of history. Read cardinality and observationIndex as well, then the newest observation and the slot at (index + 1) modulo cardinality. If that slot is not initialized, the oldest usable time is slot 0, and only while the ring has not yet overwritten slot 0. If that slot is initialized, its own blockTimestamp is the left edge. Now minus that timestamp is the longest lookback that does not trigger OLD. One second further, and the target falls before the left edge.</p>
+              <p>This is a different set of fields from <a href="/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">Feed Check: Time Inside the Heartbeat Is Not a Slice of the Deviation</a>. A heartbeat and a deviation threshold describe how soon another kind of feed must update, and how far the price must move before it must update. The Uniswap array stores neither a heartbeat nor a deviation threshold. It stores a cumulative at each real write. Between writes, the tick is treated as a constant multiplied by the time delta. Seconds without a write do not grow a new observation just because next is already 4.</p>
+              <p>This is an analytical frame. Ring initialization, grow writing only timestamp 1, the same-block early return in write, cardinality jumping to next at the end of the ring, and the OLD revert when the target is older than the oldest initialized observation come from Oracle.sol v1.0.0. The three slot0 fields, increaseObservationCardinalityNext calling only grow, the in-range position write using the pre-change tick and liquidity, and the swap write using the pre-swap tick only when the tick changes come from UniswapV3Pool.sol v1.0.0. 10000, 20000, 25000, 34028236692093846346337460743176821 and 68056473384187692692674921486353642 are teaching results of those integer operations, not a pool reading from 9 November 2026, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>7. Misreadings that keep coming back</h2>
+              <h3>Does cardinalityNext of 4 mean the pool can look back across four spans of history?</h3>
+              <p>No. Growing to 4 writes blockTimestamp 1 into slots 1, 2 and 3, leaves initialized false, and leaves cardinality at 1. The first write, at time 1100, raises cardinality to 4 and fills only index 1. At time 1200 slot 3 is still timestamp 1. The left edge of a successful lookback is the oldest initialized observation, time 1000, not four spans.</p>
+              <h3>At time 1200, why does 201 seconds revert while 200 seconds succeeds?</h3>
+              <p>Looking back 200 seconds targets time 1000, the slot initialize wrote. Looking back 201 seconds targets 999, which is older than that blockTimestamp. getSurroundingObservations reverts OLD when the comparison fails. Cardinality is already 4, and that does not change the comparison.</p>
+              <h3>If time reaches 1250 with no new write, does secondsAgo of 0 have no reading?</h3>
+              <p>It has one. When secondsAgo is 0 and the newest observation timestamp is not the current time, observeSingle transforms that observation forward with the current tick. The cumulative goes from 20000 plus 100 times 50, which is 25000. Array length limits queries older than the oldest initialized observation, not the current time.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to read a pool's slot0 and compare observationCardinality with observationCardinalityNext, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether a 201-second lookback reverts OLD, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">Prepaid slots and recorded history are two numbers</a></li><li><a href="#sec-2">From time 1000 to 1200, three of the four slots are observations</a></li><li><a href="#sec-3">200 seconds lands on 1000. 201 seconds reverts OLD</a></li><li><a href="#sec-4">Until the ring is full, the left edge stays at initialization</a></li><li><a href="#sec-5">At time 1250, with no new write, the current reading still exists</a></li><li><a href="#sec-6">Read three fields, then the timestamp of the oldest slot</a></li><li><a href="#faq">Misreadings that keep coming back</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Uniswap v3: grow, write, and the OLD revert</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: the two lengths in slot0, and when an observation is written</a></li></ul><p class="ref-note">Sources checked on 9 November 2026. Ring length, the placeholder timestamp and OLD come from Oracle.sol v1.0.0. The slot0 fields, the grow entry point, and the tick written by a position change or a swap come from UniswapV3Pool.sol v1.0.0. 10000, 20000, 25000 and the two seconds-per-liquidity integers are a teaching conversion, not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">TWAP Check: The Time-Weighted Tick Is Not the Average of the Prices</a></li><li><a href="/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">Feed Check: Time Inside the Heartbeat Is Not a Slice of the Deviation</a></li><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">deskbyai</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=123c98b4"></script>
+</body>
+</html>

@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-fee-growth-vs-tokens-owed-verification-guide',
-  publishedISO: '2026-11-06T09:36:16+08:00',
+  slug: 'uniswap-v3-oracle-cardinality-vs-lookback-verification-guide',
+  publishedISO: '2026-11-09T09:56:02+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0",
-    tagLabel: "应收",
-    cardDesc: "教学里写入 feeGrowth 的是 3000，池子流动性是 1000000。poke 之前两笔 tokensOwed 都是 0。poke 之后是 749 和 2249，加总 2998。",
+    h1: "预言机核验：数组长度写成 4，能回看的仍是 200 秒",
+    tagLabel: "窗口",
+    cardDesc: "初始化在时间 1000，cardinalityNext 调到 4 之后 cardinality 仍是 1。两次写入落在 1100 和 1200。回看 201 秒会 OLD，回看 200 秒才落到最早的初始化观察。",
   },
   en: {
-    h1: "Fee Check: Growth Records 3000, and tokensOwed Is Still 0 Before the Poke",
-    tagLabel: "Owed",
-    cardDesc: "The teaching fee written into fee growth is 3000, on pool liquidity 1000000. Before the poke both tokensOwed values are 0. After it they are 749 and 2249, which sum to 2998.",
+    h1: "Oracle Check: Cardinality 4 Still Looks Back Only 200 Seconds",
+    tagLabel: "Window",
+    cardDesc: "Initialization is at time 1000. After cardinalityNext is raised to 4, cardinality is still 1. Two writes land at 1100 and 1200. Looking back 201 seconds reverts OLD. Looking back 200 seconds reaches the oldest initialized observation.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-fee-growth-vs-tokens-owed-verification-guide',
     'uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide',
     'uniswap-v3-tick-spacing-vs-min-tick-verification-guide',
     'uniswap-v3-twap-tick-vs-price-average-verification-guide',

@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html': '2026-11-09 09:56:02',
+    '/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html': '2026-11-09 09:56:02',
     '/en/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html': '2026-11-06 09:36:16',
     '/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html': '2026-11-06 09:36:16',
     '/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html': '2026-11-05 10:57:41',

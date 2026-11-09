@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预言机核验：数组长度写成 4，能回看的仍是 200 秒 - 加密货币研究</title>
+  <meta name="description" content="初始化在时间 1000，cardinalityNext 调到 4 之后 cardinality 仍是 1。两次写入落在 1100 和 1200。回看 201 秒会 OLD，回看 200 秒才落到最早的初始化观察。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,observationCardinality,TWAP,预言机,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="预言机核验：数组长度写成 4，能回看的仍是 200 秒">
+  <meta property="og:description" content="初始化在时间 1000，cardinalityNext 调到 4 之后 cardinality 仍是 1。两次写入落在 1100 和 1200。回看 201 秒会 OLD，回看 200 秒才落到最早的初始化观察。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-09T09:56:02+08:00">
+  <meta property="article:modified_time" content="2026-11-09T09:56:02+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="窗口">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="observationCardinality">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="一条留着缺口的环。实线上是 1000、1100、1200。缺口里是时间戳 1。200 秒保留，400 秒被划掉。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="预言机核验：数组长度写成 4，能回看的仍是 200 秒">
+  <meta name="twitter:description" content="初始化在时间 1000，cardinalityNext 调到 4 之后 cardinality 仍是 1。两次写入落在 1100 和 1200。回看 201 秒会 OLD，回看 200 秒才落到最早的初始化观察。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.png">
+  <meta name="twitter:image:alt" content="一条留着缺口的环。实线上是 1000、1100、1200。缺口里是时间戳 1。200 秒保留，400 秒被划掉。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html",
+      "name": "预言机核验：数组长度写成 4，能回看的仍是 200 秒",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "预言机核验：数组长度写成 4，能回看的仍是 200 秒", "item": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#article",
+      "headline": "预言机核验：数组长度写成 4，能回看的仍是 200 秒",
+      "description": "初始化在时间 1000，cardinalityNext 调到 4 之后 cardinality 仍是 1。两次写入落在 1100 和 1200。回看 201 秒会 OLD，回看 200 秒才落到最早的初始化观察。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.png"],
+      "datePublished": "2026-11-09T09:56:02+08:00",
+      "dateModified": "2026-11-09T09:56:02+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","observationCardinality","TWAP","预言机","加密货币研究"],
+      "wordCount": 5875,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "cardinalityNext 写成 4，是不是就能回看 4 段历史？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不能。grow 到 4 只把第 1、2、3 格的 blockTimestamp 写成 1，initialized 仍是 false，cardinality 仍是 1。时间 1100 的第一次写入才把 cardinality 抬到 4，而且只填了 index 1。时间 1200 时第 3 格仍是时间戳 1。能回看的左端是最早的初始化观察，时间 1000，不是 4 段。" }
+        },
+        {
+          "@type": "Question",
+          "name": "在时间 1200 回看 201 秒为什么回退，200 秒却可以？",
+          "acceptedAnswer": { "@type": "Answer", "text": "回看 200 秒的目标时间是 1000，等于 initialize 写下的那一格。回看 201 秒的目标是 999，早于这格的 blockTimestamp。getSurroundingObservations 在比较失败时回退 OLD。cardinality 已经是 4，也不改变这个比较。" }
+        },
+        {
+          "@type": "Question",
+          "name": "时间到了 1250，期间没有新的写入，secondsAgo 为 0 是不是就没有读数？",
+          "acceptedAnswer": { "@type": "Answer", "text": "有。secondsAgo 为 0 时，若最新观察的时间戳不是当前时间，observeSingle 会用当前 tick 把最新观察外推到现在。累计从 20000 加上 100 乘 50，等于 25000。数组长度限制的是早于最早初始化观察的查询，不是当前时间。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">窗口</span></p>
+          <h1>预言机核验：数组长度写成 4，能回看的仍是 200 秒</h1>
+          <p class="article-summary">Uniswap V3 的观察数组有两个长度。cardinalityNext 是预付存储之后允许用到的环长，cardinality 是取模时正在使用的环长。教学里，池子在时间 1000 初始化，tick 是 100，流动性是 1000000，tick 累计从 0 起。把 cardinalityNext 调到 4 之后，cardinality 仍是 1，第 1、2、3 格的时间戳是 1，initialized 仍是 false。时间 1100 的第一次写入把 cardinality 一次抬到 4，tick 累计写成 10000，只占用 index 1。同一区块里紧接着的反向操作不再写第二条。时间 1200 的下一次写入把累计写成 20000，index 是 2，第 3 格仍是时间戳 1。此刻回看 200 秒，目标时间是 1000，可以读到。回看 201 秒，目标是 999，回退 OLD。回看 400 秒同样回退。数字是教学值，不是 2026 年 11 月 9 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-09T09:56:02+08:00">2026-11-09 09:56:02</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-oracle-cardinality-vs-lookback-verification-guide.svg" alt="一条留着缺口的环。实线上是 1000、1100、1200。缺口里是时间戳 1。200 秒保留，400 秒被划掉。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>先分清两个长度。cardinalityNext 调到 4 之后，cardinality 仍是 1。第 1、2、3 格的时间戳是 1，initialized 仍是 false。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>时间 1100、tick 100、写入前流动性 1000000 的那次写入，把 cardinality 一次抬到 4，tick 累计是 10000，秒数除流动性的增量是 34028236692093846346337460743176821。同一区块再改一次流动性，index 仍是 1。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>时间 1200 再写一次，index 是 2，tick 累计是 20000。第 3 格仍是时间戳 1。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>在时间 1200 回看 200 秒，目标是 1000。回看 201 秒，目标是 999，回退 OLD。回看 400 秒同样回退。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 预付的格子和已经记下的历史是两个数</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Oracle.sol v1.0.0</a> 的文件头把观察写成一个环。池子初始化时数组长度是 1。任何人可以付存储成本把最大长度加大。新格子要等数组写到当前长度的末尾，才在下一次 write 里启用。写满之后，新观察覆盖最旧的一格。最近一条观察可以单独读到，传给 observe 的 secondsAgo 为 0 即可，不必先把数组加长。</p>
+              <p>initialize 只填第 0 格：blockTimestamp 是传入的时间，tickCumulative 是 0，secondsPerLiquidityCumulativeX128 是 0，initialized 是 true。返回的 cardinality 和 cardinalityNext 都是 1。初始化不把当时的 tick 乘进累计。tick 从这一刻才开始计时，要等下一次 transform 才进入累计。</p>
+              <p>grow 的要求是 current 大于 0，否则回退 I。next 不大于 current 时原样返回，所以把长度从 4 再调回 1 不会缩短环。next 更大时，它从 current 写到 next 的前一格，只把 blockTimestamp 设成 1。注释写明这些数据不会被使用，因为 initialized 仍是 false。结构体的布尔默认值就是 false，grow 没有把它改成 true。</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool v1.0.0</a> 的 slot0 把三件东西分开存。observationIndex 是最近写入的下标。observationCardinality 的注释是当前正在存储的观察条数上限。observationCardinalityNext 的注释是下一次由 observations.write 触发的上限。increaseObservationCardinalityNext 只调用 grow，再把返回值写进 next。它不调用 write，也不改 index。所以「把 next 调到 4」之后，链上可以同时读到 next 等于 4、cardinality 仍等于 1。把这两个字段读成同一个历史长度，窗口就会被放大。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 时间 1000 到 1200，四格里只有三格是观察</h2>
+              <p>教学池在时间 1000 初始化。当前 tick 是 100，流动性是 1000000。预言机第 0 格的时间戳是 1000，tick 累计是 0。随后把 next 调到 4。cardinality 仍是 1。第 1、2、3 格的时间戳是 1，累计是 0，initialized 是 false。时间戳 1 不是「池子在时刻 1 有过价格」。它是 grow 留下的占位，用来把冷存储的开销提前付掉。</p>
+              <p>时间 1100，一笔边界为 tick 60 和 180 的仓位变化触发写入。当前 tick 100 落在这个区间里，_modifyPosition 会先写观察，用的是改流动性之前的 tick 和 liquidity。write 发现上一格的时间戳是 1000，不等于 1100，于是继续。next 大于 cardinality，而且 index 正好等于 cardinality 减 1。cardinality 因此一次变成 4，不是变成 2。新下标是 (0 + 1) 对 4 取模，等于 1。</p>
+              <p>transform 的时间差是 100。tick 累计等于 0 加 100 乘 100，等于 10000。秒数除流动性的增量等于 (100 左移 128) 除以 1000000 的向下取整，等于 34028236692093846346337460743176821。除法余数是 145600，被丢掉。这次写入把 100 秒全部记在 tick 100 上。它记录的是写入当时、改流动性之前的 tick，不是这笔仓位变化「希望价格去到」的 tick。mint 和 burn 本身不移动当前 tick。</p>
+              <p>同一区块里把刚加上的流动性再撤掉。第二次 write 读到的上一格时间戳已经是 1100，函数在开头返回原来的 index 和 cardinality。流动性可以回到 1000000，观察数组不增加第二条时间戳同为 1100 的记录。历史的密度是每个区块至多一条，而且要真的走进 write。swap 只有在成交后的 tick 和成交前不同时才写，写入的仍是成交前的 tick。一笔没有跨 tick 的兑换，不会因为「有成交」就多一条观察。</p>
+              <table>
+                <caption>时间 1200、index 为 2 时，四格各自的内容</caption>
+                <thead><tr><th scope="col">index</th><th scope="col">blockTimestamp</th><th scope="col">tickCumulative</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>1000</td><td>0</td><td>true</td></tr>
+                  <tr><td>1</td><td>1100</td><td>10000</td><td>true</td></tr>
+                  <tr><td>2</td><td>1200</td><td>20000</td><td>true</td></tr>
+                  <tr><td>3</td><td>1</td><td>0</td><td>false</td></tr>
+                </tbody>
+              </table>
+              <p>时间 1200，同样在流动性回到 1000000、tick 仍是 100 时再写一次。此时 index 是 1，cardinality 已经是 4，index 不等于 3，所以环长不再变。新下标是 2。时间差仍是 100，tick 累计等于 10000 加 10000，等于 20000。秒数除流动性再增加同一个 34028236692093846346337460743176821。两步相加是 68056473384187692692674921486353642。这个数刚好等于把 200 秒一次性做同一次除法的向下取整，因为单步余数 145600 的两倍仍小于 1000000。余数只要不小于 500000，两步分别取整就会比合并取整少 1。相等是这组分母的结果，不是「取整可以忽略」。</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. 回看 200 秒落到 1000，201 秒回退 OLD</h2>
+              <p>observe 先要求 cardinality 大于 0，否则回退 I。secondsAgo 为 0 时，若最新一格的时间戳不是当前时间，就用当前 tick 和当前流动性把那一格 transform 到现在。这是往当前时间外推，不消耗新格子，也不读取 next。</p>
+              <p>secondsAgo 大于 0 时，目标时间等于当前时间减去秒数。getSurroundingObservations 先看最新一格。目标不早于最新时间戳时，要么目标刚好等于它，直接返回；要么用 transform 外推到目标。外推成功，不表示数组里真有一条那个时刻的存储。</p>
+              <p>目标早于最新观察时，候选的最早一格是 self[(index + 1) 对 cardinality 取模]。时间 1200、index 2、cardinality 4，这个下标是 3。第 3 格没有 initialized，代码改用第 0 格，也就是时间 1000、累计 0。然后要求目标时间不早于这格的时间戳，否则回退 OLD。回看的左端因此是最早一条已经初始化的观察，不是 next，也不是「4 乘平均出块时间」。</p>
+              <p>在时间 1200，回看 200 秒，目标是 1000，等于这条最早的观察，调用可以通过。回看 201 秒，目标是 999，早于 1000，回退 OLD。回看 400 秒，目标是 800，同样回退。cardinality 已经是 4，第 3 格的时间戳 1 也不会被当成时刻 1 的价格去填这 400 秒。未初始化的格子只让搜索退回第 0 格；它不延长窗口。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. 环写满之前，左端一直停在初始化</h2>
+              <p>时间 1200 的最新下标是 2。下一个不同区块的写入落到 index 3，环长仍是 4，这一格才第一次变成 initialized。再下一个不同区块写回 index 0，时间 1000 的那条被覆盖。若这两次落在 1300 和 1400，而且 tick 仍是 100，则 1300 的累计是 30000，1400 的累计是 40000，写在 index 0 上。此刻最新下标是 0，(0 + 1) 对 4 取模等于 1，第 1 格已经初始化，时间戳是 1100。代码不再退回第 0 格。最早可用时间从 1000 变成 1100。在 1400 回看，300 秒的目标是 1100，可以通过；301 秒的目标是 1099，回退 OLD。</p>
+              <p>所以把 next 调到 4，买到的是这四格被覆盖的速度，不是立刻拥有 4 段历史。环还没写满时，左端停在初始化时间 1000，可回看的长度等于「现在减 1000」。写满并覆盖第 0 格之后，左端跳到当时环上最旧的那一条。格子之间的秒数来自真实发生写入的区块间隔。同一区块的第二笔不会补一条，没有跨 tick 的 swap 也不会补一条。合约不保证每格相隔 100 秒。用 cardinality 乘一个想象的间隔去估窗口，把存储上限换成了时间。</p>
+              <p>第 0 格被覆盖之后，再读到时间戳 1 的可能性只剩「这格还没被 write 走过」。本教学在 1200 时第 3 格就是这种状态。一旦 index 3 被写过，四格全部 initialized，搜索不会再因为 false 退回某一格。此后窗口的左端永远是 (index + 1) 对 cardinality 取模的那一格，直到有人把 next 再调大，并在 index 走到环尾时把 cardinality 再次抬高。</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. 时间 1250 没有新写入，当前读数仍然存在</h2>
+              <p>时间走到 1250，期间没有新的 write。最新观察仍是 index 2，时间戳 1200，tick 累计 20000。secondsAgo 为 0 时，transform 的时间差是 50。tick 累计等于 20000 加 100 乘 50，等于 25000。当前流动性仍是 1000000 时，秒数除流动性再增加 (50 左移 128) 除以 1000000 的向下取整，等于 17014118346046923173168730371588410。cardinality 没有变，读数也存在。数组长度卡住的是早于最早初始化观察的查询，不是「现在必须先有一条新存储」。</p>
+              <p>同一时刻回看 150 秒，目标是 1100，正好是 index 1，tick 累计 10000。两端相减再除以秒数：(25000 − 10000) / 150 = 100。商是 tick，不是价格。把 100 和另一个端点的 tick 各自换成 1.0001 的幂再做算术平均，会得到另一个数。那一步的差别在<a href="/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">时间加权核验：链上的平均 tick，不等于两端价格的平均数</a>。本篇把窗口是否存在先钉住。目标若是 999，调用在做除法之前就回退 OLD，不会用 0 填充一段不存在的历史，再给出一个看起来完整的平均数。</p>
+              <p>目标落在两格之间时，observeSingle 先把累计差除以两格的时间差，整数除法，再乘目标离左格的秒数。本教学的 tick 恒为 100，累计差能被时间差整除，插值没有余数。余数被丢掉时，插出来的累计小于按实数比例应有的值。那是取整，窗口并没有因此变长。外推使用的 tick 是调用当时传入的当前 tick，不是两格之间每一秒的真实路径。中间若有过别的 tick、却没有留下观察，这段外推和插值都不会把它补回来。</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. 读的时候对三个字段，再对最早一格的时间戳</h2>
+              <p>只读 observationCardinalityNext，会把预留长度当成可回看的秒数。要同时读 cardinality 和 observationIndex，再读 observations 里最新一格，以及 (index + 1) 对 cardinality 取模的那一格。那一格若未初始化，最早的可用时间在第 0 格，而且只在环还没把第 0 格覆盖掉的时候成立。那一格若已初始化，它自己的 blockTimestamp 就是左端。用现在的时间减去这个时间戳，得到的才是不会触发 OLD 的最长回看。再减 1 秒，目标就落到左端之前。</p>
+              <p>这和<a href="/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">喂价核验：心跳走了多久，不等于价格偏了多少</a>不是同一套字段。心跳和偏离阈值描述的是另一类喂价多久必须更新、价格偏了多少必须更新。Uniswap 这张表不存心跳，也不存偏离阈值。它存的是每次真正写入时的累计。两次写入之间，tick 被当成常数乘上时间差。没有写入的那几秒，不会因为 next 已经是 4 就自动出现一条新观察。</p>
+              <p>本文是分析框架。环的初始化、grow 只写时间戳 1、write 在同一区块提前返回、cardinality 在环尾一次抬到 next，以及目标早于最早初始化观察时回退 OLD，来自 Oracle.sol v1.0.0。slot0 的三个字段、increaseObservationCardinalityNext 只调用 grow、区间内改仓位时用改动前的 tick 和流动性写观察、swap 仅在 tick 变化时用成交前的 tick 写观察，来自 UniswapV3Pool.sol v1.0.0。10000、20000、25000、34028236692093846346337460743176821 和 68056473384187692692674921486353642 是这些整数运算的教学结果，不是 2026 年 11 月 9 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>cardinalityNext 写成 4，是不是就能回看 4 段历史？</h3>
+              <p>不能。grow 到 4 只把第 1、2、3 格的 blockTimestamp 写成 1，initialized 仍是 false，cardinality 仍是 1。时间 1100 的第一次写入才把 cardinality 抬到 4，而且只填了 index 1。时间 1200 时第 3 格仍是时间戳 1。能回看的左端是最早的初始化观察，时间 1000，不是 4 段。</p>
+              <h3>在时间 1200 回看 201 秒为什么回退，200 秒却可以？</h3>
+              <p>回看 200 秒的目标时间是 1000，等于 initialize 写下的那一格。回看 201 秒的目标是 999，早于这格的 blockTimestamp。getSurroundingObservations 在比较失败时回退 OLD。cardinality 已经是 4，也不改变这个比较。</p>
+              <h3>时间到了 1250，期间没有新的写入，secondsAgo 为 0 是不是就没有读数？</h3>
+              <p>有。secondsAgo 为 0 时，若最新观察的时间戳不是当前时间，observeSingle 会用当前 tick 把最新观察外推到现在。累计从 20000 加上 100 乘 50，等于 25000。数组长度限制的是早于最早初始化观察的查询，不是当前时间。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己读一个池子的 slot0，对照 observationCardinality 和 observationCardinalityNext，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与回看 201 秒会不会回退 OLD 无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">预付的格子和已经记下的历史是两个数</a></li><li><a href="#sec-2">时间 1000 到 1200，四格里只有三格是观察</a></li><li><a href="#sec-3">回看 200 秒落到 1000，201 秒回退 OLD</a></li><li><a href="#sec-4">环写满之前，左端一直停在初始化</a></li><li><a href="#sec-5">时间 1250 没有新写入，当前读数仍然存在</a></li><li><a href="#sec-6">读的时候对三个字段，再对最早一格的时间戳</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Oracle.sol" target="_blank" rel="noopener">Uniswap v3：grow、write 与回看时的 OLD</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3：slot0 的两个长度，以及何时写观察</a></li></ul><p class="ref-note">资料核对日期：2026年11月9日。环长、占位时间戳和 OLD 来自 Oracle.sol v1.0.0。slot0 字段、grow 的入口，以及改仓位和 swap 各自写入的 tick，来自 UniswapV3Pool.sol v1.0.0。10000、20000、25000 和两组秒数除流动性的整数是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-twap-tick-vs-price-average-verification-guide.html">时间加权核验：链上的平均 tick，不等于两端价格的平均数</a></li><li><a href="/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">喂价核验：心跳走了多久，不等于价格偏了多少</a></li><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=123c98b4"></script>
+</body>
+</html>
