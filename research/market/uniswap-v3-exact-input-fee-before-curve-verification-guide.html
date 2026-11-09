@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>兑换核验：输入 997，曲线吃进 994，手续费是 3 - 加密货币研究</title>
+  <meta name="description" content="费率 3000、精确输入 997、价格上限是 2^97+1 时，曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整会得到 2。输入 100301 打到上限时，曲线吃进 100000，手续费是 301。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,SwapMath,手续费,精确输入,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="兑换核验：输入 997，曲线吃进 994，手续费是 3">
+  <meta property="og:description" content="费率 3000、精确输入 997、价格上限是 2^97+1 时，曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整会得到 2。输入 100301 打到上限时，曲线吃进 100000，手续费是 301。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-09T15:16:33+08:00">
+  <meta property="article:modified_time" content="2026-11-09T15:16:33+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="先扣">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="SwapMath">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="一小截标着 3，和下面高得多的 994 中间留空。旁边的 2 被划掉。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="兑换核验：输入 997，曲线吃进 994，手续费是 3">
+  <meta name="twitter:description" content="费率 3000、精确输入 997、价格上限是 2^97+1 时，曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整会得到 2。输入 100301 打到上限时，曲线吃进 100000，手续费是 301。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.png">
+  <meta name="twitter:image:alt" content="一小截标着 3，和下面高得多的 994 中间留空。旁边的 2 被划掉。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html",
+      "name": "兑换核验：输入 997，曲线吃进 994，手续费是 3",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "兑换核验：输入 997，曲线吃进 994，手续费是 3", "item": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#article",
+      "headline": "兑换核验：输入 997，曲线吃进 994，手续费是 3",
+      "description": "费率 3000、精确输入 997、价格上限是 2^97+1 时，曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整会得到 2。输入 100301 打到上限时，曲线吃进 100000，手续费是 301。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.png"],
+      "datePublished": "2026-11-09T15:16:33+08:00",
+      "dateModified": "2026-11-09T15:16:33+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","SwapMath","手续费","精确输入","加密货币研究"],
+      "wordCount": 4930,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "输入 997、费率 3000，手续费是不是 2？",
+          "acceptedAnswer": { "@type": "Answer", "text": "这一步没打到价格上限时，先用 997 乘 997000 再除以 1000000 向下取整，得到 994。教学池的流动性也是 994，曲线把这 994 全部吃进。手续费是 997 减 994，等于 3。用 997 乘 3000 再除以 1000000 向下取整，得到的是 2。" }
+        },
+        {
+          "@type": "Question",
+          "name": "输入 100，向下取整得到 0，是不是就没有手续费？",
+          "acceptedAnswer": { "@type": "Answer", "text": "没有打到价格上限时，曲线吃进 99，手续费是 1。输入 1 时，送给价格函数的数量是 0，价格不动，曲线吃进 0，手续费仍是 1。两次用输入乘 3000 再除以 1000000 向下取整，结果都是 0。" }
+        },
+        {
+          "@type": "Question",
+          "name": "输入 100301 打到价格上限，手续费是不是 300？",
+          "acceptedAnswer": { "@type": "Answer", "text": "打到上限之后，手续费用曲线吃进的 100000 乘 3000，再除以 997000，有余数就进一。100000 乘 3000 是 300000000，商是 300，余数是 900000，所以手续费是 301。用 100301 乘 3000 再除以 1000000 向下取整，得到的是 300。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">先扣</span></p>
+          <h1>兑换核验：输入 997，曲线吃进 994，手续费是 3</h1>
+          <p class="article-summary">精确输入先扣手续费，曲线只看见扣完之后的数。费率 3000 时，分母 1000000 里留给曲线的是 997000。教学里，当前平方根价格是 2^96，方向是向池子支付 token1。精确输入 997、流动性 994、价格上限是 2^97 加 1 时，这一步打不到上限。曲线吃进 994，手续费是 3。用 997 乘 3000 再除以 1000000 向下取整，得到的是 2。精确输入 100 时曲线吃进 99，手续费是 1，同一种向下取整是 0。精确输入 1000000、流动性 997000 时，两种算法都得到 3000，所以大数对上了不能证明公式相同。价格上限改成正好 2^97、精确输入 100301、流动性 100000 时，这一步打到上限，曲线吃进 100000，手续费按余数进一变成 301。数字是教学值，不是 2026 年 11 月 9 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-09T15:16:33+08:00">2026-11-09 15:16:33</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide.svg" alt="一小截标着 3，和下面高得多的 994 中间留空。旁边的 2 被划掉。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>先看这一步有没有打到价格上限。没打到时，手续费是剩余输入减去曲线实际吃进的数量，不是输入乘费率再向下取整。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>费率 3000、输入 997、流动性 994、上限是 2^97 加 1。曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整是 2。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>输入 100 时曲线吃进 99，手续费是 1。输入 1 时曲线吃进 0，手续费仍是 1。两种向下取整都是 0。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>输入 100301、流动性 100000、上限正好是 2^97。曲线吃进 100000，手续费是 301，余数是 900000。用整笔输入做向下取整会得到 300。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 曲线看见的数量，已经少掉一截手续费</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">SwapMath.sol v1.0.0</a> 的 computeSwapStep 把一步兑换拆成四个返回值：下一步的平方根价格、曲线吃进的 amountIn、曲线给出的 amountOut、以及 feeAmount。精确输入时，amountRemaining 大于等于 0。函数先算 amountRemainingLessFee，等于剩余输入乘以 1000000 减 feePips，再除以 1000000，FullMath.mulDiv 向下取整。费率 3000 时，这个系数是 997000。曲线函数收到的是这个已经向下取整的数，不是用户签名的那一笔全额。</p>
+              <p>注释写明，精确输入时手续费加上 amountIn，不会超过剩余输入。两条路径把这句话落实成不同的式子。新价格没有打到传入的价格上限时，feeAmount 等于剩余输入减去曲线实际吃进的 amountIn。打到上限，或者这笔根本不是精确输入时，feeAmount 等于 amountIn 乘 feePips，再除以 1000000 减 feePips，mulDivRoundingUp，有余数就进一。前一条把第一次除法丢掉的零头留在手续费里。后一条对着曲线已经吃进的数量向上取整，分母是 997000，不是 1000000。</p>
+              <p>所以「费率 3000 就是成交额的 0.3%，再向下取整」只在少数整除的输入上碰巧得到同一个整数。它把两条路径收成一条，还把向上取整的分母写错。本篇用 token1 换出 token0，zeroForOne 为 false，当前平方根价格是 2^96，也就是 79228162514264337593543950336。这是 tick 0 的存储价格，开方和报价的差别在<a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a>。本篇不再开方，只追手续费在进曲线之前被拿掉的那一截。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 输入 997，曲线吃进 994，手续费是 3</h2>
+              <p>教学池的流动性是 994，费率是 3000，精确输入的 token1 是 997。价格上限设成 2^97 加 1，也就是 158456325028528675187087900673。先算留给曲线的数量：997 乘 997000 等于 994009000，再除以 1000000 向下取整，等于 994。零头 0.009 个代币在这一步就没有了。</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">SqrtPriceMath.sol v1.0.0</a> 在 token1 增加时，把输入数量左移 96 位，再除以流动性，向下取整，加到当前平方根价格上。994 左移 96 位之后正好能被流动性 994 整除，商是 2^96。新的平方根价格是 2^96 加 2^96，等于 2^97，也就是 158456325028528675187087900672。它比上限小 1，所以这一步没有打到上限。</p>
+              <p>打不到上限时，amountIn 要按新价格重算，并且向上取整。流动性 994 乘价格差 2^96，再除以 2^96，结果正好是 994，没有进一。手续费因此等于 997 减 994，等于 3。用户付出的 997 被分成两截：曲线吃进 994，手续费拿走 3。用 997 乘 3000 再除以 1000000 向下取整，997 乘 3000 是 2991，商是 2。少掉的 1 就是第一次除法里那个 0.009 被收进手续费的结果，不是协议又抽了一层。</p>
+              <p>流动性被设成 994，是为了让平方根价格的除法整除，从而把手续费和价格取整拆开。流动性若不整除 994 乘 2^96，曲线重算出来的 amountIn 可以小于 994。手续费仍是 997 减那个更小的 amountIn，于是大于 3。3 是曲线把提供给它的 994 全部吃进时的手续费，不是任意流动性下的下限。</p>
+              <table>
+                <caption>没打到价格上限时，精确输入、曲线吃进的数量和手续费</caption>
+                <thead><tr><th scope="col">精确输入</th><th scope="col">流动性</th><th scope="col">曲线吃进</th><th scope="col">手续费</th><th scope="col">输入乘 3000 再除以 1000000，向下取整</th></tr></thead>
+                <tbody>
+                  <tr><td>997</td><td>994</td><td>994</td><td>3</td><td>2</td></tr>
+                  <tr><td>100</td><td>99</td><td>99</td><td>1</td><td>0</td></tr>
+                  <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                  <tr><td>1000000</td><td>997000</td><td>997000</td><td>3000</td><td>3000</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. 输入 100 和 1，向下取整都会写成没有手续费</h2>
+              <p>精确输入 100，流动性 99，价格上限仍是 2^97 加 1。100 乘 997000 等于 99700000，除以 1000000 向下取整是 99。99 左移 96 位再除以流动性 99，商仍是 2^96，新价格是 2^97，打不到上限。重算的 amountIn 是 99。手续费是 100 减 99，等于 1。100 乘 3000 再除以 1000000，商是 0。按后一种算法，这笔兑换会被写成免手续费。合约里曲线少吃的那 1 个代币就是手续费。</p>
+              <p>精确输入 1，流动性 1。1 乘 997000 再除以 1000000，向下取整是 0。SqrtPriceMath 在输入数量为 0 时直接返回当前平方根价格，前提是流动性和当前价格都大于 0，否则价格函数先回退。价格停在 2^96，不等于上限，所以走「剩余输入减去 amountIn」。价格没动，重算的 amountIn 是 0，手续费是 1 减 0，等于 1。整枚代币都变成手续费，曲线吃进 0，也换不出 token0。1 乘 3000 再除以 1000000 仍是 0。小额精确输入上，向下取整会把一笔真实的手续费写成 0。</p>
+              <p>这两笔和 997 用的是同一条没打到上限的路径。差别只在第一次除法丢掉的零头占输入的比例。输入越大，零头越不容易被看出来。用一笔 1000000 的整数结果去代表所有输入，会把 100 和 1 上的手续费一起抹掉。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. 输入 1000000 时两种算法都是 3000</h2>
+              <p>精确输入 1000000，流动性 997000，上限仍是 2^97 加 1。1000000 乘 997000 再除以 1000000，正好是 997000。997000 左移 96 位再除以同样的流动性，商是 2^96，新价格是 2^97。打不到上限，重算的 amountIn 是 997000，手续费是 1000000 减 997000，等于 3000。1000000 乘 3000 再除以 1000000 也是 3000。两种算法在这一行重合。</p>
+              <p>重合是因为 1000000 能被费率的分母整除，第一次 mulDiv 没有零头。它不说明手续费的定义是「输入乘 3000 再向下取整」。上一节的 997、100 和 1 用的是同一段代码，结果分别是 3、1 和 1，向下取整给出的是 2、0 和 0。核验时要故意放进一个不能整除的输入。只拿 1000000 这种整除样本，会把分支选错的公式留在报告里。</p>
+              <p>到上限的比较用的是大于等于。若把上限改成正好 2^97，输入 997 的曲线需求也是 994，留给曲线的数量同样是 994，比较成立，这一步改走向上取整。994 乘 3000 等于 2982000，除以 997000 的商是 2，余数是 988000，进一之后仍是 3。整数碰巧相同，路径已经换了。读 feeAmount 之前要先记下下一步价格是否等于上限，不能只看最后的 3。</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. 输入 100301 打到上限，手续费是 301</h2>
+              <p>另一座教学池把流动性设成 100000，价格上限设成正好 2^97。从 2^96 走到 2^97，价格差是 2^96。流动性 100000 乘这个差，再除以 2^96，向上取整仍是 100000。精确输入是 100301。100301 乘 997000 等于 100000097000，除以 1000000 向下取整是 100000，零头大约 0.097 被丢掉。留给曲线的 100000 正好等于打到上限所需的数量，大于等于成立，下一步价格就是上限。</p>
+              <p>打到上限后不再用「剩余输入减 amountIn」。手续费等于 100000 乘 3000，再除以 997000，有余数就进一。100000 乘 3000 是 300000000。997000 乘 300 是 299100000。余数是 900000，所以结果是 301。曲线吃进 100000，手续费 301，用户这一步付出 100301，和精确输入相同。注释里的上限在这里取等：手续费加 amountIn 没有超过剩余输入。</p>
+              <p>用整笔 100301 乘 3000 再除以 1000000 向下取整，100301 乘 3000 是 300903000，商是 300。报告会写成手续费 300、曲线吃进 100001。合约里曲线只吃进 100000，多出来的 1 在手续费上，不在曲线上。301 比 300 多的那 1，来自分母 997000 上的余数 900000，不是费率从 3000 改成了另一个档。</p>
+              <table>
+                <caption>打到价格上限之后，手续费按曲线吃进的数量向上取整</caption>
+                <thead><tr><th scope="col">精确输入</th><th scope="col">流动性</th><th scope="col">曲线吃进</th><th scope="col">余数</th><th scope="col">手续费</th><th scope="col">整笔输入向下取整</th></tr></thead>
+                <tbody>
+                  <tr><td>100301</td><td>100000</td><td>100000</td><td>900000</td><td>301</td><td>300</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-6">
+              <h2>6. 这 3 和 301 还没分成协议费，也还不是 tokensOwed</h2>
+              <p>精确输出的 amountRemaining 是负数，exactIn 为 false。没打到上限这条「剩余输入减 amountIn」因此不会被用到。无论价格停在半路还是打到上限，精确输出的手续费都走向上取整：amountIn 乘 3000，再除以 997000。若曲线为了凑出指定的输出而吃进 100000，手续费同样是 301，余数同样是 900000。精确输出不是「先把 0.3% 打在输出上再向下取整」。</p>
+              <p>本篇的 3 和 301 是 computeSwapStep 返回的 feeAmount，还没有按协议分成拆开。池子费率 3000 怎样在手续费已经存在之后分成流动性提供者留下的 2250 或 2500，是<a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a>的问题。把 3 再乘一次协议分母，是在另一层取整上继续算，不是本篇这一步的手续费。</p>
+              <p>feeAmount 写入增长量之后，仓位上的 tokensOwed 仍要等 Position.update。那是<a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a>。本篇停在曲线吃进多少、手续费拿走多少。997 没打到上限时是 994 和 3。100301 打到上限时是 100000 和 301。把其中任何一个写成「输入乘 3000 再向下取整」，997 会少记 1，100301 也会少记 1，只是少记的位置不同：一笔少在手续费，一笔少在曲线。</p>
+              <p>本文是分析框架。精确输入先做向下取整、没打到上限时用剩余输入减 amountIn、打到上限或精确输出时用 mulDivRoundingUp，来自 SwapMath.sol v1.0.0。token1 增加时价格按左移 96 位后的整数除法前进、输入为 0 时价格不动，来自 SqrtPriceMath.sol v1.0.0。994、3、99、1、997000、3000、100000、301 和余数 900000 是这些整数运算的教学结果，不是 2026 年 11 月 9 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>输入 997、费率 3000，手续费是不是 2？</h3>
+              <p>这一步没打到价格上限时，先用 997 乘 997000 再除以 1000000 向下取整，得到 994。教学池的流动性也是 994，曲线把这 994 全部吃进。手续费是 997 减 994，等于 3。用 997 乘 3000 再除以 1000000 向下取整，得到的是 2。</p>
+              <h3>输入 100，向下取整得到 0，是不是就没有手续费？</h3>
+              <p>没有打到价格上限时，曲线吃进 99，手续费是 1。输入 1 时，送给价格函数的数量是 0，价格不动，曲线吃进 0，手续费仍是 1。两次用输入乘 3000 再除以 1000000 向下取整，结果都是 0。</p>
+              <h3>输入 100301 打到价格上限，手续费是不是 300？</h3>
+              <p>打到上限之后，手续费用曲线吃进的 100000 乘 3000，再除以 997000，有余数就进一。100000 乘 3000 是 300000000，商是 300，余数是 900000，所以手续费是 301。用 100301 乘 3000 再除以 1000000 向下取整，得到的是 300。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己对一笔很小的 token1 输入，看曲线吃进的数量和手续费是否差在取整上，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与 3 和 301 哪个才是这一步的 feeAmount 无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">曲线看见的数量，已经少掉一截手续费</a></li><li><a href="#sec-2">输入 997，曲线吃进 994，手续费是 3</a></li><li><a href="#sec-3">输入 100 和 1，向下取整都会写成没有手续费</a></li><li><a href="#sec-4">输入 1000000 时两种算法都是 3000</a></li><li><a href="#sec-5">输入 100301 打到上限，手续费是 301</a></li><li><a href="#sec-6">这 3 和 301 还没分成协议费，也还不是 tokensOwed</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">Uniswap v3：精确输入先扣手续费，打到上限则向上取整</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap v3：token1 增加时的下一步价格，输入为 0 则价格不动</a></li></ul><p class="ref-note">资料核对日期：2026年11月9日。两条手续费路径来自 SwapMath.sol v1.0.0。价格按整数除法前进、输入为 0 时返回原价格，来自 SqrtPriceMath.sol v1.0.0。994、3、301 和余数 900000 是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a></li><li><a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a></li><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6146a27a"></script>
+</body>
+</html>

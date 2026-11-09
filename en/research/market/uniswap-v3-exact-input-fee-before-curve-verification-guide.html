@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3 - Crypto Research Notes</title>
+  <meta name="description" content="Fee tier 3000, exact input 997, and a price limit of 2^97 plus 1: the curve takes 994 and the fee is 3. Floor of input times 3000 over 1000000 is 2. Input 100301 reaches the limit, the curve takes 100000, and the fee is 301.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,SwapMath,swap fee,exact input,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3">
+  <meta property="og:description" content="Fee tier 3000, exact input 997, and a price limit of 2^97 plus 1: the curve takes 994 and the fee is 3. Floor of input times 3000 over 1000000 is 2. Input 100301 reaches the limit, the curve takes 100000, and the fee is 301.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-09T15:16:33+08:00">
+  <meta property="article:modified_time" content="2026-11-09T15:16:33+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="First">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="SwapMath">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="A short cap marked 3 sits above a much taller block marked 994, with a gap between them. The 2 beside the cap is crossed out.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3">
+  <meta name="twitter:description" content="Fee tier 3000, exact input 997, and a price limit of 2^97 plus 1: the curve takes 994 and the fee is 3. Floor of input times 3000 over 1000000 is 2. Input 100301 reaches the limit, the curve takes 100000, and the fee is 301.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="A short cap marked 3 sits above a much taller block marked 994, with a gap between them. The 2 beside the cap is crossed out.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon-en.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html",
+      "name": "Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#article",
+      "headline": "Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3",
+      "description": "Fee tier 3000, exact input 997, and a price limit of 2^97 plus 1: the curve takes 994 and the fee is 3. Floor of input times 3000 over 1000000 is 2. Input 100301 reaches the limit, the curve takes 100000, and the fee is 301.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.png"],
+      "datePublished": "2026-11-09T15:16:33+08:00",
+      "dateModified": "2026-11-09T15:16:33+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","SwapMath","swap fee","exact input","crypto research"],
+      "wordCount": 2201,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is the fee 2 on an input of 997 at fee tier 3000?",
+          "acceptedAnswer": { "@type": "Answer", "text": "When the step misses the price limit, 997 times 997000 divided by 1000000, rounded down, is 994. The teaching pool's liquidity is also 994, and the curve takes all of it. The fee is 997 minus 994, which is 3. Input times 3000 divided by 1000000, rounded down, is 2." }
+        },
+        {
+          "@type": "Question",
+          "name": "If an input of 100 rounds down to a fee of 0, is the swap free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "When the step misses the price limit, the curve takes 99 and the fee is 1. On an input of 1 the amount passed to the price function is 0, the price does not move, the curve takes 0, and the fee is still 1. Both times, input times 3000 divided by 1000000 rounded down is 0." }
+        },
+        {
+          "@type": "Question",
+          "name": "Input 100301 reaches the price limit. Is the fee 300?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Once the limit is reached, the fee is the 100000 the curve took, times 3000, divided by 997000, rounded up when a remainder remains. 100000 times 3000 is 300000000. The quotient is 300 and the remainder is 900000, so the fee is 301. Input 100301 times 3000 divided by 1000000, rounded down, is 300." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">First</span></p>
+          <h1>Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3</h1>
+          <p class="article-summary">A Uniswap V3 exact-input step removes the fee from the amount remaining before the curve sees it. At fee tier 3000, the factor left for the curve is 997000 out of 1000000. In this teaching, the current square-root price is 2^96 and the pool is paid in token1. Exact input 997, liquidity 994, and a price limit of 2^97 plus 1 miss that limit. The curve takes 994 and the fee is 3. Input times 3000 divided by 1000000, rounded down, is 2. Exact input 100 lets the curve take 99 and charges a fee of 1, while the same floor is 0. Exact input 1000000 with liquidity 997000 makes both formulas return 3000, so a matching large number does not prove the formulas are the same. With the limit set exactly at 2^97, exact input 100301, and liquidity 100000, the step reaches the limit, the curve takes 100000, and the fee rounds up to 301. The numbers are a teaching series, not a pool reading from 9 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-09T15:16:33+08:00">2026-11-09 15:16:33</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-exact-input-fee-before-curve-verification-guide-en.svg" alt="A short cap marked 3 sits above a much taller block marked 994, with a gap between them. The 2 beside the cap is crossed out." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>First record whether the step reaches the price limit. If it does not, the fee is the remaining input minus what the curve actually took, not the input times the fee rounded down.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Fee tier 3000, input 997, liquidity 994, and a limit of 2^97 plus 1. The curve takes 994 and the fee is 3. Input times 3000 divided by 1000000, rounded down, is 2.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Input 100 lets the curve take 99, and the fee is 1. Input 1 lets the curve take 0, and the fee is still 1. Both floors are 0.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Input 100301, liquidity 100000, and a limit of exactly 2^97. The curve takes 100000, the fee is 301, and the remainder is 900000. Flooring the whole input produces 300.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. The curve sees an amount that has already lost its fee</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">SwapMath.sol v1.0.0</a> splits one step in computeSwapStep into four return values: the next square-root price, the amountIn the curve takes, the amountOut the curve pays, and feeAmount. On an exact input, amountRemaining is zero or positive. The function first computes amountRemainingLessFee: the remaining input times 1000000 minus feePips, divided by 1000000, with FullMath.mulDiv rounding down. At fee tier 3000 the factor is 997000. The price function receives that floored amount, not the full amount the user signed.</p>
+              <p>The comment says that on an exact input the fee plus amountIn never exceeds the amount remaining. Two paths make that sentence into two different formulas. If the new price is not the price limit passed in, feeAmount is the remaining input minus the amountIn the curve actually took. If the step reaches the limit, or the swap is not an exact input, feeAmount is amountIn times feePips divided by 1000000 minus feePips, through mulDivRoundingUp, so any remainder adds 1. The first path keeps the fraction dropped by the opening division inside the fee. The second path rounds up against what the curve already took, and the denominator is 997000, not 1000000.</p>
+              <p>So "fee tier 3000 is 0.3 percent of the trade, rounded down" matches only on inputs that divide cleanly. It collapses two paths into one, and it uses the wrong denominator for the round-up. This note pays the pool in token1, so zeroForOne is false, and the current square-root price is 2^96, which is 79228162514264337593543950336. That is the stored price at tick 0. The gap between one division and the quoted price is the subject of <a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a>. This note does not take the square root again. It follows the slice removed before the curve.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. Input 997: the curve takes 994, and the fee is 3</h2>
+              <p>The teaching pool has liquidity 994, fee tier 3000, and an exact input of 997 token1. The price limit is 2^97 plus 1, which is 158456325028528675187087900673. The amount offered to the curve is 997 times 997000, which is 994009000, divided by 1000000 and rounded down, which is 994. A fraction of 0.009 token is already gone.</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">SqrtPriceMath.sol v1.0.0</a> moves the price up when token1 is added by shifting the input left by 96 and dividing by liquidity, rounding down, then adding the quotient to the current square-root price. 994 shifted left by 96 divides evenly by liquidity 994, and the quotient is 2^96. The new square-root price is 2^96 plus 2^96, which is 2^97, or 158456325028528675187087900672. It is 1 below the limit, so the step does not reach the limit.</p>
+              <p>When the limit is missed, amountIn is recomputed from the new price and rounded up. Liquidity 994 times the price gap of 2^96, divided by 2^96, is exactly 994, so nothing rounds up. The fee is 997 minus 994, which is 3. The user's 997 splits in two: the curve takes 994, and the fee takes 3. Input 997 times 3000 is 2991, and dividing by 1000000 rounds down to 2. The missing 1 is the 0.009 from the first division, kept inside the fee. It is not a second protocol cut.</p>
+              <p>Liquidity is set to 994 so the square-root division comes out even and the fee can be read apart from price rounding. If liquidity does not divide 994 times 2^96, the recomputed amountIn can be smaller than 994. The fee is still 997 minus that smaller amountIn, so it is larger than 3. The 3 is the fee when the curve takes the entire 994 it was offered. It is not a lower bound for every liquidity.</p>
+              <table>
+                <caption>Exact input, amount taken by the curve, and the fee when the price limit is missed</caption>
+                <thead><tr><th scope="col">Exact input</th><th scope="col">Liquidity</th><th scope="col">Curve takes</th><th scope="col">Fee</th><th scope="col">Input times 3000 over 1000000, rounded down</th></tr></thead>
+                <tbody>
+                  <tr><td>997</td><td>994</td><td>994</td><td>3</td><td>2</td></tr>
+                  <tr><td>100</td><td>99</td><td>99</td><td>1</td><td>0</td></tr>
+                  <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                  <tr><td>1000000</td><td>997000</td><td>997000</td><td>3000</td><td>3000</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. Inputs of 100 and 1 both round down to a fee of zero</h2>
+              <p>Exact input 100, liquidity 99, and the same limit of 2^97 plus 1. 100 times 997000 is 99700000, which divided by 1000000 rounds down to 99. 99 shifted left by 96 and divided by liquidity 99 still yields 2^96, so the new price is 2^97 and the limit is missed. The recomputed amountIn is 99. The fee is 100 minus 99, which is 1. 100 times 3000 divided by 1000000 is 0. That second formula would write the swap as free. On chain, the 1 token the curve did not take is the fee.</p>
+              <p>Exact input 1, liquidity 1. 1 times 997000 divided by 1000000 rounds down to 0. SqrtPriceMath returns the current square-root price when the input amount is 0, provided liquidity and the current price are both above 0. Otherwise the price function reverts first. The price stays at 2^96, which is not the limit, so the fee is remaining input minus amountIn. The price did not move, the recomputed amountIn is 0, and the fee is 1 minus 0, which is 1. The whole token becomes a fee. The curve takes 0 and pays no token0. 1 times 3000 divided by 1000000 is still 0. On a small exact input, rounding down writes a real fee as zero.</p>
+              <p>These two inputs use the same missed-limit path as 997. What changes is how large the dropped fraction is beside the input. A larger input hides the fraction. Using one divisible result at 1000000 to stand for every input erases the fee on 100 and on 1 together.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. At an input of 1000000 both formulas return 3000</h2>
+              <p>Exact input 1000000, liquidity 997000, and the limit still at 2^97 plus 1. 1000000 times 997000 divided by 1000000 is exactly 997000. 997000 shifted left by 96 and divided by that same liquidity yields 2^96, so the new price is 2^97. The limit is missed, the recomputed amountIn is 997000, and the fee is 1000000 minus 997000, which is 3000. 1000000 times 3000 divided by 1000000 is also 3000. The two formulas agree on this row.</p>
+              <p>They agree because 1000000 divides the fee denominator, so the first mulDiv has no remainder. That does not make the fee "input times 3000, rounded down." The previous section uses the same code on 997, 100, and 1 and gets 3, 1, and 1, while the floor produces 2, 0, and 0. A check needs an input that does not divide evenly. A sample that only uses 1000000 leaves the wrong branch in the report.</p>
+              <p>The comparison with the limit uses greater-than-or-equal. If the limit is moved to exactly 2^97, the amount the curve needs for input 997 is also 994, and the amount offered to the curve is 994, so the comparison succeeds and the step switches to the round-up. 994 times 3000 is 2982000. Divided by 997000 the quotient is 2 and the remainder is 988000, so rounding up still produces 3. The integer matches by chance. The path has changed. Read whether the next price equals the limit before reading feeAmount. The final 3 by itself does not name the path.</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. Input 100301 reaches the limit, and the fee is 301</h2>
+              <p>A second teaching pool sets liquidity to 100000 and the price limit to exactly 2^97. The gap from 2^96 to 2^97 is 2^96. Liquidity 100000 times that gap, divided by 2^96 and rounded up, is still 100000. The exact input is 100301. 100301 times 997000 is 100000097000, which divided by 1000000 rounds down to 100000. A fraction near 0.097 is dropped. The 100000 offered to the curve equals the amount required to reach the limit, so the greater-than-or-equal test passes and the next price is the limit.</p>
+              <p>After the limit is reached, the fee is no longer remaining input minus amountIn. It is 100000 times 3000, divided by 997000, rounded up when a remainder remains. 100000 times 3000 is 300000000. 997000 times 300 is 299100000. The remainder is 900000, so the fee is 301. The curve takes 100000, the fee is 301, and the user pays 100301 on this step, the same as the exact input. The comment's ceiling holds with equality here: the fee plus amountIn does not exceed the amount remaining.</p>
+              <p>The whole 100301 times 3000 divided by 1000000, rounded down, uses 100301 times 3000, which is 300903000, and the quotient is 300. A report written that way says the fee is 300 and the curve takes 100001. On chain the curve takes 100000, and the extra 1 sits in the fee. The 301 is 1 above 300 because the remainder against the denominator 997000 is 900000. The fee tier did not change.</p>
+              <table>
+                <caption>After the price limit is reached, the fee rounds up from the amount the curve took</caption>
+                <thead><tr><th scope="col">Exact input</th><th scope="col">Liquidity</th><th scope="col">Curve takes</th><th scope="col">Remainder</th><th scope="col">Fee</th><th scope="col">Whole input, rounded down</th></tr></thead>
+                <tbody>
+                  <tr><td>100301</td><td>100000</td><td>100000</td><td>900000</td><td>301</td><td>300</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-6">
+              <h2>6. The 3 and the 301 are not yet a protocol cut, and they are not tokensOwed</h2>
+              <p>An exact output makes amountRemaining negative, so exactIn is false. The missed-limit line "remaining input minus amountIn" is not used. Whether the price stops halfway or reaches the limit, an exact-output fee takes the round-up path: amountIn times 3000, divided by 997000. If the curve must take 100000 to produce the requested output, the fee is again 301 and the remainder is again 900000. Exact output is not "0.3 percent of the output, rounded down."</p>
+              <p>The 3 and the 301 in this note are the feeAmount returned by computeSwapStep. They have not been split by a protocol fee. How fee tier 3000, once a fee exists, leaves liquidity providers 2250 or 2500 is the subject of <a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a>. Multiplying 3 by a protocol denominator is another rounding layer. It is not the fee of this step.</p>
+              <p>After feeAmount is written into fee growth, tokensOwed on a position still waits for Position.update. That is <a href="/en/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">Fee Check: Growth Records 3000, and tokensOwed Is Still 0 Before the Poke</a>. This note stops at what the curve takes and what the fee keeps. When 997 misses the limit, those amounts are 994 and 3. When 100301 reaches the limit, they are 100000 and 301. Writing either pair as "input times 3000, rounded down" drops 1 from 997 and drops 1 from 100301. The missing 1 sits in a different place: once in the fee, and once in the curve.</p>
+              <p>This is an analytical frame. The exact-input floor, the missed-limit fee as remaining input minus amountIn, and the round-up when the limit is reached or the swap is an exact output come from SwapMath.sol v1.0.0. The integer price step when token1 is added, and the unchanged price when the input is 0, come from SqrtPriceMath.sol v1.0.0. 994, 3, 99, 1, 997000, 3000, 100000, 301, and the remainder 900000 are teaching results of those integer operations, not a pool reading from 9 November 2026, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>7. Misreadings that keep coming back</h2>
+              <h3>Is the fee 2 on an input of 997 at fee tier 3000?</h3>
+              <p>When the step misses the price limit, 997 times 997000 divided by 1000000, rounded down, is 994. The teaching pool's liquidity is also 994, and the curve takes all of it. The fee is 997 minus 994, which is 3. Input times 3000 divided by 1000000, rounded down, is 2.</p>
+              <h3>If an input of 100 rounds down to a fee of 0, is the swap free?</h3>
+              <p>When the step misses the price limit, the curve takes 99 and the fee is 1. On an input of 1 the amount passed to the price function is 0, the price does not move, the curve takes 0, and the fee is still 1. Both times, input times 3000 divided by 1000000 rounded down is 0.</p>
+              <h3>Input 100301 reaches the price limit. Is the fee 300?</h3>
+              <p>Once the limit is reached, the fee is the 100000 the curve took, times 3000, divided by 997000, rounded up when a remainder remains. 100000 times 3000 is 300000000. The quotient is 300 and the remainder is 900000, so the fee is 301. Input 100301 times 3000 divided by 1000000, rounded down, is 300.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to send a small token1 input and compare what the curve takes with the fee, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether 3 or 301 is the feeAmount of this step, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The curve sees an amount that has already lost its fee</a></li><li><a href="#sec-2">Input 997: the curve takes 994, and the fee is 3</a></li><li><a href="#sec-3">Inputs of 100 and 1 both round down to a fee of zero</a></li><li><a href="#sec-4">At an input of 1000000 both formulas return 3000</a></li><li><a href="#sec-5">Input 100301 reaches the limit, and the fee is 301</a></li><li><a href="#sec-6">The 3 and the 301 are not yet a protocol cut, and they are not tokensOwed</a></li><li><a href="#faq">Misreadings that keep coming back</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">Uniswap v3: exact input removes the fee first, and a reached limit rounds the fee up</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap v3: the next price when token1 is added, and a zero input leaves the price unchanged</a></li></ul><p class="ref-note">Sources checked on 9 November 2026. The two fee paths come from SwapMath.sol v1.0.0. The integer price step, and the unchanged price when the input is 0, come from SqrtPriceMath.sol v1.0.0. 994, 3, 301, and the remainder 900000 are a teaching conversion, not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a></li><li><a href="/en/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">Fee Check: Growth Records 3000, and tokensOwed Is Still 0 Before the Poke</a></li><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">deskbyai</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=6146a27a"></script>
+</body>
+</html>
