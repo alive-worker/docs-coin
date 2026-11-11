@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-exact-input-fee-before-curve-verification-guide',
-  publishedISO: '2026-11-09T15:16:33+08:00',
+  slug: 'uniswap-v3-flash-repay-vs-fee-verification-guide',
+  publishedISO: '2026-11-11T15:20:13+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "兑换核验：输入 997，曲线吃进 994，手续费是 3",
-    tagLabel: "先扣",
-    cardDesc: "费率 3000、精确输入 997、价格上限是 2^97+1 时，曲线吃进 994，手续费是 3。输入乘 3000 再除以 1000000 向下取整会得到 2。输入 100301 打到上限时，曲线吃进 100000，手续费是 301。",
+    h1: "闪电贷核验：借出 997，至少要还回 1000",
+    tagLabel: "归还",
+    cardDesc: "费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。",
   },
   en: {
-    h1: "Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3",
-    tagLabel: "First",
-    cardDesc: "Fee tier 3000, exact input 997, and a price limit of 2^97 plus 1: the curve takes 994 and the fee is 3. Floor of input times 3000 over 1000000 is 2. Input 100301 reaches the limit, the curve takes 100000, and the fee is 301.",
+    h1: "Flash Check: Borrow 997, and the Repayment Must Be at Least 1000",
+    tagLabel: "Repay",
+    cardDesc: "At fee tier 3000, a flash of 997 rounds the fee up to 3, so the balance must finish at least 3 above the pre-transfer snapshot and the repayment is at least 1000. Rounding down gives 2, and 999 fails F0. Paying one extra makes the paid amount 4; with protocol denominator 4 the protocol takes 1 and LPs still receive 3.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-exact-input-fee-before-curve-verification-guide',
     'uniswap-v3-oracle-cardinality-vs-lookback-verification-guide',
     'uniswap-v3-fee-growth-vs-tokens-owed-verification-guide',
     'uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide',

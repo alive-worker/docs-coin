@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>闪电贷核验：借出 997，至少要还回 1000 - 加密货币研究</title>
+  <meta name="description" content="费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,闪电贷,手续费,归还,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="闪电贷核验：借出 997，至少要还回 1000">
+  <meta property="og:description" content="费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-11T15:20:13+08:00">
+  <meta property="article:modified_time" content="2026-11-11T15:20:13+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="归还">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="闪电贷">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="短箭头标着 997 离开池子，更长的箭头标着 1000 回到池子。旁边的 999 被划掉。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="闪电贷核验：借出 997，至少要还回 1000">
+  <meta name="twitter:description" content="费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.png">
+  <meta name="twitter:image:alt" content="短箭头标着 997 离开池子，更长的箭头标着 1000 回到池子。旁边的 999 被划掉。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html",
+      "name": "闪电贷核验：借出 997，至少要还回 1000",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "闪电贷核验：借出 997，至少要还回 1000", "item": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#article",
+      "headline": "闪电贷核验：借出 997，至少要还回 1000",
+      "description": "费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.png"],
+      "datePublished": "2026-11-11T15:20:13+08:00",
+      "dateModified": "2026-11-11T15:20:13+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","闪电贷","手续费","归还","加密货币研究"],
+      "wordCount": 4712,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "借出 997，把 997 还回去行不行？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不行。费率 3000 时，997 乘 3000 再除以 1000000，商是 2，余数是 991000，向上取整后手续费是 3。池子在转出前记下余额，回调之后余额至少要比那个数高 3。借出的 997 已经离开，所以至少要还回 1000。只还回 997 时，余额回到转出前，增量是 0，过不了 F0。按向下取整的 2 还回 999，增量只有 2，同样过不了。" }
+        },
+        {
+          "@type": "Question",
+          "name": "借出 1，向下取整是 0，是不是不用付手续费？",
+          "acceptedAnswer": { "@type": "Answer", "text": "要付。1 乘 3000 再除以 1000000 向下取整是 0，余数是 3000，向上取整是 1。借出 1，至少还回 2。借出 100 时向下取整仍是 0，向上取整仍是 1，至少还回 101。借出 0 时手续费才是 0。池子流动性如果是 0，函数在算手续费之前就以 L 回退，零金额也借不出来。" }
+        },
+        {
+          "@type": "Question",
+          "name": "多还 1 个，流动性提供者是不是多得 1？",
+          "acceptedAnswer": { "@type": "Answer", "text": "这一组教学值里不是。正好还回 1000 时，实付增量是 3。协议费分母是 4 时，3 除以 4 是 0，流动性提供者得到 3。多还 1 个使实付变成 4，4 除以 4 是 1，流动性提供者仍是 4 减 1，等于 3。多出来的那 1 进了协议费。增长量用扣完协议费之后的实付，分母是转出前记下的流动性，不随回调里的新流动性变大。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">归还</span></p>
+          <h1>闪电贷核验：借出 997，至少要还回 1000</h1>
+          <p class="article-summary">闪电贷先把币转出，手续费记在还回之后的余额增量上。费率 3000 时，借出 997 的手续费向上取整是 3，池子余额至少要比转出前高 3，所以至少还回 1000。997 乘 3000 再除以 1000000 向下取整是 2，按这个数还回 999，增量只有 2，过不了 F0。借出 1 时向下取整是 0，向上取整仍是 1，至少还回 2。借出 1000000 时两种算法都是 3000，所以整除样本不能证明公式相同。实付增量正好是 3、协议分母是 4 时，协议费是 0，流动性提供者得到 3。多还 1 个使实付变成 4，协议费变成 1，流动性提供者仍是 3。流动性 1000000 上，这 3 写入的增长量是 1020847100762815390390123822295304。数字是教学值，不是 2026 年 11 月 11 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-11T15:20:13+08:00">2026-11-11 15:20:13</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-flash-repay-vs-fee-verification-guide.svg" alt="短箭头标着 997 离开池子，更长的箭头标着 1000 回到池子。旁边的 999 被划掉。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>手续费在转出之前就算好，但检查的是回调之后余额比转出前高出多少，不是借出的数量里先扣掉一截。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>费率 3000、借出 997。997 乘 3000 除以 1000000，商 2，余数 991000，向上取整是 3。至少还回 1000。还回 999 时增量只有 2，过不了 F0。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>借出 1 和借出 100，向下取整都是 0，向上取整都是 1，分别至少还回 2 和 101。借出 0 的手续费是 0。流动性为 0 时，函数以 L 回退。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>协议分母 4、实付 3 时，协议费是 0，流动性提供者得到 3。实付变成 4 时，协议费是 1，流动性提供者仍是 3。增长量的分母是转出前记下的流动性。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 借出去的是全额，手续费加在还回来的增量上</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool.sol v1.0.0</a> 的 flash 先读当前流动性。流动性不大于 0，函数以 L 回退，手续费还没开始算。通过之后，token0 和 token1 的手续费各自用 FullMath.mulDivRoundingUp，被借数量乘以池子费率，再除以 1000000，有余数就加 1。费率 3000 时，分母仍是 1000000，不是兑换路径里那个 997000。</p>
+              <p>余额快照记在转账之前。然后池子把借出的全额转给接收地址，回调里再把币送回来。回来之后的检查不是「余额是否回到快照」。检查是快照加上预先算好的手续费，是否小于等于回来之后的余额。差一枚就分别以 F0 或 F1 回退。实付增量是回来之后的余额减去快照，所以它量的是余额比转出前高出的部分，不是用户转回来的那一笔毛额。</p>
+              <p>把这两步连起来，归还额就不是借出额本身。转出已经让余额少掉借出的数量。要让余额比快照至少高出手续费，回调里送回来的数量至少是借出额加手续费。手续费没有从到账金额里预先扣掉。收到 997 的人，账户上多出来的就是 997，不是 994。</p>
+              <p>函数声明带 lock。回调里再进入同一个池子的 swap、mint 或下一次 flash，会撞上这把锁。归还的币要在进回调之前就拿在手里，或者从别的池子、别的合约拿。不能指望在这一次回调里用同一个池子把借来的币换成归还所需的币。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 借出 997，手续费是 3，至少还回 1000</h2>
+              <p>教学池费率 3000，只借 token0，数量是 997，token1 的数量是 0。997 乘 3000 等于 2991000。除以 1000000，商是 2，余数是 991000。余数不为 0，手续费从 2 进到 3。token1 的手续费是 0，池子也不转出 token1。</p>
+              <p>回调里至少要把 token0 余额抬到比快照高 3。997 已经转走，所以至少送回 1000。送回 1000 时，余额变化是减 997 再加 1000，实付增量正好是 3，检查取等号，可以通过。只送回 997，余额回到快照，增量是 0，比 3 小，F0 回退。按向下取整把手续费写成 2，就会准备 999。减 997 再加 999，增量是 2，仍然小于 3，同样回退。差的那 1 枚就是余数 991000 进位出来的，不是协议又抽了一层。</p>
+              <p>同一条向上取整在小额上更明显。借出 1：1 乘 3000 等于 3000，除以 1000000 的商是 0，余数是 3000，手续费是 1。到账 1，至少还回 2。借出 100：100 乘 3000 等于 300000，商是 0，余数是 300000，手续费仍是 1，至少还回 101。两笔用借出额乘 3000 再除以 1000000 向下取整，结果都是 0。按那个 0 只还本金，增量是 0，F0 回退。小额闪电贷的手续费可以比「0.3% 再向下取整」整整多出 1 枚，而这 1 枚就是全部手续费。</p>
+              <table>
+                <caption>费率 3000 时，借出数量、向上取整的手续费和至少要还回的数量</caption>
+                <thead><tr><th scope="col">借出</th><th scope="col">余数</th><th scope="col">向下取整</th><th scope="col">手续费</th><th scope="col">至少还回</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td>1</td><td>3000</td><td>0</td><td>1</td><td>2</td></tr>
+                  <tr><td>100</td><td>300000</td><td>0</td><td>1</td><td>101</td></tr>
+                  <tr><td>997</td><td>991000</td><td>2</td><td>3</td><td>1000</td></tr>
+                  <tr><td>333333</td><td>999000</td><td>999</td><td>1000</td><td>334333</td></tr>
+                  <tr><td>1000000</td><td>0</td><td>3000</td><td>3000</td><td>1003000</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. 借出 333333 只差一点整除，借出 1000000 又正好整除</h2>
+              <p>333333 乘 3000 等于 999999000。除以 1000000，商是 999，余数是 999000。余数离再进 1 个代币只差 1000，但只要余数不是 0，向上取整就从 999 变成 1000。至少还回 334333，不是 333333 加 999。用向下取整准备 334332，余额只比快照高 999，F0 回退。这一行专门给「差一点就能整除，所以可以按商来还」的算法看：差的那 1000 留在余数里，手续费已经进位。</p>
+              <p>借出 1000000 时，1000000 乘 3000 再除以 1000000 正好是 3000，余数是 0，向上取整和向下取整相同。至少还回 1003000。这一行会让两套公式看起来一样。它和 997、1、333333 用的是同一次 mulDivRoundingUp。核验报告如果只放 1000000，会把 997 上多出来的那 1 枚手续费留在表外。整除样本可以当对照，不能当公式。</p>
+              <p>借出 0 也走同一段。0 乘任何费率再除以 1000000 都是 0，没有余数，手续费是 0，池子也不做转账。回调仍会执行。余额不动时，快照加 0 仍小于等于回来之后的余额，检查通过。所以「每笔闪电贷至少付 1」不成立。前提是流动性已经大于 0。流动性为 0 时，连这笔零金额也到不了回调，函数先以 L 回退。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. 兑换里的 997 含着手续费，闪电贷里的 997 不含</h2>
+              <p><a href="/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">兑换核验：输入 997，曲线吃进 994，手续费是 3</a>里，精确输入 997 是用户付给池子的总数。没打到价格上限时，曲线吃进 994，手续费 3 已经含在这 997 里面。用户没有在 997 之外再付 3。把那一笔的算法搬到闪电贷上，会得出「手续费是 3，所以把 997 还回去就够了」。闪电贷的 3 是余额必须比转出前额外高出的部分。还回 997 只是把借走的币放回原处，增量是 0。</p>
+              <p>两条路径的分母也不一样。精确输入先用 997000 做向下取整，打到上限之后的向上取整再除以 997000。闪电贷从一开始就用 1000000 做向上取整，被借的全额先到账。997 在兑换里拆成 994 和 3。997 在闪电贷里仍是到账的 997，归还至少是 1000。同一个 3，一个在付款内部，一个在付款外面。</p>
+              <p>两个代币一起借时，两边各算各的。再借 1 个 token1，token1 的手续费是 1，至少还回 2 个 token1，同时 token0 仍至少还回 1000。把两笔手续费都堆进 token0、token1 只还本金，token0 也许能通过，token1 的增量是 0，F1 回退。检查没有「用另一种代币抵手续费」这一支。</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. 多还的 1 枚可以进协议费，流动性提供者仍是 3</h2>
+              <p>通过检查之后，写进费用的是实付增量，不是预先算好的那个最小手续费。正好还回 1000，实付是 3。还回 1001，实付是 4。多出来的代币留在池子里，按费用处理，不会退回。</p>
+              <p>协议费沿用<a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a>里的教学值。slot0.feeProtocol 写成 100 时，token0 取低 4 位，分母是 4，token1 取高 4 位，分母是 6。token0 的协议费等于实付增量除以 4，向下取整。实付 3 时，3 除以 4 是 0，协议费账户不加，流动性提供者得到 3 减 0，等于 3。实付 4 时，4 除以 4 是 1，协议费得到 1，流动性提供者得到 4 减 1，仍是 3。多还的那 1 枚没有让流动性提供者多得 1，它刚好跨过了整数除法的下一档，整枚进了协议费。</p>
+              <p>再还一枚，实付变成 5。5 除以 4 仍是 1，流动性提供者得到 4。所以第 4 枚进协议，第 5 枚才进流动性提供者。只看「多还了，提供者就按比例多分」会把第 4 枚记错账户。借出 1000000 且正好还回 1003000 时，实付是 3000，3000 除以 4 是 750，流动性提供者得到 2250。这组和费率那篇文章里一笔 3000 的手续费拆成 750 与 2250 的整数相同，来源不同：那里的 3000 是兑换手续费已经存在之后的拆分，这里的 3000 是这笔闪电贷的实付增量。</p>
+              <table>
+                <caption>协议分母为 4 时，实付增量怎样拆成协议费和流动性提供者的部分</caption>
+                <thead><tr><th scope="col">实付增量</th><th scope="col">协议费</th><th scope="col">流动性提供者</th></tr></thead>
+                <tbody>
+                  <tr><td>3</td><td>0</td><td>3</td></tr>
+                  <tr><td>4</td><td>1</td><td>3</td></tr>
+                  <tr><td>5</td><td>1</td><td>4</td></tr>
+                  <tr><td>3000</td><td>750</td><td>2250</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-6">
+              <h2>6. 这 3 枚写进增长量，分母是转出前的流动性</h2>
+              <p>流动性提供者的那一截乘以 2^128，再除以流动性，向下取整，加进 feeGrowthGlobal。分母用的是函数开头记下的流动性，不是回调结束时的流动性。教学值把这份流动性写成 1000000。实付 3、协议费 0 时，进入增长量的是 3。3 乘 2^128 再除以 1000000，向下取整是 1020847100762815390390123822295304，余数是 634368。</p>
+              <p>实付从 3 变成 4 时，流动性提供者的那一截仍是 3，所以这一步写进全局增长量的整数也不变。多付的 1 枚出现在协议费里，不出现在 feeGrowthGlobal 里。读增长量来反推「用户一共还了多少」，会把这 1 枚漏掉。</p>
+              <p>同一流动性上，进入增长量的如果是 3000 而不是 3，存储的整数是 1020847100762815390390123822295304634。这就是<a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a>里那一个增长量。把本篇这 3 枚的增长量乘以 1000，得到 1020847100762815390390123822295304000，比 3000 那一笔少 634。634 等于 1000 乘余数 634368，再除以 1000000 的商。增长量可以按实付金额放大，但每次向下取整丢掉的余数不会按同一个倍数放大。用小额闪电贷的增长量乘出大额，差的就是这些被丢掉又在更大倍数里重新进位的单位。</p>
+              <p>回调里如果再铸流动性，新的流动性不进入这一次的分母。费用按转出前已经在区间里的流动性摊。新仓位要等下一次费用才会开始累积，这和增长量那篇文章里「费用写入之后才铸的仓位领不到这一笔」是同一条时间顺序，只是这一次的费用来自归还，不来自兑换。</p>
+              <p>本文是分析框架。借出全额、手续费向上取整、余额必须比转出前的快照至少高出手续费、实付增量再按协议分母拆开、增长量使用转出前记下的流动性，来自 UniswapV3Pool.sol v1.0.0 的 flash。997 的余数 991000、手续费 3、至少还回 1000、实付 4 时协议费 1、增长量 1020847100762815390390123822295304 和少掉的 634，是这些整数运算的教学结果，不是 2026 年 11 月 11 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>借出 997，把 997 还回去行不行？</h3>
+              <p>不行。费率 3000 时，997 乘 3000 再除以 1000000，商是 2，余数是 991000，向上取整后手续费是 3。池子在转出前记下余额，回调之后余额至少要比那个数高 3。借出的 997 已经离开，所以至少要还回 1000。只还回 997 时，余额回到转出前，增量是 0，过不了 F0。按向下取整的 2 还回 999，增量只有 2，同样过不了。</p>
+              <h3>借出 1，向下取整是 0，是不是不用付手续费？</h3>
+              <p>要付。1 乘 3000 再除以 1000000 向下取整是 0，余数是 3000，向上取整是 1。借出 1，至少还回 2。借出 100 时向下取整仍是 0，向上取整仍是 1，至少还回 101。借出 0 时手续费才是 0。池子流动性如果是 0，函数在算手续费之前就以 L 回退，零金额也借不出来。</p>
+              <h3>多还 1 个，流动性提供者是不是多得 1？</h3>
+              <p>这一组教学值里不是。正好还回 1000 时，实付增量是 3。协议费分母是 4 时，3 除以 4 是 0，流动性提供者得到 3。多还 1 个使实付变成 4，4 除以 4 是 1，流动性提供者仍是 4 减 1，等于 3。多出来的那 1 进了协议费。增长量用扣完协议费之后的实付，分母是转出前记下的流动性，不随回调里的新流动性变大。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己对一笔很小的借出数量，看归还额是否比到账额多出向上取整的那一枚，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与至少还回 1000 还是 999 无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">借出去的是全额，手续费加在还回来的增量上</a></li><li><a href="#sec-2">借出 997，手续费是 3，至少还回 1000</a></li><li><a href="#sec-3">借出 333333 只差一点整除，借出 1000000 又正好整除</a></li><li><a href="#sec-4">兑换里的 997 含着手续费，闪电贷里的 997 不含</a></li><li><a href="#sec-5">多还的 1 枚可以进协议费，流动性提供者仍是 3</a></li><li><a href="#sec-6">这 3 枚写进增长量，分母是转出前的流动性</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3：闪电贷先转出全额，余额须比转出前至少高出手续费</a></li></ul><p class="ref-note">资料核对日期：2026年11月11日。转出前快照、向上取整的手续费、F0 与 F1、实付增量按协议分母拆开、增长量使用转出前的流动性，来自 UniswapV3Pool.sol v1.0.0 的 flash。997 的余数 991000、归还 1000、协议费 0 与 1、增长量里少掉的 634 是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">兑换核验：输入 997，曲线吃进 994，手续费是 3</a></li><li><a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a></li><li><a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=bf7cccd0"></script>
+</body>
+</html>
