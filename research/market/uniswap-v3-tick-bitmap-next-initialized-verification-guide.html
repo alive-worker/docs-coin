@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>位图核验：间距的下一档是 60，这一次返回的是 180 - 加密货币研究</title>
+  <meta name="description" content="间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,TickBitmap,tick,间距,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="位图核验：间距的下一档是 60，这一次返回的是 180">
+  <meta property="og:description" content="间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-12T10:42:59+08:00">
+  <meta property="article:modified_time" content="2026-11-12T10:42:59+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="跳档">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="TickBitmap">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="一条字块在 60 的位置缺了一口，180 是插在字块上的一根竖针。字块停在 15300，15360 浮在字块外面。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="位图核验：间距的下一档是 60，这一次返回的是 180">
+  <meta name="twitter:description" content="间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.png">
+  <meta name="twitter:image:alt" content="一条字块在 60 的位置缺了一口，180 是插在字块上的一根竖针。字块停在 15300，15360 浮在字块外面。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html",
+      "name": "位图核验：间距的下一档是 60，这一次返回的是 180",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "位图核验：间距的下一档是 60，这一次返回的是 180", "item": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#article",
+      "headline": "位图核验：间距的下一档是 60，这一次返回的是 180",
+      "description": "间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.png"],
+      "datePublished": "2026-11-12T10:42:59+08:00",
+      "dateModified": "2026-11-12T10:42:59+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","TickBitmap","tick","间距","加密货币研究"],
+      "wordCount": 5364,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "当前 tick 是 0、间距 60，下一次是不是 60？",
+          "acceptedAnswer": { "@type": "Answer", "text": "只初始化了 180 时，向上这一次返回 180，initialized 是 true。60 和 180 都初始化时，返回的才是 60。一个字里没有置位时，返回 15300，initialized 是 false。60 只是这次搜索从哪一位开始看，不是函数答应要返回的下一档。" }
+        },
+        {
+          "@type": "Question",
+          "name": "15360 已经初始化，从 0 向上能不能一次到 15360？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不能。15360 是压缩档 256，落在下一个字的第 0 位。从 0 向上，这一次只看到当前字，空字的右端是 15300，initialized 是 false。价格若走到 15300，池子不调用 cross，方向向上时 tick 改成 15300。下一次从 15300 向上才返回 15360，initialized 是 true。" }
+        },
+        {
+          "@type": "Question",
+          "name": "tick 是 -1，向下是不是先到 -61？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。-1 除以 60 向零取整是 0，余数不是 0，压缩档再减 1，变成 -1，也就是 tick -60 的那个位。这个位置位时，向下返回 -60。价格走到 -60 且方向向下时，cross 会跑，tick 写成 -61。从 -61 再向下，这个位已经不在掩码里。只初始化了 -60 时，下一次返回 -15360，initialized 是 false。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">跳档</span></p>
+          <h1>位图核验：间距的下一档是 60，这一次返回的是 180</h1>
+          <p class="article-summary">位图一次只看一个字，下一档不必是间距的下一格。间距 60、当前 tick 为 0、只把 180 初始化时，向上返回 180，不是 60。价格比 1.0001 的 60 次方截到 12 位是 1.006017734268，180 次方是 1.018162060104。一个字没有置位时返回 15300，initialized 是 false，对应的价格比是 4.617823568835。15360 在下一个字，这一次返回不了。tick 为 -1 时向下先碰到 -60 的位，不是 -61。数字是教学值，不是 2026 年 11 月 12 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-12T10:42:59+08:00">2026-11-12 10:42:59</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide.svg" alt="一条字块在 60 的位置缺了一口，180 是插在字块上的一根竖针。字块停在 15300，15360 浮在字块外面。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>一次调用只搜一个 256 位的字。返回值可以是没被初始化的字端，initialized 为 false 时不能把它当成下一档流动性。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>间距 60、tick 0、只初始化 180。向上返回 180，不是 60。60 和 180 都置位时才返回 60。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>同一个字是空的，从 0 向上返回 15300，initialized 是 false。只初始化 15360 时，这一次仍然是 15300。从 15300 再查，才返回 15360。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>tick -1 向下先看 -60 的位。置位则返回 -60。价格走到这一档且方向向下时，tick 写成 -61，下一次不再返回 -60。空字则这一次到 -15360。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 一个字装 256 个压缩档，不是 256 个原始 tick</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">TickBitmap.sol v1.0.0</a> 把「这个档有没有被初始化」压进 int16 到 uint256 的映射。注释写明，每个字有 256 个值，因为 tick 是 int24，字内用 8 位。position 用 tick 右移 8 位当 wordPos，用 tick 对 256 取余再收成 uint8 当 bitPos。这里的 tick 在 flip 和查找之前先除以 tickSpacing，所以字里的一位是一个压缩档，不是池子价格轴上的一档原始 tick。</p>
+              <p>间距 60 时，压缩档 0 是 tick 0，压缩档 1 是 tick 60，压缩档 3 是 tick 180，压缩档 255 是 tick 15300，压缩档 256 是 tick 15360。前四个落在字 0：位 0、位 1、位 3、位 255。压缩档 256 右移 8 位是 1，余数是 0，所以它是字 1 的第 0 位。注释里的「最多 256 档」说的是压缩档。乘上间距 60 之后，一个字的跨度是 15360 个原始 tick，不是 256 个。</p>
+              <p>这个 15360 也不是每次调用都会走满。从 tick 0 向上，函数不看当前压缩档，而从压缩档加 1 开始，也就是从位 1 开始。空字时返回的是这个字里还能看到的最远一位，压缩档 255，原始 tick 15300。距离是 255 乘 60，不是 256 乘 60。从 tick -60 向上才会从字 0 的位 0 开始看。空字时同样停在 15300，这一次的距离才是 15300 减 -60，等于 15360。把注释里的 256 直接当成「下一次价格跳 256 个 tick」，两种起点都会算错。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 只初始化 180，从 0 向上返回的是 180</h2>
+              <p>flipTick 要求 tick 能被间距整除，否则直接回退。能写进位图的是 0、60、180、15360 这种档，不是 5，也不是 -1。翻转用的是 tick 除以间距，没有负数那种向负无穷收拢。整除的档上，查找前的那一步修正不会改变压缩档，所以存进去的位和查找用的位是同一个。</p>
+              <p>nextInitializedTickWithinOneWord 在向上时把 lte 设成 false。压缩档先按向零取整去掉间距，当前 tick 不小于 0 时不再减 1。然后从压缩档加 1 的那个字和那一位开始看。注释写明，当前这一档置没置位都不影响这次向上的搜索。掩码丢掉这一位以下的所有位，剩下的字里取最低的那个 1。没有 1，就把本字还能看到的最远一位乘回间距，并把 initialized 设成 false。</p>
+              <p>教学池间距 60，当前 tick 是 0，只把 180 翻转过。压缩档是 0，向上从压缩档 1、也就是字 0 的位 1 看起。180 是压缩档 3，位 3 是这个掩码里最低的 1。返回值是 3 乘 60，等于 180，initialized 是 true。位 1 本身没有置位，所以 60 不会被返回。间距的下一格和位图的下一档在这一行分开了。</p>
+              <p>60 和 180 都置位时，位 1 比位 3 更低，返回的才是 60。函数一次只交最近的那一位，不是把这个字里所有置位都交出来。从 tick 5 向上，5 除以 60 仍是 0，搜索起点还是位 1，只初始化 180 时仍然返回 180。从 tick 60 向上，压缩档是 1，搜索从位 2 开始，120 没有置位，返回的还是 180。人站在网格上，下一次也不等于当前 tick 再加一个间距。</p>
+              <table>
+                <caption>间距 60 时，一次向上查找返回哪一档</caption>
+                <thead><tr><th scope="col">起点</th><th scope="col">已经初始化的 tick</th><th scope="col">返回</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>180</td><td>180</td><td>true</td></tr>
+                  <tr><td>0</td><td>60 和 180</td><td>60</td><td>true</td></tr>
+                  <tr><td>0</td><td>没有</td><td>15300</td><td>false</td></tr>
+                  <tr><td>0</td><td>只有 15360</td><td>15300</td><td>false</td></tr>
+                  <tr><td>5</td><td>只有 180</td><td>180</td><td>true</td></tr>
+                  <tr><td>60</td><td>只有 180</td><td>180</td><td>true</td></tr>
+                  <tr><td>15300</td><td>15360</td><td>15360</td><td>true</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. 字是空的就停在 15300，15360 要等下一次</h2>
+              <p>一个置位都没有时，从 0 向上的掩码盖住位 1 到位 255，里面没有 1。函数返回压缩档 255 乘 60，也就是 15300，initialized 是 false。15300 不是下一档流动性，它是这个字的右端。把它写成「下一档已初始化的 tick」，报告会多出一档根本没有 flip 过的边界。</p>
+              <p>只把 15360 初始化，从 0 向上的结果仍是 15300、false。15360 的压缩档是 256，位图把它放在字 1 的第 0 位。这一次的搜索从字 0 的位 1 开始，到字 0 的位 255 为止，读不到字 1。注释里的「同一个字或相邻的字」容易被读成「顺手把下一个字也扫完」。相邻只发生在压缩档加 1 已经跨字的时候。从 0 出发，加 1 还在字 0，下一个字里的 15360 对这一次是不存在的。</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool.sol v1.0.0</a> 的兑换循环把这次返回值当成这一步的 tickNext，再取它的平方根价格当目标。返回值如果超出最小或最大 tick，先夹到那两个端点，因为位图自己不知道端点。本篇的 15300 和后面的 -15360 都在端点里面，夹紧不改变教学数字。端点为什么不是间距的整数倍，是<a href="/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</a>的问题。</p>
+              <p>价格若正好走到 tickNext，initialized 为 false 时不调用 ticks.cross，流动性不变。tick 仍然会改：方向向上时写成 tickNext，方向向下时写成 tickNext 减 1。所以空字这一步走到 15300 之后，下一次循环的起点是 15300，不是仍停在 0。从 15300 向上，压缩档 255 加 1 等于 256，正好是字 1 的位 0。15360 置位时，这一次返回 15360，initialized 是 true。大额兑换可以连着吃到下一个字，但那是两次查找，不是一次查找返回了 15360。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. tick -1 用的是 -60 的位，不是 -61</h2>
+              <p>负数且不能被间距整除时，压缩档在向零取整之后再减 1，注释写的是向负无穷收拢。tick -1 除以 60，向零取整是 0，余数是 -1，不是 0，所以压缩档变成 -1。这和 tick -60 的压缩档相同：-60 能被 60 整除，不再减 1，压缩档也是 -1。tick -5 同样落到 -1。tick -1 没有自己的位，flipTick 也会拒绝它，因为它不能被 60 整除。</p>
+              <p>压缩档 -1 右移 8 位仍是 -1，wordPos 是 -1。-1 对 256 的余数再收成 uint8，是 255。tick -60 因此住在字 -1 的第 255 位，也就是这个字的最高位。字 -1 覆盖的压缩档是 -256 到 -1，原始 tick 是 -15360 到 -60。</p>
+              <p>向下查找 lte 为 true，掩码保留当前位和更低的位。从 tick -1 向下，当前位就是位 255。-60 已经置位时，最高的那个 1 就在位 255，返回 -60，initialized 是 true。人若把「再往下一块」写成 -1 减 60，会得到 -61。位图先交出来的是 -60，而 -60 比 -1 更低，但它是当前价格所在的这一格的下边界，不是 -61。</p>
+              <p>这个字里没有更低的置位时，从 -1 向下返回压缩档 -1 减 255，再乘 60，等于 -15360，initialized 是 false。-15360 是字 -1 的右端，不是下一档流动性。从 tick 0 向下则是另一回事。压缩档是 0，位是 0，掩码只剩位 0。这一位没置位时，字内没有更低的位可看，返回值就是 0，initialized 是 false。函数不会在同一次调用里穿进字 -1。所以「从 0 向下的下一档一定是 -60」在空位上不成立，这次连 -60 都看不见。</p>
+              <table>
+                <caption>间距 60 时，向下查找和负 tick 的压缩</caption>
+                <thead><tr><th scope="col">起点</th><th scope="col">已经初始化的 tick</th><th scope="col">返回</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>-1</td><td>-60</td><td>-60</td><td>true</td></tr>
+                  <tr><td>-1</td><td>没有</td><td>-15360</td><td>false</td></tr>
+                  <tr><td>-5</td><td>-60</td><td>-60</td><td>true</td></tr>
+                  <tr><td>0</td><td>没有</td><td>0</td><td>false</td></tr>
+                  <tr><td>-61</td><td>只有 -60</td><td>-15360</td><td>false</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-5">
+              <h2>5. 走到返回的 tick 之后，减 1 是为了不再看见同一位</h2>
+              <p>价格走到返回的 tick，而且方向向下时，池子把 tick 写成 tickNext 减 1，不管这一档有没有初始化。-60 置位、价格走到 -60 时，cross 会执行，tick 变成 -61。减 1 发生在 cross 的分支外面，所以空字走到 -15360 时也同样写成 -15361，只是那一次没有 cross。</p>
+              <p>下一次从 -61 向下，-61 除以 60 向零取整是 -1，余数不是 0，压缩档再减 1，变成 -2。字仍是 -1，位是 254。掩码到位 254 为止，位 255 被留在外面。只初始化了 -60 时，这次看不见它，空字的右端是压缩档 -256，返回 -15360，initialized 是 false。若池子把 tick 留在 -60 上再查一次，压缩档仍是 -1，位 255 仍在掩码里，返回的还是 -60。减 1 的作用是让下一次搜索离开刚刚用过的那一位，不是把价格再挪一档去表示一笔新的成交。</p>
+              <p>cross 里面流动性怎么加、向下时为什么要把 liquidityNet 变号，是<a href="/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">流动性核验：四档毛额加总是 2800，池子正在用的是 1000</a>的问题。本篇停在「哪一次调用会把 cross 叫出来」。initialized 为 false 的 15300 和 -15360 只是字端，价格可以走到那里，流动性数字不变。initialized 为 true 的 180 和 -60 才会进入 cross。</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. 把下一档写成 60，价格比会停在 1.006017734268</h2>
+              <p>1.0001 的 n 次方写成 10001 的 n 次方除以 10000 的 n 次方，整数部分保留，小数只取前 12 位，不进位。tick 60 是 1.006017734268。tick 180 是 1.018162060104。tick 15300 是 4.617823568835。tick 15360 是 4.645612403972。这是档位本身的价格比，不是池子用平方根价格除一次得到的报价。报价和这个比值不是同一个数，见<a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a>。</p>
+              <p>只初始化了 180 时，向上这一次的边界是 180，不是 60。用间距推出「下一档价格比是 1.006017734268」，少掉的是从 60 到 180 那一段。空字时边界是 15300，价格比是 4.617823568835，和 60 那一档差了一个数量级以上。15360 的 4.645612403972 要等第二次查找才成为边界。一次调用的返回值决定这一步的价格目标，目标错一档，后面的输入、输出和手续费都是对着另一个价格在算。</p>
+              <p>核验时先记下起点、间距和这次是向上还是向下，再列出这个字里实际置位的压缩档。返回值等于最近的那个置位，才把 initialized 写成 true。没有置位，就把字端写出来，并标明 false。从 0 向上的字端是 15300。从 -1 向下的字端是 -15360。下一个字里的 15360 另起一次调用。不要用「当前 tick 加一个间距」填这三格。</p>
+              <p>本文是分析框架。一位对应一个压缩档、一次查找不超过一个字、没有置位时返回字端且 initialized 为 false、负数不能整除时向负无穷收拢，来自 TickBitmap.sol v1.0.0。兑换用这次返回值当价格目标、走到该价格时只有 initialized 为 true 才 cross、向下时 tick 写成 tickNext 减 1，来自 UniswapV3Pool.sol v1.0.0。180、15300、15360、-60、-15360、-61，以及 1.006017734268、1.018162060104、4.617823568835，是这些整数运算的教学结果，不是 2026 年 11 月 12 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>当前 tick 是 0、间距 60，下一次是不是 60？</h3>
+              <p>只初始化了 180 时，向上这一次返回 180，initialized 是 true。60 和 180 都初始化时，返回的才是 60。一个字里没有置位时，返回 15300，initialized 是 false。60 只是这次搜索从哪一位开始看，不是函数答应要返回的下一档。</p>
+              <h3>15360 已经初始化，从 0 向上能不能一次到 15360？</h3>
+              <p>不能。15360 是压缩档 256，落在下一个字的第 0 位。从 0 向上，这一次只看到当前字，空字的右端是 15300，initialized 是 false。价格若走到 15300，池子不调用 cross，方向向上时 tick 改成 15300。下一次从 15300 向上才返回 15360，initialized 是 true。</p>
+              <h3>tick 是 -1，向下是不是先到 -61？</h3>
+              <p>不是。-1 除以 60 向零取整是 0，余数不是 0，压缩档再减 1，变成 -1，也就是 tick -60 的那个位。这个位置位时，向下返回 -60。价格走到 -60 且方向向下时，cross 会跑，tick 写成 -61。从 -61 再向下，这个位已经不在掩码里。只初始化了 -60 时，下一次返回 -15360，initialized 是 false。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己对一笔很小的兑换，看下一步价格停在已初始化的档上，还是停在一个字的空白端点上，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与这一次返回 180 还是 60 无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">一个字装 256 个压缩档，不是 256 个原始 tick</a></li><li><a href="#sec-2">只初始化 180，从 0 向上返回的是 180</a></li><li><a href="#sec-3">字是空的就停在 15300，15360 要等下一次</a></li><li><a href="#sec-4">tick -1 用的是 -60 的位，不是 -61</a></li><li><a href="#sec-5">走到返回的 tick 之后，减 1 是为了不再看见同一位</a></li><li><a href="#sec-6">把下一档写成 60，价格比会停在 1.006017734268</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">Uniswap v3：一次查找只覆盖一个字，没有置位时返回字端</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3：兑换用这次返回值当目标，只有 initialized 才 cross</a></li></ul><p class="ref-note">资料核对日期：2026年11月12日。压缩档、一个字 256 位、向负无穷收拢、initialized 为 false 的字端，来自 TickBitmap.sol v1.0.0。价格目标、端点夹紧、走到该价格才 cross、向下写成 tickNext 减 1，来自 UniswapV3Pool.sol v1.0.0。180、15300、15360、-15360 和三档价格比是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">档距核验：费率 3000 的间距是 60，最外一档也不是 -887272</a></li><li><a href="/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">流动性核验：四档毛额加总是 2800，池子正在用的是 1000</a></li><li><a href="/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">兑换核验：开一次方，不等于池子报价</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a2a83469"></script>
+</body>
+</html>

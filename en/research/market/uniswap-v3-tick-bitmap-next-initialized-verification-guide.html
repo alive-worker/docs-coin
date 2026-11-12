@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180 - Crypto Research Notes</title>
+  <meta name="description" content="Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,TickBitmap,tick,spacing,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180">
+  <meta property="og:description" content="Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-12T10:42:59+08:00">
+  <meta property="article:modified_time" content="2026-11-12T10:42:59+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Skip">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="TickBitmap">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="A word slab has a notch at 60 and a pin at 180. The slab ends at 15300, and 15360 floats outside it.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180">
+  <meta name="twitter:description" content="Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="A word slab has a notch at 60 and a pin at 180. The slab ends at 15300, and 15360 floats outside it.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html",
+      "name": "Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#article",
+      "headline": "Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180",
+      "description": "Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.png"],
+      "datePublished": "2026-11-12T10:42:59+08:00",
+      "dateModified": "2026-11-12T10:42:59+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","TickBitmap","tick","spacing","crypto research"],
+      "wordCount": 2606,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Tick is 0 and spacing is 60. Is the next tick 60?",
+          "acceptedAnswer": { "@type": "Answer", "text": "With only 180 initialized, one upward call returns 180 and initialized is true. The call returns 60 only when both 60 and 180 are initialized. An empty word returns 15300 and initialized is false. 60 is where this search starts looking. It is not the tick the function promises to return." }
+        },
+        {
+          "@type": "Question",
+          "name": "15360 is initialized. Can one upward call from 0 reach it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. 15360 is compressed tick 256, bit 0 of the next word. From 0, this call only sees the current word. The empty-word edge is 15300 and initialized is false. If the price reaches 15300, the pool does not call cross, and on the way up the tick becomes 15300. The next call, starting at 15300, returns 15360 and initialized is true." }
+        },
+        {
+          "@type": "Question",
+          "name": "Tick is -1. Is the next tick down -61?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. -1 divided by 60 rounds toward zero to 0. The remainder is not 0, so the compressed tick decreases by 1 and becomes -1, which is the bit for tick -60. When that bit is set, the downward call returns -60. If the price reaches -60 while moving down, cross runs and the tick is written as -61. A new downward call from -61 no longer includes that bit. With only -60 initialized, the next return is -15360 and initialized is false." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Skip</span></p>
+          <h1>Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180</h1>
+          <p class="article-summary">One bitmap call sees a single word, so the next tick need not be the next grid step. With spacing 60, tick 0, and only 180 initialized, the upward return is 180, not 60. The price ratio 1.0001 to the 60th, truncated to 12 decimals, is 1.006017734268. To the 180th it is 1.018162060104. An empty word returns 15300 with initialized false, and that ratio is 4.617823568835. 15360 is in the next word, so this call cannot return it. From tick -1, a downward call meets the bit for -60, not -61. The numbers are a teaching series, not a pool reading from 12 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-12T10:42:59+08:00">2026-11-12 10:42:59</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-tick-bitmap-next-initialized-verification-guide-en.svg" alt="A word slab has a notch at 60 and a pin at 180. The slab ends at 15300, and 15360 floats outside it." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>One call searches a single 256-bit word. The return can be an uninitialized word edge. When initialized is false, that tick is not the next liquidity boundary.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Spacing 60, tick 0, and only 180 initialized. The upward return is 180, not 60. The return is 60 only when both 60 and 180 are set.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>An empty word, searched upward from 0, returns 15300 with initialized false. If only 15360 is set, this call is still 15300. A second call from 15300 returns 15360.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Tick -1 looks downward at the bit for -60. If that bit is set, the return is -60. Once the price reaches it while moving down, the tick becomes -61 and the next call does not return -60. An empty word returns -15360.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. A word holds 256 compressed ticks, not 256 raw ticks</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">TickBitmap.sol v1.0.0</a> packs "is this tick initialized" into a mapping from int16 to uint256. The comment says each word holds 256 values, because a tick is an int24 and the index inside the word is 8 bits. position takes the tick shifted right by 8 as wordPos, and the tick modulo 256, cast to uint8, as bitPos. Before flip and before search, that tick is divided by tickSpacing. One bit is one compressed tick, not one raw tick on the pool's price axis.</p>
+              <p>At spacing 60, compressed tick 0 is tick 0, compressed tick 1 is tick 60, compressed tick 3 is tick 180, compressed tick 255 is tick 15300, and compressed tick 256 is tick 15360. The first four live in word 0, at bits 0, 1, 3, and 255. Compressed tick 256 shifted right by 8 is 1, and the remainder is 0, so it is bit 0 of word 1. The comment's "up to 256 ticks" means compressed ticks. Multiplied by spacing 60, one word spans 15360 raw ticks, not 256.</p>
+              <p>A call does not always travel that whole 15360. Searching upward from tick 0 ignores the current compressed tick and starts at compressed tick plus 1, which is bit 1. On an empty word the farthest visible bit is compressed tick 255, raw tick 15300. The distance is 255 times 60, not 256 times 60. Only an upward search from tick -60 starts at bit 0 of word 0. An empty word still stops at 15300, and that distance is 15300 minus -60, which is 15360. Reading the comment's 256 as "the next price jumps 256 raw ticks" is wrong at both starting points.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. With only 180 initialized, the upward call from 0 returns 180</h2>
+              <p>flipTick requires the tick to be divisible by the spacing, and reverts otherwise. The ticks that can be written are grid ticks such as 0, 60, 180, and 15360, not 5 and not -1. The flip divides by the spacing and does not apply the negative-infinity adjustment. On an exact multiple that adjustment would not change the compressed tick anyway, so the bit that is stored and the bit that a search reads are the same bit.</p>
+              <p>nextInitializedTickWithinOneWord searches upward when lte is false. The compressed tick is the division toward zero. When the current tick is not negative, nothing is subtracted. The search then starts at the word and bit of compressed tick plus 1. The comment says the current tick's own initialized state does not matter on this path. The mask drops every bit below that start, and the word that remains contributes its least significant 1. If there is no 1, the farthest bit still visible in this word is multiplied back by the spacing, and initialized is false.</p>
+              <p>The teaching pool uses spacing 60 and tick 0, and only 180 has been flipped. The compressed tick is 0, so the upward search starts at compressed tick 1, bit 1 of word 0. 180 is compressed tick 3, and bit 3 is the lowest 1 inside the mask. The return is 3 times 60, which is 180, and initialized is true. Bit 1 itself is clear, so 60 is not returned. The next grid step and the bitmap's next tick part company on this row.</p>
+              <p>When both 60 and 180 are set, bit 1 is lower than bit 3, and the return is 60. One call hands back the nearest bit, not every set bit in the word. From tick 5, 5 divided by 60 is still 0, the search still starts at bit 1, and only 180 initialized still returns 180. From tick 60 the compressed tick is 1, the search starts at bit 2, 120 is clear, and the return is still 180. Standing on the grid does not make the next return equal to the current tick plus one spacing.</p>
+              <table>
+                <caption>What one upward search returns at spacing 60</caption>
+                <thead><tr><th scope="col">Start</th><th scope="col">Initialized ticks</th><th scope="col">Return</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>180</td><td>180</td><td>true</td></tr>
+                  <tr><td>0</td><td>60 and 180</td><td>60</td><td>true</td></tr>
+                  <tr><td>0</td><td>none</td><td>15300</td><td>false</td></tr>
+                  <tr><td>0</td><td>only 15360</td><td>15300</td><td>false</td></tr>
+                  <tr><td>5</td><td>only 180</td><td>180</td><td>true</td></tr>
+                  <tr><td>60</td><td>only 180</td><td>180</td><td>true</td></tr>
+                  <tr><td>15300</td><td>15360</td><td>15360</td><td>true</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-3">
+              <h2>3. An empty word stops at 15300, and 15360 waits for the next call</h2>
+              <p>With no bits set, the upward mask from 0 covers bits 1 through 255 and contains no 1. The function returns compressed tick 255 times 60, which is 15300, and initialized is false. 15300 is not the next liquidity boundary. It is the right edge of this word. Writing it down as "the next initialized tick" adds a boundary that was never flipped.</p>
+              <p>If only 15360 is initialized, the upward result from 0 is still 15300 and false. The compressed tick of 15360 is 256, and the bitmap stores it at bit 0 of word 1. This search starts at bit 1 of word 0 and ends at bit 255 of word 0. It cannot read word 1. The comment's "same word (or adjacent word)" is easy to read as "the next word is scanned too." The adjacent word appears only when compressed tick plus 1 has already crossed a word boundary. From 0, plus 1 is still inside word 0, and 15360 in the next word does not exist for this call.</p>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">UniswapV3Pool.sol v1.0.0</a> uses that return as tickNext inside the swap loop, then reads the square-root price at that tick as the target. If the return is outside the minimum or maximum tick, the pool clamps it to those endpoints first, because the bitmap does not know the endpoints. The 15300 in this note, and the -15360 below, sit inside the endpoints, so the clamp does not change the teaching numbers. Why the endpoints are not multiples of the spacing is the subject of <a href="/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</a>.</p>
+              <p>If the price lands exactly on tickNext and initialized is false, ticks.cross is not called and liquidity does not change. The tick is still rewritten: tickNext when moving up, tickNext minus 1 when moving down. After an empty-word step reaches 15300, the next loop starts at 15300, not at 0. From 15300, compressed tick 255 plus 1 is 256, bit 0 of word 1. When 15360 is set, that call returns 15360 and initialized is true. A large swap can reach the next word, but that is two searches. It is not one search returning 15360.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. Tick -1 uses the bit for -60, not a tick of -61</h2>
+              <p>When the tick is negative and not divisible by the spacing, the compressed tick is the toward-zero quotient minus 1. The comment calls this rounding toward negative infinity. Tick -1 divided by 60 is 0 toward zero, and the remainder is -1, so the compressed tick becomes -1. That is the same compressed tick as -60: -60 divides evenly, nothing is subtracted, and the compressed tick is also -1. Tick -5 lands on -1 as well. Tick -1 has no bit of its own, and flipTick rejects it because it is not divisible by 60.</p>
+              <p>Compressed tick -1 shifted right by 8 is still -1, so wordPos is -1. The remainder of -1 modulo 256, cast to uint8, is 255. Tick -60 therefore lives at bit 255 of word -1, the highest bit of that word. Word -1 covers compressed ticks -256 through -1, which are raw ticks -15360 through -60.</p>
+              <p>A downward search sets lte to true, and the mask keeps the current bit and every lower bit. From tick -1 the current bit is bit 255. When -60 is set, the highest 1 is bit 255, and the return is -60 with initialized true. Writing "one more step down" as -1 minus 60 produces -61. The bitmap first returns -60. That tick is below -1, and it is the lower boundary of the grid cell the price is already inside. It is not -61.</p>
+              <p>When no lower bit in that word is set, the downward return from -1 is compressed tick -1 minus 255, times 60, which is -15360, and initialized is false. -15360 is the right edge of word -1, not the next liquidity boundary. A downward search from tick 0 is a different call. The compressed tick is 0 and the bit is 0, so the mask is only bit 0. If that bit is clear, the word has no lower bit to offer, and the return is 0 with initialized false. The function does not enter word -1 in the same call. "The next tick down from 0 is always -60" is false on an empty bit. This call cannot even see -60.</p>
+              <table>
+                <caption>Downward search and the compression of a negative tick, at spacing 60</caption>
+                <thead><tr><th scope="col">Start</th><th scope="col">Initialized ticks</th><th scope="col">Return</th><th scope="col">initialized</th></tr></thead>
+                <tbody>
+                  <tr><td>-1</td><td>-60</td><td>-60</td><td>true</td></tr>
+                  <tr><td>-1</td><td>none</td><td>-15360</td><td>false</td></tr>
+                  <tr><td>-5</td><td>-60</td><td>-60</td><td>true</td></tr>
+                  <tr><td>0</td><td>none</td><td>0</td><td>false</td></tr>
+                  <tr><td>-61</td><td>only -60</td><td>-15360</td><td>false</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-5">
+              <h2>5. After the price reaches the returned tick, minus 1 keeps the next search off that bit</h2>
+              <p>When the price reaches the returned tick while moving down, the pool writes the tick as tickNext minus 1, whether or not that tick was initialized. If -60 is set and the price reaches -60, cross runs and the tick becomes -61. The subtraction sits outside the cross branch, so an empty word that reaches -15360 is also written as -15361. That step simply does not cross.</p>
+              <p>The next downward search from -61 divides by 60 toward zero and gets -1. The remainder is not 0, so the compressed tick decreases again and becomes -2. The word is still -1, and the bit is 254. The mask stops at bit 254, leaving bit 255 outside. With only -60 initialized, this call cannot see it. The empty-word edge is compressed tick -256, the return is -15360, and initialized is false. If the pool kept the tick at -60 and searched again, the compressed tick would still be -1, bit 255 would still be inside the mask, and the return would be -60 again. The minus 1 moves the next search off the bit that was just used. It does not describe a new trade one tick further down.</p>
+              <p>How liquidity is added inside cross, and why liquidityNet changes sign when moving down, is the subject of <a href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">Liquidity Check: Gross on Four Ticks Sums to 2800, and the Pool Is Using 1000</a>. This note stops at which call is allowed to invoke cross. The uninitialized edges 15300 and -15360 can be price targets, and the liquidity figure does not change there. The initialized ticks 180 and -60 are the ones that enter cross.</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. Writing the next tick as 60 leaves the price ratio at 1.006017734268</h2>
+              <p>1.0001 to the n is 10001 to the n divided by 10000 to the n. Keep the integer part, keep the first 12 decimal digits, and do not round. Tick 60 is 1.006017734268. Tick 180 is 1.018162060104. Tick 15300 is 4.617823568835. Tick 15360 is 4.645612403972. These are ratios of the ticks themselves, not the quote from dividing the stored square-root price once. That quote and this ratio are not the same number. See <a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a>.</p>
+              <p>With only 180 initialized, the upward boundary of this call is 180, not 60. Deriving "the next price ratio is 1.006017734268" from the spacing drops the stretch from 60 to 180. On an empty word the boundary is 15300 and the ratio is 4.617823568835, more than a different order from the ratio at 60. The 4.645612403972 at 15360 becomes a boundary only on the second search. The return of one call is the price target of this step. Aim the step at the wrong tick, and the input, the output, and the fee are computed against another price.</p>
+              <p>A check starts by writing down the start tick, the spacing, and whether the search moves up or down, then lists the compressed ticks that are actually set in this word. The return equals the nearest set bit only when initialized is written true. With no set bit, write the word edge and mark it false. The upward edge from 0 is 15300. The downward edge from -1 is -15360. 15360, in the next word, is another call. Do not fill those three cells with "the current tick plus one spacing."</p>
+              <p>This is an analytical framework. One bit per compressed tick, one search bounded by one word, an uninitialized word edge with initialized false, and the negative-infinity adjustment when a negative tick is not on the grid, come from TickBitmap.sol v1.0.0. Using that return as the swap's price target, calling cross only when initialized is true, and writing tickNext minus 1 when moving down, come from UniswapV3Pool.sol v1.0.0. 180, 15300, 15360, -60, -15360, -61, and the ratios 1.006017734268, 1.018162060104, and 4.617823568835 are teaching results of that integer arithmetic. They are not a pool reading from 12 November 2026, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>7. Common misreadings</h2>
+              <h3>Tick is 0 and spacing is 60. Is the next tick 60?</h3>
+              <p>With only 180 initialized, one upward call returns 180 and initialized is true. The call returns 60 only when both 60 and 180 are initialized. An empty word returns 15300 and initialized is false. 60 is where this search starts looking. It is not the tick the function promises to return.</p>
+              <h3>15360 is initialized. Can one upward call from 0 reach it?</h3>
+              <p>No. 15360 is compressed tick 256, bit 0 of the next word. From 0, this call only sees the current word. The empty-word edge is 15300 and initialized is false. If the price reaches 15300, the pool does not call cross, and on the way up the tick becomes 15300. The next call, starting at 15300, returns 15360 and initialized is true.</p>
+              <h3>Tick is -1. Is the next tick down -61?</h3>
+              <p>No. -1 divided by 60 rounds toward zero to 0. The remainder is not 0, so the compressed tick decreases by 1 and becomes -1, which is the bit for tick -60. When that bit is set, the downward call returns -60. If the price reaches -60 while moving down, cross runs and the tick is written as -61. A new downward call from -61 no longer includes that bit. With only -60 initialized, the next return is -15360 and initialized is false.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: to send a small swap and see whether the next price stops on an initialized tick or on the blank edge of a word, you can review quotes, fees, and limits at <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That link does not decide whether this call returns 180 or 60, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">A word holds 256 compressed ticks, not 256 raw ticks</a></li><li><a href="#sec-2">With only 180 initialized, the upward call from 0 returns 180</a></li><li><a href="#sec-3">An empty word stops at 15300, and 15360 waits for the next call</a></li><li><a href="#sec-4">Tick -1 uses the bit for -60, not a tick of -61</a></li><li><a href="#sec-5">After the price reaches the returned tick, minus 1 keeps the next search off that bit</a></li><li><a href="#sec-6">Writing the next tick as 60 leaves the price ratio at 1.006017734268</a></li><li><a href="#faq">Common misreadings</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickBitmap.sol" target="_blank" rel="noopener">Uniswap v3: one search stays inside a word, and an empty word returns its edge</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: the swap aims at that return, and cross runs only when initialized</a></li></ul><p class="ref-note">Sources checked 12 November 2026. One compressed tick per bit, 256 bits in a word, rounding toward negative infinity, and an uninitialized word edge come from TickBitmap.sol v1.0.0. The price target, the endpoint clamp, cross only when initialized, and tickNext minus 1 when moving down come from UniswapV3Pool.sol v1.0.0. 180, 15300, 15360, -15360, and the three price ratios are teaching arithmetic, not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</a></li><li><a href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">Liquidity Check: Gross on Four Ticks Sums to 2800, and the Pool Is Using 1000</a></li><li><a href="/en/research/market/uniswap-v3-sqrt-price-vs-tick-verification-guide.html">Swap Check: Dividing the Sqrt Price Once Is Not the Pool Quote</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">deskbyai</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=a2a83469"></script>
+</body>
+</html>

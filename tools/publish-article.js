@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-flash-repay-vs-fee-verification-guide',
-  publishedISO: '2026-11-11T15:20:13+08:00',
+  slug: 'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
+  publishedISO: '2026-11-12T10:42:59+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "闪电贷核验：借出 997，至少要还回 1000",
-    tagLabel: "归还",
-    cardDesc: "费率 3000 时，借出 997 的手续费向上取整是 3，余额至少要比转出前高 3，所以要还回 1000。向下取整是 2，还回 999 过不了 F0。多还 1 个变成实付 4 时，协议分母 4 拿走 1，流动性提供者仍是 3。",
+    h1: "位图核验：间距的下一档是 60，这一次返回的是 180",
+    tagLabel: "跳档",
+    cardDesc: "间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。",
   },
   en: {
-    h1: "Flash Check: Borrow 997, and the Repayment Must Be at Least 1000",
-    tagLabel: "Repay",
-    cardDesc: "At fee tier 3000, a flash of 997 rounds the fee up to 3, so the balance must finish at least 3 above the pre-transfer snapshot and the repayment is at least 1000. Rounding down gives 2, and 999 fails F0. Paying one extra makes the paid amount 4; with protocol denominator 4 the protocol takes 1 and LPs still receive 3.",
+    h1: "Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180",
+    tagLabel: "Skip",
+    cardDesc: "Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-flash-repay-vs-fee-verification-guide',
     'uniswap-v3-exact-input-fee-before-curve-verification-guide',
     'uniswap-v3-oracle-cardinality-vs-lookback-verification-guide',
     'uniswap-v3-fee-growth-vs-tokens-owed-verification-guide',
