@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
-  publishedISO: '2026-11-12T10:42:59+08:00',
+  slug: 'uniswap-v3-fee-growth-outside-flip-verification-guide',
+  publishedISO: '2026-11-12T13:55:20+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "位图核验：间距的下一档是 60，这一次返回的是 180",
-    tagLabel: "跳档",
-    cardDesc: "间距 60、当前 tick 是 0、只初始化了 180 时，向上一次调用返回 180，不是 60。一个字里没有置位时返回 15300，initialized 是 false。15360 在下一个字，这一次看不见。",
+    h1: "外侧核验：全局记到 130，区间内仍是 20",
+    tagLabel: "外侧",
+    cardDesc: "下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。",
   },
   en: {
-    h1: "Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180",
-    tagLabel: "Skip",
-    cardDesc: "Spacing 60, current tick 0, and only 180 initialized: one upward call returns 180, not 60. An empty word returns 15300 with initialized false. 15360 sits in the next word and this call cannot see it.",
+    h1: "Outside Check: Global Growth Reaches 130, and Inside Stays 20",
+    tagLabel: "Outside",
+    cardDesc: "The lower tick is initialized at global 80, so its outside is 80 and the inside is 0. Global then reaches 100 and the inside is 20. After the upper cross, global reaches 130 and the inside is still 20. Subtracting 80 from 130 and calling the result 50 counts an extra 30.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
     'uniswap-v3-flash-repay-vs-fee-verification-guide',
     'uniswap-v3-exact-input-fee-before-curve-verification-guide',
     'uniswap-v3-oracle-cardinality-vs-lookback-verification-guide',

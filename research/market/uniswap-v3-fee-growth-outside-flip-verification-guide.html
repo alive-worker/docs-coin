@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>外侧核验：全局记到 130，区间内仍是 20 - 加密货币研究</title>
+  <meta name="description" content="下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,feeGrowthOutside,手续费,区间,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="外侧核验：全局记到 130，区间内仍是 20">
+  <meta property="og:description" content="下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-12T13:55:20+08:00">
+  <meta property="article:modified_time" content="2026-11-12T13:55:20+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="外侧">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="feeGrowthOutside">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="一条横条左边宽段标着 80，右边窄段标着 20，竖线把它们分开。上面的 50 被划掉。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="外侧核验：全局记到 130，区间内仍是 20">
+  <meta name="twitter:description" content="下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.png">
+  <meta name="twitter:image:alt" content="一条横条左边宽段标着 80，右边窄段标着 20，竖线把它们分开。上面的 50 被划掉。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html",
+      "name": "外侧核验：全局记到 130，区间内仍是 20",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "外侧核验：全局记到 130，区间内仍是 20", "item": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#article",
+      "headline": "外侧核验：全局记到 130，区间内仍是 20",
+      "description": "下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.png"],
+      "datePublished": "2026-11-12T13:55:20+08:00",
+      "dateModified": "2026-11-12T13:55:20+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","feeGrowthOutside","手续费","区间","加密货币研究"],
+      "wordCount": 4175,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "下沿初始化时全局已经是 80，新仓位是不是马上有 80？",
+          "acceptedAnswer": { "@type": "Answer", "text": "没有。下沿小于等于当前 tick，外侧被写成当时的全局 80。上沿大于当前 tick，外侧保持 0。当前 tick 在区间内时，区间内等于 80 减 80 减 0，等于 0。把两侧外侧都当成 0，才会把历史的 80 算进这个新仓位。" }
+        },
+        {
+          "@type": "Question",
+          "name": "全局从 80 涨到 130，仓位是不是赚了 50？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。价格还在区间内、全局到 100 时，区间内是 100 减 80 减 0，等于 20。向上穿过上沿后全局再到 130，上侧是 130 减 100，等于 30，区间内是 130 减 80 减 30，仍是 20。多出来的 30 记在区间上方。130 减 80 等于 50，把这 30 也算进了仓位。" }
+        },
+        {
+          "@type": "Question",
+          "name": "穿过上沿之后，外侧写成 100，是不是上沿外赚了 100？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不是。穿过时外侧改成全局减去旧外侧。全局是 100、旧外侧是 0，所以写成 100。它是检查点，不是这一侧新赚的手续费。价格停在上沿或上沿之上时，上侧用全局减这个检查点，100 减 100 等于 0，区间内仍是 20。再穿回来且全局已是 130 时，外侧改成 130 减 100，等于 30。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">外侧</span></p>
+          <h1>外侧核验：全局记到 130，区间内仍是 20</h1>
+          <p class="article-summary">外侧记下的不是区间外的手续费，翻转让同一个数换边。下沿在全局增长量 80 时初始化，外侧被写成 80，当时区间内是 0。全局再到 100，区间内是 20。价格向上穿过上沿 120 之后，上沿外侧被改写成 100，区间内仍是 20。全局继续到 130，多出的 30 记在上侧，区间内还是 20。把 130 减 80 当成仓位赚到的 50，多记了 30。这些是教学用的增长量整数，不是 2026 年 11 月 12 日某个池子的读数，也不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-12T13:55:20+08:00">2026-11-12 13:55:20</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-fee-growth-outside-flip-verification-guide.svg" alt="一条横条左边宽段标着 80，右边窄段标着 20，竖线把它们分开。上面的 50 被划掉。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>feeGrowthOutside 是相对全局的检查点。价格在 tick 的哪一侧，决定这个数是直接使用，还是用全局去减它。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>下沿在全局 80、当前 tick 60 时初始化，外侧写成 80，上沿外侧是 0。区间内是 0，不是 80。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>全局到 100 且价格仍在区间内，区间内是 20。穿过上沿后外侧改成 100，区间内仍是 20。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>价格停在上沿之外、全局再到 130，上侧是 30，区间内还是 20。130 减 80 得到的 50 把这 30 算进了仓位。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. 外侧是检查点，初始化时就决定历史算在哪一侧</h2>
+              <p><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Tick.sol v1.0.0</a> 的 getFeeGrowthInside 不读取「这一档外侧赚了多少代币」。它用三个存储量做减法：全局增长量、下沿的 feeGrowthOutside、上沿的 feeGrowthOutside。当前 tick 大于等于下沿时，下侧直接取下沿的外侧；否则下侧等于全局减去下沿外侧。当前 tick 小于上沿时，上侧直接取上沿的外侧；否则上侧等于全局减去上沿外侧。区间内等于全局减去下侧再减去上侧。</p>
+              <p>同一笔外侧存储，在 tick 的两侧算法不同。价格在它上方，它代表「这一档以下已经发生过的增长」；价格在它下方，真正要用的下侧或上侧是全局减去它。所以把字段名里的 outside 读成「区间外的手续费余额」，会在每一侧都用错一次。</p>
+              <p>这个检查点在档位第一次被写入时就定下来。update 只在该档的 liquidityGross 还是 0 时设置外侧。注释写明，约定是：某一档初始化之前的全部增长，都算在这一档的下面。因此只有 tick 小于等于当前 tick 时，才把当时的全局抄进 feeGrowthOutside。tick 大于当前 tick 时，外侧留着 0。同一档以后再加流动性，gross 已经不是 0，这段不会再跑，外侧不会被新的全局覆盖。</p>
+              <p>教学仓的下沿是 0，上沿是 120，初始化时当前 tick 是 60，全局增长量是 80。60 大于等于 0，下沿外侧写成 80。120 大于 60，上沿外侧保持 0。价格还在两条边界之间：60 大于等于 0，而且 60 小于 120。下侧是 80，上侧是 0，区间内是 80 减 80 减 0，等于 0。新仓位没有领到初始化之前的那 80。若把两个外侧都当成 0，区间内会写成 80，历史增长被算进一个当时还不存在的区间。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 全局从 80 到 100，区间内是 20</h2>
+              <p>价格停在 60，没有穿过任何边界，两个外侧都不变。全局从 80 增加到 100。下侧仍是 80，上侧仍是 0。区间内等于 100 减 80 减 0，等于 20。这 20 是初始化之后、价格还在区间内时新发生的增长。它不是全局 100，也不是下沿外侧那笔 80。</p>
+              <p>80 和 20 加起来才是 100。把全局整个算成仓位收入，会把初始化时已经划到下侧的 80 再算一遍。只拿下沿外侧 80 当收入，则把方向拿反了：那 80 是要从全局里减掉的部分，不是仓位留住的部分。</p>
+              <p>本篇的 80、100、130、20、30 是教学用的增长量整数，表示已经处在这种定点里的存储值。合约做的是同样的减法。不要把 20 再乘上 2^128，也不要把 20 读成 20 枚代币。池子费率怎样先分成协议费和流动性提供者的部分，是<a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a>的问题。那些拆分发生在增长量写进全局之前。这里的 20 是拆完之后、又被外侧检查点裁过的区间内增量。</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. 向上穿过 120，外侧改成 100，区间内仍是 20</h2>
+              <p>cross 把该档的外侧改成全局减去旧外侧。上沿旧外侧是 0，穿过时全局是 100，新外侧是 100 减 0，等于 100。下沿这次没被穿过，外侧仍是 80。这个 100 不是「上沿外侧新赚了 100」。它是检查点被翻到了全局的另一侧。翻之前，0 表示上沿上方还没有需要单独记的增长。翻之后，100 表示：价格若回到上沿下方，直接把 100 当作上侧；价格若留在上沿这一侧，上侧要用全局再减这 100。</p>
+              <p>比较是严格小于。当前 tick 等于上沿 120 时，120 小于 120 不成立，走的是「全局减上沿外侧」那一支，不是把外侧原样当成上侧。120 大于等于下沿 0，下侧仍直接取 80。上侧是 100 减 100，等于 0。区间内是 100 减 80 减 0，仍是 20。价格刚刚到达区间上沿，区间内的增长没有变成 0，也没有变成 100。</p>
+              <p>若穿过之后忘了翻转，上沿外侧还停在 0，而价格已经不小于上沿。上侧会被算成 100 减 0，等于 100。区间内变成 100 减 80 减 100。这不是 20。上侧被当成了整个全局，区间内那 20 先被减掉，下沿的 80 又被多减了一次。翻转的作用是让上侧在这一刻等于 0，把区间内留在 20。</p>
+              <table>
+                <caption>下沿 0、上沿 120，全局和两侧外侧怎样得到区间内</caption>
+                <thead><tr><th scope="col">阶段</th><th scope="col">当前 tick</th><th scope="col">全局</th><th scope="col">下沿外侧</th><th scope="col">上沿外侧</th><th scope="col">区间内</th></tr></thead>
+                <tbody>
+                  <tr><td>刚初始化</td><td>60</td><td>80</td><td>80</td><td>0</td><td>0</td></tr>
+                  <tr><td>仍在区间内</td><td>60</td><td>100</td><td>80</td><td>0</td><td>20</td></tr>
+                  <tr><td>到达上沿</td><td>120</td><td>100</td><td>80</td><td>100</td><td>20</td></tr>
+                  <tr><td>停在上沿之外</td><td>180</td><td>130</td><td>80</td><td>100</td><td>20</td></tr>
+                  <tr><td>穿回区间内</td><td>60</td><td>130</td><td>80</td><td>30</td><td>20</td></tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="sec-4">
+              <h2>4. 全局再到 130，多出的 30 不进区间</h2>
+              <p>价格停在 180，不再穿过上沿，所以上沿外侧保持穿过时写下的 100，下沿外侧保持 80。全局从 100 增加到 130。180 大于等于 0，下侧仍是 80。180 小于 120 不成立，上侧等于 130 减 100，等于 30。区间内等于 130 减 80 减 30，还是 20。</p>
+              <p>这 30 是价格离开区间之后新发生的全局增长。它出现在上侧，不出现在区间内。全局相对初始化时的 80 一共增加了 50，其中 20 发生在区间内，30 发生在上沿之外。用 130 减 80 得到 50，是把两段时间接成一段。仓位在这段教学里只对应那 20。</p>
+              <p>只看上沿外侧的 100 也会读错。100 是上一次翻转写进检查点的全局，不是这 30，也不是仓位的 20。价格还在上沿之上时，上侧是 130 减 100。把 100 本身当成上侧，会把检查点和「检查点与当前全局的差」当成同一个数。</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. 再穿回来，外侧变成 30，区间内还是 20</h2>
+              <p>价格向下再次穿过 120，全局已经是 130。cross 又做一次减法：新的上沿外侧等于 130 减 100，等于 30。下沿仍是 80。回到 tick 60 以后，60 小于 120，上侧直接取外侧 30，不再用全局去减。下侧仍是 80。区间内等于 130 减 80 减 30，还是 20。穿出和穿回都没有把区间内从 20 改成别的数。改变的是上沿那个检查点：先从 0 变成 100，再从 100 变成 30。</p>
+              <p>连续翻转两次并不总是回到旧值。若第二次翻转时全局没变，100 减 100 会得到 0，检查点回到穿过之前。全局若已经变成 130，130 减 100 得到 30，回不去 0。30 正好等于价格在区间外新增的那一段。检查点跟着全局走，不是一份会自动复原的手续费账单。</p>
+              <p>同一条减法也作用在秒数上。初始化时如果时间是 1000，下沿小于等于当前 tick，secondsOutside 写成 1000；上沿大于当前 tick，秒数外侧留着 0。向上穿过时时间是 1300，上沿秒数外侧变成 1300 减 0，等于 1300。这 1300 不是「价格在上沿外侧停留了 1300 秒」。它是穿过那一刻的时间减去旧检查点。再穿回来时时间若是 1600，新检查点是 1600 减 1300，等于 300。300 同样不是仓位在区间内停留的秒数。秒数、每流动性秒数和 tickCumulative 的外侧都用各自的全局量减去旧值，和手续费外侧是同一种记账。本篇不把 300 换算成时间加权价格。</p>
+            </section>
+            <section id="sec-6">
+              <h2>6. 这 20 还没写进 tokensOwed</h2>
+              <p>getFeeGrowthInside 给出的是区间内增长量。它不修改仓位，也不增加 tokensOwed。仓位要等下一次 Position.update，用区间内增长量减去上次记下的值，再乘上当时的流动性，才会出现应收。那一步是<a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a>。本篇的 20 不能拿去和那篇的 3000 相加。20 是这一组教学检查点算出来的区间内增量，3000 是另一篇里已经进入全局增长量的手续费。</p>
+              <p>穿过哪一档，还要先看位图有没有把该档初始化。没初始化的字端不会调用 cross，外侧也不会翻转。那是<a href="/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">位图核验：间距的下一档是 60，这一次返回的是 180</a>。本篇假定上沿 120 已经被初始化，所以价格走到 120 时 cross 会跑。若 120 的位是空的，上面这张表里的外侧 100 和 30 都不会被写上。</p>
+              <p>核验时按时间顺序记四列：当前 tick、全局、下沿外侧、上沿外侧。先用 tick 和两条边界选支路，再算下侧和上侧，最后用全局去减。初始化完成时区间内应是 0。价格留在区间内、全局到 100 时是 20。价格到 120 或 180、全局到 130 时仍是 20。穿回之后上沿外侧应是 30，区间内还是 20。任何一列把 130 减 80 写成 50，都是把区间外的 30 算进了仓位。</p>
+              <p>本文是分析框架。区间内等于全局减下侧再减上侧、价格在边界哪一侧决定外侧是直接使用还是被全局减去、档位第一次初始化时才抄下全局、穿过时外侧改成全局减旧值，来自 Tick.sol v1.0.0。80、100、130、20、30，以及秒数检查点 1000、1300、300，是这些整数运算的教学结果，不是 2026 年 11 月 12 日某个池子的读数，也不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>7. 常见误读</h2>
+              <h3>下沿初始化时全局已经是 80，新仓位是不是马上有 80？</h3>
+              <p>没有。下沿小于等于当前 tick，外侧被写成当时的全局 80。上沿大于当前 tick，外侧保持 0。当前 tick 在区间内时，区间内等于 80 减 80 减 0，等于 0。把两侧外侧都当成 0，才会把历史的 80 算进这个新仓位。</p>
+              <h3>全局从 80 涨到 130，仓位是不是赚了 50？</h3>
+              <p>不是。价格还在区间内、全局到 100 时，区间内是 100 减 80 减 0，等于 20。向上穿过上沿后全局再到 130，上侧是 130 减 100，等于 30，区间内是 130 减 80 减 30，仍是 20。多出来的 30 记在区间上方。130 减 80 等于 50，把这 30 也算进了仓位。</p>
+              <h3>穿过上沿之后，外侧写成 100，是不是上沿外赚了 100？</h3>
+              <p>不是。穿过时外侧改成全局减去旧外侧。全局是 100、旧外侧是 0，所以写成 100。它是检查点，不是这一侧新赚的手续费。价格停在上沿或上沿之上时，上侧用全局减这个检查点，100 减 100 等于 0，区间内仍是 20。再穿回来且全局已是 130 时，外侧改成 130 减 100，等于 30。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：若要自己对一笔很小的区间流动性，看增长量是落在区间内还是被外侧检查点隔在区间外，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a> 的报价、费用与限额。该入口与区间内是 20 还是 50 无关，也不代表对平台服务作保证。任何兑换须用于真实、合规的研究支出，勿用于违法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">外侧是检查点，初始化时就决定历史算在哪一侧</a></li><li><a href="#sec-2">全局从 80 到 100，区间内是 20</a></li><li><a href="#sec-3">向上穿过 120，外侧改成 100，区间内仍是 20</a></li><li><a href="#sec-4">全局再到 130，多出的 30 不进区间</a></li><li><a href="#sec-5">再穿回来，外侧变成 30，区间内还是 20</a></li><li><a href="#sec-6">这 20 还没写进 tokensOwed</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Uniswap v3：区间内用全局减去两侧，穿过时外侧改成全局减旧值</a></li></ul><p class="ref-note">资料核对日期：2026年11月12日。初始化时把全局抄进小于等于当前 tick 的档、getFeeGrowthInside 的两条支路、cross 用全局减旧外侧，来自 Tick.sol v1.0.0。80、20、30、50 和秒数检查点 1000、1300、300 是教学换算，不是某个实时池子的读数。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-fee-growth-vs-tokens-owed-verification-guide.html">手续费核验：增长量记下 3000，poke 之前 tokensOwed 仍是 0</a></li><li><a href="/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">手续费核验：池子上的费率，不等于流动性提供者留下的那一截</a></li><li><a href="/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">位图核验：间距的下一档是 60，这一次返回的是 180</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=c7eb2b36"></script>
+</body>
+</html>
