@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-fee-growth-outside-flip-verification-guide',
-  publishedISO: '2026-11-12T13:55:20+08:00',
+  slug: 'uniswap-v3-max-liquidity-per-tick-verification-guide',
+  publishedISO: '2026-11-13T10:48:58+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "外侧核验：全局记到 130，区间内仍是 20",
-    tagLabel: "外侧",
-    cardDesc: "下沿在全局 80 时初始化，外侧被写成 80，区间内是 0。全局再到 100，区间内是 20。穿过上沿之后全局到 130，区间内仍是 20。把 130 减 80 写成仓位赚到的 50，多记了 30。",
+    h1: "上限核验：间距 60 有 29575 档，除数不是 29576",
+    tagLabel: "上限",
+    cardDesc: "间距 60 的网格有 29575 档，单档上限是 11505743598341114571880798222544994。用 ±887272 直接去除得到 29576，上限少了 389022978034254617658939620724。多出来的 1 档，是两侧各 52 个越格 tick 拼出来的。",
   },
   en: {
-    h1: "Outside Check: Global Growth Reaches 130, and Inside Stays 20",
-    tagLabel: "Outside",
-    cardDesc: "The lower tick is initialized at global 80, so its outside is 80 and the inside is 0. Global then reaches 100 and the inside is 20. After the upper cross, global reaches 130 and the inside is still 20. Subtracting 80 from 130 and calling the result 50 counts an extra 30.",
+    h1: "Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576",
+    tagLabel: "Cap",
+    cardDesc: "Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-fee-growth-outside-flip-verification-guide',
     'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
     'uniswap-v3-flash-repay-vs-fee-verification-guide',
     'uniswap-v3-exact-input-fee-before-curve-verification-guide',

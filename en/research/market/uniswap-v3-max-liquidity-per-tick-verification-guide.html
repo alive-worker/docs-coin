@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576 - Crypto Research Notes</title>
+  <meta name="description" content="Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,maxLiquidityPerTick,tickSpacing,liquidity cap,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576">
+  <meta property="og:description" content="Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-13T10:48:58+08:00">
+  <meta property="article:modified_time" content="2026-11-13T10:48:58+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Cap">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="maxLiquidityPerTick">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="The denominator under the fraction bar is 29575. The 29576 beside it is crossed out.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576">
+  <meta name="twitter:description" content="Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="The denominator under the fraction bar is 29575. The 29576 beside it is crossed out.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html",
+      "name": "Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#article",
+      "headline": "Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576",
+      "description": "Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.png"],
+      "datePublished": "2026-11-13T10:48:58+08:00",
+      "dateModified": "2026-11-13T10:48:58+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","maxLiquidityPerTick","tickSpacing","liquidity cap","crypto research"],
+      "wordCount": 2143,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/TickMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is the per-tick cap the uint128 maximum divided by 29576?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Spacing 60 first snaps -887272 and 887272 to -887220 and 887220, and the tick count is 29575. The quotient is 11505743598341114571880798222544994. Dividing by 29576 produces a smaller quotient, short by 389022978034254617658939620724. The extra tick comes from 52 off-grid ticks on each side. 52 plus 52 is 104, and 104 contains one full spacing." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the cap times 29575 equal the uint128 maximum?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The quotient times 29575 is 340282366920938463463374607431768197550, which is 13905 below 340282366920938463463374607431768211455. That 13905 is the division remainder and is not given to any tick. If every tick held the cap plus 1, the sum would exceed the uint128 maximum by 15670." }
+        },
+        {
+          "@type": "Question",
+          "name": "The tick is already at the cap. Does minting 1 more liquidity pass because the amount is small?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Tick.update compares liquidityGross after the addition, not the size of this mint on its own. The cap plus 1 still fits in an int128, but the gross is above maxLiquidityPerTick and the call reverts with LO. Two positions that do not share a boundary can raise the liquidity the pool is using to twice the cap. The cap binds each tick's gross." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Cap</span></p>
+          <h1>Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576</h1>
+          <p class="article-summary">The per-tick cap divides by the number of ticks on the grid, not by the raw span between the absolute ends. Spacing 60 first snaps the minimum and maximum ticks to -887220 and 887220, and counting both ends gives 29575 ticks. Dividing the uint128 maximum by 29575 leaves the quotient 11505743598341114571880798222544994, and the remainder 13905 is not assigned to any tick. Skipping the snap and dividing by the raw ±887272 span produces 29576, and that cap is 389022978034254617658939620724 too small. The extra tick is 52 off-grid ticks on each side added together: 52 plus 52 is 104, which contains one full spacing. Factory spacings 10 and 200 do not have this extra tick. These are integer results from the v1.0.0 sources, not a pool reading from 13 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-13T10:48:58+08:00">2026-11-13 10:48:58</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-max-liquidity-per-tick-verification-guide-en.svg" alt="The denominator under the fraction bar is 29575. The 29576 beside it is crossed out." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>The per-tick cap is the uint128 maximum divided by the number of usable ticks. The count snaps ±887272 onto the spacing grid, counts both ends, and adds 1.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Spacing 60 uses the ends -887220 and 887220, so the count is 29575. The quotient is 11505743598341114571880798222544994 and the remainder is 13905.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Dividing by the raw span produces 29576. That quotient is smaller by 389022978034254617658939620724. The two off-grid ends of 52 add to 104, and that is the extra tick.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>The cap compares liquidityGross on that tick after the addition. Minting 1 more on a full tick reverts with LO. Two positions that do not share a boundary can leave the pool using twice the cap.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. The cap divides the uint128 maximum by the tick count</h2>
+              <p>tickSpacingToMaxLiquidityPerTick in Tick.sol v1.0.0 does not convert tokens. It starts from the two constants in TickMath. The minimum tick is -887272, and the maximum tick is 887272, the negation of the minimum. Integer division by the pool's spacing, then multiplication by that same spacing, snaps both ends onto the grid. The tick count is the upper end minus the lower end, divided by the spacing, plus 1. The return value keeps only the quotient of the uint128 maximum divided by that count.</p>
+              <p>The pool calls this function once from its constructor, with its own tickSpacing, and stores the result in maxLiquidityPerTick. The field is immutable. Later, every position update that touches a lower or upper tick passes that same value into Tick.update from UniswapV3Pool._updatePosition. update adds the delta onto the tick's existing liquidityGross through LiquidityMath.addDelta, then requires the gross after the addition to be no greater than the cap. If it is greater, the call reverts with the error string LO.</p>
+              <p>A check therefore has two steps, and the fee tier is not one of the inputs to the division. First read the pool's tickSpacing, recompute the count and the quotient, and compare the quotient with maxLiquidityPerTick. Then add the liquidity about to be minted to the gross already stored on that tick, and see whether the sum still fits under the quotient. Fee 3000 is only the factory key that selects spacing 60. It is not the divisor.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. Spacing 60 has 29575 ticks, and the remainder is 13905</h2>
+              <p>The v1.0.0 factory constructor stores spacing 60 for fee 3000. The outermost usable ticks are already computed in <a href="/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</a>. Solidity 0.7 integer division truncates toward zero, so -887272 divided by 60 is -14787, and multiplying by 60 returns -887220. The positive end snaps to 887220 the same way. This note counts ticks from those two ends. It does not treat -887272 itself as a tick that can be initialized.</p>
+              <p>The upper end minus the lower end is 1774440. Dividing 1774440 by 60 gives 29574, which is the number of gaps between the ends and does not yet count an endpoint. Adding 1 makes 29575. Dropping that 1 drops an endpoint that already sits on the grid, shrinks the divisor, and raises the per-tick cap. The contract adds 1.</p>
+              <p>The uint128 maximum is 340282366920938463463374607431768211455. Divided by 29575, the quotient is 11505743598341114571880798222544994 and the remainder is 13905. The contract stores only the quotient. The cap times 29575 is therefore 340282366920938463463374607431768197550, which is 13905 below the uint128 maximum. Those 13905 units are not liquidity withheld from one particular tick. They are the remainder of the division, and no tick receives them.</p>
+              <p>Writing every tick as the cap plus 1, then multiplying by 29575, exceeds the uint128 maximum by 15670. The sum does not fit in a uint128. That is what the division is for: if every tick's gross is full, the sum of those gross values still fits. The cap plus 1 fails because that worst case would overflow, not because the mint looks large in a worked example.</p>
+              <p>Do not treat this quotient as the maximum of an int128. The int128 maximum is 170141183460469231731687303715884105727, far above the per-tick cap. The cap plus 1 still fits in an int128, and it still fits in a uint128. The comparison after the gross is updated fails first, with LO. When a mint reverts, check whether the tick's gross would pass maxLiquidityPerTick before assuming the delta's integer type is too narrow.</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. Dividing by ±887272 produces a 29576th tick</h2>
+              <p>Skipping the snap and subtracting the minimum tick from the maximum gives 1774544. Dividing 1774544 by 60 gives quotient 29575 and remainder 44. Adding 1, as the formula does, makes the divisor 29576. Dividing by 29576 produces 11505354575363080317263139282924270. That is 389022978034254617658939620724 below the real cap. Rejecting a mint against this smaller quotient blocks liquidity that the contract's LO check still accepts.</p>
+              <p>The extra tick is not rounding. It is the off-grid ends folded into the span. 887272 divided by 60 leaves 52, so each side has 52 ticks outside the grid. 52 plus 52 is 104. Dividing 104 by 60 leaves quotient 1 and remainder 44. That quotient of 1 is the difference between 29576 and 29575. The remainder 44 is the same 44 left when the raw span 1774544 is divided by 60. After the snap removes both blocks of 52, the span is 104 shorter, 1774440 divided by 60 no longer carries, and the count returns to 29575.</p>
+              <p>29576 is not a more conservative count. It includes a tick that does not exist, and the per-tick cap comes out lower. The phantom tick appears only when the two remainders add up to at least one spacing. Spacing 60 leaves 52 on each side, 104 is at least 60, and the fee-3000 pool is the factory tier that hits this case. The other two factory spacings do not.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. Spacings 10 and 200 do not have the extra tick</h2>
+              <p>The v1.0.0 factory constructor enables three fee tiers. Fee 500 stores spacing 10, fee 3000 stores spacing 60, and fee 10000 stores spacing 200. enableFeeAmount can later add another fee if the caller is the owner, the fee is below 1000000, the spacing is greater than 0 and below 16384, and that fee has not been written yet. This note does not put a later fee into the table. A pool already created computed its cap in the constructor. A fee enabled afterward does not rewrite that pool's maxLiquidityPerTick.</p>
+              <table>
+                <thead>
+                  <tr><th>Spacing</th><th>Grid low</th><th>Grid high</th><th>Off-grid on one side</th><th>Ticks</th><th>Per-tick cap</th><th>Remainder</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>10</td><td>-887270</td><td>887270</td><td>2</td><td>177455</td><td>1917569901783203986719870431555990</td><td>6005</td></tr>
+                  <tr><td>60</td><td>-887220</td><td>887220</td><td>52</td><td>29575</td><td>11505743598341114571880798222544994</td><td>13905</td></tr>
+                  <tr><td>200</td><td>-887200</td><td>887200</td><td>72</td><td>8873</td><td>38350317471085141830651933667504588</td><td>2131</td></tr>
+                </tbody>
+              </table>
+              <p>Spacing 10 leaves 2 on one side, and the two sides add to 4. 4 is below 10, so integer division of the raw span does not add a tick beyond the grid. The count stays 177455, the cap is 1917569901783203986719870431555990, and the remainder is 6005. Spacing 200 leaves 72 on one side, the two sides add to 144, and 144 is below 200, so there is again no extra tick. The count is 8873, the cap is 38350317471085141830651933667504588, and the remainder is 2131. Of the three factory spacings, only 60 makes the raw ±887272 span and the snapped grid disagree by 1.</p>
+              <p>A wider spacing means fewer ticks and a larger per-tick cap. That does not mean the spacing-60 cap can be scaled by 200 over 60. 200 over 60 is 10 over 3. Multiplying the spacing-60 cap by 10 and dividing by 3 produces 38352478661137048572935994075149980, which is 2161190051906742284060407645392 above the real spacing-200 cap. The extra amount comes from the added endpoint and from the fact that the off-grid blocks of 52 and 72 do not shrink by the same ratio. The ratio of the tick counts is not the inverse ratio of the spacings, and the ratio of the caps is not the ratio of the spacings.</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. The cap binds the tick's gross, not the liquidity the pool is using</h2>
+              <p>Tick.update receives liquidityGross on that tick after the addition. Every position that uses the tick as a lower or upper boundary adds into the same gross. One position consumes its liquidity once on the lower tick and once on the upper tick. When the position's liquidity equals the cap, both boundaries are full. Another position that touches either boundary, even to mint 1 more, makes the gross the cap plus 1 and reverts with LO.</p>
+              <p>When the boundaries are not shared, the liquidity the pool is using can exceed the per-tick cap. In the teaching case the current tick is 90. The first position uses ticks 0 and 120, with liquidity equal to the cap. The second uses ticks 60 and 180, also at the cap. Each of the four boundaries has gross equal to the cap, and none exceeds it. The pool does not add to in-range liquidity when the current tick is below the lower tick. 90 is not below 0 and not below 60. 90 is below 120 and below 180. Both mints take the branch where the current tick is inside the range, and the liquidity the pool is using becomes twice the cap.</p>
+              <p>This is the same kind of split as <a href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">Liquidity Check: Gross on Four Ticks Sums to 2800, and the Pool Is Using 1000</a>, and the numbers must not be added together. That note uses a smaller teaching liquidity to show that the sum of gross is not the liquidity the pool is using. This note shows that the cap binds each tick's gross. Two full positions that do not share a boundary can leave in-range liquidity at twice the cap. A third position on ticks 0 and 60 that mints only 1 fails on those two already-full ticks. The failure is the gross, not the size of that 1.</p>
+              <p>Decreasing liquidity makes the gross after the update smaller, so it still fits under the cap, and this LO comparison does not fail because liquidity was removed. After a decrease brings the gross back to 0, the bitmap can flip that tick off. Which bit in which word flips is <a href="/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180</a>. The cap in this note does not change the word and bit arithmetic. It only decides whether that tick's gross can grow.</p>
+              <p>To check a deployed pool, read in this order. Read tickSpacing and confirm it is 10, 60, or 200 from the factory constructor, or another spacing written later by enableFeeAmount. Then compute the grid ends, the tick count, the quotient, and the remainder from the minimum tick, the maximum tick, and that spacing. The quotient must equal the pool's maxLiquidityPerTick. A fee-3000 pool must have 29575 ticks and the quotient 11505743598341114571880798222544994. If a comment or a front-end limit uses the 29576 quotient, that limit is stricter than the contract by 389022978034254617658939620724. Last, read liquidityGross on the target tick, add the liquidity to be minted, and see whether the sum is still within the quotient.</p>
+              <p>This is an analytical framework. The grid ends, the tick count, the division, and the LO comparison come from Tick.sol, TickMath.sol, UniswapV3Pool.sol, and UniswapV3Factory.sol at v1.0.0. 11505743598341114571880798222544994, 13905, 15670, and 389022978034254617658939620724 are results of that integer arithmetic, not a pool reading from 13 November 2026, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>6. Common misreadings</h2>
+              <h3>Is the per-tick cap the uint128 maximum divided by 29576?</h3>
+              <p>No. Spacing 60 first snaps -887272 and 887272 to -887220 and 887220, and the tick count is 29575. The quotient is 11505743598341114571880798222544994. Dividing by 29576 produces a smaller quotient, short by 389022978034254617658939620724. The extra tick comes from 52 off-grid ticks on each side. 52 plus 52 is 104, and 104 contains one full spacing.</p>
+              <h3>Does the cap times 29575 equal the uint128 maximum?</h3>
+              <p>No. The quotient times 29575 is 340282366920938463463374607431768197550, which is 13905 below 340282366920938463463374607431768211455. That 13905 is the division remainder and is not given to any tick. If every tick held the cap plus 1, the sum would exceed the uint128 maximum by 15670.</p>
+              <h3>The tick is already at the cap. Does minting 1 more liquidity pass because the amount is small?</h3>
+              <p>No. Tick.update compares liquidityGross after the addition, not the size of this mint on its own. The cap plus 1 still fits in an int128, but the gross is above maxLiquidityPerTick and the call reverts with LO. Two positions that do not share a boundary can raise the liquidity the pool is using to twice the cap. The cap binds each tick's gross.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: the per-tick cap is checked on the pool's maxLiquidityPerTick, and a quote page does not show it. To look at the price and fee of one small swap, you can review <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That entry has nothing to do with whether the divisor is 29575 or 29576, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The cap divides the uint128 maximum by the tick count</a></li><li><a href="#sec-2">Spacing 60 has 29575 ticks, and the remainder is 13905</a></li><li><a href="#sec-3">Dividing by ±887272 produces a 29576th tick</a></li><li><a href="#sec-4">Spacings 10 and 200 do not have the extra tick</a></li><li><a href="#sec-5">The cap binds the tick's gross, not the liquidity the pool is using</a></li><li><a href="#faq">Common misreadings</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Uniswap v3: the per-tick cap is the uint128 maximum divided by the grid count, and a larger gross reverts with LO</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Factory.sol" target="_blank" rel="noopener">Uniswap v3: the constructor stores fees 500, 3000, and 10000 as spacings 10, 60, and 200</a></li></ul><p class="ref-note">Sources checked 13 November 2026. The grid ends, the tick count after adding 1, the division that keeps only the quotient, and the LO revert when liquidityGross exceeds the cap come from Tick.sol and TickMath.sol v1.0.0. The pool writes maxLiquidityPerTick in the constructor and passes it when the boundaries are updated, from UniswapV3Pool.sol v1.0.0. The three fee spacings come from the UniswapV3Factory.sol v1.0.0 constructor. 29575, 13905, and the amount the wrong divisor drops are integer results, not a live pool reading.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-tick-spacing-vs-min-tick-verification-guide.html">Spacing Check: Fee 3000 Stores Tick Spacing 60, and -887272 Is Outside the Grid</a></li><li><a href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">Liquidity Check: Gross on Four Ticks Sums to 2800, and the Pool Is Using 1000</a></li><li><a href="/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">Bitmap Check: The Next Spacing Tick Is 60, and This Call Returns 180</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">deskbyai</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=afc45800"></script>
+</body>
+</html>
