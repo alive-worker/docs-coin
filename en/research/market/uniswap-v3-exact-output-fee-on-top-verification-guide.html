@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002 - Crypto Research Notes</title>
+  <meta name="description" content="At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,SwapMath,exact output,swap fee,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002">
+  <meta property="og:description" content="At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-16T10:48:05+08:00">
+  <meta property="article:modified_time" content="2026-11-16T10:48:05+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Out">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="SwapMath">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="998 plus 4, with 1002 under the line. The 1001 beside it is crossed out.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002">
+  <meta name="twitter:description" content="At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="998 plus 4, with 1002 under the line. The 1001 beside it is crossed out.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html",
+      "name": "Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#article",
+      "headline": "Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002",
+      "description": "At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.png"],
+      "datePublished": "2026-11-16T10:48:05+08:00",
+      "dateModified": "2026-11-16T10:48:05+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","SwapMath","exact output","swap fee","crypto research"],
+      "wordCount": 2548,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "The curve needs 998. Is a payment of 1001 enough?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. 998 times 3000 is 2994000. Divided by 997000, the quotient is 3 and the remainder is 3000, so the fee rounds up to 4 and the payment is 1002. A payment of 1001, under the exact-input split, is 1001 times 997000 divided by 1000000 and truncated, which is 997. The curve takes 997, not 998." }
+        },
+        {
+          "@type": "Question",
+          "name": "The curve needs 997 and the payment is 1000. Is that the same trade as an exact input of 997?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. 997 times 3000 is 2991000, which divides evenly by 997000, so the fee is exactly 3. The exact output pays 1000 and the curve takes 997. An exact input pays 997, the curve takes 994, and the fee is the remaining 3. A flash loan that borrows 997 and must repay at least 1000 compares balances with the pre-borrow balance. It does not mean the curve took 997." }
+        },
+        {
+          "@type": "Question",
+          "name": "If this step cuts the output down to the amount still requested, does the fee get smaller?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The cut replaces amountOut, and it happens before the fee is computed. The curve's amountIn is not reduced. The fee is still amountIn times 3000 divided by 997000, plus 1 when the remainder is greater than 0." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Out</span></p>
+          <h1>Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002</h1>
+          <p class="article-summary">An exact output adds the fee outside the amount the curve takes. It does not deduct the fee from the payment first. At fee 3000 the divisor is 997000, not 1000000. When the curve already needs 998, 998 times 3000 is 2994000. Divided by 997000 the quotient is 3 and the remainder is 3000, so the fee rounds up to 4 and the payment is 1002. A short payment of 1001, split the exact-input way, lets the curve take only 997. When the curve needs 997 the remainder is 0, the fee is exactly 3, and the payment is 1000. That 1000 is not an exact input of 997, which lets the curve take only 994. These are the integers on the fee line, not a pool quote from 16 November 2026, and they are not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-16T10:48:05+08:00">2026-11-16 10:48:05</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-exact-output-fee-on-top-verification-guide-en.svg" alt="998 plus 4, with 1002 under the line. The 1001 beside it is crossed out." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>On an exact output the fee is not payment minus curve input. It is the curve input times the fee, divided by 1000000 minus the fee, plus 1 when the remainder is greater than 0.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>At fee 3000 the curve needs 998. The product is 2994000, the quotient is 3, the remainder is 3000, the fee is 4, and the payment is 1002.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>A payment of 1001, under the exact-input split, lets the curve take 997. Rounding 998 up with the flash-loan divisor of 1000000 writes the fee as 3 and drops 1.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>When the output is cut down to the amount still requested, the cut replaces amountOut. amountIn is not reduced, and the fee still rounds up from the uncut curve input. The callback must cover the positive return value.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. An exact output adds the fee outside the curve</h2>
+              <p>Inside SwapMath.computeSwapStep, exactIn is true when the amount still remaining on this step is greater than or equal to 0. That is an exact input. A negative remainder is an exact output: the amountSpecified the caller passed to the pool is negative, and its absolute value is how much the pool should send out. The pool's own exactInput flag is a strict greater-than. An amountSpecified of 0 reverts with AS before the loop, so a real swap never reaches SwapMath carrying 0. The two comparisons disagree at 0, and 0 never arrives at the fee line.</p>
+              <p>On an exact input that does not reach the price target, the fee is the remaining input minus the amount the curve actually takes. <a href="/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3</a> is that branch: the input is multiplied by 997000 and divided by 1000000, truncated, and only then shown to the curve. An exact output cannot enter that branch. When exactIn is false, whether or not the price target is reached, the fee is FullMath.mulDivRoundingUp of the curve input times feePips, divided by 1000000 minus feePips. If the product does not divide evenly and the remainder is greater than 0, the result gains 1.</p>
+              <p>At fee 3000 that divisor is 997000, not 1000000. The exact-input formula divides by 1000000 because the fee is carved out of the payment and the curve only sees the remaining 997000 parts. An exact output runs the other way: the amount the curve must take is already fixed, and the fee is added outside it, so the divisor is the part that remains after the fee tier is removed. The two divisors differ by the fee tier itself. Using the wrong one can land on the same fee when the division is exact, and it drops 1 as soon as there is a remainder.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. The curve needs 998, the remainder is 3000, and the payment is 1002</h2>
+              <p>This note starts after the curve has already produced amountIn. 998 is not a token amount converted from a square-root price. It is the input to the fee line. How the price function produced 998 is SqrtPriceMath. The fee line does not look at the output again. It only looks at how much the curve is about to take.</p>
+              <p>998 times 3000 is 2994000. Divided by 997000, the quotient is 3, because 997000 times 3 is 2991000. The remainder is 3000. A remainder greater than 0 makes mulDivRoundingUp add 1 to the quotient, so the fee is 4. The payment is 998 plus 4, which is 1002. Truncating would leave the fee at 3 and write the payment as 1001. That 1 is the remainder of 3000 being rounded up.</p>
+              <table>
+                <thead>
+                  <tr><th>Curve takes</th><th>Times 3000</th><th>Quotient</th><th>Remainder</th><th>Fee</th><th>Payment</th><th>Curve takes if you pay 1 less</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>3000</td><td>0</td><td>3000</td><td>1</td><td>2</td><td>0</td></tr>
+                  <tr><td>332</td><td>996000</td><td>0</td><td>996000</td><td>1</td><td>333</td><td>331</td></tr>
+                  <tr><td>333</td><td>999000</td><td>1</td><td>2000</td><td>2</td><td>335</td><td>332</td></tr>
+                  <tr><td>997</td><td>2991000</td><td>3</td><td>0</td><td>3</td><td>1000</td><td>996</td></tr>
+                  <tr><td>998</td><td>2994000</td><td>3</td><td>3000</td><td>4</td><td>1002</td><td>997</td></tr>
+                </tbody>
+              </table>
+              <p>The product for 332 is 996000, still below 997000, so the quotient is 0 and the remainder is 996000. Rounding up still makes the fee 1, and the payment is 333. The product for 333 is 999000, already past one divisor. The quotient is 1, the remainder is 2000, the fee becomes 2, and the payment is 335. A quotient of 1 does not mean the rounding step can be skipped. Any remainder still adds 1. The product for 1 is only 3000, the quotient is 0, the rounded fee is 1, and the payment is 2. The curve takes 1, and the payment is still 2, not 1.</p>
+              <p>997 is the only row in the table with remainder 0. 2991000 is exactly 3 times 997000, so truncation and rounding up both give 3, and the payment is 1000. An exact division hides the gap between the two rules. Checking only the 997 row makes the exact-output round-up look identical to truncation. 998 is the row that shows the difference of 1.</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. Paying 1 less lets the curve take 997</h2>
+              <p>Reading an exact output as the inverse of an exact input means estimating a truncated fee and adding it to the 998 the curve needs. 998 times 3000 divided by 997000 truncates to 3, so the payment is written as 1001. The exact-input split checks that 1001 the other way: 1001 times 997000 is 997997000, and dividing by 1000000 truncates to 997. The curve takes 997, and the fee is 1001 minus 997, which is 4. The amount taken is 1 below 998. The payment was short by 1, and the curve is also short by 1, but the missing 1 was not removed from the fee. It was cut when the whole payment was truncated into 997000 parts.</p>
+              <p>Paying the full 1002 gives 1002 times 997000, which is 998994000. Divided by 1000000 and truncated, that is 998, and the remaining 4 is the rounded-up fee. An exact input of 1002 that does not hit the price target lets the curve take 998 with a fee of 4. An exact output that needs the curve to take 998 also requires a payment of 1002. The two sides meet when the payment includes the rounded-up fee. They do not meet one unit lower, because the exact-input truncation reduces the curve input as well when the payment drops by 1.</p>
+              <p>The 333 row does the same thing. After rounding up, the payment is 335. 335 times 997000 divided by 1000000 truncates to 333. The short payment of 334 produces 332: 334 times 997000 is 332998000, and dividing by 1000000 leaves 332, with a fraction below 1 cut off. Reading the quotient of 1 as a fee of 1, and paying 334, stops the curve at 332, one short of the 333 it needed. A remainder of 2000 is far below 997000, and the round-up still costs that full 1.</p>
+              <p>The other undercount borrows the flash-loan divisor. A flash fee is the borrowed amount times the fee, divided by 1000000, rounded up when there is a remainder. In <a href="/en/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">Flash Check: Borrow 997, and the Repayment Must Be at Least 1000</a>, 997 times 3000 is 2991000. Divided by 1000000 the quotient is 2 and the remainder is 991000, so the fee rounds up to 3. Using that same division by 1000000 on a curve input of 998 gives 2994000 divided by 1000000, quotient 2 and remainder 994000, which rounds up to a fee of 3 and a payment of 1001. The exact-output divisor is 997000, and the fee on that same 998 is 4. Dropping the fee tier of 3000 out of the divisor drops 1 from the fee. 998 is the next integer after the two divisors still agree. 997 divides 997000 evenly, and dividing by 1000000 still rounds up to 3, so both formulas land on a fee of 3 and the split stays hidden.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. An exact 997 costs 1000, and that is not an exact input of 997</h2>
+              <p>When the curve needs 997, 2991000 divided by 997000 has no remainder, the fee is 3, and the payment is 1000. An exact input whose payment is 997 is a different trade: 997 times 997000 divided by 1000000 truncates to 994, and the fee is 997 minus 994, which is 3. You pay 997 and the curve takes 994. The exact output pays 1000 and the curve takes 997. Both fees of 3 are right, and the amounts taken differ by 3, because one 3 is carved out of the payment and the other 3 is added outside the amount the curve needs.</p>
+              <p>The flash loan's 1000 is a third trade. After borrowing 997, the pool requires the balance to rise by at least the fee of 3 above the pre-borrow balance, so at least 1000 comes back. Those 1000 include the 997 that was just sent out. The exact output's 1000 contains 997 that the curve is newly taking and 3 added outside it. The pool did not first lend 997 on this swap. All three sit next to fee 3000 with a 997 and a 1000. They cannot be added together, and one formula cannot be used to check another.</p>
+              <p>Paying 999, under the exact-input split, lets the curve take 996: 999 times 997000 is 996003000, and dividing by 1000000 truncates to 996. That is neither the 997 an exact output needed nor the 994 an exact input of 997 lets the curve take. Around 997, each step of 1 cuts the exact-input formula in a different place. A check has to name exact input, exact output, or flash loan before it picks the divisor.</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. Cutting the output does not shrink the fee</h2>
+              <p>Before the fee, computeSwapStep has one line that applies only to an exact output. If the amountOut implied by the price move is larger than the output still requested, amountOut is replaced by that remainder. The line changes the output. It does not change amountIn. The fee branch that follows still uses the original amountIn. The output that was cut off cannot be subtracted from the curve input and used to recompute the fee. The 998, 4, and 1002 in this table assume that line was not taken. If it is taken, the output gets smaller, and the fee is still not recomputed from the smaller output.</p>
+              <p>When the pool folds the step back into the swap, an exact output adds the output to the remaining amount, which moves toward 0. amountCalculated adds the curve input plus the fee, the positive amount that has to be paid. The loop stops when the remainder returns to 0 or the price hits the limit. If the remainder hits 0 first, the negative side equals the original amountSpecified and the positive side is the sum of the payments from the steps that ran. If the price limit hits first, the negative side is only the output actually sent and the positive side only adds the steps that already ran. This note does not invent an unfinished output amount.</p>
+              <p>Which return value is positive depends on whether zeroForOne and exactInput are the same boolean. On an exact output, exactInput is false. When zeroForOne is true the two flags differ, amount0 is amountCalculated and is the positive payment, and amount1 is the negative value computed from the remainder. The pool transfers token1 to the recipient first, then the callback must increase the token0 balance by at least amount0 or the call reverts with IIA. When zeroForOne is false the two flags match, the positive value is amount1, the pool transfers token0 first, and the callback must bring token1. When the curve takes 998 and the fee is 4, that positive value is 1002. A payment of 1001 fails IIA. The transfer happens before the callback, and a short payment reverts the whole transaction, so the transfer does not remain.</p>
+              <p>This 4 has not yet been split into a protocol fee. The protocol fee is an integer division of the step fee, using the denominator stored in slot0, and the remainder stays with liquidity providers. <a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a> is that later cut. The 4 in this note is the whole step fee before the split. It should not be written down as liquidity-provider income, and it should not be added to that note's example of a 3000 fee splitting into 2250 or 2500.</p>
+              <p>To check an exact output, read in this order. Confirm that amountSpecified is negative and is not 0. Read the step's amountIn, multiply by the pool fee, and divide by 1000000 minus the fee. A remainder of 0 keeps the quotient. A remainder greater than 0 takes the quotient plus 1. The payment is amountIn plus that fee. Run the payment minus 1 through the exact-input split, and the curve input should come out lower than amountIn. Last, after the callback, the balance increase must be at least the positive return value. At fee 3000 with amountIn of 998, the fee must be 4 and the positive value must be 1002. A figure of 1001 has dropped the remainder of 3000.</p>
+              <p>This is an analytical framework. The exact-output round-up, the divisor of 1000000 minus the fee, and the output being cut on its own come from SwapMath.sol and FullMath.sol v1.0.0. The positive value that the callback must cover, and the transfer that happens before payment, come from UniswapV3Pool.sol v1.0.0. 998, 4, 1002, 997, and 1000 are results of that integer arithmetic, not a pool quote from 16 November 2026, and they are not investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>6. Common misreadings</h2>
+              <h3>The curve needs 998. Is a payment of 1001 enough?</h3>
+              <p>No. 998 times 3000 is 2994000. Divided by 997000, the quotient is 3 and the remainder is 3000, so the fee rounds up to 4 and the payment is 1002. A payment of 1001, under the exact-input split, is 1001 times 997000 divided by 1000000 and truncated, which is 997. The curve takes 997, not 998.</p>
+              <h3>The curve needs 997 and the payment is 1000. Is that the same trade as an exact input of 997?</h3>
+              <p>No. 997 times 3000 is 2991000, which divides evenly by 997000, so the fee is exactly 3. The exact output pays 1000 and the curve takes 997. An exact input pays 997, the curve takes 994, and the fee is the remaining 3. A flash loan that borrows 997 and must repay at least 1000 compares balances with the pre-borrow balance. It does not mean the curve took 997.</p>
+              <h3>If this step cuts the output down to the amount still requested, does the fee get smaller?</h3>
+              <p>No. The cut replaces amountOut, and it happens before the fee is computed. The curve's amountIn is not reduced. The fee is still amountIn times 3000 divided by 997000, plus 1 when the remainder is greater than 0.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: the exact-output round-up is checked on the fee line in SwapMath, and a quote page does not split 998 from 4. To look at the price and fee of one small swap, you can review <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> yourself. That entry has nothing to do with whether the payment is 1002 or 1001, and it is not a guarantee of the service. Any swap should be a real, lawful research expense, not an unlawful use.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">An exact output adds the fee outside the curve</a></li><li><a href="#sec-2">The curve needs 998, the remainder is 3000, and the payment is 1002</a></li><li><a href="#sec-3">Paying 1 less lets the curve take 997</a></li><li><a href="#sec-4">An exact 997 costs 1000, and that is not an exact input of 997</a></li><li><a href="#sec-5">Cutting the output does not shrink the fee</a></li><li><a href="#faq">Common misreadings</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SwapMath.sol" target="_blank" rel="noopener">Uniswap v3: an exact output rounds the fee up from the curve input, and the divisor is 1000000 minus the fee</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: an exact output transfers tokens first, and a short callback payment reverts with IIA</a></li></ul><p class="ref-note">Sources checked 16 November 2026. An exact output skipping the remainder-of-input fee, adding 1 when the remainder is greater than 0, and cutting the output on its own come from SwapMath.sol and FullMath.sol v1.0.0. The AS revert when amountSpecified is 0, and the positive return that the callback must cover, come from UniswapV3Pool.sol v1.0.0. 998, 4, 1002, 997, and 1000 are integer results, not a live pool quote.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-exact-input-fee-before-curve-verification-guide.html">Swap Check: Input 997 Reaches the Curve as 994, and the Fee Is 3</a></li><li><a href="/en/research/market/uniswap-v3-flash-repay-vs-fee-verification-guide.html">Flash Check: Borrow 997, and the Repayment Must Be at Least 1000</a></li><li><a href="/en/research/market/uniswap-v3-fee-tier-vs-lp-fee-verification-guide.html">Fee Check: The Pool Fee Tier Is Not the Cut LPs Keep</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon-en.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">An English-language site focused on crypto research methodology and on-chain data, covering research frameworks, on-chain metric interpretation, and fund-flow observation, aiming to help readers understand crypto projects more systematically and rationally.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Popular Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance, Assets &amp; Special Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About This Site</a></li>
+          <li><a href="/en/virtual-card.html">Virtual Card Payment Guide</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friends</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">deskbyai</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Subscription Pay</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Going Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Swap Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content on this site is for research and educational purposes only and does not constitute investment advice; crypto asset prices are highly volatile and involve risk — please make your own judgment and take responsibility for your own decisions.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=61146bb8"></script>
+</body>
+</html>

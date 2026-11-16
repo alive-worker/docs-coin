@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-max-liquidity-per-tick-verification-guide',
-  publishedISO: '2026-11-13T10:48:58+08:00',
+  slug: 'uniswap-v3-exact-output-fee-on-top-verification-guide',
+  publishedISO: '2026-11-16T10:48:05+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "上限核验：间距 60 有 29575 档，除数不是 29576",
-    tagLabel: "上限",
-    cardDesc: "间距 60 的网格有 29575 档，单档上限是 11505743598341114571880798222544994。用 ±887272 直接去除得到 29576，上限少了 389022978034254617658939620724。多出来的 1 档，是两侧各 52 个越格 tick 拼出来的。",
+    h1: "兑出核验：曲线要吃进 998，进一之后要付 1002",
+    tagLabel: "兑出",
+    cardDesc: "费率 3000 的精确输出，手续费用曲线吃进量乘 3000 再除以 997000，有余数就进一。曲线要 998 时商是 3、余数 3000，手续费是 4，要付 1002。少付的 1001 按先扣公式只能让曲线吃进 997。",
   },
   en: {
-    h1: "Cap Check: Spacing 60 Has 29575 Ticks, and the Divisor Is Not 29576",
-    tagLabel: "Cap",
-    cardDesc: "Spacing 60 has 29575 ticks on the grid, and the per-tick cap is 11505743598341114571880798222544994. Dividing by the raw ±887272 span produces 29576 and a cap that is 389022978034254617658939620724 smaller. The extra tick is the two off-grid ends of 52 added together.",
+    h1: "Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002",
+    tagLabel: "Out",
+    cardDesc: "At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-max-liquidity-per-tick-verification-guide',
     'uniswap-v3-fee-growth-outside-flip-verification-guide',
     'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
     'uniswap-v3-flash-repay-vs-fee-verification-guide',

@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html': '2026-11-16 10:48:05',
+    '/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html': '2026-11-16 10:48:05',
     '/en/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html': '2026-11-13 10:48:58',
     '/research/market/uniswap-v3-max-liquidity-per-tick-verification-guide.html': '2026-11-13 10:48:58',
     '/en/research/market/uniswap-v3-fee-growth-outside-flip-verification-guide.html': '2026-11-12 13:55:20',
