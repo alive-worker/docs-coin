@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000 - Crypto Research Notes</title>
+  <meta name="description" content="When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,liquidityNet,cross tick,active liquidity,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000">
+  <meta property="og:description" content="When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-18T09:24:40+08:00">
+  <meta property="article:modified_time" content="2026-11-18T09:24:40+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Cross">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="liquidityNet">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Crossing left past 200: 4000 minus negative 1000 returns 5000. Erroneously adding yields 3000.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000">
+  <meta name="twitter:description" content="When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Crossing left past 200: 4000 minus negative 1000 returns 5000. Erroneously adding yields 3000.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html",
+      "name": "Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#article",
+      "headline": "Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000",
+      "description": "When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.png"],
+      "datePublished": "2026-11-18T09:24:40+08:00",
+      "dateModified": "2026-11-18T09:24:40+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","liquidityNet","cross tick","active liquidity","crypto research"],
+      "wordCount": 2150,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/LiquidityMath.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does crossing an initialized tick always increase active pool liquidity?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The static liquidityNet of an initialized tick can be positive or negative. When the price moves upward past an upper tick, liquidityNet is negative and active liquidity decreases. When moving downward past a lower tick, negating the sign also reduces active liquidity. Active liquidity increases only when stepping inside an active position range." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is liquidityGross positive if liquidityNet is negative at upper tick 200?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Because they measure different properties. liquidityGross tracks the total absolute liquidity referencing that tick boundary, and it is always non-negative. It determines whether the tick remains active or can be cleared from the bitmap. liquidityNet tracks directional signed deltas, which must be negative at upper ticks to signal liquidity removal upon upward breakout." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if an off-chain simulation forgets to negate liquidityNet when moving left?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It creates a doubled error. Starting from 4000 active liquidity and upper tick net of -1000, the correct calculation subtracts -1000 to get 5000. Adding directly yields 4000 + (-1000) = 3000, understating active depth by 2000. In subsequent swap steps, this artificially small liquidity exaggerates price impact and ruins routing predictions." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Cross</span></p>
+          <h1>Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000</h1>
+          <p class="article-summary">When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. When 1000 liquidity is added to range [100, 200], lower tick 100 records +1000 and upper tick 200 records -1000. Active liquidity 5000 crossing right past 200 drops to 4000; when the price drops and crosses left back past 200, subtracting -1000 restores it to 5000. Omitting the sign negation on leftward steps adds -1000 directly, erroneously dropping liquidity to 3000 and understating active depth by 2000. These are integer rules from UniswapV3Pool and LiquidityMath, not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-18T09:24:40+08:00">2026-11-18 09:24:40</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-cross-tick-liquidity-net-verification-guide-en.svg" alt="Crossing left past 200: 4000 minus negative 1000 returns 5000. Erroneously adding yields 3000." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>ticks[tick].liquidityNet records net liquidity change when price crosses from left to right. Lower ticks are positive, upper ticks are negative.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Crossing right (zeroForOne is false, price rises) adds liquidityNet directly: 5000 plus -1000 equals 4000.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Crossing left (zeroForOne is true, price falls) negates the sign: 4000 minus -1000 restores active liquidity to 5000.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Omitting sign negation on leftward crossings drops liquidity to 3000, creating an error of 2000; falling past lower tick 100 subtracts +1000 to drop to 4000.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. liquidityNet signs are defined for upward crossings</h2>
+              <p>In Uniswap V3, concentrated liquidity positions are constrained within discrete tick ranges [tickLower, tickUpper]. Inside the core <code>Tick.update</code> function, adding a liquidity delta assigns distinct algebraic signs to the lower and upper boundaries:</p>
+              <pre><code>// Tick.sol
+liquidityNet = upper
+    ? int128(int256(liquidityNet).sub(liquidityDelta))
+    : int128(int256(liquidityNet).add(liquidityDelta));</code></pre>
+              <p>When an LP deposits 1000 liquidity across [100, 200], tickLower = 100 records <code>liquidityNet = +1000</code>, while tickUpper = 200 records <code>liquidityNet = -1000</code>. The physical convention assumes monotonic price growth from left to right: crossing tickLower = 100 activates the position and injects 1000 active liquidity into the pool, whereas crossing tickUpper = 200 exits the position range, requiring that same 1000 to be subtracted.</p>
+              <p>While <code>liquidityGross</code> always stores the non-negative sum of referencing commitments (both ticks register +1000), <code>liquidityNet</code> represents a directional derivative. Understanding this sign convention is essential for correctly verifying tick transition arithmetic.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. Crossing right past 200: 5000 plus -1000 becomes 4000</h2>
+              <p>When a swap sells token1 for token0 (<code>zeroForOne = false</code>), token1 reserves increase, token0 reserves decrease, and the marginal price rises as the current tick advances to the right. Inside the swap loop of <code>UniswapV3Pool.sol</code>, hitting an initialized tick triggers the cross transition:</p>
+              <pre><code>// UniswapV3Pool.sol
+if (state.tick == step.tickNext) {
+    int128 liquidityNet = ticks.cross(step.tickNext, ...);
+    if (zeroForOne) liquidityNet = -liquidityNet;
+    state.liquidity = LiquidityMath.addDelta(state.liquidity, liquidityNet);
+}</code></pre>
+              <p>Assume global active liquidity <code>state.liquidity</code> is 5000 prior to crossing 200. Because <code>zeroForOne</code> is false, the code bypasses the negation branch and retains <code>liquidityNet = -1000</code>.</p>
+              <p>Executing <code>LiquidityMath.addDelta(5000, -1000)</code> yields 4000. Global pool liquidity drops from 5000 to 4000. This integer change mirrors reality: the position's tokens have been entirely converted to token0, and that 1000 liquidity no longer supports trades above tick 200.</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. Crossing left back past 200: subtracting -1000 returns to 5000</h2>
+              <p>Consider the reverse market movement. The price had reached 250 with active liquidity at 4000. A heavy sell order sells token0 for token1 (<code>zeroForOne = true</code>), pushing the price downwards and crossing left back past tick 200.</p>
+              <p>Upon crossing tickUpper = 200 to the left, <code>ticks.cross</code> reads the static stored value <code>-1000</code>. Crucially, because <code>zeroForOne</code> is true, the pool executes the mandatory sign negation:</p>
+              <pre><code>if (zeroForOne) liquidityNet = -liquidityNet;</code></pre>
+              <p>Here, -1000 is negated to -(-1000) = +1000. Calling <code>LiquidityMath.addDelta(4000, 1000)</code> accurately increases active liquidity to 5000. The position is reactivated, restoring pool depth.</p>
+              <table>
+                <thead>
+                  <tr><th>Crossing Scenario</th><th>Current Liquidity</th><th>Tick Boundary</th><th>Stored liquidityNet</th><th>zeroForOne Flag</th><th>Effective Delta</th><th>New Liquidity</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Enter range rightward</td><td>4000</td><td>tickLower = 100</td><td>+1000</td><td>false (Up)</td><td>+1000</td><td>5000</td></tr>
+                  <tr><td>Exit range rightward</td><td>5000</td><td>tickUpper = 200</td><td>-1000</td><td>false (Up)</td><td>-1000</td><td>4000</td></tr>
+                  <tr><td>Re-enter range leftward</td><td>4000</td><td>tickUpper = 200</td><td>-1000</td><td>true (Down)</td><td>+1000</td><td>5000</td></tr>
+                  <tr><td>Exit range leftward</td><td>5000</td><td>tickLower = 100</td><td>+1000</td><td>true (Down)</td><td>-1000</td><td>4000</td></tr>
+                </tbody>
+              </table>
+              <p>Row 3 highlights the common pitfall in offline simulation engines. Naive implementations that simply execute <code>state.liquidity += tick.liquidityNet</code> add -1000 directly to 4000, mistakenly producing 3000 instead of 5000.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. The 2000-unit discrepancy and compound errors</h2>
+              <p>Miscalculating liquidity as 3000 instead of 5000 does not merely drop 2000 units on a balance sheet; it severely distorts subsequent swap execution.</p>
+              <p>Immediately after the tick cross, the swap loop proceeds to <code>SwapMath.computeSwapStep</code>, where the price step denominator is the updated <code>state.liquidity</code>:</p>
+              <pre><code>ΔsqrtPrice = Δy / L</code></pre>
+              <p>With an actual active liquidity <code>L = 5000</code>, substituting an erroneous <code>L = 3000</code> magnifies the estimated price drop by <code>5000 / 3000 ≈ 1.67</code> (a 66.7% overestimation of slippage). Consequently:</p>
+              <ol>
+                <li>Arbitrage bots falsely predict slippage limit violations and abandon profitable trades;</li>
+                <li>Lending liquidation bots overestimate market impact, issuing unwarranted distress signals;</li>
+                <li>Successive down-crossings compound inverted signs, eventually driving simulated liquidity negative and crashing the engine.</li>
+              </ol>
+            </section>
+            <section id="sec-5">
+              <h2>5. Exiting lower tick 100: subtracting +1000 drops to 4000</h2>
+              <p>Continuing along the downward price path, as the price breaks below tickLower = 100, <code>step.tickNext</code> hits 100 where static <code>liquidityNet</code> is +1000.</p>
+              <p>With <code>zeroForOne = true</code>, the value is negated to -1000. Global liquidity drops from 5000 plus -1000 back to 4000. Below tick 100, all position assets are converted to token1, and pool depth correctly resets to 4000, creating an exact symmetric cycle: 4000 &rarr; 5000 &rarr; 4000.</p>
+              <p>To verify a tick cross on-chain: confirm the <code>zeroForOne</code> boolean; retrieve the static <code>liquidityNet</code> of <code>step.tickNext</code>; negate it if <code>zeroForOne</code> is true; and add the signed result to previous liquidity. Crossing upper tick 200 to the left must return 5000, never 3000.</p>
+              <p>This is an analytical framework. Static tick net definitions come from <code>Tick.sol</code>, while directional crossing and liquidity updates come from <code>UniswapV3Pool.sol</code> and <code>LiquidityMath.sol</code> v1.0.0. The integers 4000, 5000, 3000, and 2000 are exact results of this arithmetic and do not constitute investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>6. Common misreadings</h2>
+              <h3>Does crossing an initialized tick always increase active pool liquidity?</h3>
+              <p>No. The static liquidityNet of an initialized tick can be positive or negative. When the price moves upward past an upper tick, liquidityNet is negative and active liquidity decreases. When moving downward past a lower tick, negating the sign also reduces active liquidity. Active liquidity increases only when stepping inside an active position range.</p>
+              <h3>Why is liquidityGross positive if liquidityNet is negative at upper tick 200?</h3>
+              <p>Because they measure different properties. liquidityGross tracks the total absolute liquidity referencing that tick boundary, and it is always non-negative. It determines whether the tick remains active or can be cleared from the bitmap. liquidityNet tracks directional signed deltas, which must be negative at upper ticks to signal liquidity removal upon upward breakout.</p>
+              <h3>What happens if an off-chain simulation forgets to negate liquidityNet when moving left?</h3>
+              <p>It creates a doubled error. Starting from 4000 active liquidity and upper tick net of -1000, the correct calculation subtracts -1000 to get 5000. Adding directly yields 4000 + (-1000) = 3000, understating active depth by 2000. In subsequent swap steps, this artificially small liquidity exaggerates price impact and ruins routing predictions.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: validating cross-tick liquidity changes is essential for accurate quantitative models, whereas typical swap interfaces abstract away internal tick step operations. For practical small-scale spot or cross-chain swap testing alongside research, you may inspect <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> directly. That entry is independent of whether the liquidity is 5000 or 3000, and does not serve as an endorsement. Please utilize blockchain services lawfully for bona fide research.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">liquidityNet signs are defined for upward crossings</a></li><li><a href="#sec-2">Crossing right past 200: 5000 plus -1000 becomes 4000</a></li><li><a href="#sec-3">Crossing left back past 200: subtracting -1000 returns to 5000</a></li><li><a href="#sec-4">The 2000-unit discrepancy and compound errors</a></li><li><a href="#sec-5">Exiting lower tick 100: subtracting +1000 drops to 4000</a></li><li><a href="#faq">Common misreadings</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: swap loop negates liquidityNet upon cross when zeroForOne is true</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/Tick.sol" target="_blank" rel="noopener">Uniswap v3: Tick.update subtracts liquidity delta on upper tick and adds on lower tick</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/LiquidityMath.sol" target="_blank" rel="noopener">Uniswap v3: LiquidityMath.addDelta handles signed liquidity arithmetic</a></li></ul><p class="ref-note">Sources checked 18 November 2026. Cross negation and zeroForOne logic come from UniswapV3Pool.sol v1.0.0, and tick boundary signed deltas come from Tick.sol v1.0.0. 4000, 5000, 3000, and 2000 are exact integer verification results, not a live pool quote.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002</a></li><li><a href="/en/research/market/uniswap-v3-tick-bitmap-next-initialized-verification-guide.html">Bitmap Check: Locating the Next Active Price Tick from Bitmap Words</a></li><li><a href="/en/research/market/uniswap-v3-liquidity-gross-vs-active-liquidity-verification-guide.html">Liquidity Check: Per-Tick Gross Cap vs Global Active Liquidity</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A research publication focused on crypto methodology and on-chain data, providing analytical frameworks and metric verification to help readers systematically evaluate crypto protocols.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Featured Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance &amp; Asset Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friendly Links</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI System</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Sub</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About and Disclaimer</a></p>
+      <p>Content is for educational and research purposes only and does not constitute investment advice. Crypto assets carry substantial volatility risk; make decisions responsibly.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=2018f512"></script>
+</body>
+</html>

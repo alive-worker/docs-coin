@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-exact-output-fee-on-top-verification-guide',
-  publishedISO: '2026-11-16T10:48:05+08:00',
+  slug: 'uniswap-v3-cross-tick-liquidity-net-verification-guide',
+  publishedISO: '2026-11-18T09:24:40+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "兑出核验：曲线要吃进 998，进一之后要付 1002",
-    tagLabel: "兑出",
-    cardDesc: "费率 3000 的精确输出，手续费用曲线吃进量乘 3000 再除以 997000，有余数就进一。曲线要 998 时商是 3、余数 3000，手续费是 4，要付 1002。少付的 1001 按先扣公式只能让曲线吃进 997。",
+    h1: "穿档核验：向左穿过 200 减去负 1000，流动性回到 5000",
+    tagLabel: "穿档",
+    cardDesc: "Uniswap V3 在穿过已初始化 tick 时，向右移动加上 liquidityNet，向左移动减去 liquidityNet。区间 [100, 200] 注入流动性 1000 时，下界 100 的 net 为 +1000，上界 200 的 net 为 -1000。活跃流动性 5000 向右穿过 200 变为 4000；向左跌回穿过 200 时减去 -1000 恢复为 5000。若向左跌破时误用加号，流动性会被错算成 3000，少算整整 2000 活跃深度。",
   },
   en: {
-    h1: "Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002",
-    tagLabel: "Out",
-    cardDesc: "At fee 3000 an exact output rounds the fee up: curve input times 3000, divided by 997000. When the curve needs 998 the quotient is 3 and the remainder is 3000, so the fee is 4 and the payment is 1002. Paying 1001, under the exact-input split, lets the curve take only 997.",
+    h1: "Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000",
+    tagLabel: "Cross",
+    cardDesc: "When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-exact-output-fee-on-top-verification-guide',
     'uniswap-v3-max-liquidity-per-tick-verification-guide',
     'uniswap-v3-fee-growth-outside-flip-verification-guide',
     'uniswap-v3-tick-bitmap-next-initialized-verification-guide',
