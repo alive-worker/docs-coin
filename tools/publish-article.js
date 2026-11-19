@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
-  publishedISO: '2026-11-19T10:14:57+08:00',
+  slug: 'uniswap-v3-swap-step-target-price-fee-verification-guide',
+  publishedISO: '2026-11-19T14:52:57+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "进位核验：同一价格区间收进要付 1，吐出只给 0",
-    tagLabel: "进位",
-    cardDesc: "Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。",
+    h1: "步进核验：打到目标价按吃进量进一，没打到按剩余量扣除",
+    tagLabel: "步进",
+    cardDesc: "SwapMath.computeSwapStep 在计算单步手续费时有两条根本不同的分支：打到价格目标时，手续费按实际吃进量乘以费率除以 1000000 减费率向上进一，多余输入留给下一步；未打到目标时，手续费等于剩余输入减去曲线吃进量，把本步输入全部耗尽。曲线要 998 时打到需付 1002，传入 1001 付不起 1002 只能走未打到分支，曲线吃进回落至 997。",
   },
   en: {
-    h1: "Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range",
-    tagLabel: "Round",
-    cardDesc: "Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.",
+    h1: "Step Fee Check: Hitting Target Rounds from Curve Input, Falling Short Deducts All Remaining",
+    tagLabel: "Step",
+    cardDesc: "SwapMath.computeSwapStep branches fee computation based on target attainment: hitting the target rounds the fee up from curve input using divisor 1000000 minus fee, preserving excess input for next steps; falling short sets fee to remaining input minus curve input, consuming the step entirely. When the curve needs 998, hitting target requires 1002; inputting 1001 falls short, dropping curve input to 997.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
     'uniswap-v3-cross-tick-liquidity-net-verification-guide',
     'uniswap-v3-exact-output-fee-on-top-verification-guide',
     'uniswap-v3-max-liquidity-per-tick-verification-guide',
