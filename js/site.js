@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html': '2026-11-19 10:14:57',
+    '/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html': '2026-11-19 10:14:57',
     '/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html': '2026-11-18 09:24:40',
     '/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html': '2026-11-18 09:24:40',
     '/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html': '2026-11-16 10:48:05',

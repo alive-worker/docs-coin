@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range - Crypto Research Notes</title>
+  <meta name="description" content="Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,SqrtPriceMath,rounding,roundUp,precision error,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range">
+  <meta property="og:description" content="Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-19T10:14:57+08:00">
+  <meta property="article:modified_time" content="2026-11-19T10:14:57+08:00">
+  <meta property="article:section" content="Market Structure and Liquidity">
+  <meta property="article:tag" content="Round">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="SqrtPriceMath">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Same Range: Pay 1 to Inflow, Receive 0 on Outflow. 1 wei asymmetry in favor of the pool.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range">
+  <meta name="twitter:description" content="Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.png">
+  <meta name="twitter:image:alt" content="Same Range: Pay 1 to Inflow, Receive 0 on Outflow. 1 wei asymmetry in favor of the pool.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research Notes RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html",
+      "name": "Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure and Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range", "item": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#article",
+      "headline": "Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range",
+      "description": "Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.png"],
+      "datePublished": "2026-11-19T10:14:57+08:00",
+      "dateModified": "2026-11-19T10:14:57+08:00",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/en/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#webpage" },
+      "articleSection": "Market Structure and Liquidity",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","SqrtPriceMath","rounding","roundUp","precision error","crypto research"],
+      "wordCount": 2180,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why can't SqrtPriceMath simply use standard half-up rounding?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Because standard rounding truncates below 0.5 and rounds up above 0.5. If the pool truncates on inflows, traders pay less than required by the invariant curve; if it rounds up on outflows, the pool pays more than it holds. In high-frequency environments, attackers could craft micro-trades to drain token reserves using rounding biases." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does paying 1 and receiving 0 mean traders always lose value?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In macro trades, a 1 wei discrepancy across 18 decimals is negligible. But in micro-trades, dust orders, or tight-range arbitrage, this 1 wei determines economic feasibility. It serves as an essential defense and a fixed cost that simulation engines must account for." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does token1 have the same directional rounding protection?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. getAmount1Delta also receives the roundUp parameter. It calculates liquidity times price delta divided by 2^96. When roundUp is true, it calls mulDivRoundingUp; when false, it calls mulDiv. The pool strictly enforces rounding up on inflows and truncation on outflows for both token0 and token1." }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Notes home">
+        <img class="brand-logo" src="/favicon-en.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">Crypto Research Notes</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure and Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Round</span></p>
+          <h1>Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range</h1>
+          <p class="article-summary">Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks. These are integer truncation rules from SqrtPriceMath and FullMath, not investment advice.</p>
+          <p class="article-meta"><a href="/en/about.html#author">ipfsWeb</a> · Published <time datetime="2026-11-19T10:14:57+08:00">2026-11-19 10:14:57</time> Beijing time (UTC+08:00)</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide-en.svg" alt="Same Range: Pay 1 to Inflow, Receive 0 on Outflow. 1 wei asymmetry in favor of the pool." width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">Verification checklist</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>SqrtPriceMath.getAmount0Delta and getAmount1Delta rely on roundUp to dictate truncation direction. Inflows pass true, outflows pass false.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>For liquidity 1000 across sqrt price 100 to 101, theoretical token delta is 1000 / 10100 ≈ 0.099.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Inflows trigger divRoundingUp: quotient 0 with remainder 1000 rounds up to 1 wei; outflows trigger integer division: quotient 0 truncates to 0 wei.</li><li><span class="article-verify-check" aria-hidden="true">✓</span>Round-tripping through the same price interval enforces an irreversible 1 wei scissors gap, eliminating pool-draining precision exploits.</li></ul></div>
+            <section id="sec-1">
+              <h2>1. The essence of roundUp: the pool never loses</h2>
+              <p>In Uniswap V3, whenever price transitions from one square-root ratio to another, the pool computes the exact token delta required. Whether minting, burning, or swapping, all delta calculations funnel into two core functions inside <code>SqrtPriceMath.sol</code>: <code>getAmount0Delta</code> and <code>getAmount1Delta</code>.</p>
+              <p>Both functions accept a critical boolean parameter: <code>roundUp</code>. Inside <code>UniswapV3Pool.sol</code>, passing this argument adheres to an unyielding security invariant:</p>
+              <pre><code>// UniswapV3Pool.sol swap excerpt
+// When the pool charges tokens from the user:
+amount0 = SqrtPriceMath.getAmount0Delta(sqrtRatioTargetX96, state.sqrtPriceX96, state.liquidity, true);
+
+// When the pool pays tokens to the user:
+amount1 = SqrtPriceMath.getAmount1Delta(state.sqrtPriceX96, sqrtRatioTargetX96, state.liquidity, false);</code></pre>
+              <p>This design is known as "strictly in favor of the pool": whenever tokens flow into the pool, <code>roundUp</code> is <code>true</code>, forcing any non-zero remainder to round up by 1 wei. Whenever tokens flow out of the pool, <code>roundUp</code> is <code>false</code>, truncating fractional units to zero. The pool never pays out or undercharges a single wei due to fixed-point rounding.</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. Price moving from 100 to 101: theoretical delta of 0.099</h2>
+              <p>To inspect this rounding mechanism with exact arithmetic, consider an isolated scenario: virtual liquidity <code>L = 1000</code>, with square-root price moving between <code>sqrtRatioA = 100</code> and <code>sqrtRatioB = 101</code>.</p>
+              <p>According to the concentrated liquidity invariant, the theoretical delta for token0 is:</p>
+              <pre><code>Δx = L * (sqrtRatioB - sqrtRatioA) / (sqrtRatioA * sqrtRatioB)</code></pre>
+              <p>Substituting the numbers:</p>
+              <pre><code>Δx = 1000 * (101 - 100) / (100 * 101) = 1000 / 10100 ≈ 0.0990099...</code></pre>
+              <p>In real-number math, the theoretical token amount is less than 0.1. But in the EVM's integer world, whether this evaluates to 0 or 1 is decided entirely by <code>roundUp</code>.</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. Inflows round up to 1, outflows truncate to 0</h2>
+              <p>Tracing <code>SqrtPriceMath.getAmount0Delta</code> reveals the conditional execution branch:</p>
+              <pre><code>// SqrtPriceMath.sol
+return
+    roundUp
+        ? UnsafeMath.divRoundingUp(
+            FullMath.mulDivRoundingUp(numerator1, numerator2, sqrtRatioBX96),
+            sqrtRatioAX96
+        )
+        : FullMath.mulDiv(numerator1, numerator2, sqrtRatioBX96) / sqrtRatioAX96;</code></pre>
+              <p>Numerator product <code>numerator1 * numerator2</code> equals 1000, while the divisor is 10100.</p>
+              <ol>
+                <li><strong>When the pool receives token0 (roundUp = true)</strong>:
+                  Dividing 1000 by 10100 yields quotient 0 and remainder 1000. With remainder &gt; 0, <code>divRoundingUp</code> increments the quotient to <code>0 + 1 = 1</code>. The user must transfer 1 wei.</li>
+                <li><strong>When the pool pays token0 (roundUp = false)</strong>:
+                  Dividing 1000 by 10100 yields quotient 0. Standard division truncates the remainder, yielding 0. The pool transfers 0 wei.</li>
+              </ol>
+              <table>
+                <thead>
+                  <tr><th>Operation Direction</th><th>Liquidity L</th><th>Price Interval</th><th>Theoretical Delta</th><th>roundUp Flag</th><th>Math Routine</th><th>Final Integer Settlement</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Pool Receives Tokens (In)</td><td>1000</td><td>[100, 101]</td><td>0.0990099...</td><td>true (Up)</td><td>divRoundingUp</td><td><strong>1 wei</strong></td></tr>
+                  <tr><td>Pool Pays Tokens (Out)</td><td>1000</td><td>[100, 101]</td><td>0.0990099...</td><td>false (Down)</td><td>mulDiv / div</td><td><strong>0 wei</strong></td></tr>
+                </tbody>
+              </table>
+              <p>Under the exact same liquidity and price displacement, reversing the transfer direction flips the outcome between 1 and 0. This directional bias secures fixed-point protocol reserves.</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. The 1 wei scissors gap and anti-drain defense</h2>
+              <p>Consider an arbitrageur attempting a round-trip swap across this identical interval: first pushing price from 100 to 101, then immediately returning it from 101 to 100.</p>
+              <p>Under an idealized zero-fee model, net capital should be perfectly conserved. However, in Uniswap V3's integer mechanics:</p>
+              <pre><code>Paid to Pool (Inflow):     1 wei
+Received from Pool (Outflow): 0 wei
+Net Round-trip Loss:       1 wei</code></pre>
+              <p>Without asymmetric rounding, if inflows also truncated downward, traders would pay 0 wei and receive 0 wei. More dangerously, if any division branch erroneously rounded in the user's favor, an attacker could trigger millions of micro-swaps to extract 1 wei per loop, executing a "rounding drain attack".</p>
+              <p>By forcing inflows to round up and outflows to truncate, Uniswap V3 ensures that every round-trip across fractional thresholds permanently surrenders at least 1 wei to pool reserves.</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. Drift pitfalls in off-chain simulation engines</h2>
+              <p>When developing high-frequency market-making algorithms or offline backtesters, engineers frequently simulate <code>SqrtPriceMath</code> using standard floating-point operations or uniform integer division (<code>//</code>), neglecting the <code>roundUp</code> flag.</p>
+              <p>While negligible in isolated macro trades, this simplification causes cumulative distortion in high-frequency environments:</p>
+              <ol>
+                <li><strong>Grid Trading Strategies</strong>: Rapidly executing orders across narrow tick bands accumulates fictitious paper gains in float simulators, whereas live execution suffers continuous 1-2 wei rounding drag;</li>
+                <li><strong>Micro-Arbitrage Detection</strong>: Bots detecting sub-cent arbitrage fail on-chain because contracts demand an additional 1 wei on deposit and truncate 1 wei on withdrawal, causing transaction reverts (e.g., <code>IIA</code>);</li>
+                <li><strong>Reserve Curve Desynchronization</strong>: Backtests ignoring <code>divRoundingUp</code> gradually desynchronize token balances from the underlying invariant curve.</li>
+              </ol>
+              <p>When auditing token delta calculations, verify transfer direction: deposits must trigger <code>divRoundingUp</code>, while withdrawals must truncate. Across liquidity 1000 and range [100, 101], inflows must equal 1 wei and outflows must equal 0 wei.</p>
+              <p>This is an analytical framework. Rounding and truncation mechanics stem from <code>SqrtPriceMath.sol</code> and <code>FullMath.sol</code> v1.0.0. The integers 1, 0, and 0.099 represent exact fixed-point results and do not constitute investment advice.</p>
+            </section>
+            <section id="faq">
+              <h2>6. Common misreadings</h2>
+              <h3>Why can't SqrtPriceMath simply use standard half-up rounding?</h3>
+              <p>Because standard rounding truncates below 0.5 and rounds up above 0.5. If the pool truncates on inflows, traders pay less than required by the invariant curve; if it rounds up on outflows, the pool pays more than it holds. In high-frequency environments, attackers could craft micro-trades to drain token reserves using rounding biases.</p>
+              <h3>Does paying 1 and receiving 0 mean traders always lose value?</h3>
+              <p>In macro trades, a 1 wei discrepancy across 18 decimals is negligible. But in micro-trades, dust orders, or tight-range arbitrage, this 1 wei determines economic feasibility. It serves as an essential defense and a fixed cost that simulation engines must account for.</p>
+              <h3>Does token1 have the same directional rounding protection?</h3>
+              <p>Yes. getAmount1Delta also receives the roundUp parameter. It calculates liquidity times price delta divided by 2^96. When roundUp is true, it calls mulDivRoundingUp; when false, it calls mulDiv. The pool strictly enforces rounding up on inflows and truncation on outflows for both token0 and token1.</p>
+            </section>
+            <aside class="callout" aria-label="Sponsored note"><p>Sponsored note: understanding SqrtPriceMath rounding rules is vital for building institutional-grade quantitative backtesters, while standard retail interfaces abstract away single-wei fixed-point adjustments. To explore small-scale spot or cross-chain swaps alongside research, you may inspect <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap</a> directly. That entry is independent of the 1 vs 0 wei rounding derivation and does not constitute an endorsement. Please utilize blockchain tools lawfully for research purposes.</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#sec-1">The essence of roundUp: the pool never loses</a></li><li><a href="#sec-2">Price moving from 100 to 101: theoretical delta of 0.099</a></li><li><a href="#sec-3">Inflows round up to 1, outflows truncate to 0</a></li><li><a href="#sec-4">The 1 wei scissors gap and anti-drain defense</a></li><li><a href="#sec-5">Drift pitfalls in off-chain simulation engines</a></li><li><a href="#faq">Common misreadings</a></li></ol></nav>
+            <aside class="references" aria-label="Primary sources"><h2>Primary sources</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap v3: SqrtPriceMath.getAmount0Delta branches on roundUp for rounding vs truncation</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">Uniswap v3: FullMath.mulDivRoundingUp and mulDiv fixed-point routines</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3: Swap loop passes true when receiving tokens and false when paying tokens</a></li></ul><p class="ref-note">Sources checked 19 November 2026. Rounding rules derive from SqrtPriceMath.sol and FullMath.sol v1.0.0. The integers 1, 0, and 0.099 represent exact fixed-point evaluations, not a live pool quote.</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="Related research"><h2>Related research</h2><ul><li><a href="/en/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000</a></li><li><a href="/en/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">Exact-Out Check: The Curve Needs 998, and Rounding Up Makes the Payment 1002</a></li><li><a href="/en/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">Position Check: Range Liquidity vs Token Quantities</a></li></ul></aside>
+        <div class="back-row"><a href="/en/articles.html">All articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">Crypto Research Notes</span>
+          <p class="site-foot-desc">A research publication focused on crypto methodology and on-chain data, providing analytical frameworks and metric verification to help readers systematically evaluate crypto protocols.</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>Featured Topics</h3>
+        <ul>
+          <li><a href="/en/articles.html?topic=basics">Research Fundamentals</a></li>
+          <li><a href="/en/articles.html?topic=protocol">Protocol &amp; Infrastructure Risk</a></li>
+          <li><a href="/en/articles.html?topic=market">Market Structure &amp; Liquidity</a></li>
+          <li><a href="/en/articles.html?topic=governance">Governance &amp; Asset Verification</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/about.html">About</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub Repository</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>Friendly Links</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI System</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI Sub</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">Chain Swap</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">Virtual Card</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">Global Nav</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">Crypto Blog</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">Crypto Guide</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">Crypto News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research Notes · <a href="/en/about.html">About and Disclaimer</a></p>
+      <p>Content is for educational and research purposes only and does not constitute investment advice. Crypto assets carry substantial volatility risk; make decisions responsibly.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=34056bca"></script>
+</body>
+</html>

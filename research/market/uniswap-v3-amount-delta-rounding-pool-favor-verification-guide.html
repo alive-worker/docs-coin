@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>进位核验：同一价格区间收进要付 1，吐出只给 0 - 加密货币研究</title>
+  <meta name="description" content="Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Uniswap V3,SqrtPriceMath,进位,roundUp,舍入误差,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="进位核验：同一价格区间收进要付 1，吐出只给 0">
+  <meta property="og:description" content="Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。">
+  <meta property="og:url" content="https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-19T10:14:57+08:00">
+  <meta property="article:modified_time" content="2026-11-19T10:14:57+08:00">
+  <meta property="article:section" content="市场结构与流动性">
+  <meta property="article:tag" content="进位">
+  <meta property="article:tag" content="Uniswap V3">
+  <meta property="article:tag" content="SqrtPriceMath">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="同一区间：收进付 1，吐出给 0。永远偏向池子的 1 wei 剪刀差。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="进位核验：同一价格区间收进要付 1，吐出只给 0">
+  <meta name="twitter:description" content="Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.png">
+  <meta name="twitter:image:alt" content="同一区间：收进付 1，吐出给 0。永远偏向池子的 1 wei 剪刀差。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#2f5b8c">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=efb56891">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://coin.ponr.org/#org",
+      "name": "加密货币研究",
+      "alternateName": "Crypto Research Notes",
+      "url": "https://coin.ponr.org/",
+      "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#webpage",
+      "url": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html",
+      "name": "进位核验：同一价格区间收进要付 1，吐出只给 0",
+      "inLanguage": "zh-CN",
+      "isPartOf": { "@id": "https://coin.ponr.org/#org" },
+      "breadcrumb": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.png",
+        "width": 1200,
+        "height": 600
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "市场结构与流动性", "item": "https://coin.ponr.org/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "进位核验：同一价格区间收进要付 1，吐出只给 0", "item": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#article",
+      "headline": "进位核验：同一价格区间收进要付 1，吐出只给 0",
+      "description": "Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。",
+      "image": ["https://coin.ponr.org/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.png"],
+      "datePublished": "2026-11-19T10:14:57+08:00",
+      "dateModified": "2026-11-19T10:14:57+08:00",
+      "inLanguage": "zh-CN",
+      "author": { "@type": "Person", "name": "ipfsWeb", "url": "https://coin.ponr.org/about.html#author" },
+      "publisher": { "@id": "https://coin.ponr.org/#org" },
+      "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#webpage" },
+      "articleSection": "市场结构与流动性",
+      "isAccessibleForFree": true,
+      "keywords": ["Uniswap V3","SqrtPriceMath","进位","roundUp","舍入误差","加密货币研究"],
+      "wordCount": 3920,
+      "citation": [
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol",
+        "https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "为什么 SqrtPriceMath 计算代币变动时不能统一采用四舍五入？",
+          "acceptedAnswer": { "@type": "Answer", "text": "因为四舍五入会在余数小于 0.5 时向下舍入、大于等于 0.5 时向上进位。如果池子收进代币时发生向下舍入，用户就会少付代币，导致池子储备金低于理论曲线要求；如果吐出代币时发生向上进位，池子就会多给用户代币。长期或高频套利下，攻击者只需构造特定价格微小步长，就能通过四舍五入的舍入偏离逐步抽干池子资产。" }
+        },
+        {
+          "@type": "Question",
+          "name": "收进要付 1、吐出给 0，是不是意味着交易者永远在亏钱？",
+          "acceptedAnswer": { "@type": "Answer", "text": "在宏观大额交易中，1 wei 的舍入差异相对于以太坊 18 位精度可以忽略不计；但在微小碎屑交易或极端区间套利中，这 1 wei 会直接决定套利是否具有实际可行性。它不仅是安全防线，更是离线套利算法与量化模拟器必须纳入计算的刚性成本。" }
+        },
+        {
+          "@type": "Question",
+          "name": "token1 的计算是不是也有相同的进位保护？",
+          "acceptedAnswer": { "@type": "Answer", "text": "是的。getAmount1Delta 同样接收 roundUp 参数。公式为 liquidity 乘以价格差，再除以 2^96。当 roundUp 为 true 时调用 mulDivRoundingUp 向上进一；当 roundUp 为 false 时调用 mulDiv 向下截断。池子无论对待 token0 还是 token1，均执行收进必进一、吐出必舍去的统一原则。" }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text"><span class="brand-name">加密货币研究</span></span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换到深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/market/">市场结构与流动性</a> / <span class="side-tag archive-tag archive-tag--amber">进位</span></p>
+          <h1>进位核验：同一价格区间收进要付 1，吐出只给 0</h1>
+          <p class="article-summary">Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。这些是 SqrtPriceMath 与 FullMath 的整数截断规则，不构成投资建议。</p>
+          <p class="article-meta"><a href="/about.html#author">ipfsWeb</a> · 发布于 <time datetime="2026-11-19T10:14:57+08:00">2026-11-19 10:14:57</time> 北京时间（UTC+08:00）</p>
+        </header>
+        <img class="article-cover" src="/img/article-uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.svg" alt="同一区间：收进付 1，吐出给 0。永远偏向池子的 1 wei 剪刀差。" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel"><p class="article-verify-title">核验清单</p><ul class="article-verify-list"><li><span class="article-verify-check" aria-hidden="true">✓</span>SqrtPriceMath.getAmount0Delta 与 getAmount1Delta 的 roundUp 参数决定截断方向。池子收款必须传 true，付款必须传 false。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>流动性 1000、价格从 100 到 101 的区间中，理论代币变化量为 1000 / 10100 ≈ 0.099。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>收进时执行 divRoundingUp，商 0 余数 1000，向上进位为 1 wei；吐出时执行原生除法，商 0 截断为 0 wei。</li><li><span class="article-verify-check" aria-hidden="true">✓</span>相同区间来回往返兑换存在严格 1 wei 的进位剪刀差，彻底防止攻击者利用舍入误差抽干池子流动性。</li></ul></div>
+            <section id="sec-1">
+              <h2>1. roundUp 参数的本质：池子资产永不吃亏</h2>
+              <p>在 Uniswap V3 中，当价格从一个平方根价格移动到另一个平方根价格时，池子必须计算需要转移的代币数量。无论是流动性添加、移除，还是实时兑换，所有代币增量的计算最终都会汇聚到 <code>SqrtPriceMath.sol</code> 库中的两个核心函数：<code>getAmount0Delta</code> 与 <code>getAmount1Delta</code>。</p>
+              <p>这两个函数都带有一个关键的布尔参数：<code>roundUp</code>。在 <code>UniswapV3Pool.sol</code> 中，对该参数的赋值遵循极其严谨的安全原则：</p>
+              <pre><code>// UniswapV3Pool.sol 兑换逻辑片段
+// 池子向用户收取输入代币时（精确输出或步进输入）：
+amount0 = SqrtPriceMath.getAmount0Delta(sqrtRatioTargetX96, state.sqrtPriceX96, state.liquidity, true);
+
+// 池子向用户支付输出代币时：
+amount1 = SqrtPriceMath.getAmount1Delta(state.sqrtPriceX96, sqrtRatioTargetX96, state.liquidity, false);</code></pre>
+              <p>这一设计被称为「永远偏向池子（in favor of the pool）」：只要代币是流向池子（用户付给池子），<code>roundUp</code> 就必须为 <code>true</code>，任何不能整除的微小余数都要向上进位，迫使用户多付 1 wei；只要代币是流出池子（池子付给用户），<code>roundUp</code> 就必须为 <code>false</code>，任何多余的小数都要向下截断舍去，池子少付 1 wei。池子绝不会因为定点数计算的舍入问题多支出哪怕 1 wei 的资产。</p>
+            </section>
+            <section id="sec-2">
+              <h2>2. 价格从 100 到 101：理论变化量 0.099</h2>
+              <p>为了直观核算这种取整规则，我们构建一个极度纯粹且易于复算的整数场景。假设虚拟流动性 <code>L = 1000</code>，价格从平方根价格 <code>sqrtRatioA = 100</code> 变动到 <code>sqrtRatioB = 101</code>。</p>
+              <p>根据恒定乘积公式在流动性集中下的微分关系，token0 的变化量理论公式为：</p>
+              <pre><code>Δx = L * (sqrtRatioB - sqrtRatioA) / (sqrtRatioA * sqrtRatioB)</code></pre>
+              <p>将数值代入：</p>
+              <pre><code>Δx = 1000 * (101 - 100) / (100 * 101) = 1000 / 10100 ≈ 0.0990099...</code></pre>
+              <p>在实数领域，代币理论变化量不足 0.1。但在 EVM 的无符号整数世界里，代币不存在小数。这一步计算到底是变成 0 还是变成 1，完全由 <code>roundUp</code> 决定。</p>
+            </section>
+            <section id="sec-3">
+              <h2>3. 收进进一要付 1，吐出舍去只给 0</h2>
+              <p>现在深入 <code>SqrtPriceMath.getAmount0Delta</code> 源码中的分支执行流：</p>
+              <pre><code>// SqrtPriceMath.sol
+return
+    roundUp
+        ? UnsafeMath.divRoundingUp(
+            FullMath.mulDivRoundingUp(numerator1, numerator2, sqrtRatioBX96),
+            sqrtRatioAX96
+        )
+        : FullMath.mulDiv(numerator1, numerator2, sqrtRatioBX96) / sqrtRatioAX96;</code></pre>
+              <p>分子 <code>numerator1 * numerator2</code> 为 1000。分母为 10100。</p>
+              <ol>
+                <li><strong>当池子收进 token0 时（roundUp = true）</strong>：
+                  1000 除以 10100，整数商为 0，余数为 1000。由于余数大于 0，<code>divRoundingUp</code> 强制触发进位：<code>0 + 1 = 1</code>。调用者必须转入 1 wei 的 token0。</li>
+                <li><strong>当池子吐出 token0 时（roundUp = false）</strong>：
+                  1000 除以 10100，整数商为 0，余数 1000。原生整数除法 <code>/</code> 直接丢弃余数，向下截断为 0。池子转出 0 wei 的 token0。</li>
+              </ol>
+              <table>
+                <thead>
+                  <tr><th>操作方向</th><th>流动性 L</th><th>价格区间</th><th>理论计算值</th><th>roundUp 参数</th><th>数学操作</th><th>最终整数结算</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>池子收进代币 (In)</td><td>1000</td><td>[100, 101]</td><td>0.0990099...</td><td>true (进一)</td><td>divRoundingUp</td><td><strong>1 wei</strong></td></tr>
+                  <tr><td>池子吐出代币 (Out)</td><td>1000</td><td>[100, 101]</td><td>0.0990099...</td><td>false (舍去)</td><td>mulDiv / div</td><td><strong>0 wei</strong></td></tr>
+                </tbody>
+              </table>
+              <p>同样的流动性，同样的价格移动幅度，只要流向相反，结算结果就是 1 和 0 的巨大反差。这种非对称性构成了定点数数学的核心防护网。</p>
+            </section>
+            <section id="sec-4">
+              <h2>4. 往返兑换的 1 wei 剪刀差与防抽水机制</h2>
+              <p>假设一名套利者试图在同一个价格区间内反复进行往返兑换（Round-trip Swap）。他首先推动价格从 100 到 101，然后立即推动价格从 101 回到 100。</p>
+              <p>在理想的无手续费数学模型中，往返交易的总资产应该完美守恒。但在 Uniswap V3 的整数世界中：</p>
+              <pre><code>支付 (池子收进): 1 wei
+获得 (池子吐出): 0 wei
+单次往返净损失: 1 wei</code></pre>
+              <p>如果没有 <code>roundUp</code> 的严格不对称控制，而是错误地在收进时也向下截断，那么套利者在输入时只需付 0 wei，在输出时也能拿到 0 wei。更严重的是，一旦在另一个维度的除法中出现偏向用户的舍入漏洞，攻击者就能通过高频触发极小微步（微量兑换），在每次往返中白赚 1 wei 代币，形成著名的「舍入抽水攻击（Rounding Drain Attack）」。</p>
+              <p>正是因为 Uniswap V3 在数学底层做到了收进永远多算 1、吐出永远少给 1，使得任何试图利用舍入截断套利的交易者，每跨越一次微小区间，都在不可逆地向池子输送 1 wei 的定点数损耗。</p>
+            </section>
+            <section id="sec-5">
+              <h2>5. 常见离线模拟器在密集微小交易中的漂移陷阱</h2>
+              <p>在构建量化高频做市系统或离线链下路由回测时，许多工程师直接使用 Python 或 JavaScript 的原生浮点数模拟 <code>SqrtPriceMath</code>，或者统一使用整除运算符 <code>//</code>，完全忽略了 <code>roundUp</code> 布尔标志。</p>
+              <p>这种简化的模拟器在宏观大额单次兑换中误差极小，但在以下高频微小场景中会产生严重漂移：</p>
+              <ol>
+                <li><strong>网格做市策略（Grid Trading）</strong>：在密集 Tick 间反复高频挂单与吃单，浮点数模拟器会认为净值持续上升，而实际上链运行后由于每次穿档都承担 1-2 wei 的进位剪刀差，实际收益会显著低于回测预期；</li>
+                <li><strong>微额套利侦测</strong>：离线机器人可能会侦测到利润只有几个 wei 的“套利机会”，但实际发起链上交易时，由于链上合约要求多付 1 wei 且少付 1 wei，导致交易无法覆盖 Gas 甚至因 1 wei 余额不足触发 <code>IIA</code> 回退；</li>
+                <li><strong>储备金恒等式漂移</strong>：长周期回测若未对齐 <code>divRoundingUp</code>，模拟池子中的 token0 与 token1 累计储备量会脱离 <code>L * sqrtPrice</code> 的数学曲面。</li>
+              </ol>
+              <p>核验一笔代币变动量时，必须严格区分是池子收款还是付款。只要是向池子注入或付款，必须核验是否执行了 <code>divRoundingUp</code> 并向上进一；只要是从池子提款或出款，必须核验是否截断。在流动性 1000、区间 [100, 101] 中，收进必须是 1，吐出必须是 0。</p>
+              <p>本文是分析框架。进位与舍入规则来自 <code>SqrtPriceMath.sol</code> 与 <code>FullMath.sol</code> v1.0.0。1、0 与 0.099 是严格数学推导的定点数整数结果，不构成投资建议。</p>
+            </section>
+            <section id="faq">
+              <h2>6. 常见误读</h2>
+              <h3>为什么 SqrtPriceMath 计算代币变动时不能统一采用四舍五入？</h3>
+              <p>因为四舍五入会在余数小于 0.5 时向下舍入、大于等于 0.5 时向上进位。如果池子收进代币时发生向下舍入，用户就会少付代币，导致池子储备金低于理论曲线要求；如果吐出代币时发生向上进位，池子就会多给用户代币。长期或高频套利下，攻击者只需构造特定价格微小步长，就能通过四舍五入的舍入偏离逐步抽干池子资产。</p>
+              <h3>收进要付 1、吐出给 0，是不是意味着交易者永远在亏钱？</h3>
+              <p>在宏观大额交易中，1 wei 的舍入差异相对于以太坊 18 位精度可以忽略不计；但在微小碎屑交易或极端区间套利中，这 1 wei 会直接决定套利是否具有实际可行性。它不仅是安全防线，更是离线套利算法与量化模拟器必须纳入计算的刚性成本。</p>
+              <h3>token1 的计算是不是也有相同的进位保护？</h3>
+              <p>是的。getAmount1Delta 同样接收 roundUp 参数。公式为 liquidity 乘以价格差，再除以 2^96。当 roundUp 为 true 时调用 mulDivRoundingUp 向上进一；当 roundUp 为 false 时调用 mulDiv 向下截断。池子无论对待 token0 还是 token1，均执行收进必进一、吐出必舍去的统一原则。</p>
+            </section>
+            <aside class="callout" aria-label="推广信息"><p>推广信息：精确理解 SqrtPriceMath 的进位规则是编写高精度量化合约与回测引擎的前提，而日常现货兑换的前端界面往往会将 1 wei 的定点数微小剪刀差隐去。若在研究之余需要测试小额多链资产兑换或跨链现货体验，可自行查看 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 兑换</a>。该入口仅供便捷参考，与 1 还是 0 的定点数进位推导无关，亦不构成平台背书或投资建议。请合规使用链上工具，勿用于非法用途。</p></aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="本文目录"><h2>本文目录</h2><ol><li><a href="#sec-1">roundUp 参数的本质：池子资产永不吃亏</a></li><li><a href="#sec-2">价格从 100 到 101：理论变化量 0.099</a></li><li><a href="#sec-3">收进进一要付 1，吐出舍去只给 0</a></li><li><a href="#sec-4">往返兑换的 1 wei 剪刀差与防抽水机制</a></li><li><a href="#sec-5">常见离线模拟器在密集微小交易中的漂移陷阱</a></li><li><a href="#faq">常见误读</a></li></ol></nav>
+            <aside class="references" aria-label="一手资料"><h2>一手资料</h2><ul><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/SqrtPriceMath.sol" target="_blank" rel="noopener">Uniswap v3：SqrtPriceMath.getAmount0Delta 根据 roundUp 决定进一还是截断</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/libraries/FullMath.sol" target="_blank" rel="noopener">Uniswap v3：FullMath.mulDivRoundingUp 与 mulDiv 定点数乘除法实现</a></li><li><a href="https://github.com/Uniswap/v3-core/blob/v1.0.0/contracts/UniswapV3Pool.sol" target="_blank" rel="noopener">Uniswap v3：池子主循环在收取输入时传 true、支付输出时传 false</a></li></ul><p class="ref-note">资料核对日期：2026年11月19日。进位与舍入规则来自 SqrtPriceMath.sol 与 FullMath.sol v1.0.0。1、0 与 0.099 是严格数学推导的定点数整数结果，不是某个实时池子的报价。</p></aside>
+          </div>
+        </div>
+        <aside class="related" aria-label="相关研究"><h2>相关研究</h2><ul><li><a href="/research/market/uniswap-v3-cross-tick-liquidity-net-verification-guide.html">穿档核验：向左穿过 200 减去负 1000，流动性回到 5000</a></li><li><a href="/research/market/uniswap-v3-exact-output-fee-on-top-verification-guide.html">兑出核验：曲线要吃进 998，进一之后要付 1002</a></li><li><a href="/research/market/uniswap-v3-position-liquidity-vs-token-amount-verification-guide.html">头寸核验：区间流动性与代币数量的几何关系</a></li></ul></aside>
+        <div class="back-row"><a href="/articles.html">查看全部文章</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot site-foot--rich">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <img src="/favicon.svg" width="32" height="32" alt="" aria-hidden="true">
+        <div>
+          <span class="site-foot-brand-name">加密货币研究</span>
+          <p class="site-foot-desc">聚焦加密货币研究方法与链上数据的中文站点，记录研究框架、链上指标解读与资金流观察，希望帮助读者更系统、更理性地看懂一个加密项目。</p>
+        </div>
+      </div>
+      <div class="site-foot-col site-foot-col--topics">
+        <h3>热门主题</h3>
+        <ul>
+          <li><a href="/articles.html?topic=basics">研究方法基础</a></li>
+          <li><a href="/articles.html?topic=protocol">协议与基础设施风险</a></li>
+          <li><a href="/articles.html?topic=market">市场结构与流动性</a></li>
+          <li><a href="/articles.html?topic=governance">治理、资产与专项核验</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col">
+        <h3>站点</h3>
+        <ul>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/about.html">关于本站</a></li>
+          <li><a href="/virtual-card.html">虚拟卡支付指南</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="https://github.com/alive-worker/docs-coin" target="_blank" rel="noopener">GitHub 开源仓库</a></li>
+        </ul>
+      </div>
+      <div class="site-foot-col site-foot-col--friends">
+        <h3>友情链接</h3>
+        <ul>
+          <li><a href="https://deskbyai.com/" target="_blank" rel="noopener">AI做系统</a></li>
+          <li><a href="https://aiplussub.com/" target="_blank" rel="noopener nofollow sponsored">AI代付</a></li>
+          <li><a href="https://allswap.io/" target="_blank" rel="noopener nofollow sponsored">链兑换</a></li>
+          <li><a href="https://rdvcc.com/" target="_blank" rel="noopener nofollow sponsored">虚拟卡</a></li>
+          <li><a href="https://chdh.me/" target="_blank" rel="noopener">出海导航</a></li>
+          <li><a href="https://crypto-blog-phi.vercel.app/" target="_blank" rel="noopener">虚拟币</a></li>
+          <li><a href="https://swap.forlines.org/" target="_blank" rel="noopener">虚拟币指南</a></li>
+          <li><a href="https://www.ie9.cc/" target="_blank" rel="noopener">虚拟币资讯</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=34056bca"></script>
+</body>
+</html>

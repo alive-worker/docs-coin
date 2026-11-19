@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-cross-tick-liquidity-net-verification-guide',
-  publishedISO: '2026-11-18T09:24:40+08:00',
+  slug: 'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
+  publishedISO: '2026-11-19T10:14:57+08:00',
   tagColor: 'amber',
   topic: 'market',
 
   zh: {
-    h1: "穿档核验：向左穿过 200 减去负 1000，流动性回到 5000",
-    tagLabel: "穿档",
-    cardDesc: "Uniswap V3 在穿过已初始化 tick 时，向右移动加上 liquidityNet，向左移动减去 liquidityNet。区间 [100, 200] 注入流动性 1000 时，下界 100 的 net 为 +1000，上界 200 的 net 为 -1000。活跃流动性 5000 向右穿过 200 变为 4000；向左跌回穿过 200 时减去 -1000 恢复为 5000。若向左跌破时误用加号，流动性会被错算成 3000，少算整整 2000 活跃深度。",
+    h1: "进位核验：同一价格区间收进要付 1，吐出只给 0",
+    tagLabel: "进位",
+    cardDesc: "Uniswap V3 计算代币变化量时严格偏向池子：收进时向上取整多要 1，吐出时向下截断少给 1。在流动性 1000、价格 100 变到 101 的区间中，理论代币量为 0.099。池子向调用者收款时必须付 1；向调用者付款时只给 0。进位不对称性在相同区间产生 1 wei 剪刀差，彻底封堵舍入抽水攻击。",
   },
   en: {
-    h1: "Cross-Tick Check: Moving Left Past 200 Subtracts Minus 1000 to Return Liquidity to 5000",
-    tagLabel: "Cross",
-    cardDesc: "When Uniswap V3 crosses an initialized tick, moving right adds liquidityNet while moving left subtracts it. The upper tick 200 has net -1000. Active liquidity 5000 crossed right drops to 4000; crossed back left it subtracts -1000 to return to 5000. Adding on leftward steps miscalculates liquidity to 3000, creating a 2000 error.",
+    h1: "Rounding Check: Paying 1 to Enter and Receiving 0 to Exit Over the Same Price Range",
+    tagLabel: "Round",
+    cardDesc: "Uniswap V3 calculates token deltas strictly in favor of the pool: rounding up on inflows to charge 1 more, and truncating on outflows to pay 1 less. Across liquidity 1000 and price 100 to 101, theoretical delta is 0.099. The pool demands 1 on deposit but pays 0 on withdrawal. This creates a 1 wei asymmetry preventing rounding drain attacks.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-cross-tick-liquidity-net-verification-guide',
     'uniswap-v3-exact-output-fee-on-top-verification-guide',
     'uniswap-v3-max-liquidity-per-tick-verification-guide',
     'uniswap-v3-fee-growth-outside-flip-verification-guide',
