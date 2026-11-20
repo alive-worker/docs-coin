@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'dao-proposer-threshold-drop-cancel-verification-guide',
-  publishedISO: '2026-11-20T09:39:18+08:00',
-  tagColor: 'indigo',
-  topic: 'governance',
+  slug: 'eip-1153-transient-storage-reentrancy-leak-verification-guide',
+  publishedISO: '2026-11-20T14:02:07+08:00',
+  tagColor: 'teal',
+  topic: 'protocol',
 
   zh: {
-    h1: "提案门槛核验：跌破门槛全民可撤销，质押转账瞬间作废",
-    tagLabel: "门槛",
-    cardDesc: "在 GovernorBravo 等主流治理架构中，提案人委托票权必须贯穿全生命周期高于 proposalThreshold。一旦提案人在投票期或时间锁排队期因将代币存入 Aave/Compound 质押借贷、转账或被大户撤销委托导致票权跌破门槛，全网任何第三方均可无需权限抢跑调用 cancel 强行将提案作废，且不可逆转。",
+    h1: "EIP-1153瞬态存储重入核验：Cancun升级后TSTORE上下文泄漏与重入锁失效陷阱",
+    tagLabel: "瞬态存储",
+    cardDesc: "以太坊Cancun升级引入EIP-1153瞬态存储(TSTORE/TLOAD)，将重入锁Gas从数千暴降至100。然而众多DeFi开发者误将交易生命周期等同于调用帧生命周期：一旦在Multicall早退、try/catch异常捕获或ERC-4337同批次打包中漏清状态，瞬态存储将发生致命上下文泄漏，导致重入锁永久自锁或跨调用状态污染。本文拆解字节码执行路径、Multicall复用陷阱与链上安全防范清单。",
   },
   en: {
-    h1: "Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly",
-    tagLabel: "Threshold",
-    cardDesc: "In GovernorBravo frameworks, a proposer must continuously maintain delegated voting power above proposalThreshold until execution. If the proposer deposits tokens into Aave/Compound lending, transfers balances, or loses delegated support, any third party can permissionlessly call cancel to permanently abort the proposal even during timelock queues.",
+    h1: "EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures",
+    tagLabel: "Transient",
+    cardDesc: "Ethereum Cancun introduced EIP-1153 transient storage (TSTORE/TLOAD), slashing reentrancy lock costs from thousands of gas down to 100. However, many DeFi developers confuse transaction lifetime with call-frame scope: early returns in Multicall, try/catch swallows, or shared-batch ERC-4337 transactions cause catastrophic context leaks, permanently locking contracts or bypassing reentrancy protection. This guide details EVM bytecode execution paths, Multicall vulnerabilities, and verification checklists.",
   },
 
   existingSlugsNewestFirst: [
+    'dao-proposer-threshold-drop-cancel-verification-guide',
     'uniswap-v3-swap-step-target-price-fee-verification-guide',
     'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
     'uniswap-v3-cross-tick-liquidity-net-verification-guide',

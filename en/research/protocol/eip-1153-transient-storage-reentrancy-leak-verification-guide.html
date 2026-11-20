@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures - Crypto Research</title>
+  <meta name="description" content="Ethereum Cancun introduced EIP-1153 transient storage (TSTORE/TLOAD), slashing reentrancy lock costs from thousands of gas down to 100. However, many DeFi developers confuse transaction lifetime with call-frame scope: early returns in Multicall, try/catch swallows, or shared-batch ERC-4337 transactions cause catastrophic context leaks, permanently locking contracts or bypassing reentrancy protection. This guide details EVM bytecode execution paths, Multicall vulnerabilities, and verification checklists.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="EIP-1153,transient storage,TSTORE,TLOAD,reentrancy guard,Cancun upgrade,smart contract security,Multicall,DeFi security,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures">
+  <meta property="og:description" content="EIP-1153 transient storage slashes reentrancy gas to 100, but Multicall and early exits risk severe context leakage. In-depth EVM audit and safety guide.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-20T14:02:07+08:00">
+  <meta property="article:modified_time" content="2026-11-20T14:02:07+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Protocol &amp; Infrastructure Risk">
+  <meta property="article:tag" content="Transient">
+  <meta property="article:tag" content="EIP-1153">
+  <meta property="article:tag" content="Smart Contract Security">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-eip-1153-transient-storage-reentrancy-leak-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="EIP-1153 Transient Storage Reentrancy Check Diagram">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures">
+  <meta name="twitter:description" content="Detailed breakdown of EVM EIP-1153 transient storage risks in reentrancy guards, Multicall deadlocks, and audit guidelines.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-eip-1153-transient-storage-reentrancy-leak-verification-guide-en.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#0d9488">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-eip-1153-transient-storage-reentrancy-leak-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=b8a1e14f">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","EIP-1153","transient storage","TSTORE","smart contract security","reentrancy guard","Cancun upgrade"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-eip-1153-transient-storage-reentrancy-leak-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html", "name": "EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Protocol & Infrastructure Risk", "item": "https://coin.ponr.org/en/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures", "item": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#article", "headline": "EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures", "description": "Ethereum Cancun introduced EIP-1153 transient storage (TSTORE/TLOAD), slashing reentrancy lock costs from thousands of gas down to 100. However, many DeFi developers confuse transaction lifetime with call-frame scope: early returns in Multicall, try/catch swallows, or shared-batch ERC-4337 transactions cause catastrophic context leaks, permanently locking contracts or bypassing reentrancy protection. This guide details EVM bytecode execution paths, Multicall vulnerabilities, and verification checklists. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#primaryimage" }, "articleSection": "Protocol & Infrastructure Risk", "isAccessibleForFree": true, "keywords": ["EIP-1153","transient storage","TSTORE","TLOAD","reentrancy guard","Cancun upgrade","smart contract security","Multicall"], "wordCount": 1980, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-11-20T14:02:07+08:00", "dateModified": "2026-11-20T14:02:07+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does EIP-1153 Transient Storage (TSTORE) fundamentally differ from traditional SSTORE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TSTORE and TLOAD cost a constant 100 gas each and never touch the global state Merkle Patricia Trie. Transient storage lives exclusively in the client's volatile memory table and is cleared automatically upon transaction completion, delivering over 96% gas savings compared to persistent cold and warm SSTORE writes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is TSTORE scoped to the transaction rather than the individual call frame?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EIP-1153 intentionally defines transient storage lifecycle per transaction. Any external call, internal recursion, or Multicall invocation across the same contract during a single transaction shares identical transient slot mappings. Returning from a function frame does not reset transient slots without explicit code clearing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does an uncleaned TSTORE reentrancy guard trigger permanent transaction self-deadlocks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If a function enters by writing tstore(slot, 1) and exits via an unhandled early return or caught exception without a full EVM revert, the transient slot remains 1. Subsequent calls within the same transaction fail reentrancy checks, freezing execution and aborting batch operations."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--teal">Transient</span></p>
+          <h1>EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures</h1>
+          <p class="article-summary">With Ethereum's Cancun hard fork, EIP-1153 introduced the long-awaited TSTORE and TLOAD opcodes, reducing reentrancy protection overhead from thousands of gas units down to an ultra-cheap 100 gas per invocation. However, as Uniswap v4, dynamic liquidity hooks, and lending protocols rapidly migrate to transient storage, a subtle architectural vulnerability has surfaced: confusing transaction lifetime with call-frame scope. When developers fail to rigorously reset transient lock flags across early returns, error handling, or Multicall batches, contracts suffer from permanent self-deadlocks or lethal context cross-contamination within a single transaction.</p>
+          <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-20T14:02:07+08:00">2026-11-20 14:02:07</time></p>
+        </header>
+
+        <img class="article-cover" src="/img/article-eip-1153-transient-storage-reentrancy-leak-verification-guide-en.svg" alt="EIP-1153 Transient Storage Reentrancy Check Diagram" width="1200" height="600" fetchpriority="high" decoding="async">
+
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">Verification Checklist: Transient Storage &amp; Reentrancy Boundaries</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>Scope Boundary Verification</strong>: Clearly distinguish Tx-scope from Frame-scope. Never assume returning from a function automatically zeroes <code>TSTORE</code> slots; explicit cleanup in bytecode is mandatory.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Multicall Batch Isolation</strong>: Verify whether protocols support sequential invocations in a single transaction. Dirty reentrancy locks will cause subsequent valid calls to revert.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Try/Catch Exception Swallowing</strong>: Audit outer contracts capturing inner execution errors. If an error is caught without full EVM state reversion, residual transient state corrupts subsequent logic.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>ERC-4337 Batch Attack Surfaces</strong>: When bundlers aggregate multiple UserOps into one L1 transaction, verify that shared transient storage cannot leak cross-user parameters or balances.</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. EIP-1153 Architecture: The Truth Behind 100 Gas TSTORE</h2>
+              <p>In historical EVM versions, standard reentrancy protection (e.g., OpenZeppelin's classic <code>ReentrancyGuard</code>) relied on persistent contract storage via <code>sstore</code>. Switching state from <code>_NOT_ENTERED (1)</code> to <code>_ENTERED (2)</code> and back costs around 2,900 gas for warm storage writes under EIP-2929 rules. For high-frequency DEX swaps and flash accounting, this overhead accumulated rapidly.</p>
+              <p>EIP-1153 changed this paradigm by introducing two volatile opcodes:</p>
+              <ul>
+                <li><code>TSTORE (0x5c)</code>: Writes 32 bytes to a 32-byte transient slot, strictly costing <strong>100 Gas</strong>.</li>
+                <li><code>TLOAD (0x5d)</code>: Reads 32 bytes from a 32-byte transient slot, strictly costing <strong>100 Gas</strong>.</li>
+              </ul>
+              <p>Crucially, transient storage <strong>never interacts with the Merkle Patricia State Trie</strong>. It exists purely in ephemeral execution-client memory tables and is discarded immediately after the transaction concludes. No disk writes, state root hashes, or cryptographic proofs are required, creating a 96%+ gas reduction.</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. The Fatal Misconception: Frame Scope vs. Transaction Scope</h2>
+              <p>Because EIP-1153 documentation highlights that data is "discarded after the transaction," many developers incorrectly assume that transient storage behaves like EVM Memory—cleared when a call frame returns. <strong>This assumption is disastrously wrong.</strong></p>
+              <p>In EVM execution semantics:</p>
+              <ul>
+                <li><strong>Memory</strong> is private to each call frame. Entering a new external call allocates fresh memory space.</li>
+                <li><strong>Storage</strong> is globally persistent on-chain across all transactions.</li>
+                <li><strong>Transient Storage</strong> is <strong>contract-account global throughout the entire transaction</strong>.</li>
+              </ul>
+              <p>Regardless of how many external calls, delegatecalls, or nested frames execute within one transaction, <code>TLOAD</code> accesses the exact same slot mapping for that contract address. If a function executes <code>tstore(REENTRANCY_SLOT, 1)</code>, that slot remains <code>1</code> when the function finishes unless explicitly rewritten to zero.</p>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. Vulnerable Patterns: Multicall Deadlocks and Early Returns</h2>
+              <p>Consider the following transient guard implementation commonly adopted in custom hooks and routers:</p>
+              <pre><code>// Vulnerable transient reentrancy guard implementation
+abstract contract VulnerableTransientGuard {
+    bytes32 private constant GUARD_SLOT = keccak256("guard.slot");
+
+    modifier nonReentrant() {
+        assembly {
+            if tload(GUARD_SLOT) {
+                mstore(0x00, 0x8bbb7719) // ReentrancyGuardReentrantCall()
+                revert(0x1c, 0x04)
+            }
+            tstore(GUARD_SLOT, 1)
+        }
+        _;
+        assembly {
+            tstore(GUARD_SLOT, 0)
+        }
+    }
+}</code></pre>
+              <p>While this appears logically identical to traditional guards, production edge cases trigger fatal errors:</p>
+              <h3>Early Returns Bypassing Teardown</h3>
+              <p>If an internal conditional path executes a raw <code>return</code> or compiler-generated jump that skips post-execution blocks, the teardown assembly <code>tstore(GUARD_SLOT, 0)</code> is never reached. The contract remains permanently locked for the rest of that transaction.</p>
+
+              <h3>Multicall Execution with Swallowed Errors</h3>
+              <p>Modern routers batch actions via <code>multicall(bytes[] calldata data)</code>. If call #1 locks the guard, encounters a non-reverting soft failure (or is caught via <code>try/catch</code>), and exits without a state-rolling revert:</p>
+              <ol>
+                <li>The transient slot remains set to <code>1</code>;</li>
+                <li>Call #2 in the same multicall executes;</li>
+                <li><code>tload(GUARD_SLOT)</code> returns <code>1</code>, misidentifying a valid sequential call as an illegal reentrancy attempt and reverting the entire transaction.</li>
+              </ol>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. ERC-4337 Account Abstraction: Shared Bundler Collision</h2>
+              <p>An even more subtle vulnerability occurs in ERC-4337 account abstraction infrastructures. Bundlers batch multiple independent user transactions (<code>UserOperations</code>) into a single L1 transaction calling <code>handleOps</code>.</p>
+              <p>If a protocol utilizes transient storage to track flash accounting or user quotas without guaranteed end-of-call zeroing:</p>
+              <ul>
+                <li>User A's operation sets a transient balance or parameter;</li>
+                <li>User B's operation executes immediately following User A within the same L1 transaction block;</li>
+                <li>Contract logic in User B's frame reads dirty residual data left by User A, leading to parameter corruption, unauthorized execution rights, or fund drain.</li>
+              </ul>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. Industrial Defense: Standardized SafeTransientReentrancyGuard</h2>
+              <p>To eliminate transient context leakage, protocol development teams must adhere to strict architectural patterns:</p>
+
+              <pre><code>// Production-ready transient reentrancy guard pattern (OpenZeppelin v5.1+ aligned)
+abstract contract SafeTransientReentrancyGuard {
+    bytes32 private constant REENTRANCY_GUARD_SLOT = 
+        0x929eee65222671e245b6613c49c7177fa7d7d8e90d57f68670868f605b082010;
+
+    modifier nonReentrant() {
+        _nonReentrantBefore();
+        _;
+        _nonReentrantAfter();
+    }
+
+    function _nonReentrantBefore() private {
+        assembly {
+            if tload(REENTRANCY_GUARD_SLOT) {
+                mstore(0x00, 0x8bbb7719) // ReentrancyGuardReentrantCall()
+                revert(0x1c, 0x04)
+            }
+            tstore(REENTRANCY_GUARD_SLOT, 1)
+        }
+    }
+
+    function _nonReentrantAfter() private {
+        assembly {
+            tstore(REENTRANCY_GUARD_SLOT, 0)
+        }
+    }
+}</code></pre>
+
+              <p>Security audit teams must mandate the following verification protocols:</p>
+              <ol>
+                <li><strong>Sequential Multicall Invariant Tests</strong>: Implement fuzzing suites in Foundry that repeatedly invoke protected endpoints sequentially in single transactions to verify zero leftover lock states.</li>
+                <li><strong>Bytecode Control Flow Verification</strong>: Disassemble generated EVM bytecode to ensure all basic blocks terminating with <code>RETURN</code> or <code>STOP</code> symmetrically zero out transient slots.</li>
+                <li><strong>Callback Delta Assertions</strong>: For flash accounting systems (such as Uniswap v4 pool managers), verify that all caller-held debt slots are rigorously asserted to equal zero upon exit.</li>
+              </ol>
+            </section>
+
+            <aside class="article-aside">
+              <p>Promotional Notice: During protocol upgrades and smart contract testing across heterogeneous EVM testnets and mainnets, developers frequently need streamlined cross-chain liquidity rebalancing. For multi-chain asset swaps and liquidity routing alongside your security research, explore <a href="https://allswap.io" target="_blank" rel="sponsored nofollow noopener">Allswap Cross-Chain Swap</a>. This notice is provided for reference only, is unrelated to EIP-1153 opcode mechanics, and does not constitute investment advice. Always verify smart contract approvals and protect private keys.</p>
+            </aside>
+
+            <section class="article-sources" aria-label="References">
+              <h2>References &amp; Standards</h2>
+              <ul>
+                <li>Ethereum Improvement Proposals: <a href="https://eips.ethereum.org/EIPS/eip-1153" target="_blank" rel="noopener nofollow">EIP-1153: Transient Storage Opcodes (Cancun)</a></li>
+                <li>OpenZeppelin Contracts: <a href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/ReentrancyGuardTransient.sol" target="_blank" rel="noopener nofollow">ReentrancyGuardTransient.sol Implementation</a></li>
+                <li>Uniswap v4 Core Whitepaper: <a href="https://github.com/Uniswap/v4-core/blob/main/docs/whitepaper-v4.pdf" target="_blank" rel="noopener nofollow">Flash Accounting &amp; Transient Storage Invariants</a></li>
+                <li>ERC-4337 Specifications: <a href="https://eips.ethereum.org/EIPS/eip-4337" target="_blank" rel="noopener nofollow">Account Abstraction Using Alternative Mempools</a></li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="sidebar" aria-label="Related Articles">
+            <div class="sidebar-block">
+              <h3 class="sidebar-heading">Latest Protocol Checks</h3>
+              <ul class="sidebar-list">
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Protocol</span>
+                    <span class="side-title">L2 Sequencer Grace Period &amp; Oracle Price Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/oracle-heartbeat-vs-deviation-threshold-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Oracle</span>
+                    <span class="side-title">Oracle Heartbeat vs Deviation Threshold Verification</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--indigo">Threshold</span>
+                    <span class="side-title">Proposal Threshold Check: Drops Trigger Open Cancel</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/market/uniswap-v3-swap-step-target-price-fee-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--amber">Step</span>
+                    <span class="side-title">Swap Step Check: Target Price Ceiling vs In-Amount</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-foot-inner">
+      <div class="site-foot-brand">
+        <p class="site-foot-title">Crypto Research</p>
+        <p class="site-foot-desc">Focused on on-chain data and smart contract security · Not investment advice</p>
+      </div>
+      <div class="site-foot-nav">
+        <p class="foot-heading">Navigation</p>
+        <ul class="foot-links">
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/about.html">About Us</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for educational and research purposes only, not financial or investment advice. Crypto markets are volatile; conduct your own due diligence.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=89770de6"></script>
+</body>
+</html>

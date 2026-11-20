@@ -1,0 +1,79 @@
+<svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EIP-1153 Transient Storage Reentrancy Check Cover Diagram">
+  <defs>
+    <radialGradient id="glowEipEn" cx="65%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#0d9488" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softEipEn" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gridEipEn" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#14b8a6" fill-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="600" fill="#070d12"/>
+  <rect width="1200" height="600" fill="url(#gridEipEn)"/>
+  
+  <g transform="translate(64,54)">
+    <rect x="0" y="0" width="36" height="36" rx="10" fill="#0d9488"/>
+    <text x="18" y="24" font-family="'Segoe UI',Arial,sans-serif" font-size="16" font-weight="750" fill="#ffffff" text-anchor="middle">RE</text>
+    <text x="46" y="24" font-family="'Segoe UI',Arial,sans-serif" font-size="14" font-weight="650" fill="#94a3b8">Crypto Research · Protocol &amp; Infrastructure Risk</text>
+  </g>
+
+  <circle cx="880" cy="280" r="240" fill="url(#glowEipEn)"/>
+
+  <!-- Diagram: Cancun EIP-1153 Transient Storage Context Leak -->
+  <g transform="translate(620, 110)">
+    <!-- Gas Comparison Box -->
+    <rect x="30" y="20" width="230" height="110" rx="14" fill="#0b171e" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.4"/>
+    <text x="50" y="52" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#5eead4">EIP-1153 TSTORE (100 Gas)</text>
+    <text x="50" y="78" font-family="'Segoe UI',sans-serif" font-size="11" fill="#94a3b8">Cleared at Tx End (Tx Scope)</text>
+    <text x="50" y="104" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#2dd4bf">100 Gas <tspan font-size="11" font-weight="normal" fill="#64748b">(vs 2900 SSTORE)</tspan></text>
+
+    <!-- Context Leak Box -->
+    <rect x="280" y="20" width="230" height="110" rx="14" fill="#180e12" stroke="#f43f5e" stroke-width="1.5" stroke-opacity="0.5"/>
+    <text x="300" y="52" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#fda4af">Multicall / Early Exit</text>
+    <text x="300" y="78" font-family="'Segoe UI',sans-serif" font-size="11" fill="#94a3b8">Frame Exit Leaves slot=1</text>
+    <text x="300" y="104" font-family="'Segoe UI',sans-serif" font-size="18" font-weight="800" fill="#fb7185">Self-Deadlock / Contamination</text>
+
+    <!-- Flow Diagram -->
+    <g transform="translate(40, 160)">
+      <rect x="0" y="0" width="130" height="42" rx="8" fill="#13232b" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="65" y="26" font-family="'Segoe UI',sans-serif" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">Call 1: lock=1</text>
+
+      <path d="M 130 21 L 170 21" stroke="#5eead4" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="175,21 167,17 167,25" fill="#5eead4"/>
+
+      <rect x="180" y="0" width="130" height="42" rx="8" fill="#24131a" stroke="#e11d48" stroke-width="1.2"/>
+      <text x="245" y="26" font-family="'Segoe UI',sans-serif" font-size="12" font-weight="700" fill="#f43f5e" text-anchor="middle">Early Exit Leak</text>
+
+      <path d="M 310 21 L 350 21" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="355,21 347,17 347,25" fill="#f43f5e"/>
+
+      <rect x="360" y="0" width="110" height="42" rx="8" fill="#1e1014" stroke="#f43f5e" stroke-width="1.5"/>
+      <text x="415" y="26" font-family="'Segoe UI',sans-serif" font-size="12" font-weight="750" fill="#fda4af" text-anchor="middle">Call 2 Revert</text>
+    </g>
+
+    <!-- Warning Pill -->
+    <rect x="40" y="235" width="430" height="34" rx="8" fill="#161f24" stroke="#14b8a6" stroke-width="1"/>
+    <text x="60" y="257" font-family="'Segoe UI',Consolas,monospace" font-size="12" font-weight="600" fill="#5eead4">⚠️ TSTORE scope is Tx-wide, not frame-scoped. Enforce explicit reset.</text>
+  </g>
+
+  <!-- Left Side Title Block -->
+  <g transform="translate(64, 210)">
+    <rect x="0" y="0" width="80" height="26" rx="6" fill="#13232b" stroke="#14b8a6" stroke-width="1"/>
+    <text x="40" y="17" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="750" fill="#2dd4bf" text-anchor="middle">Protocol</text>
+
+    <text x="0" y="72" font-family="'Segoe UI',Arial,sans-serif" font-size="34" font-weight="800" fill="#f8fafc" letter-spacing="-0.02em">
+      <tspan x="0" dy="0">EIP-1153 Transient Storage Check</tspan>
+      <tspan x="0" dy="50" font-size="28" fill="#94a3b8">Cancun TSTORE Context Leak and Reentrancy Lock Failures</tspan>
+    </text>
+
+    <text x="0" y="195" font-family="'Segoe UI',Arial,sans-serif" font-size="14.5" fill="#64748b" line-height="1.6">
+      <tspan x="0" dy="0">TSTORE slashes reentrancy gas to 100, but Multicall, early exits, and try/catch</tspan>
+      <tspan x="0" dy="24">introduce lethal state contamination. A complete EVM audit and safety guide.</tspan>
+    </text>
+  </g>
+</svg>
