@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html': '2026-11-20 09:39:18',
+    '/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html': '2026-11-20 09:39:18',
     '/en/research/market/uniswap-v3-swap-step-target-price-fee-verification-guide.html': '2026-11-19 14:52:57',
     '/research/market/uniswap-v3-swap-step-target-price-fee-verification-guide.html': '2026-11-19 14:52:57',
     '/en/research/market/uniswap-v3-amount-delta-rounding-pool-favor-verification-guide.html': '2026-11-19 10:14:57',

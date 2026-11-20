@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly - Crypto Research</title>
+  <meta name="description" content="In Compound GovernorBravo and mainstream DAO governance frameworks, proposal thresholds prevent spam. However, this check is not merely an upfront requirement: if a proposer's delegated voting power drops below proposalThreshold at any point before execution, any third party can permissionlessly call cancel to permanently abort the proposal. Staking tokens into Aave, redelegating, or transferring tokens drops votes instantly, killing proposals even during timelock queue.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="DAO governance,GovernorBravo,proposal threshold,cancel function,on-chain voting,delegated votes,smart contract security,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly">
+  <meta property="og:description" content="In GovernorBravo, once a proposer's delegated voting power drops below proposalThreshold, any third party can permissionlessly call cancel to abort the proposal. Staking tokens into Aave, redelegating, or transferring tokens drops votes instantly, killing proposals even during queue.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-20T09:39:18+08:00">
+  <meta property="article:modified_time" content="2026-11-20T09:39:18+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Crypto Research">
+  <meta property="article:tag" content="Threshold">
+  <meta property="article:tag" content="GovernorBravo">
+  <meta property="article:tag" content="DAO Governance">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-dao-proposer-threshold-drop-cancel-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly Cover Art">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly">
+  <meta name="twitter:description" content="Any third party can cancel a Governor proposal once proposer votes drop below threshold. Deep technical analysis of state machines, lending pools, and verification checklists.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-dao-proposer-threshold-drop-cancel-verification-guide-en.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-dao-proposer-threshold-drop-cancel-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=89a5a02f">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","tokenomics","stablecoins","cross-chain","smart contract security","DAO governance","GovernorBravo threshold verification"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-dao-proposer-threshold-drop-cancel-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html", "name": "Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Governance & Verification", "item": "https://coin.ponr.org/en/research/governance/" },
+        { "@type": "ListItem", "position": 3, "name": "Proposal Threshold Check: Drops Trigger Open Cancel", "item": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#article", "headline": "Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly", "description": "In GovernorBravo, once a proposer's delegated voting power drops below proposalThreshold, any third party can permissionlessly call cancel to abort the proposal. Deep technical analysis of state machines, lending pools, and verification checklists. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#primaryimage" }, "articleSection": "Crypto Research", "isAccessibleForFree": true, "keywords": ["DAO governance","GovernorBravo","proposal threshold","cancel function","on-chain voting","delegated votes","smart contract security"], "wordCount": 1850, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-11-20T09:39:18+08:00", "dateModified": "2026-11-20T09:39:18+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does GovernorBravo allow any external address to call cancel?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This is a core anti-spam and game-theoretic defense. If proposers could dump, transfer, or lend their tokens after proposing without consequence, they would lose skin in the game. Open permissionless cancellation allows the community to prune proposals whose sponsors have relinquished their stake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a proposal be canceled after winning the vote and entering the Timelock queue?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. In Compound GovernorBravo and Uniswap Governor, as long as a proposal has not reached the final Executed state, any dip in the proposer's voting power below proposalThreshold allows anyone to execute cancel, aborting the proposal permanently."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does depositing tokens into Aave or Compound reduce delegated voting power?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because ERC20Votes checkpoints track balances transferred out of the account. Depositing tokens into a lending pool transfers ownership to the pool contract, resetting the user's checkpoints downward unless the pool supports specialized voting pass-through."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/governance/">Governance & Verification</a> / <span class="side-tag archive-tag archive-tag--indigo">Threshold</span></p>
+          <h1>Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly</h1>
+          <p class="article-summary">In major decentralized governance systems such as Compound GovernorBravo and Uniswap Governor, creating a proposal requires delegated voting power above proposalThreshold. Most developers and governance auditors assume that passing this check at propose() invocation is sufficient. However, an essential security invariant governs the entire lifecycle: if the proposer's current voting power drops below proposalThreshold due to transfers, lending deposits, or un-delegation, any third party can permissionlessly invoke cancel() to permanently kill the proposal. Over a 7- to 14-day voting and timelock queue window, minor operational errors can derail multimillion-dollar upgrades. This article breaks down state machine checks, Solidity mechanics, lending pitfalls, and verification checklists.</p>
+          <p class="article-meta"><span><a href="https://coin.ponr.org/en/about.html#author">ipfsWeb</a></span> · Crypto Research Editorial Desk · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-20T09:39:18+08:00">2026-11-20 09:39:18</time></p>
+        </header>
+        <img class="article-cover" src="/img/article-dao-proposer-threshold-drop-cancel-verification-guide-en.svg" alt="Proposal Threshold Check Cover Diagram" width="1200" height="600" fetchpriority="high" decoding="async">
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">Verification Checklist: Proposer Voting Power & Cancel Exposure</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>Dynamic Voting Power Tracking</strong>: Verify that the proposer's delegated voting power remains strictly greater than <code>proposalThreshold</code> across Active voting and Queued timelock stages.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Lending & Staking Isolation</strong>: Ensure the proposer address interacts with zero liquidity pools, money markets (Aave/Compound), or wrappers that trigger underlying token transfers.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Delegation Source Stability</strong>: When relying on third-party delegations to satisfy threshold, confirm that whale delegators have timelocked or multisig cooldowns against re-delegation.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Cancellation Vulnerability Window</strong>: Determine whether the contract is native GovernorBravo or OpenZeppelin v4.9+, checking whether cancel is open or restricted to whitelisted accounts.</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. Design Philosophy of GovernorBravo Thresholds: Why Anti-Spam Spans the Lifecycle</h2>
+              <p>In Ethereum decentralized governance, Compound's GovernorAlpha and GovernorBravo frameworks established the blueprint for on-chain proposals. To protect DAOs from spam and frivolous governance actions that burden community attention and gas, frameworks enforce a <code>proposalThreshold</code>. On Uniswap, submitting a proposal mandates at least 2.5 million UNI in delegated voting weight; on Compound, this threshold is historically calibrated around 65,000 COMP.</p>
+              <p>The core objective is ensuring skin in the game: the entity initiating the proposal must possess a substantial economic stake in protocol health. However, game theory and smart contract security dictate that verifying threshold solely at the moment of <code>propose()</code> is fundamentally incomplete. If a proposer could submit an action and immediately offload tokens on secondary markets, transfer them to a fresh address, or borrow stablecoins against them, the proposer would no longer face the economic consequences of malicious or poorly audited execution.</p>
+              <p>To seal this vulnerability, Compound's GovernorBravo introduces an uncompromising invariant: <strong>the proposer must maintain delegated voting power at or above proposalThreshold continuously until the proposal reaches executed finality</strong>. If votes dip below threshold for even a single block, any external entity—arbitrageur, automated bot, or competitor—gains permissionless authority to invoke <code>cancel()</code>, rendering the proposal irreversibly dead.</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. Mathematical Mechanics & Solidity Analysis of cancel(proposalId)</h2>
+              <p>To identify exact execution boundaries, we examine the canonical Compound GovernorBravo implementation in <code>GovernorBravoDelegate.sol</code>:</p>
+              <pre><code>function cancel(uint proposalId) external {
+    require(state(proposalId) != ProposalState.Executed, "GovernorBravo::cancel: cannot cancel executed proposal");
+
+    Proposal storage proposal = proposals[proposalId];
+    require(
+        msg.sender == proposal.proposer || 
+        comp.getPriorVotes(proposal.proposer, sub256(block.number, 1)) < proposal.proposalThreshold,
+        "GovernorBravo::cancel: proposer above threshold"
+    );
+
+    proposal.canceled = true;
+    timelock.cancelTransaction(
+        proposal.targets[i], 
+        proposal.values[i], 
+        proposal.signatures[i], 
+        proposal.calldatas[i], 
+        proposal.eta
+    );
+
+    emit ProposalCanceled(proposalId);
+}</code></pre>
+              <p>Analyzing this contract logic reveals a strict assertion tree:</p>
+              <ul>
+                <li><strong>State Pre-condition</strong>: As long as the proposal state is not <code>ProposalState.Executed</code>, cancellation is permissible. This leaves proposals in <code>Pending</code>, <code>Active</code>, <code>Succeeded</code>, and <code>Queued</code> fully vulnerable.</li>
+                <li><strong>Dual-Branch Authorization</strong>: The transaction succeeds if either of the following conditions holds:
+                  <ol>
+                    <li><code>msg.sender == proposal.proposer</code>: Voluntary cancellation by the author;</li>
+                    <li><code>comp.getPriorVotes(proposal.proposer, block.number - 1) &lt; proposal.proposalThreshold</code>: The proposer's historical delegated votes at block <code>B-1</code> fell below threshold.</li>
+                  </ol>
+                </li>
+              </ul>
+              <p>Under the second branch, <code>msg.sender</code> is unrestricted. If at block height <code>B</code>, the proposer's voting power <code>V_p(B) &lt; T</code> where <code>T</code> is the proposal threshold, then in block <code>B+1</code>, any caller worldwide can invoke <code>cancel(proposalId)</code>. Even if the proposer deposits tokens back at block <code>B+2</code> restoring <code>V_p(B+2) &ge; T</code>, an interim cancellation locks the proposal permanently into <code>Canceled</code>. There is no appeal, re-opening, or retroactive restoration.</p>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. Operational Pitfalls: Staking Into Lending Pools Erases Delegated Checkpoints</h2>
+              <p>In practice, governance failures rarely result from short-sellers; rather, they stem from proposers misunderstanding ERC20Votes checkpoint architecture. The most common catastrophic error involves <strong>yield optimization and lending collateral deposits</strong>.</p>
+              <div class="case-study-box">
+                <p class="case-study-label">Real-World Case Study: Collateral Deposit Derails Key DAO Upgrade</p>
+                <p>A core contributor proposed a vital fee-sharing parameter modification requiring 100,000 governance tokens. The author controlled 105,000 tokens, self-delegated, and submitted the proposal. On Day 3 of the 5-day voting window, aiming to maximize capital efficiency, the author supplied 10,000 tokens to Aave as collateral to borrow stablecoins.</p>
+                <p>Supplying tokens transferred them from the author's wallet to the Aave pool contract. The underlying <code>ERC20Votes._transferTokens</code> hook immediately fired: the author's checkpointed balance dropped from 105,000 to 95,000. Because 95,000 is less than the 100,000 threshold, the proposal became immediately cancelable. Within two minutes, an automated keeper script dispatched <code>cancel()</code> to the Governor contract, aborting the upgrade on the verge of passage.</p>
+              </div>
+              <p>Why do lending deposits destroy voting power? Major governance tokens (COMP, UNI, AAVE) utilize checkpointed historical ledger arrays <code>checkpoints[account]</code>. When tokens transfer—regardless of whether the recipient is an EOA or a smart contract vault—the sender's voting power is deducted. Lending protocols do not re-delegate incoming tokens back to the depositor, resulting in an immediate net voting deficit.</p>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. Front-Running Cancellation Vectors & Bot Exploitation</h2>
+              <p>Governance votes determine key economic allocations, such as treasury grants, collateral onboarding, and debt ceiling adjustments. For competing entities, aborting an opponent's proposal generates direct financial advantages.</p>
+              <p>When a proposer maintains only a paper-thin margin above threshold (e.g., &lt;1%), monitoring bots can target multiple execution vectors:</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Trigger Event</th>
+                    <th>Token Movement</th>
+                    <th>Voting Power Impact</th>
+                    <th>Bot Exploit Vector</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Routine Transfers</strong></td>
+                    <td>Proposer moves tokens to cold storage</td>
+                    <td>Direct deduction from self-delegated power</td>
+                    <td>Monitor Transfer event, trigger cancel next block</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Re-delegation</strong></td>
+                    <td>Whale delegator switches proxy to another address</td>
+                    <td>Proposer's external delegated power vanishes</td>
+                    <td>Execute cancel within the same or subsequent block</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Liquidity Provision</strong></td>
+                    <td>Proposer deposits tokens into AMM pool</td>
+                    <td>Transfer to pool drops wallet voting balance</td>
+                    <td>Backrun AMM mint transaction with cancel</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lending Liquidation</strong></td>
+                    <td>Market volatility triggers collateral liquidation</td>
+                    <td>Liquidator seizes tokens out of account</td>
+                    <td>Bundle liquidation and proposal cancel atomically</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>On Ethereum and major Layer 2 networks, automated MEV searchers and governance bots continuously scan pending transactions. If a proposer's voting power dips below threshold, searchers submit <code>cancel(proposalId)</code> within milliseconds, leaving zero window for remedial deposits.</p>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. On-Chain Lifecycle Verification: From Creation to Timelock Finality</h2>
+              <p>To safeguard critical upgrades across the 7- to 14-day voting and execution window, security teams must deploy real-time monitoring and defensive hygiene:</p>
+              <pre><code>// On-chain proposer safety verification logic
+function verifyProposerSafety(address governor, uint proposalId) view returns (bool isAtRisk, uint256 margin) {
+    IGovernor gov = IGovernor(governor);
+    Proposal memory p = gov.proposals(proposalId);
+    uint256 threshold = gov.proposalThreshold();
+    uint256 currentVotes = gov.token().getPriorVotes(p.proposer, block.number - 1);
+    
+    if (currentVotes < threshold) {
+        return (true, 0); // Active cancellation exposure!
+    }
+    margin = currentVotes - threshold;
+    isAtRisk = (margin * 100 / threshold) < 10; // Alert if safety buffer < 10%
+}</code></pre>
+              <p>Essential operational rules include:</p>
+              <ul>
+                <li><strong>Safety Buffer Maintenance</strong>: Proposers should maintain a minimum 15%–20% buffer above <code>proposalThreshold</code> to cushion against accidental delegation withdrawals.</li>
+                <li><strong>Dedicated Cold Wallet Isolation</strong>: The proposing address should serve strictly as an isolated governance multisig. Once <code>propose()</code> is executed, the address must halt all external contract calls until final on-chain execution.</li>
+                <li><strong>Delegation Binding Commitments</strong>: When relying on external whale delegations, formal timelock commitments should ensure the delegator cannot modify <code>delegate()</code> before execution.</li>
+                <li><strong>Queued State Active Defense</strong>: Even after a proposal achieves unanimous approval and enters the Timelock queue, the proposal remains vulnerable to cancellation until <code>execute()</code> completes.</li>
+              </ul>
+            </section>
+
+            <section id="sec-6">
+              <h2>6. Framework Distinctions: OpenZeppelin Governor vs GovernorBravo</h2>
+              <p>Developers frequently conflate OpenZeppelin Governor with Compound GovernorBravo. In reality, their cancellation logic reflects divergent architectural paradigms:</p>
+              <p>In modern OpenZeppelin Contracts (v4.9+), cancellation rights can be configured through modular extensions such as <code>GovernorPreventLateQuorum</code> and role-based permissions. By default, cancellations can be restricted to the proposer or dedicated administrative guardians, preventing open public cancellations during timelock queues.</p>
+              <p>However, in forks and deployments derived directly from Compound GovernorBravo (including Uniswap and Compound themselves), <strong>permissionless open cancellation is hardcoded into the immutable state machine</strong>. Proposers must treat their tokens not as liquid discretionary capital, but as an active on-chain security deposit securing the proposal until execution.</p>
+            </section>
+
+            <section id="faq">
+              <h2>Frequently Asked Questions (FAQ)</h2>
+              <h3>Why does GovernorBravo allow any external address to call cancel?</h3>
+              <p>This is a core anti-spam and game-theoretic defense. If proposers could dump, transfer, or lend their tokens after proposing without consequence, they would lose skin in the game. Open permissionless cancellation allows the community to prune proposals whose sponsors have relinquished their stake.</p>
+
+              <h3>Can a proposal be canceled after winning the vote and entering the Timelock queue?</h3>
+              <p>Yes. In Compound GovernorBravo and Uniswap Governor, as long as a proposal has not reached the final Executed state, any dip in the proposer's voting power below proposalThreshold allows anyone to execute cancel, aborting the proposal permanently.</p>
+
+              <h3>Why does depositing tokens into Aave or Compound reduce delegated voting power?</h3>
+              <p>Because ERC20Votes checkpoints track balances transferred out of the account. Depositing tokens into a lending pool transfers ownership to the pool contract, resetting the user's checkpoints downward unless the pool supports specialized voting pass-through.</p>
+            </section>
+
+            <aside class="callout" aria-label="Sponsored Information">
+              <p>Sponsored Notice: During active governance cycles, proposer addresses must maintain zero token transfers. For multi-chain treasury reallocation, cross-chain arbitrage, and liquidity research conducted outside governance multisigs, explore <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap Cross-Chain Swap</a> for competitive swap rates. This mention is for exploratory convenience only, operates independently from DAO threshold checks, and does not constitute financial advice.</p>
+            </aside>
+          </div>
+          <div class="article-sidebar">
+            <nav class="toc" aria-label="Table of Contents">
+              <h2>Table of Contents</h2>
+              <ol>
+                <li><a href="#sec-1">GovernorBravo Threshold Philosophy</a></li>
+                <li><a href="#sec-2">cancel() Code & Mathematical Model</a></li>
+                <li><a href="#sec-3">Lending & Staking Zero-Vote Trap</a></li>
+                <li><a href="#sec-4">Front-Running Bot Vectors</a></li>
+                <li><a href="#sec-5">On-Chain Verification Checklist</a></li>
+                <li><a href="#sec-6">OpenZeppelin vs Bravo Nuances</a></li>
+                <li><a href="#faq">FAQ</a></li>
+              </ol>
+            </nav>
+            <div class="references">
+              <h2>Primary References</h2>
+              <ul>
+                <li><a href="https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoDelegate.sol" target="_blank" rel="noopener">Compound GovernorBravoDelegate Source Code</a></li>
+                <li><a href="https://github.com/Uniswap/governance" target="_blank" rel="noopener">Uniswap Governance Repository & Threshold Standards</a></li>
+                <li><a href="https://docs.openzeppelin.com/contracts/4.x/api/governance" target="_blank" rel="noopener">OpenZeppelin Governor Technical Documentation</a></li>
+                <li><a href="https://eips.ethereum.org/EIPS/eip-5805" target="_blank" rel="noopener">EIP-5805: Voting with delegation extension</a></li>
+              </ul>
+              <p class="ref-note">Disclaimer: This guide is strictly for on-chain governance verification research and smart contract security analysis; it does not constitute financial advice.</p>
+            </div>
+          </div>
+        </div>
+        <div class="related">
+          <h2>Related Research</h2>
+          <ul>
+            <li><a href="/en/research/governance/dao-emergency-proposal-timelock-bypass-verification-guide.html">DAO Emergency Proposal Verification: How Easily Can the Timelock Bypass Get Triggered</a></li>
+            <li><a href="/en/research/governance/dao-proposal-quorum-threshold-verification-guide.html">DAO Proposal Quorum Threshold Verification: Most Proposals Have Zero Quorum</a></li>
+            <li><a href="/en/research/governance/dao-treasury-multisig-timelock-verification-guide.html">DAO Treasury Multisig Timelock Verification: Transparency Review</a></li>
+          </ul>
+        </div>
+        <div class="back-row"><a href="/en/articles.html">← Back to All Articles</a></div>
+      </article>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <details class="foot-nav">
+        <summary class="foot-nav-title">Quick Navigation</summary>
+        <ul>
+          <li><a href="/en/research/basics/">Basics & Foundations</a></li>
+          <li><a href="/en/research/market/">Market & Liquidity</a></li>
+          <li><a href="/en/research/protocol/">Protocols & Contracts</a></li>
+          <li><a href="/en/research/governance/">Governance & Verification</a></li>
+        </ul>
+      </details>
+      <p>© 2026 Crypto Research Notes · On-chain data and security verification</p>
+      <p><a href="/en/about.html">About</a> · <a href="/en/methodology.html">Methodology</a> · <a href="/en/feed.xml">RSS Feed</a></p>
+    </div>
+  </footer>
+  <button type="button" class="back-to-top" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <script src="/js/site.js?v=da9350ea"></script>
+</body>
+</html>

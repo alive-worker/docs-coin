@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'uniswap-v3-swap-step-target-price-fee-verification-guide',
-  publishedISO: '2026-11-19T14:52:57+08:00',
-  tagColor: 'amber',
-  topic: 'market',
+  slug: 'dao-proposer-threshold-drop-cancel-verification-guide',
+  publishedISO: '2026-11-20T09:39:18+08:00',
+  tagColor: 'indigo',
+  topic: 'governance',
 
   zh: {
-    h1: "步进核验：打到目标价按吃进量进一，没打到按剩余量扣除",
-    tagLabel: "步进",
-    cardDesc: "SwapMath.computeSwapStep 在计算单步手续费时有两条根本不同的分支：打到价格目标时，手续费按实际吃进量乘以费率除以 1000000 减费率向上进一，多余输入留给下一步；未打到目标时，手续费等于剩余输入减去曲线吃进量，把本步输入全部耗尽。曲线要 998 时打到需付 1002，传入 1001 付不起 1002 只能走未打到分支，曲线吃进回落至 997。",
+    h1: "提案门槛核验：跌破门槛全民可撤销，质押转账瞬间作废",
+    tagLabel: "门槛",
+    cardDesc: "在 GovernorBravo 等主流治理架构中，提案人委托票权必须贯穿全生命周期高于 proposalThreshold。一旦提案人在投票期或时间锁排队期因将代币存入 Aave/Compound 质押借贷、转账或被大户撤销委托导致票权跌破门槛，全网任何第三方均可无需权限抢跑调用 cancel 强行将提案作废，且不可逆转。",
   },
   en: {
-    h1: "Step Fee Check: Hitting Target Rounds from Curve Input, Falling Short Deducts All Remaining",
-    tagLabel: "Step",
-    cardDesc: "SwapMath.computeSwapStep branches fee computation based on target attainment: hitting the target rounds the fee up from curve input using divisor 1000000 minus fee, preserving excess input for next steps; falling short sets fee to remaining input minus curve input, consuming the step entirely. When the curve needs 998, hitting target requires 1002; inputting 1001 falls short, dropping curve input to 997.",
+    h1: "Proposal Threshold Check: Drops Trigger Open Cancel, Transfers Invalidate Instantly",
+    tagLabel: "Threshold",
+    cardDesc: "In GovernorBravo frameworks, a proposer must continuously maintain delegated voting power above proposalThreshold until execution. If the proposer deposits tokens into Aave/Compound lending, transfers balances, or loses delegated support, any third party can permissionlessly call cancel to permanently abort the proposal even during timelock queues.",
   },
 
   existingSlugsNewestFirst: [
+    'uniswap-v3-swap-step-target-price-fee-verification-guide',
     'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
     'uniswap-v3-cross-tick-liquidity-net-verification-guide',
     'uniswap-v3-exact-output-fee-on-top-verification-guide',
