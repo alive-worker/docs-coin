@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing - Crypto Research</title>
+  <meta name="description" content="Proof of Reserves (PoR) is widely cited as the gold standard of solvency, yet conventional Merkle trees conceal lethal audit flaws: without ZK non-negative range proofs, inserting synthetic negative-balance nodes artificially suppresses total liabilities; furthermore, single-block snapshots allow platforms to bridge-borrow assets right before block capture and repay immediately after. This guide breaks down Merkle Sum Tree mathematical constraints, on-chain bridge loan detection, and solvency audit verification protocols.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="Proof of Reserves,PoR,Merkle tree,Merkle Sum Tree,negative balance smuggling,exchange solvency,zk-SNARKs,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing">
+  <meta property="og:description" content="Conventional Merkle tree PoR without non-negative range proofs allows platforms to hide liabilities via negative balances. Mathematical audit and on-chain verification guide.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-22T14:06:47+08:00">
+  <meta property="article:modified_time" content="2026-11-22T14:06:47+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Research Foundations">
+  <meta property="article:tag" content="PoR Check">
+  <meta property="article:tag" content="Proof of Reserves">
+  <meta property="article:tag" content="Exchange Solvency">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-proof-of-reserves-merkle-liability-snapshot-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Proof of Reserves PoR Verification Cover Diagram">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing">
+  <meta name="twitter:description" content="Detailed analysis of Merkle liability smuggling and snapshot window dressing in crypto exchange Proof of Reserves audits.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-proof-of-reserves-merkle-liability-snapshot-verification-guide-en.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#0284c7">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-proof-of-reserves-merkle-liability-snapshot-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=b8a1e14f">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","proof of reserves","PoR","Merkle Sum Tree","exchange solvency","zk-SNARKs","bridge borrowing"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/en/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-proof-of-reserves-merkle-liability-snapshot-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html", "name": "Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Research Foundations", "item": "https://coin.ponr.org/en/research/basics/" },
+        { "@type": "ListItem", "position": 3, "name": "Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing", "item": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#article", "headline": "Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing", "description": "Proof of Reserves (PoR) is widely cited as the gold standard of solvency, yet conventional Merkle trees conceal lethal audit flaws: without ZK non-negative range proofs, inserting synthetic negative-balance nodes artificially suppresses total liabilities; furthermore, single-block snapshots allow platforms to bridge-borrow assets right before block capture and repay immediately after. This guide breaks down Merkle Sum Tree mathematical constraints, on-chain bridge loan detection, and solvency audit verification protocols. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#primaryimage" }, "articleSection": "Research Foundations", "isAccessibleForFree": true, "keywords": ["Proof of Reserves","PoR","Merkle tree","Merkle Sum Tree","negative balance smuggling","exchange solvency","zk-SNARKs"], "wordCount": 2080, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/en/#org" }, "datePublished": "2026-11-22T14:06:47+08:00", "dateModified": "2026-11-22T14:06:47+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does finding your account leaf inside a Merkle tree fail to prove full exchange solvency?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because individual leaf verification only demonstrates inclusion ('my balance was included in this tree'), not completeness or non-negativity. If the custodian introduces synthetic negative-balance nodes (e.g., -50,000 BTC) within unseen branches, the aggregated root liability is dramatically understated, falsely matching available on-chain reserves."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is single-block snapshot window dressing, and how can on-chain analysts detect it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Window dressing occurs when an exchange borrows substantial capital from DeFi lending markets or OTC desks immediately prior to an audit block, snapshots the inflated balance, and promptly returns the borrowed funds a few blocks later. Analysts detect this by tracking cold wallet UTXO and token residency velocity across at least a 72-hour window before and after the snapshot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do zero-knowledge range proofs (zk-PoR) mathematically eradicate negative balance fraud?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "zk-PoR incorporates cryptographic range proofs (such as Bulletproofs) into the circuit, enforcing that 0 <= balance < 2^64 for every committed leaf. Because negative integers wrap around to astronomically large values in prime-order finite fields, any negative entry invalidates the proof, mathematically guaranteeing that no liabilities are subtracted."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/basics/">Research Foundations</a> / <span class="side-tag archive-tag archive-tag--blue">PoR Check</span></p>
+          <h1>Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing</h1>
+          <p class="article-summary">Following high-profile custodial insolvencies across centralized platforms, Proof of Reserves (PoR) emerged as the flagship metric for solvency assurance. Most retail users simply locate their account hash along a Merkle tree and assume their deposits are fully backed. However, conventional Merkle Sum Trees harbor critical structural and game-theoretic flaws: without cryptographic non-negative range proofs, operators can inject synthetic negative-balance nodes into uninspected subtrees, effortlessly erasing billions in customer liabilities; simultaneously, single-block snapshots offer ample opportunity for temporary bridge-borrowing to fabricate reserves. This guide examines the mathematical mechanics of negative-balance smuggling, on-chain time-weighted residency tracking, and independent PoR audit verification protocols.</p>
+          <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-22T14:06:47+08:00">2026-11-22 14:06:47</time></p>
+        </header>
+
+        <img class="article-cover" src="/img/article-proof-of-reserves-merkle-liability-snapshot-verification-guide-en.svg" alt="Proof of Reserves PoR Verification Cover Diagram" width="1200" height="600" fetchpriority="high" decoding="async">
+
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">Verification Checklist: Centralized Exchange PoR Audit Essentials</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>Mathematical Non-Negativity Verification</strong>: Verify whether the Merkle tree architecture enforces zero-knowledge range constraints (e.g., Bulletproofs) ensuring <code>0 ≤ balance &lt; 2^64</code> to prevent liability offset attacks.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Time-Weighted Balance Velocity Analysis</strong>: Reject static single-block snapshots. Audit cold wallet UTXO and ERC-20 inflows across at least 72 hours before and after the snapshot block to detect temporary bridge loans.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Off-Chain Encumbrance &amp; Rehypothecation Check</strong>: Confirm whether reserve addresses have approved token transfers to external lending vaults (EigenLayer, Aave, Lido) that generate subordinated unbacked debt.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Comprehensive Multi-Asset Liability Closure</strong>: Ensure that the published audit scope accounts for margin deposits, yield programs (Earn), and collateral loans across all platform services rather than cherry-picked pairs.</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. The Mathematical Illusion of Merkle Sum Trees: Why Leaf Inclusion Fails Solvency</h2>
+              <p>In standard Merkle Sum Tree implementations, each leaf node represents an anonymized user account commitment <code>h = H(uid, nonce)</code> paired with an asset balance <code>b</code>. Parent nodes are computed recursively by summing child balances and hashing concatenated digests:</p>
+              <pre><code>parent.hash = H(left.hash || left.balance || right.hash || right.balance)
+parent.balance = left.balance + right.balance</code></pre>
+              <p>When an individual user downloads their personal authentication path, their local script recomputes hashes and balances up to the Merkle Root. If the computed root matches the operator's published root, the user receives apparent cryptographic confirmation.</p>
+              <p>However, information theory reveals a foundational blind spot: <strong>Proof of Inclusion does not imply Proof of Completeness or Solvency</strong>. An individual audit path covers merely 20 to 30 adjacent siblings along a single branch. The user remains entirely blind to the contents of millions of other leaves across parallel subtrees. If a fraudulent operator constructs anomalous values within uninspected branches, the root liability sum can be forged arbitrarily.</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. Negative Balance Smuggling: Mathematical Mechanics of Offset Fraud</h2>
+              <p>Negative balance smuggling occurs when an insolvent platform intentionally modifies leaf generation logic to offset customer deposits against phantom negative entries. The underlying arithmetic is alarmingly straightforward:</p>
+              <p>Suppose an exchange genuinely owes users <code>115,000 BTC</code>, but holds merely <code>65,000 BTC</code> in its on-chain vaults, suffering an uncollateralized deficit of <code>50,000 BTC</code>. In a naive Merkle Sum Tree devoid of non-negative range proofs:</p>
+              <ol>
+                <li>The exchange packages all legitimate customer balances honestly (aggregating to <code>+115,000 BTC</code>);</li>
+                <li>The exchange inserts an internal dummy leaf into an isolated branch carrying an artificial balance of <code>-50,000 BTC</code>;</li>
+                <li>When the parent nodes aggregate across subtrees:
+                  <pre><code>root.balance = legitimate_subtree.balance (+115,000) + dummy_node.balance (-50,000) = 65,000 BTC</code></pre>
+                </li>
+                <li>The resulting Merkle Root indicates a total liability of exactly <code>65,000 BTC</code>, matching on-chain reserves precisely to boast a fraudulent 100% reserve ratio.</li>
+              </ol>
+              <p>Under this attack vector, <strong>every genuine user verifies their personal path with 100% success</strong>. Because no individual user path intersects with the isolated negative leaf, traditional audits blindly confirming <code>Root.balance == OnChain.reserves</code> will report pristine solvency.</p>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. Snapshot Window Dressing: Detecting Ephemeral Bridge Borrowing</h2>
+              <p>Beyond liability manipulation, the asset side of PoR is frequently compromised by <strong>single-block snapshot window dressing</strong>. Solvency attestations conventionally record balances at a predetermined block height (e.g., Ethereum block <code>21,240,000</code>).</p>
+              <p>Because decentralized lending pools and institutional OTC desks provide multi-million-dollar flash liquidity:</p>
+              <ul>
+                <li>Ten blocks prior to the audit target (approximately 2 minutes prior), the platform borrows <code>20,000 ETH</code> using off-chain collateral or protocol credit;</li>
+                <li>The borrowed capital is swept into the platform's public cold storage address;</li>
+                <li>The snapshot block is minted, and the custodian cryptographically signs the balance assertion;</li>
+                <li>Merely 5 blocks later, the platform executes reverse transfers, returning the 20,000 ETH to the lender.</li>
+              </ul>
+              <p>To penetrate this deception, researchers must discard static snapshot balances in favor of a <strong>Time-Weighted Balance Velocity Model</strong>. By analyzing UTXO residency and ERC-20 inflows across a 72-hour window before and after the snapshot block, any large-scale deposit representing more than 5% of reserves that persists for less than 48 hours and subsequently flows back to lending facilities must be flagged as fictitious temporary liquidity.</p>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. Zero-Knowledge Proofs (zk-PoR): Enforcing Non-Negativity with Bulletproofs</h2>
+              <p>To eliminate negative-balance exploits algorithmically, advanced custody infrastructures transition to <strong>zk-SNARKs and Bulletproofs-based Proof of Reserves (zk-PoR)</strong>. The core innovation lies in cryptographic range proofs:</p>
+              <p>Within a zero-knowledge circuit, individual user balances are represented as homomorphic Pedersen commitments: <code>C = g^v * h^r</code> (where <code>v</code> is the balance and <code>r</code> is a blinding factor). The circuit mathematically proves that:</p>
+              <pre><code>0 ≤ v &lt; 2^64</code></pre>
+              <p>Under discrete logarithm assumptions, attempting to insert a negative value (which wraps around to an astronomically large number modulo the prime field exceeding <code>2^64</code>) causes proof generation to fail irrevocably. Independent verifiers run lightweight verification scripts locally to guarantee that every leaf across tens of millions of accounts is strictly non-negative without compromising personal account privacy.</p>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. Independent Verification Protocols: An Audit Checklist for Researchers</h2>
+              <p>Professional analysts, market makers, and institutional depositors evaluating any centralized solvency report must execute the following four-step verification framework:</p>
+
+              <ol>
+                <li><strong>Local Open-Source Script Verification</strong>: Never rely on web-based verification widgets hosted by the exchange itself. Always download open-source verification CLI binaries (Python or Rust) and independently compute Merkle path hashes inside an isolated sandbox.</li>
+                <li><strong>Cryptographic Ownership Signatures</strong>: Verify that the custodian generated valid digital signatures (ECDSA / Ed25519) utilizing the private keys of disclosed cold storage addresses over the exact snapshot block hash, preventing third-party address spoofing.</li>
+                <li><strong>On-Chain Collateral &amp; Allowance Tracking</strong>: Audit disclosed cold storage addresses using on-chain explorers to ensure that tokens are not encumbered by infinite ERC-20 approvals to decentralized lending protocols (such as Aave, Compound, or Morpho) where assets may serve as pledged collateral for unrevealed liabilities.</li>
+                <li><strong>Holistic Multi-Product Balance Reconciliation</strong>: Confirm that the solvency audit accounts for open futures margins, Earn yield programs, and lending obligations rather than restricting transparency to spot balances while concealing derivative exposures.</li>
+              </ol>
+            </section>
+
+            <aside class="article-aside">
+              <p>Promotional Notice: During cross-platform solvency audits and custodial risk evaluations, researchers and active market participants frequently rebalance capital into decentralized, self-custodied environments. For streamlined multi-chain liquidity routing and low-slippage execution alongside your on-chain research, explore <a href="https://allswap.io" target="_blank" rel="sponsored nofollow noopener">Allswap Cross-Chain Swap</a>. This notice is provided for reference only, is unrelated to Proof of Reserves audit mechanics, and does not constitute investment advice. Always safeguard private keys and audit token approvals.</p>
+            </aside>
+
+            <section class="article-sources" aria-label="References">
+              <h2>References &amp; Standards</h2>
+              <ul>
+                <li>Vitalik Buterin's Solvency Framework: <a href="https://vitalik.eth.limo/general/2022/11/19/proof_of_reserves.html" target="_blank" rel="noopener nofollow">Having a safe CEX: proof of solvency and beyond (Vitalik Buterin)</a></li>
+                <li>Cryptographic Range Proof Standards: <a href="https://eprint.iacr.org/2017/1066.pdf" target="_blank" rel="noopener nofollow">Bulletproofs: Short Proofs for Confidential Transactions and More</a></li>
+                <li>Exchange Solvency Research: <a href="https://eprint.iacr.org/2015/1008.pdf" target="_blank" rel="noopener nofollow">Provisions: Complete Privacy-Preserving Proofs of Solvency for Bitcoin Exchanges</a></li>
+                <li>Ethereum Signature Verification: <a href="https://eips.ethereum.org/EIPS/eip-1271" target="_blank" rel="noopener nofollow">EIP-1271: Standard Signature Validation Method for Contracts</a></li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="sidebar" aria-label="Related Articles">
+            <div class="sidebar-block">
+              <h3 class="sidebar-heading">Latest Research Checks</h3>
+              <ul class="sidebar-list">
+                <li class="sidebar-item">
+                  <a href="/en/research/basics/exchange-asset-rehypothecation-risk-guide.html">
+                    <span class="side-tag archive-tag archive-tag--blue">Asset Security</span>
+                    <span class="side-title">Exchange Asset Rehypothecation &amp; Custody Risk</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/basics/exchange-withdrawal-fee-onchain-gas-markup-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--blue">Withdrawal Fees</span>
+                    <span class="side-title">Withdrawal Fee vs On-Chain Gas Markup Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/basics/usdt-reserve-transparency-onramp-defi-security-guide.html">
+                    <span class="side-tag archive-tag archive-tag--blue">Stablecoins</span>
+                    <span class="side-title">USDT Reserve Transparency &amp; On-Chain Safety</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Transient</span>
+                    <span class="side-title">EIP-1153 Transient Storage Reentrancy Check</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-foot-inner">
+      <div class="site-foot-brand">
+        <p class="site-foot-title">Crypto Research</p>
+        <p class="site-foot-desc">Focused on on-chain data and smart contract security · Not investment advice</p>
+      </div>
+      <div class="site-foot-nav">
+        <p class="foot-heading">Navigation</p>
+        <ul class="foot-links">
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/about.html">About Us</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for educational and research purposes only, not financial or investment advice. Crypto markets are volatile; conduct your own due diligence.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=3db000ae"></script>
+</body>
+</html>

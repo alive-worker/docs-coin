@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'eip-1153-transient-storage-reentrancy-leak-verification-guide',
-  publishedISO: '2026-11-20T14:02:07+08:00',
-  tagColor: 'teal',
-  topic: 'protocol',
+  slug: 'proof-of-reserves-merkle-liability-snapshot-verification-guide',
+  publishedISO: '2026-11-22T14:06:47+08:00',
+  tagColor: 'blue',
+  topic: 'basics',
 
   zh: {
-    h1: "EIP-1153瞬态存储重入核验：Cancun升级后TSTORE上下文泄漏与重入锁失效陷阱",
-    tagLabel: "瞬态存储",
-    cardDesc: "以太坊Cancun升级引入EIP-1153瞬态存储(TSTORE/TLOAD)，将重入锁Gas从数千暴降至100。然而众多DeFi开发者误将交易生命周期等同于调用帧生命周期：一旦在Multicall早退、try/catch异常捕获或ERC-4337同批次打包中漏清状态，瞬态存储将发生致命上下文泄漏，导致重入锁永久自锁或跨调用状态污染。本文拆解字节码执行路径、Multicall复用陷阱与链上安全防范清单。",
+    h1: "储备证明核验：Merkle负债抵消陷阱与时点快照过桥借贷穿透",
+    tagLabel: "PoR核验",
+    cardDesc: "交易所储备证明(PoR)常被散户奉为安全信条，但传统Merkle树存在两大隐蔽欺诈漏洞：若树生成逻辑缺少零知识非负范围证明，注入负余额虚假节点即可抵消巨额用户负债；若仅依赖单区块时点快照，机构可在快照前借入资产充数、快照后归还过桥资金。本文拆解Merkle Sum Tree数学约束、过桥借贷链上穿透识别模型与链上PoR独立验证清单。",
   },
   en: {
-    h1: "EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak and Reentrancy Lock Failures",
-    tagLabel: "Transient",
-    cardDesc: "Ethereum Cancun introduced EIP-1153 transient storage (TSTORE/TLOAD), slashing reentrancy lock costs from thousands of gas down to 100. However, many DeFi developers confuse transaction lifetime with call-frame scope: early returns in Multicall, try/catch swallows, or shared-batch ERC-4337 transactions cause catastrophic context leaks, permanently locking contracts or bypassing reentrancy protection. This guide details EVM bytecode execution paths, Multicall vulnerabilities, and verification checklists.",
+    h1: "Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing",
+    tagLabel: "PoR Check",
+    cardDesc: "Proof of Reserves (PoR) is widely cited as the gold standard of solvency, yet conventional Merkle trees conceal lethal audit flaws: without ZK non-negative range proofs, inserting synthetic negative-balance nodes artificially suppresses total liabilities; furthermore, single-block snapshots allow platforms to bridge-borrow assets right before block capture and repay immediately after. This guide breaks down Merkle Sum Tree mathematical constraints, on-chain bridge loan detection, and solvency audit verification protocols.",
   },
 
   existingSlugsNewestFirst: [
+    'eip-1153-transient-storage-reentrancy-leak-verification-guide',
     'dao-proposer-threshold-drop-cancel-verification-guide',
     'uniswap-v3-swap-step-target-price-fee-verification-guide',
     'uniswap-v3-amount-delta-rounding-pool-favor-verification-guide',
