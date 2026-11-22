@@ -11,7 +11,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const FIX = process.argv.includes('--fix');
@@ -142,11 +142,11 @@ function parseArchiveTags(html) {
 
 function parseArchiveTagsFromGit(file) {
   try {
-    const hashes = execSync(`git log -30 --pretty=%H -- ${file}`, {
+    const hashes = execFileSync('git', ['log', '-30', '--pretty=%H', '--', file], {
       cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
     }).trim().split(/\r?\n/).filter(Boolean);
     for (const h of hashes) {
-      const html = execSync(`git show ${h}:${file}`, {
+      const html = execFileSync('git', ['show', `${h}:${file}`], {
         cwd: root, encoding: 'utf8', maxBuffer: 12 * 1024 * 1024,
         stdio: ['ignore', 'pipe', 'ignore'],
       });
