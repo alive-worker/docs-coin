@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html': '2026-11-25 09:58:51',
+    '/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html': '2026-11-25 09:58:51',
     '/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html': '2026-11-22 14:06:47',
     '/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html': '2026-11-22 14:06:47',
     '/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html': '2026-11-20 14:02:07',

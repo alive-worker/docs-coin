@@ -1,0 +1,75 @@
+<svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="EIP-7702 EOA Delegation Storage Collision and Revocation Verification Diagram">
+  <defs>
+    <radialGradient id="glow7702En" cx="68%" cy="46%" r="55%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.34"/>
+      <stop offset="50%" stop-color="#0d9488" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid7702En" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#22d3ee" fill-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="600" fill="#070d12"/>
+  <rect width="1200" height="600" fill="url(#grid7702En)"/>
+
+  <g transform="translate(64,54)">
+    <rect x="0" y="0" width="36" height="36" rx="10" fill="#0891b2"/>
+    <text x="18" y="24" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="750" fill="#ffffff" text-anchor="middle">CR</text>
+    <text x="46" y="24" font-family="'Segoe UI',Arial,sans-serif" font-size="14" font-weight="650" fill="#94a3b8">Crypto Research · Protocol &amp; Infrastructure Risk</text>
+  </g>
+
+  <circle cx="885" cy="285" r="245" fill="url(#glow7702En)"/>
+
+  <!-- Diagram: EIP-7702 Delegation Pointer & Dirty Storage Collision -->
+  <g transform="translate(615, 108)">
+    <!-- Code Pointer Box -->
+    <rect x="25" y="18" width="235" height="114" rx="14" fill="#0b1820" stroke="#06b6d4" stroke-width="1.5" stroke-opacity="0.5"/>
+    <text x="45" y="50" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#67e8f9">EOA Code (23 Bytes)</text>
+    <text x="45" y="76" font-family="Consolas,'Segoe UI',monospace" font-size="12" fill="#94a3b8">0xef0100 || Impl_B</text>
+    <text x="45" y="106" font-family="'Segoe UI',sans-serif" font-size="16" font-weight="800" fill="#22d3ee">Revoke Clears Code Only</text>
+
+    <!-- Storage Collision Box -->
+    <rect x="280" y="18" width="235" height="114" rx="14" fill="#1a0e14" stroke="#f43f5e" stroke-width="1.5" stroke-opacity="0.55"/>
+    <text x="300" y="50" font-family="'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#fda4af">EOA Storage Slot 0</text>
+    <text x="300" y="76" font-family="Consolas,'Segoe UI',monospace" font-size="12" fill="#94a3b8">Residual Impl_A State</text>
+    <text x="300" y="106" font-family="'Segoe UI',sans-serif" font-size="16" font-weight="800" fill="#fb7185">Slot Collision / Takeover</text>
+
+    <!-- Flow Diagram -->
+    <g transform="translate(30, 162)">
+      <rect x="0" y="0" width="136" height="44" rx="8" fill="#11242e" stroke="#0891b2" stroke-width="1.2"/>
+      <text x="68" y="27" font-family="'Segoe UI',sans-serif" font-size="11.5" font-weight="700" fill="#67e8f9" text-anchor="middle">Impl_A Writes Slot 0</text>
+
+      <path d="M 136 22 L 172 22" stroke="#67e8f9" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="178,22 170,18 170,26" fill="#67e8f9"/>
+
+      <rect x="182" y="0" width="132" height="44" rx="8" fill="#18202c" stroke="#38bdf8" stroke-width="1.2"/>
+      <text x="248" y="27" font-family="'Segoe UI',sans-serif" font-size="11.5" font-weight="700" fill="#7dd3fc" text-anchor="middle">Re-Delegate Impl_B</text>
+
+      <path d="M 314 22 L 350 22" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="356,22 348,18 348,26" fill="#f43f5e"/>
+
+      <rect x="360" y="0" width="120" height="44" rx="8" fill="#221017" stroke="#e11d48" stroke-width="1.5"/>
+      <text x="420" y="27" font-family="'Segoe UI',sans-serif" font-size="11.5" font-weight="750" fill="#fda4af" text-anchor="middle">Dirty Read Bypass</text>
+    </g>
+
+    <!-- Warning Pill -->
+    <rect x="30" y="238" width="480" height="36" rx="8" fill="#121e26" stroke="#06b6d4" stroke-width="1"/>
+    <text x="48" y="261" font-family="Consolas,'Segoe UI',monospace" font-size="11.5" font-weight="600" fill="#67e8f9">Verify 0xef0100 Code + ERC-7201 Namespaces + Non-Zero chainId</text>
+  </g>
+
+  <!-- Left Side Title Block -->
+  <g transform="translate(64, 206)">
+    <rect x="0" y="0" width="112" height="26" rx="6" fill="#10252f" stroke="#06b6d4" stroke-width="1"/>
+    <text x="56" y="17" font-family="'Segoe UI',Arial,sans-serif" font-size="12" font-weight="750" fill="#22d3ee" text-anchor="middle">EIP-7702 Check</text>
+
+    <text x="0" y="72" font-family="'Segoe UI',Arial,sans-serif" font-size="31" font-weight="800" fill="#f8fafc" letter-spacing="-0.02em">
+      <tspan x="0" dy="0">EIP-7702 EOA Delegation Check</tspan>
+      <tspan x="0" dy="46" font-size="25" fill="#94a3b8">Storage Collisions, Replay &amp; Residual State</tspan>
+    </text>
+
+    <text x="0" y="192" font-family="'Segoe UI',Arial,sans-serif" font-size="14" fill="#64748b">
+      <tspan x="0" dy="0">Pectra lets EOAs delegate code via 0xef0100 pointers, yet revoking</tspan>
+      <tspan x="0" dy="24">never wipes persistent storage—and breaks tx.origin invariants.</tspan>
+    </text>
+  </g>
+</svg>

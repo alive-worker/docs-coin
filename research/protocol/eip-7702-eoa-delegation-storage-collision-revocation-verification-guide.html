@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱 - 加密货币研究</title>
+  <meta name="description" content="以太坊 Pectra 升级引入 EIP-7702（SetCode 交易 0x04），允许普通 EOA 通过 23 字节 0xef0100 委托指针执行智能合约代码。但撤销或切换委托仅覆盖代码指针，绝不会清空 EOA 持久存储；若未强制采用 ERC-7201 命名空间，旧槽位脏数据将直接引发权限越权，叠加 chain_id=0 全链重放与 tx.origin 防线失效，构成全新链上风险面。本文提供字节码与 RPC 核验清单。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="EIP-7702,Pectra升级,EOA委托账户,存储槽位碰撞,ERC-7201,0xef0100,跨链重放,智能合约安全,账户抽象,加密货币研究">
+  <link rel="canonical" href="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="加密货币研究">
+  <meta property="og:title" content="EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱">
+  <meta property="og:description" content="EIP-7702 允许 EOA 通过 0xef0100 委托合约代码，但撤销授权不清空持久存储。深度拆解存储槽位碰撞、chain_id=0 重放、tx.origin 失效与链上 RPC 核验方法。">
+  <meta property="og:url" content="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-25T09:58:51+08:00">
+  <meta property="article:modified_time" content="2026-11-25T09:58:51+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="协议与基础设施风险">
+  <meta property="article:tag" content="委托账户">
+  <meta property="article:tag" content="EIP-7702">
+  <meta property="article:tag" content="智能合约安全">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="EIP-7702 委托账户存储槽位碰撞与撤销残留核验 主题配图">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱">
+  <meta name="twitter:description" content="深度拆解以太坊 Pectra EIP-7702 委托账户的存储残留碰撞、chain_id=0 跨链重放与 tx.origin 防线崩塌，附可执行 RPC 核验清单。">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="加密货币研究 RSS" href="/feed.xml">
+  <meta name="theme-color" content="#0891b2">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=0c35a636">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/#org", "name": "加密货币研究", "alternateName": "Crypto Research Notes", "url": "https://coin.ponr.org/", "email": "mailto:llf.worker@gmail.com", "description": "聚焦加密货币研究方法与链上数据的中文信息站点，内容仅供学习研究、不构成投资建议。", "knowsAbout": ["加密货币研究","链上数据分析","EIP-7702","ERC-7201","账户抽象","智能合约安全","Pectra升级","EOA委托"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/en/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/#website", "url": "https://coin.ponr.org/", "name": "加密货币研究", "inLanguage": "zh-CN", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#webpage", "url": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html", "name": "EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱 - 加密货币研究", "isPartOf": { "@id": "https://coin.ponr.org/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#breadcrumb" }, "inLanguage": "zh-CN" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://coin.ponr.org/" },
+        { "@type": "ListItem", "position": 2, "name": "协议与基础设施风险", "item": "https://coin.ponr.org/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱", "item": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#article", "headline": "EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱", "description": "以太坊 Pectra 升级引入 EIP-7702（SetCode 交易 0x04），允许普通 EOA 通过 23 字节 0xef0100 委托指针执行智能合约代码。但撤销或切换委托仅覆盖代码指针，绝不会清空 EOA 持久存储；若未强制采用 ERC-7201 命名空间，旧槽位脏数据将直接引发权限越权，叠加 chain_id=0 全链重放与 tx.origin 防线失效，构成全新链上风险面。不构成投资建议。", "image": { "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage" }, "articleSection": "协议与基础设施风险", "isAccessibleForFree": true, "keywords": ["EIP-7702","Pectra升级","EOA委托账户","存储槽位碰撞","ERC-7201","0xef0100","跨链重放","智能合约安全"], "wordCount": 2650, "author": { "@id": "https://coin.ponr.org/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-11-25T09:58:51+08:00", "dateModified": "2026-11-25T09:58:51+08:00", "inLanguage": "zh-CN", "mainEntityOfPage": { "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "撤销 EIP-7702 委托（授权至零地址）会清空 EOA 里之前写入的存储数据吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。将 EIP-7702 委托目标设置为 0x0000000000000000000000000000000000000000 仅会将 EOA 的账户代码重置为空（codeHash 回到空哈希），但该 EOA 在世界状态树（Storage Trie）中写入的所有持久存储槽均原封不动地保留。日后该 EOA 若再委托给新合约，极易读取到历史脏数据。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么 EIP-7702 授权签名中的 chain_id = 0 会构成严重跨链重放风险？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EIP-7702 规范允许授权元组将 chain_id 设为 0 以实现多链统一部署。但一旦签名泄露或上链公开，任何人都可在其他 EVM 链上以相同 nonce 重放该授权；若目标实现地址在另一条链上尚未部署且未采用 CREATE2 确定性部署，攻击者甚至可抢先部署恶意合约并接管该 EOA。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "EIP-7702 激活后，DeFi 合约里的 require(tx.origin == msg.sender) 还能拦截合约调用吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "彻底失效。在 EIP-7702 下，已设置委托代码的 EOA 可以直接作为交易发起者（tx.origin）执行自身委托的批量智能合约逻辑。在目标 DeFi 合约视角下，tx.origin 与 msg.sender 完全相等，但发起方实际上在同一笔交易中执行了多步套利或闪电贷组合逻辑。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="加密货币研究首页">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">加密货币研究</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">首页</a>
+        <a href="/articles.html">全部文章</a>
+        <a href="/methodology.html">方法论</a>
+        <a href="/about.html">关于</a>
+        <a class="lang-switch" href="/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html" hreflang="en" lang="en">EN</a>
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/research/protocol/">协议与基础设施风险</a> / <span class="side-tag archive-tag archive-tag--cyan">委托账户</span></p>
+          <h1>EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱</h1>
+          <p class="article-summary">以太坊 Pectra 升级激活的 EIP-7702 彻底打破了“外部账户（EOA）不能执行合约代码”的十年铁律：用户只需签署一条 SetCode（Type 0x04）授权元组，即可将 23 字节委托指示符 <code>0xef0100 || address</code> 写入 EOA 代码区，原地址瞬间获得批量交易、Gas 代付与会话密钥能力。然而，这种“就地升级”在工程实践中暴露出三类高度隐蔽的资产安全陷阱：撤销或切换委托合约时 EOA 持久存储永不自动清空导致的槽位碰撞、<code>chain_id = 0</code> 签名引发的全链重放与目标地址抢注，以及全网存量 DeFi 合约赖以生存的 <code>tx.origin == msg.sender</code> 防线瞬间崩塌。</p>
+          <p class="article-meta"><span><a href="/about.html#author">ipfsWeb</a></span> · 加密货币研究编辑部 · 发布于 <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-25T09:58:51+08:00">2026-11-25 09:58:51</time></p>
+        </header>
+
+        <img class="article-cover" src="/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.svg" alt="EIP-7702 委托账户存储槽位碰撞与撤销残留核验 主题配图" width="1200" height="600" fetchpriority="high" decoding="async">
+
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">核验清单：EIP-7702 委托账户四大边界检查</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>代码指针与撤销残留核验</strong>：用 <code>eth_getCode</code> 核查地址是否以 <code>0xef0100</code> 开头（总长 23 字节）；切换或撤销委托后，必须单独用 <code>eth_getStorageAt</code> 排查旧槽位残留，切勿误以为归零代码即清空状态。</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>ERC-7201 命名空间隔离</strong>：核验目标委托实现合约是否禁止线性 Slot 0 排布，强制使用 ERC-7201 哈希命名空间存储，避免不同钱包实现间出现 <code>owner</code>/<code>nonce</code> 槽位互踩。</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>签名元组 <code>chain_id</code> 与初始化鉴权</strong>：严禁签署 <code>chain_id == 0</code> 的跨链通配授权；核验实现合约的 <code>initialize()</code> 是否强制校验 <code>msg.sender == address(this)</code> 或 EOA 签名，杜绝同块抢跑接管。</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>协议侧 <code>tx.origin</code> 假设退场</strong>：审计交互的 DeFi 协议是否仍依赖 <code>tx.origin == msg.sender</code> 或 <code>extcodesize == 0</code> 作为防闪电贷/防重入约束，此类约束在 EIP-7702 下已完全失效。</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. EIP-7702 底层状态机：23 字节 0xef0100 指针与存储归属</h2>
+              <p>要看清 EIP-7702 的风险边界，必须从字节码级理解其与传统 ERC-4337 智能合约钱包的本质差异。ERC-4337 需要部署一个全新的代理地址并把资产迁移进去，而 EIP-7702 引入了全新的交易类型 <code>0x04</code>（SetCode Transaction），其携带的 <code>authorization_list</code> 包含若干由 EOA 私钥签署的授权元组：</p>
+              <pre><code>// EIP-7702 授权签名哈希构造（MAGIC = 0x05）
+authHash = keccak256(0x05 || rlp([chain_id, address, nonce]))</code></pre>
+              <p>当打包者（Relayer 或用户本人）将该交易送上链并通过 <code>ecrecover</code> 验证签名后，EVM 会在该 EOA 账户的 <code>code</code> 字段写入一段固定 <strong>23 字节</strong>的委托指示符（Delegation Designator）：前 3 字节为 EIP-3541 保留字节 <code>0xef0100</code>（普通合约永远无法通过正常部署拥有 <code>0xef</code> 开头字节码），后 20 字节为目标实现合约地址。</p>
+              <p>关键的状态机后果在于：此后任何发往该 EOA 的调用，EVM 都会解析 <code>0xef0100</code> 后的地址并加载目标合约代码，但在<strong>该 EOA 自身的上下文</strong>中执行——就像 EOA 对目标合约执行了一次透明的 <code>DELEGATECALL</code>。这意味着目标合约里所有 <code>SSTORE</code> 写入的数据，全部持久化落盘在<strong>该 EOA 自己的 Storage Trie</strong> 中，而不是实现合约里。</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. 致命陷阱一：切换钱包与撤销委托不清空存储导致的槽位碰撞</h2>
+              <p>许多用户与钱包前端存在一个极其危险的误区：认为只要发起一笔指向零地址 <code>0x0000000000000000000000000000000000000000</code> 的 EIP-7702 授权，把账户“还原为普通 EOA”，或者将委托从钱包 A 切换到钱包 B，原先的合约状态就会随之重置。<strong>这在 EVM 底层规范中完全不成立。</strong></p>
+              <p>EIP-7702 的撤销操作仅将 EOA 的账户代码清空（<code>codeHash</code> 恢复为空字节哈希），<strong>绝不会遍历或清除 EOA 的任何 Storage 槽位</strong>。设想如下真实攻防路径：</p>
+              <ol>
+                <li>用户此前将 EOA 委托给实现合约 <code>WalletImplA</code>，其线性布局将 <code>Slot 0</code> 用作自定义 <code>uint256 public sessionNonce</code> 或某个第三方中继器的白名单地址，执行过几次操作后 <code>Slot 0</code> 存有非零值；</li>
+                <li>随后用户撤销 <code>WalletImplA</code>，或直接重签授权将 EOA 切换至 <code>WalletImplB</code>，而 <code>WalletImplB</code> 的线性布局恰恰将 <code>Slot 0</code> 定义为 <code>address public admin</code> 或 <code>bool public initialized</code>；</li>
+                <li>切换完成的瞬间，<code>WalletImplB</code> 读取 <code>Slot 0</code> 会直接把旧合约遗留的脏数据解释为合法管理员地址或“已完成初始化”标志，轻则导致账户永久无法初始化（自锁），重则让旧地址直接获得 <code>WalletImplB</code> 的最高控制权，无需私钥即可转走资产。</li>
+              </ol>
+              <p>工业级解决标准是强制要求所有 EIP-7702 委托实现合约放弃默认的线性槽位分配，严格遵循 <strong>ERC-7201（Namespaced Storage Layout）</strong>，将每套实现的状态映射到由唯一字符串派生的伪随机槽位：</p>
+              <pre><code>// ERC-7201 命名空间槽位计算公式（彻底隔离不同委托实现的存储）
+// keccak256(abi.encode(uint256(keccak256("mywallet.v1.storage")) - 1)) &amp; ~bytes32(uint256(0xff))
+bytes32 private constant STORAGE_LOCATION =
+    0x4a8f12c9b3d07e1f8c2a6b4d9e0f1a2b3c4d5e6f708192a3b4c5d6e7f8091000;
+
+struct WalletStorage {
+    address guardian;
+    uint256 nonce;
+    mapping(address =&gt; uint48) sessionExpiries;
+}
+
+function _getStorage() private pure returns (WalletStorage storage $) {
+    assembly {
+        $.slot := STORAGE_LOCATION
+    }
+}</code></pre>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. 致命陷阱二：chain_id = 0 全链重放与 initialize() 同块抢跑</h2>
+              <p>除了存储污染，EIP-7702 签名元组自身的灵活性也引入了两条高频攻击路径：</p>
+              <h3>1）chain_id = 0 跨链通配重放与非确定性地址劫持</h3>
+              <p>按照规范，当授权元组的 <code>chain_id</code> 填为 <code>0</code> 时，该签名在所有支持 EIP-7702 的 EVM 网络上均有效。一旦你在以太坊主网或某条 L2 广播了这笔交易，签名数据即全网公开。攻击者可以立刻提取该元组，在 Arbitrum、Base、Optimism 等任何该 EOA 尚未用掉对应 <code>nonce</code> 的链上进行重放。更致命的是，如果目标实现合约 <code>address</code> 在主网上是用传统 <code>CREATE</code>（依赖部署者地址与 nonce）部署的，而在另一条链上该地址尚未被项目方占领，攻击者完全可以通过同源 nonce 或碰撞手法在目标链的相同地址部署恶意合约，再重放你的 <code>chain_id = 0</code> 授权，瞬间接管你在该链的全部资产。</p>
+              <h3>2）无鉴权 initialize() 的同块抢跑接管</h3>
+              <p>由于 EIP-7702 允许任意第三方（如代付 Gas 的 Sponsor）替用户提交 <code>authorization_list</code>，很多从传统代理模式迁移过来的合约保留了公开的 <code>initialize(address owner)</code> 函数。攻击者只需在内存池（Mempool）监听到用户的 <code>0x04</code> 交易，剥离其中的授权元组并打包进自己的高优先费交易，在设置完委托代码的同一笔交易里抢先调用 <code>eoa.initialize(attacker)</code>，就能反客为主锁定受害者 EOA 的代理管理权。因此，任何面向 EIP-7702 的初始化函数，要么严格限制 <code>require(msg.sender == address(this))</code>（只能通过 EOA 自身批量调用触发），要么在初始化载荷中强制校验 EOA 本人的 ECDSA 签名。</p>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. 致命陷阱三：tx.origin == msg.sender 防线全面崩塌</h2>
+              <p>在 EIP-7702 之前，大量老牌 DeFi 协议、NFT 铸造合约与链上抽奖/空投合约普遍采用以下两行代码来“禁止合约调用、仅限真实用户 EOA 参与”：</p>
+              <pre><code>// EIP-7702 激活后，以下两类“防合约/防闪电贷”校验全部失效
+require(msg.sender == tx.origin, "Only EOA allowed");
+require(msg.sender.code.length == 0, "Contract caller forbidden");</code></pre>
+              <p>在 EIP-7702 下，<strong>这两条假设被同时击穿</strong>：当一个已经设置委托代码的 EOA 自己发起交易时，在下游 DeFi 协议的调用栈中，<code>tx.origin</code> 是该 EOA，<code>msg.sender</code> 同样是该 EOA——<code>msg.sender == tx.origin</code> 恒为 <code>true</code>！然而，该 EOA 在这笔交易内部已经通过委托代码执行了包含闪电贷借入、多池套利、循环铸造与还款在内的完整合约逻辑。与此同时，对普通用户而言，如果某个旧协议依然使用 <code>msg.sender.code.length == 0</code> 拒绝带代码地址，则升级为 EIP-7702 的合规钱包反而会被意外拒之门外（因为此时 <code>extcodesize</code> 返回 23 字节而非 0）。研究者在评估 DeFi 协议抗闪电贷与抗女巫模型时，必须彻底剔除基于 <code>tx.origin</code> 的安全假设，转向基于区块延迟（Commit-Reveal）或状态不变量（Invariant）的真实防线。</p>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. 可执行链上核验规程：RPC 探测与安全自查命令</h2>
+              <p>无论是普通研究员排查自身 EOA 状态，还是安全团队审计拟接入的 EIP-7702 钱包实现，都可以直接通过 Foundry <code>cast</code> 或标准 JSON-RPC 执行以下四步硬核核验：</p>
+              <pre><code># 1. 检查目标 EOA 当前是否处于 EIP-7702 委托状态（正常委托必返回 23 字节且前缀为 0xef0100）
+cast code 0xYourEOAAddress --rpc-url $RPC_URL
+# 若返回 0xef0100&lt;20-byte-impl&gt;，提取后 40 位十六进制即为当前实现合约地址；返回 0x 则无委托
+
+# 2. 撤销委托后，抽查线性低位槽位 0..3 是否仍残留历史脏数据
+cast storage 0xYourEOAAddress 0 --rpc-url $RPC_URL
+cast storage 0xYourEOAAddress 1 --rpc-url $RPC_URL
+
+# 3. 核验目标实现合约在多条链上的字节码哈希是否完全一致（防范非确定性部署劫持）
+cast codehash 0xTargetImplAddress --rpc-url $ETH_MAINNET_RPC
+cast codehash 0xTargetImplAddress --rpc-url $ARB_ONE_RPC</code></pre>
+              <p>结合上述实测结果，建立上线前与签署前的刚性准入门槛：</p>
+              <ol>
+                <li><strong>拒绝盲签 <code>chain_id = 0</code></strong>：钱包弹窗若未明确展示当前目标链 ID，或签名原文中 <code>chain_id</code> 为 <code>0</code>，一律中止签署；</li>
+                <li><strong>源码必查 ERC-7201 与 <code>onlySelf</code></strong>：在区块浏览器核对 <code>0xef0100</code> 指向的实现合约源码，确认无裸露线性状态变量，且所有初始化/升级入口均校验 <code>msg.sender == address(this)</code> 或 EOA 签名；</li>
+                <li><strong>切换委托先清槽再换绑</strong>：若旧版实现合约未采用 ERC-7201 且提供清理函数，应在撤销前主动归零关键槽位，并保留 <code>eth_getStorageAt</code> 核验快照作为链上留证。</li>
+              </ol>
+            </section>
+
+            <aside class="article-aside">
+              <p>推广信息：在跨以太坊主网与各条 Layer 2 实测 EIP-7702 委托状态、比对不同链的 <code>codehash</code> 与合约部署一致性时，研究者往往需要在多条公链准备小额 Gas 与测试资产。若在链上协议研究之余需要进行便捷的多链资产调仓或跨链兑换，可参考体验 <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap 跨链兑换</a>。该工具仅供跨链资产调度与实测参考，与 EIP-7702 底层协议核验无关，不构成任何投资建议；链上交互前请务必核对目标网络、收款地址与合约授权权限。</p>
+            </aside>
+
+            <section class="article-sources" aria-label="参考来源">
+              <h2>参考来源与规范文档</h2>
+              <ul>
+                <li>以太坊核心改进提案：<a href="https://eips.ethereum.org/EIPS/eip-7702" target="_blank" rel="noopener nofollow">EIP-7702: Set EOA account code (Pectra)</a></li>
+                <li>命名空间存储标准：<a href="https://eips.ethereum.org/EIPS/eip-7201" target="_blank" rel="noopener nofollow">ERC-7201: Namespaced Storage Layout</a></li>
+                <li>保留字节码前缀规范：<a href="https://eips.ethereum.org/EIPS/eip-3541" target="_blank" rel="noopener nofollow">EIP-3541: Reject new contract code starting with the 0xEF byte</a></li>
+                <li>OpenZeppelin 合约安全文档：<a href="https://docs.openzeppelin.com/contracts/5.x/account-abstraction" target="_blank" rel="noopener nofollow">OpenZeppelin Contracts: Account Abstraction &amp; EIP-7702 Security</a></li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="sidebar" aria-label="相关文章与目录">
+            <div class="sidebar-block">
+              <h3 class="sidebar-heading">本专栏最新核验</h3>
+              <ul class="sidebar-list">
+                <li class="sidebar-item">
+                  <a href="/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">瞬态存储</span>
+                    <span class="side-title">EIP-1153瞬态存储重入核验：Cancun升级后TSTORE上下文泄漏与重入锁失效陷阱</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">协议核验</span>
+                    <span class="side-title">L2 排序器重启宽限期与预言机价格核验</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">代理合约</span>
+                    <span class="side-title">可升级合约代理管理员私钥与时间锁核验</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--indigo">门槛</span>
+                    <span class="side-title">提案门槛核验：跌破门槛全民可撤销</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-foot-inner">
+      <div class="site-foot-brand">
+        <p class="site-foot-title">加密货币研究</p>
+        <p class="site-foot-desc">聚焦链上数据与智能合约安全研究 · 内容不构成投资建议</p>
+      </div>
+      <div class="site-foot-nav">
+        <p class="foot-heading">导航</p>
+        <ul class="foot-links">
+          <li><a href="/">首页</a></li>
+          <li><a href="/articles.html">全部文章</a></li>
+          <li><a href="/methodology.html">方法论</a></li>
+          <li><a href="/about.html">关于我们</a></li>
+          <li><a href="/feed.xml">RSS 订阅</a></li>
+          <li><a href="/sitemap.xml">网站地图</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 加密货币研究 · <a href="/about.html">关于本站与免责声明</a></p>
+      <p>本站内容仅供学习与研究参考，不构成任何投资建议；加密资产价格波动剧烈且存在风险，请自行判断并对自己的决策负责。</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=854403f0"></script>
+</body>
+</html>

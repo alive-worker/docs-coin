@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps - Crypto Research</title>
+  <meta name="description" content="Ethereum's Pectra upgrade activates EIP-7702 (SetCode tx 0x04), allowing EOAs to execute contract logic via a 23-byte 0xef0100 delegation pointer. However, revoking or switching delegations clears only the code pointer—never the EOA's persistent storage. Without ERC-7201 namespaces, residual slots trigger privilege takeover, while chain_id=0 replay and broken tx.origin guards reshape on-chain security. Includes executable RPC verification commands.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="EIP-7702,Pectra upgrade,EOA delegation,storage collision,ERC-7201,0xef0100,cross-chain replay,smart contract security,account abstraction,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps">
+  <meta property="og:description" content="EIP-7702 lets EOAs delegate code via 0xef0100 pointers, yet revoking never clears persistent storage. Technical breakdown of ERC-7201 collisions, chain_id=0 replay, tx.origin failure, and RPC checks.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-25T09:58:51+08:00">
+  <meta property="article:modified_time" content="2026-11-25T09:58:51+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Protocol &amp; Infrastructure Risk">
+  <meta property="article:tag" content="EIP-7702">
+  <meta property="article:tag" content="ERC-7201">
+  <meta property="article:tag" content="Smart Contract Security">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="EIP-7702 EOA Delegation Storage Collision and Revocation Verification Diagram">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps">
+  <meta name="twitter:description" content="In-depth audit of EIP-7702 EOA delegation storage collisions, chain_id=0 replay risks, tx.origin invariant collapse, and actionable RPC checks.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide-en.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#0891b2">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=0c35a636">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","EIP-7702","ERC-7201","account abstraction","smart contract security","Pectra upgrade","EOA delegation"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html", "name": "EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Protocol & Infrastructure Risk", "item": "https://coin.ponr.org/en/research/protocol/" },
+        { "@type": "ListItem", "position": 3, "name": "EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps", "item": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#article", "headline": "EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps", "description": "Ethereum's Pectra upgrade activates EIP-7702 (SetCode tx 0x04), allowing EOAs to execute contract logic via a 23-byte 0xef0100 delegation pointer. However, revoking or switching delegations clears only the code pointer—never the EOA's persistent storage. Without ERC-7201 namespaces, residual slots trigger privilege takeover, while chain_id=0 replay and broken tx.origin guards reshape on-chain security. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#primaryimage" }, "articleSection": "Protocol & Infrastructure Risk", "isAccessibleForFree": true, "keywords": ["EIP-7702","Pectra upgrade","EOA delegation","storage collision","ERC-7201","0xef0100","cross-chain replay","smart contract security"], "wordCount": 1920, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-11-25T09:58:51+08:00", "dateModified": "2026-11-25T09:58:51+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does revoking an EIP-7702 delegation (pointing to the zero address) clear the EOA's stored state?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Authorizing a delegation to 0x0000000000000000000000000000000000000000 clears only the EOA's 23-byte delegation code back to empty bytecode. Every persistent storage slot previously written to the EOA's Storage Trie remains intact and can collide with future delegated implementations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is signing an EIP-7702 authorization with chain_id = 0 dangerous?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When chain_id is set to 0, the signed authorization tuple is valid on every EIP-7702-enabled EVM chain where the EOA has the matching nonce. Once broadcast on one chain, anyone can replay it on other networks—and if the target address was not deployed deterministically via CREATE2, an attacker may deploy malicious code at that address on another chain."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does require(tx.origin == msg.sender) still block smart contract calls after EIP-7702?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Under EIP-7702, a delegated EOA initiating a transaction acts as both tx.origin and msg.sender while executing arbitrary batched smart contract logic, completely bypassing legacy anti-flashloan and EOA-only guards."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/protocol/">Protocol &amp; Infrastructure Risk</a> / <span class="side-tag archive-tag archive-tag--cyan">EIP-7702</span></p>
+          <h1>EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps</h1>
+          <p class="article-summary">Ethereum's Pectra upgrade activates EIP-7702, overturning a decade-old EVM invariant that Externally Owned Accounts (EOAs) cannot host executable code. By signing a SetCode (Type 0x04) authorization tuple, an EOA writes a 23-byte delegation designator (<code>0xef0100 || address</code>) into its code field—instantly gaining batching, gas sponsorship, and session keys without migrating assets. Yet this in-place upgrade introduces three severe failure modes: persistent storage is never wiped when revoking or switching delegations, <code>chain_id = 0</code> tuples enable cross-chain replay and address hijacking, and legacy <code>tx.origin == msg.sender</code> defenses collapse overnight.</p>
+          <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-25T09:58:51+08:00">2026-11-25 09:58:51</time></p>
+        </header>
+
+        <img class="article-cover" src="/img/article-eip-7702-eoa-delegation-storage-collision-revocation-verification-guide-en.svg" alt="EIP-7702 EOA Delegation Storage Collision and Revocation Verification Diagram" width="1200" height="600" fetchpriority="high" decoding="async">
+
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">Verification Checklist: EIP-7702 Delegation Security Boundaries</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>Code Pointer &amp; Residual Storage Audit</strong>: Query <code>eth_getCode</code> for the 23-byte <code>0xef0100</code> prefix. After revoking or re-delegating, inspect low-index slots with <code>eth_getStorageAt</code>—clearing code never erases persistent state.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>ERC-7201 Namespaced Storage</strong>: Confirm target wallet implementations forbid linear Slot 0 layouts and isolate all state via ERC-7201 hashed namespaces to prevent cross-wallet <code>owner</code>/<code>nonce</code> collisions.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Non-Zero <code>chain_id</code> &amp; Init Guards</strong>: Reject any authorization signing <code>chain_id == 0</code>; verify <code>initialize()</code> enforces <code>msg.sender == address(this)</code> or an explicit EOA signature to block same-block front-running.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Retirement of <code>tx.origin</code> Invariants</strong>: Audit integrated DeFi contracts for <code>tx.origin == msg.sender</code> or <code>extcodesize == 0</code> checks, which no longer guarantee non-contract single-call execution under EIP-7702.</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. EIP-7702 State Machine: The 23-Byte 0xef0100 Pointer &amp; Storage Ownership</h2>
+              <p>Understanding EIP-7702's attack surface starts with how it differs structurally from ERC-4337 smart accounts. Rather than deploying a separate proxy contract and migrating funds, EIP-7702 introduces transaction type <code>0x04</code> (SetCode Transaction), carrying an <code>authorization_list</code> of tuples signed by an EOA private key:</p>
+              <pre><code>// EIP-7702 authorization digest (MAGIC = 0x05)
+authHash = keccak256(0x05 || rlp([chain_id, address, nonce]))</code></pre>
+              <p>Once included on-chain and verified via <code>ecrecover</code>, the EVM writes a fixed <strong>23-byte</strong> delegation designator into the EOA's code field: the 3-byte prefix <code>0xef0100</code> (reserved under EIP-3541 so standard contracts can never deploy <code>0xef</code>-prefixed bytecode) concatenated with the 20-byte target implementation address.</p>
+              <p>The critical execution consequence: any subsequent call to the EOA resolves the target address and executes its bytecode inside the <strong>EOA's own storage context</strong>, mirroring <code>DELEGATECALL</code> semantics. Every <code>SSTORE</code> executed by the delegated logic writes persistently into the <strong>EOA's own Storage Trie</strong>—not into the implementation contract.</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. Trap #1: Storage Slot Collisions After Switching or Revoking Delegations</h2>
+              <p>A pervasive misconception among wallet teams and users is that revoking an EIP-7702 delegation (by authorizing <code>0x0000000000000000000000000000000000000000</code>) or switching from Wallet A to Wallet B resets the account to a clean slate. <strong>EVM state rules do the exact opposite.</strong></p>
+              <p>Revocation clears only the 23-byte code pointer (returning <code>codeHash</code> to the empty hash) while leaving every persistent storage slot untouched. Consider this concrete exploit sequence:</p>
+              <ol>
+                <li>An EOA delegates to <code>WalletImplA</code>, which uses standard linear Solidity storage and writes a non-zero <code>sessionNonce</code> or relayer address to <code>Slot 0</code>;</li>
+                <li>The user later revokes <code>WalletImplA</code> or re-delegates to <code>WalletImplB</code>, where linear <code>Slot 0</code> maps to <code>address public admin</code> or <code>bool public initialized</code>;</li>
+                <li>Immediately upon re-delegation, <code>WalletImplB</code> misinterprets the residual dirty bytes in <code>Slot 0</code> as an active admin address or initialized flag—either permanently bricking wallet initialization or handing full execution authority to a stale address without requiring the EOA's private key.</li>
+              </ol>
+              <p>Production EIP-7702 delegates must abandon linear slot layouts entirely and enforce <strong>ERC-7201 (Namespaced Storage Layout)</strong> so each implementation hashes its state root to a collision-resistant slot:</p>
+              <pre><code>// ERC-7201 namespaced storage root (isolates state across wallet implementations)
+// keccak256(abi.encode(uint256(keccak256("mywallet.v1.storage")) - 1)) &amp; ~bytes32(uint256(0xff))
+bytes32 private constant STORAGE_LOCATION =
+    0x4a8f12c9b3d07e1f8c2a6b4d9e0f1a2b3c4d5e6f708192a3b4c5d6e7f8091000;
+
+struct WalletStorage {
+    address guardian;
+    uint256 nonce;
+    mapping(address =&gt; uint48) sessionExpiries;
+}
+
+function _getStorage() private pure returns (WalletStorage storage $) {
+    assembly {
+        $.slot := STORAGE_LOCATION
+    }
+}</code></pre>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. Trap #2: chain_id = 0 Cross-Chain Replay &amp; initialize() Front-Running</h2>
+              <p>Beyond storage persistence, EIP-7702's authorization mechanics open two high-severity signature vectors:</p>
+              <h3>1) Wildcard chain_id = 0 Replay &amp; Non-Deterministic Address Hijacking</h3>
+              <p>EIP-7702 permits setting <code>chain_id = 0</code> so a single authorization can activate across multiple networks. Once broadcast on any chain, however, that signature becomes public calldata. Any third party can replay it on every EVM L2 where the EOA shares the same nonce. Worse, if the target implementation was deployed on mainnet via standard <code>CREATE</code> rather than deterministic <code>CREATE2</code>, an attacker can pre-deploy malicious bytecode at the exact same address on an uninitialized L2, replay the victim's <code>chain_id = 0</code> tuple, and drain the EOA on that chain.</p>
+              <h3>2) Unguarded initialize() Front-Running</h3>
+              <p>Because anyone—such as a gas sponsor or MEV searcher—can submit a user's signed <code>authorization_list</code>, delegates ported from UUPS/Transparent proxies with an open <code>initialize(address owner)</code> function are immediately vulnerable. A searcher monitoring the mempool can extract the authorization tuple, bundle it into a higher-priority transaction, and call <code>eoa.initialize(attacker)</code> in the same block before the user's setup call lands. Safe EIP-7702 delegates must gate initialization behind <code>require(msg.sender == address(this))</code> or verify a fresh ECDSA signature from the EOA itself over the initialization payload.</p>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. Trap #3: Collapse of tx.origin == msg.sender Defenses</h2>
+              <p>For years, DeFi protocols, NFT mints, and on-chain raffles relied on two canonical lines to block smart contracts and atomic flash-loan bots:</p>
+              <pre><code>// Both legacy "EOA-only / anti-flashloan" checks fail under EIP-7702
+require(msg.sender == tx.origin, "Only EOA allowed");
+require(msg.sender.code.length == 0, "Contract caller forbidden");</code></pre>
+              <p>Under EIP-7702, <strong>both assumptions break simultaneously</strong>. When a delegated EOA initiates a transaction, <code>tx.origin</code> and <code>msg.sender</code> are identical inside downstream protocol calls—passing <code>msg.sender == tx.origin</code>—even though the EOA is executing an arbitrary multi-step contract batch (flash loan, multi-pool arbitrage, and repayment) in a single atomic transaction. Conversely, legacy protocols enforcing <code>code.length == 0</code> inadvertently lock out legitimate EIP-7702 wallet users because <code>extcodesize</code> now returns 23 bytes. Security researchers must treat <code>tx.origin</code> checks as obsolete and evaluate protocols on true economic invariants or multi-block commit-reveal windows.</p>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. Executable On-Chain Verification: RPC Probes &amp; Audit Checklist</h2>
+              <p>Researchers and auditors can verify live EOA delegation status, residual storage, and cross-chain bytecode parity directly using Foundry <code>cast</code> or standard JSON-RPC calls:</p>
+              <pre><code># 1. Inspect EOA code for the 23-byte EIP-7702 delegation prefix (0xef0100 + 20-byte impl)
+cast code 0xYourEOAAddress --rpc-url $RPC_URL
+# Output 0xef0100&lt;impl&gt; confirms active delegation; 0x confirms standard EOA
+
+# 2. Audit low-index storage slots after revocation to detect lingering dirty state
+cast storage 0xYourEOAAddress 0 --rpc-url $RPC_URL
+cast storage 0xYourEOAAddress 1 --rpc-url $RPC_URL
+
+# 3. Verify identical implementation codehash across chains before any multi-chain delegation
+cast codehash 0xTargetImplAddress --rpc-url $ETH_MAINNET_RPC
+cast codehash 0xTargetImplAddress --rpc-url $ARB_ONE_RPC</code></pre>
+              <p>Before signing or integrating any EIP-7702 wallet implementation, enforce three hard gates:</p>
+              <ol>
+                <li><strong>Never Blind-Sign <code>chain_id = 0</code></strong>: Require wallet UIs to display the explicit target chain ID and reject wildcard cross-chain authorization tuples;</li>
+                <li><strong>Verify ERC-7201 &amp; <code>onlySelf</code> in Verified Source</strong>: Confirm the contract referenced after <code>0xef0100</code> uses zero linear storage variables and restricts initialization/upgrades to <code>msg.sender == address(this)</code> or signed EOA payloads;</li>
+                <li><strong>Zero Critical Slots Before Switching Delegates</strong>: When migrating away from legacy non-namespaced implementations, invoke cleanup routines prior to revocation and archive <code>eth_getStorageAt</code> snapshots as audit evidence.</li>
+              </ol>
+            </section>
+
+            <aside class="article-aside">
+              <p>Promotional Notice: When verifying EIP-7702 delegation pointers and cross-chain <code>codehash</code> parity across Ethereum mainnet and Layer 2 networks, researchers often need small amounts of native gas and test liquidity on multiple chains. For streamlined multi-chain asset routing alongside your protocol research, you may explore <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap Cross-Chain Swap</a>. This mention is for operational reference only, is unrelated to EIP-7702 EVM mechanics, and does not constitute investment advice; always verify target networks, recipient addresses, and contract approvals.</p>
+            </aside>
+
+            <section class="article-sources" aria-label="References">
+              <h2>References &amp; Standards</h2>
+              <ul>
+                <li>Ethereum Improvement Proposals: <a href="https://eips.ethereum.org/EIPS/eip-7702" target="_blank" rel="noopener nofollow">EIP-7702: Set EOA account code (Pectra)</a></li>
+                <li>Namespaced Storage Standard: <a href="https://eips.ethereum.org/EIPS/eip-7201" target="_blank" rel="noopener nofollow">ERC-7201: Namespaced Storage Layout</a></li>
+                <li>Reserved Bytecode Prefix: <a href="https://eips.ethereum.org/EIPS/eip-3541" target="_blank" rel="noopener nofollow">EIP-3541: Reject new contract code starting with the 0xEF byte</a></li>
+                <li>OpenZeppelin Security Documentation: <a href="https://docs.openzeppelin.com/contracts/5.x/account-abstraction" target="_blank" rel="noopener nofollow">OpenZeppelin Contracts: Account Abstraction &amp; EIP-7702 Security</a></li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="sidebar" aria-label="Related Articles">
+            <div class="sidebar-block">
+              <h3 class="sidebar-heading">Latest Protocol Checks</h3>
+              <ul class="sidebar-list">
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/eip-1153-transient-storage-reentrancy-leak-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Transient</span>
+                    <span class="side-title">EIP-1153 Transient Storage Reentrancy Check: TSTORE Context Leak</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/l2-sequencer-grace-period-price-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Protocol</span>
+                    <span class="side-title">L2 Sequencer Grace Period &amp; Oracle Price Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/upgradeable-contract-proxy-admin-key-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--teal">Proxy</span>
+                    <span class="side-title">Upgradeable Contract Proxy Admin Key &amp; Timelock Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/governance/dao-proposer-threshold-drop-cancel-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--indigo">Threshold</span>
+                    <span class="side-title">Proposal Threshold Check: Drops Trigger Open Cancel</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-foot-inner">
+      <div class="site-foot-brand">
+        <p class="site-foot-title">Crypto Research</p>
+        <p class="site-foot-desc">Focused on on-chain data and smart contract security · Not investment advice</p>
+      </div>
+      <div class="site-foot-nav">
+        <p class="foot-heading">Navigation</p>
+        <ul class="foot-links">
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/about.html">About Us</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for educational and research purposes only, not financial or investment advice. Crypto markets are volatile; conduct your own due diligence.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=854403f0"></script>
+</body>
+</html>

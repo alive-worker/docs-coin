@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'proof-of-reserves-merkle-liability-snapshot-verification-guide',
-  publishedISO: '2026-11-22T14:06:47+08:00',
-  tagColor: 'blue',
-  topic: 'basics',
+  slug: 'eip-7702-eoa-delegation-storage-collision-revocation-verification-guide',
+  publishedISO: '2026-11-25T09:58:51+08:00',
+  tagColor: 'cyan',
+  topic: 'protocol',
 
   zh: {
-    h1: "储备证明核验：Merkle负债抵消陷阱与时点快照过桥借贷穿透",
-    tagLabel: "PoR核验",
-    cardDesc: "交易所储备证明(PoR)常被散户奉为安全信条，但传统Merkle树存在两大隐蔽欺诈漏洞：若树生成逻辑缺少零知识非负范围证明，注入负余额虚假节点即可抵消巨额用户负债；若仅依赖单区块时点快照，机构可在快照前借入资产充数、快照后归还过桥资金。本文拆解Merkle Sum Tree数学约束、过桥借贷链上穿透识别模型与链上PoR独立验证清单。",
+    h1: "EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱",
+    tagLabel: "委托账户",
+    cardDesc: "以太坊 Pectra 升级引入 EIP-7702（SetCode 交易 0x04），允许普通 EOA 通过 23 字节 0xef0100 委托指针执行智能合约代码。但撤销或切换委托仅覆盖代码指针，绝不会清空 EOA 持久存储；若未强制采用 ERC-7201 命名空间，旧槽位脏数据将直接引发权限越权，叠加 chain_id=0 全链重放与 tx.origin 防线失效，构成全新链上风险面。本文提供字节码与 RPC 核验清单。",
   },
   en: {
-    h1: "Proof of Reserves Verification: Merkle Liability Smuggling and Snapshot Bridge Borrowing",
-    tagLabel: "PoR Check",
-    cardDesc: "Proof of Reserves (PoR) is widely cited as the gold standard of solvency, yet conventional Merkle trees conceal lethal audit flaws: without ZK non-negative range proofs, inserting synthetic negative-balance nodes artificially suppresses total liabilities; furthermore, single-block snapshots allow platforms to bridge-borrow assets right before block capture and repay immediately after. This guide breaks down Merkle Sum Tree mathematical constraints, on-chain bridge loan detection, and solvency audit verification protocols.",
+    h1: "EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps",
+    tagLabel: "EIP-7702",
+    cardDesc: "Ethereum's Pectra upgrade activates EIP-7702 (SetCode tx 0x04), allowing EOAs to execute contract logic via a 23-byte 0xef0100 delegation pointer. However, revoking or switching delegations clears only the code pointer—never the EOA's persistent storage. Without ERC-7201 namespaces, residual slots trigger privilege takeover, while chain_id=0 replay and broken tx.origin guards reshape on-chain security. Includes executable RPC verification commands.",
   },
 
   existingSlugsNewestFirst: [
+    'proof-of-reserves-merkle-liability-snapshot-verification-guide',
     'eip-1153-transient-storage-reentrancy-leak-verification-guide',
     'dao-proposer-threshold-drop-cancel-verification-guide',
     'uniswap-v3-swap-step-target-price-fee-verification-guide',
