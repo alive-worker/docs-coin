@@ -107,23 +107,24 @@ function enPath(slug) { return `en/research/${topicOf(slug)}/${slug}.html`; }
 // CONFIG — fill this in for each new article, then run the script.
 // ---------------------------------------------------------------------------
 const CONFIG = {
-  slug: 'eip-7702-eoa-delegation-storage-collision-revocation-verification-guide',
-  publishedISO: '2026-11-25T09:58:51+08:00',
-  tagColor: 'cyan',
-  topic: 'protocol',
+  slug: 'lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide',
+  publishedISO: '2026-11-27T23:04:00+08:00',
+  tagColor: 'amber',
+  topic: 'market',
 
   zh: {
-    h1: "EIP-7702 委托账户核验：EOA 存储槽位碰撞、跨链重放与撤销残留陷阱",
-    tagLabel: "委托账户",
-    cardDesc: "以太坊 Pectra 升级引入 EIP-7702（SetCode 交易 0x04），允许普通 EOA 通过 23 字节 0xef0100 委托指针执行智能合约代码。但撤销或切换委托仅覆盖代码指针，绝不会清空 EOA 持久存储；若未强制采用 ERC-7201 命名空间，旧槽位脏数据将直接引发权限越权，叠加 chain_id=0 全链重放与 tx.origin 防线失效，构成全新链上风险面。本文提供字节码与 RPC 核验清单。",
+    h1: "借贷坏账清算核验：清算奖励倒挂、DEX 流动性悬崖与拍卖级联穿仓模型",
+    tagLabel: "清算核验",
+    cardDesc: "DeFi 借贷协议的穿仓坏账并非始于抵押率跌破 100%，而是始于抵押物价值跌穿债务×(1+清算奖励)的清算奖励倒挂点。本文通过真实安全垫公式 1 - LT×(1+LB)、Aave v3 的 HF<0.95 满额清算跳变、Morpho LIF 激励曲线与 DEX 深度悬崖实测，拆解级联穿仓与未实现坏账虚增存款 APY 的链上核验方法。",
   },
   en: {
-    h1: "EIP-7702 EOA Delegation Check: Storage Collisions, Cross-Chain Replay, and Revocation Traps",
-    tagLabel: "EIP-7702",
-    cardDesc: "Ethereum's Pectra upgrade activates EIP-7702 (SetCode tx 0x04), allowing EOAs to execute contract logic via a 23-byte 0xef0100 delegation pointer. However, revoking or switching delegations clears only the code pointer—never the EOA's persistent storage. Without ERC-7201 namespaces, residual slots trigger privilege takeover, while chain_id=0 replay and broken tx.origin guards reshape on-chain security. Includes executable RPC verification commands.",
+    h1: "Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades",
+    tagLabel: "Liquidation",
+    cardDesc: "DeFi lending bad debt begins before collateral drops below 100% of debt—it starts when collateral falls below Debt × (1 + Liquidation Bonus) or when DEX slippage exceeds the liquidation bonus. This guide quantifies the true insolvency buffer 1 - LT×(1+LB), Aave v3's HF<0.95 close-factor jump, Morpho's LIF formula, and how unrealized bad debt inflates nominal supplier APY, with executable RPC checks.",
   },
 
   existingSlugsNewestFirst: [
+    'eip-7702-eoa-delegation-storage-collision-revocation-verification-guide',
     'proof-of-reserves-merkle-liability-snapshot-verification-guide',
     'eip-1153-transient-storage-reentrancy-leak-verification-guide',
     'dao-proposer-threshold-drop-cancel-verification-guide',

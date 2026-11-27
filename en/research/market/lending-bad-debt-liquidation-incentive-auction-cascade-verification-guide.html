@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades - Crypto Research</title>
+  <meta name="description" content="DeFi lending bad debt begins before collateral drops below 100% of debt—it starts when collateral falls below Debt × (1 + Liquidation Bonus) or when DEX slippage exceeds the liquidation bonus. This guide quantifies the true insolvency buffer 1 - LT×(1+LB), Aave v3's HF<0.95 close-factor jump, Morpho's LIF formula, and how unrealized bad debt inflates nominal supplier APY, with executable RPC checks.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="ipfsWeb">
+  <meta name="keywords" content="DeFi bad debt,liquidation bonus inversion,DEX liquidity cliff,Aave v3 liquidation,Morpho Blue LIF,Close Factor,health factor,liquidation cascade,crypto research">
+  <link rel="canonical" href="https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://coin.ponr.org/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html">
+  <link rel="alternate" hreflang="en" href="https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://coin.ponr.org/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Crypto Research Notes">
+  <meta property="og:title" content="Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades">
+  <meta property="og:description" content="A 90% LT with a 7.5% liquidation bonus leaves only a 3.25% true insolvency buffer. Technical breakdown of bonus inversion, DEX liquidity cliffs, Morpho LIF, and unrealized bad debt detection.">
+  <meta property="og:url" content="https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html">
+  <meta property="article:published_time" content="2026-11-27T23:04:00+08:00">
+  <meta property="article:modified_time" content="2026-11-27T23:04:00+08:00">
+  <meta property="article:author" content="ipfsWeb">
+  <meta property="article:section" content="Market Structure &amp; Liquidity">
+  <meta property="article:tag" content="Liquidation">
+  <meta property="article:tag" content="Bad Debt">
+  <meta property="article:tag" content="DEX Liquidity">
+  <meta property="og:image" content="https://coin.ponr.org/img/article-lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide-en.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Lending Bad Debt Check: Liquidation Bonus Inversion and DEX Liquidity Cliffs Diagram">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades">
+  <meta name="twitter:description" content="Quantifying true lending insolvency buffers 1-LT*(1+LB), DEX liquidity cliffs, and unrealized bad debt traps with on-chain RPC commands.">
+  <meta name="twitter:image" content="https://coin.ponr.org/img/article-lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide-en.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Crypto Research RSS" href="/en/feed.xml">
+  <meta name="theme-color" content="#d97706">
+  <link rel="dns-prefetch" href="https://allswap.io">
+  <link rel="preload" as="image" href="/img/article-lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide-en.svg" fetchpriority="high">
+  <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <link rel="stylesheet" href="/styles.css?v=0c35a636">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": "https://coin.ponr.org/en/#org", "name": "Crypto Research Notes", "alternateName": "加密货币研究", "url": "https://coin.ponr.org/en/", "email": "mailto:llf.worker@gmail.com", "description": "An English-language information site focused on crypto research methods and on-chain data, for learning and research purposes only — not investment advice.", "knowsAbout": ["crypto research","on-chain data analysis","DeFi bad debt","liquidation mechanics","DEX liquidity","Aave v3","Morpho Blue","market microstructure"], "logo": { "@type": "ImageObject", "url": "https://coin.ponr.org/logo.png", "width": 512, "height": 512 }, "contactPoint": { "@type": "ContactPoint", "email": "llf.worker@gmail.com", "contactType": "editorial" }, "sameAs": ["https://coin.ponr.org/"] },
+    { "@type": "WebSite", "@id": "https://coin.ponr.org/en/#website", "url": "https://coin.ponr.org/en/", "name": "Crypto Research Notes", "inLanguage": "en", "publisher": { "@id": "https://coin.ponr.org/#org" } },
+    { "@type": "ImageObject", "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#primaryimage", "url": "https://coin.ponr.org/img/article-lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide-en.png", "width": 1200, "height": 600 },
+    { "@type": "WebPage", "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#webpage", "url": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html", "name": "Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades - Crypto Research", "isPartOf": { "@id": "https://coin.ponr.org/en/#website" }, "primaryImageOfPage": { "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#primaryimage" }, "breadcrumb": { "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#breadcrumb" }, "inLanguage": "en" },
+    { "@type": "BreadcrumbList", "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#breadcrumb", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://coin.ponr.org/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Market Structure & Liquidity", "item": "https://coin.ponr.org/en/research/market/" },
+        { "@type": "ListItem", "position": 3, "name": "Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades", "item": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html" }
+    ] },
+    { "@type": "Article", "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#article", "headline": "Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades", "description": "DeFi lending bad debt begins before collateral drops below 100% of debt—it starts when collateral falls below Debt × (1 + Liquidation Bonus) or when DEX slippage exceeds the liquidation bonus. This guide quantifies the true insolvency buffer 1 - LT×(1+LB), Aave v3's HF<0.95 close-factor jump, Morpho's LIF formula, and how unrealized bad debt inflates nominal supplier APY. Not investment advice.", "image": { "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#primaryimage" }, "articleSection": "Market Structure & Liquidity", "isAccessibleForFree": true, "keywords": ["DeFi bad debt","liquidation bonus inversion","DEX liquidity cliff","Aave v3","Morpho Blue","Close Factor","liquidation cascade"], "wordCount": 1960, "author": { "@id": "https://coin.ponr.org/en/about.html#author" }, "publisher": { "@id": "https://coin.ponr.org/#org" }, "datePublished": "2026-11-27T23:04:00+08:00", "dateModified": "2026-11-27T23:04:00+08:00", "inLanguage": "en", "mainEntityOfPage": { "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#webpage" }, "isPartOf": { "@id": "https://coin.ponr.org/en/#website" } },
+    {
+      "@type": "FAQPage",
+      "@id": "https://coin.ponr.org/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does a 90% Liquidation Threshold with a 7.5% Liquidation Bonus leave only a 3.25% safety buffer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When liquidation triggers at 90% LTV, liquidators claim 1.075 USD of collateral for every 1 USD of debt repaid. For a full liquidation to leave zero bad debt, collateral must exceed Debt × (1 + LB). The true buffer is therefore 1 - 0.90 × 1.075 = 3.25%, not 10%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Liquidation Bonus Inversion in DeFi lending markets?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Atomic flash-loan liquidators earn the liquidation bonus minus DEX selling slippage, MEV builder tips, and gas. Once PriceImpact + MEV + Gas exceeds the liquidation bonus, liquidating becomes unprofitable—bots halt execution and underwater vaults immediately accumulate bad debt."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why can unrealized bad debt make a lending pool's supplier APY look deceptively attractive?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In pools that do not automatically write off zero-collateral debt, uncollectible borrows remain counted inside totalBorrows. This artificially elevates utilization above the interest-rate kink, pushing nominal supplier APY upward even while real withdrawable liquidity is draining."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/en/" aria-label="Crypto Research Home">
+        <img class="brand-logo" src="/favicon.svg" width="34" height="34" alt="" aria-hidden="true">
+        <span class="brand-text">
+          <span class="brand-name">Crypto Research</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/articles.html">All Articles</a>
+        <a href="/en/methodology.html">Methodology</a>
+        <a href="/en/about.html">About</a>
+        <a class="lang-switch" href="/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html" hreflang="zh-CN" lang="zh-CN">中文</a>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" aria-pressed="false"><svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout layout--article">
+    <main class="main" id="main" tabindex="-1">
+      <article class="article-shell">
+        <header class="article-head">
+          <p><a href="/en/research/market/">Market Structure &amp; Liquidity</a> / <span class="side-tag archive-tag archive-tag--amber">Liquidation</span></p>
+          <h1>Lending Bad Debt Check: Liquidation Bonus Inversion, DEX Liquidity Cliffs, and Auction Cascades</h1>
+          <p class="article-summary">Most DeFi analysts judge lending pool solvency by staring at headline over-collateralization ratios or Liquidation Thresholds (LT), assuming an <code>85% LT</code> guarantees a clean 15% drawdown cushion. That static view ignores liquidator economics: arbitrage bots seize collateral at a discount (Liquidation Bonus, LB) and must unwind it on-chain minus DEX slippage and MEV tips. Once market depth thins so slippage exceeds LB—a state of Liquidation Bonus Inversion—or collateral drops below <code>Debt × (1 + LB)</code>, liquidators walk away. Unbacked debt then lingers inside <code>totalBorrows</code>, pushing utilization above the interest-rate kink and disguising insolvency as an attractive supplier APY.</p>
+          <p class="article-meta"><span><a href="/en/about.html#author">ipfsWeb</a></span> · Crypto Research Editorial · Published <svg class="side-cal" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-27T23:04:00+08:00">2026-11-27 23:04:00</time></p>
+        </header>
+
+        <img class="article-cover" src="/img/article-lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide-en.svg" alt="Lending Bad Debt Check: Liquidation Bonus Inversion and DEX Liquidity Cliffs Diagram" width="1200" height="600" fetchpriority="high" decoding="async">
+
+        <div class="article-columns">
+          <div class="article-body">
+            <div class="article-verify-panel">
+              <h2 class="article-verify-title">Verification Checklist: Lending Insolvency &amp; Hidden Bad Debt</h2>
+              <ul class="article-verify-list">
+                <li><span class="article-verify-check">✓</span> <span><strong>True Insolvency Buffer</strong>: Fetch on-chain <code>LT</code> and <code>LB</code> and compute <code>Buffer = 1 - LT × (1 + LB)</code>. Long-tail collateral with a true buffer under <code>5%</code> can gap straight past profitable liquidation during oracle lag.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>DEX Liquidity Cliff Test</strong>: Sum liquidatable collateral <code>Q_liq</code> within a <code>5%</code> drop band and simulate selling <code>Q_liq</code> on DEX quoters to verify <code>PriceImpact(Q_liq) &lt; LB - 0.5%</code>.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Close Factor Jump Stress Test</strong>: Check whether <code>HF &lt; 0.95</code> or dust rules unlock a <code>100%</code> close factor, doubling single-block sell pressure and triggering reflexive cascades.</span></li>
+                <li><span class="article-verify-check">✓</span> <span><strong>Zero-Collateral Debt Scan</strong>: Aggregate total debt held by accounts with zero remaining collateral and compare against protocol reserves before trusting high headline utilization APY.</span></li>
+              </ul>
+            </div>
+
+            <section id="sec-1">
+              <h2>1. The True Insolvency Buffer: Why 90% LT Is Not a 10% Cushion</h2>
+              <p>In over-collateralized lending markets such as Aave v3, Spark, and Compound v3, a position becomes liquidatable when its Health Factor <code>HF = (Collateral × LT) / Debt &lt; 1</code>. For each unit of debt <code>ΔD</code> repaid, the liquidator seizes collateral worth <code>ΔD × (1 + LB)</code>.</p>
+              <p>Crucially, a full liquidation clears debt with <strong>zero bad debt</strong> only while collateral value remains at or above <code>Debt × (1 + LB)</code>—not merely <code>Debt</code>. Between the liquidation trigger (<code>Debt = Collateral × LT</code>) and the onset of economic bad debt, the true price-drop cushion is:</p>
+              <pre><code>// Effective Insolvency Buffer
+Buffer = 1 - LT × (1 + LB)
+
+// Case A (Blue-chip WETH): LT = 82.5%, LB = 5.0%
+Buffer_A = 1 - 0.825 × 1.05 = 13.375%   // Headline 17.5%, true buffer 4.125% lower
+
+// Case B (High-LTV LST / Long-tail): LT = 90.0%, LB = 7.5%
+Buffer_B = 1 - 0.900 × 1.075 = 3.25%    // Headline 10.0%, true buffer only 3.25%</code></pre>
+              <p>In Case B, a sharp <strong>3.25%</strong> gap between oracle heartbeat updates pushes the vault straight past the zero-bad-debt boundary. Seizing the entire collateral stack leaves residual uncovered debt on the pool's balance sheet, and any further 4% slide erases liquidator profitability altogether.</p>
+            </section>
+
+            <section id="sec-2">
+              <h2>2. Liquidation Bonus Inversion &amp; DEX Liquidity Cliffs</h2>
+              <p>Even when spot oracle prices suggest positive equity, atomic flash-loan liquidators execute only if their single-block profit equation stays positive:</p>
+              <pre><code>// Atomic Flash-Loan Liquidator Profit Constraint
+NetProfit = ΔD × LB - Slippage(ΔC) - FlashloanFee - PriorityGasFee - BuilderTip &gt; 0
+// Required condition: PriceImpact(ΔC) + ExecutionCost% &lt; LB</code></pre>
+              <p>Real-world DeFi bad-debt events almost always arise from two compounding microstructure mechanisms:</p>
+              <ul>
+                <li><strong>Concentrated Liquidity Cliffs</strong>: On Uniswap v3 and similar CLMMs, active LP liquidity clusters tightly within ±3% of spot. Once the first wave of liquidations exhausts that band, market depth below the cliff can drop by over 80%, spiking price impact from 0.8% to 9%+. Once slippage exceeds <code>LB</code>, bonus inversion occurs and bots stop bidding.</li>
+                <li><strong>Aave v3's <code>HF &lt; 0.95</code> 100% Close Factor Jump</strong>: Above <code>HF = 0.95</code>, Aave v3 caps single-transaction liquidation at a <code>50%</code> Close Factor to stagger sell pressure. Below <code>0.95</code> (or under the <code>$2,000</code> dust threshold), the protocol unlocks <strong>100% liquidation</strong>. During rapid drawdowns, clustered whale accounts crossing 0.95 simultaneously double single-block sell volume, punching through DEX depth and cascading neighboring vaults into insolvency.</li>
+              </ul>
+            </section>
+
+            <section id="sec-3">
+              <h2>3. Fixed Spread (Aave) vs. Dynamic LIF (Morpho) &amp; Bad Debt Socialization</h2>
+              <p>How bad debt propagates to lenders depends strictly on protocol accounting design:</p>
+              <ol>
+                <li><strong>Fixed-Spread Pools (Aave v3 / Compound v3)</strong>: Governance sets static <code>LB</code> parameters. Execution is fast in deep markets, but incentives cannot self-adjust during liquidity droughts. If bad debt forms, lender balances are not immediately hair-cut; unbacked debt sits on-chain until backstopped by a Safety Module or protocol revenue, creating a classic first-mover exit race.</li>
+                <li><strong>LLTV-Scaled Incentives &amp; Instant Socialization (Morpho Blue)</strong>: Morpho Blue derives its Liquidation Incentive Factor directly from each isolated market's <code>LLTV</code>: <code>LIF = min(1.15, 1 / (1 - 0.3 × (1 - LLTV)))</code> (yielding ~4.38% bonus at 86% LLTV and ~1.68% at 94.5% LLTV). Crucially, when a borrower's last unit of collateral is seized with remaining debt, Morpho immediately writes down both <code>totalBorrowAssets</code> and <code>totalSupplyAssets</code> pro-rata—realizing the loss instantly across all suppliers in that isolated market and eliminating bank-run distortion.</li>
+              </ol>
+            </section>
+
+            <section id="sec-4">
+              <h2>4. The Hidden Trap: Unrealized Bad Debt Disguised as High Supplier APY</h2>
+              <p>In pooled lending markets without instant bad-debt write-offs, unrealized bad debt creates a dangerous yield mirage. Suppose a stablecoin pool reports <code>$10M</code> in nominal deposits, of which <code>$3M</code> is uncollectible zero-collateral bad debt, <code>$6M</code> is healthy debt, and only <code>$1M</code> remains as withdrawable cash. The contract computes <code>Utilization = ($6M + $3M) / $10M = 90%</code>, crossing the interest-rate kink and advertising an <code>18%+</code> nominal supplier APY.</p>
+              <p>New depositors attracted by that yield inadvertently supply exit liquidity for informed lenders who withdraw the remaining <code>$1M</code> of real USDC—leaving latecomers holding claims backed by <code>$3M</code> of zombie debt. Any lending market pinned above 90% utilization with volatile or illiquid collateral requires direct on-chain bad-debt verification.</p>
+            </section>
+
+            <section id="sec-5">
+              <h2>5. Executable On-Chain Verification: RPC &amp; Quoter Commands</h2>
+              <p>Before allocating capital or publishing a lending risk report, run these three direct on-chain checks using Foundry <code>cast</code>:</p>
+              <pre><code># 1. Fetch Aave v3 reserve parameters (3rd output = liquidationThreshold, 4th = liquidationBonus)
+cast call 0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3 \
+  "getReserveConfigurationData(address)(uint256,uint256,uint256,uint256,uint256,bool,bool,bool,bool,bool)" \
+  0xCollateralTokenAddress --rpc-url $ETH_RPC_URL
+# Aave v3 stores liquidationBonus in bps + 10000 (e.g., 10500 = 5% bonus). Compute 1 - (LT/10000)*(LB/10000)
+
+# 2. Simulate DEX price impact for liquidatable volume Q_liq via Uniswap v3 QuoterV2
+cast call 0x61fFE014bA17989E743c5F6cB21bF9697530B21e \
+  "quoteExactInputSingle((address,address,uint256,uint24,uint160))(uint256,uint160,uint32,uint256)" \
+  "(0xCollateral,0xUSDC,10000000000000000000000,500,0)" --rpc-url $ETH_RPC_URL
+# Compare quoted output against spot value; if PriceImpact &gt;= LB - 0.5%, flag high bad-debt cascade risk
+
+# 3. Check actual withdrawable ERC20 cash balance inside the pool contract
+cast call 0xUSDCAddress "balanceOf(address)(uint256)" 0xaTokenPoolAddress --rpc-url $ETH_RPC_URL</code></pre>
+              <p>Codify three quantitative risk gates from these probes:</p>
+              <ol>
+                <li><strong>Buffer Gate</strong>: Flag uncorrelated collateral when <code>1 - LT × (1 + LB) &lt; 8%</code>, or correlated LST pairs when below <code>3%</code>;</li>
+                <li><strong>Liquidity Cliff Gate</strong>: Require aggregated DEX price impact across the <code>10%</code> liquidation wall to stay strictly below <code>LB - 0.5%</code>;</li>
+                <li><strong>Reserve Coverage Gate</strong>: If zero-collateral borrower debt exceeds <code>50%</code> of accumulated protocol reserves, halt new deposits and assess withdrawal liquidity immediately.</li>
+              </ol>
+            </section>
+
+            <aside class="article-aside">
+              <p>Promotional Notice: When benchmarking collateral DEX liquidity cliffs and execution slippage across Ethereum mainnet and Layer 2 lending venues, researchers frequently rebalance small test allocations across chains. For streamlined multi-chain asset routing alongside your market microstructure research, you may explore <a href="https://allswap.io/zh-hans" target="_blank" rel="sponsored nofollow noopener">Allswap Cross-Chain Swap</a>. This mention is provided for operational reference only, is unrelated to lending liquidation mechanics, and does not constitute investment advice; always verify slippage limits, target networks, and token approvals.</p>
+            </aside>
+
+            <section class="article-sources" aria-label="References">
+              <h2>References &amp; Standards</h2>
+              <ul>
+                <li>Aave v3 Liquidation &amp; Close Factor Specification: <a href="https://aave.com/docs/developers/smart-contracts/pool#liquidationcall" target="_blank" rel="noopener nofollow">Aave v3 Developers: Pool LiquidationCall &amp; Close Factor Rules</a></li>
+                <li>Morpho Blue LIF &amp; Bad Debt Realization: <a href="https://docs.morpho.org/morpho/concepts/liquidation" target="_blank" rel="noopener nofollow">Morpho Blue Documentation: Liquidation &amp; Bad Debt Realization</a></li>
+                <li>Uniswap v3 QuoterV2 On-Chain Slippage Quotes: <a href="https://docs.uniswap.org/contracts/v3/reference/periphery/lens/QuoterV2" target="_blank" rel="noopener nofollow">Uniswap v3 Periphery Reference: QuoterV2</a></li>
+                <li>DeFi Liquidation Cascade Risk Modeling: <a href="https://chaoslabs.xyz/resources" target="_blank" rel="noopener nofollow">Chaos Labs DeFi Risk &amp; Liquidation Cascade Methodology</a></li>
+              </ul>
+            </section>
+          </div>
+
+          <aside class="sidebar" aria-label="Related Articles">
+            <div class="sidebar-block">
+              <h3 class="sidebar-heading">Latest Market Checks</h3>
+              <ul class="sidebar-list">
+                <li class="sidebar-item">
+                  <a href="/en/research/market/lending-health-factor-vs-price-drop-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--amber">Health Factor</span>
+                    <span class="side-title">Lending Health Factor vs. Actual Price Drop Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/market/lending-utilization-available-liquidity-apy-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--amber">Utilization</span>
+                    <span class="side-title">Lending Utilization, Available Liquidity &amp; APY Check</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--cyan">EIP-7702</span>
+                    <span class="side-title">EIP-7702 EOA Delegation Check: Storage Collisions &amp; Replay</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a href="/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html">
+                    <span class="side-tag archive-tag archive-tag--blue">PoR Check</span>
+                    <span class="side-title">Proof of Reserves: Merkle Liability Smuggling &amp; Bridge Borrowing</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-foot-inner">
+      <div class="site-foot-brand">
+        <p class="site-foot-title">Crypto Research</p>
+        <p class="site-foot-desc">Focused on on-chain data and smart contract security · Not investment advice</p>
+      </div>
+      <div class="site-foot-nav">
+        <p class="foot-heading">Navigation</p>
+        <ul class="foot-links">
+          <li><a href="/en/">Home</a></li>
+          <li><a href="/en/articles.html">All Articles</a></li>
+          <li><a href="/en/methodology.html">Methodology</a></li>
+          <li><a href="/en/about.html">About Us</a></li>
+          <li><a href="/en/feed.xml">RSS Feed</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-bottom">
+      <p>© 2026 Crypto Research · <a href="/en/about.html">About &amp; Disclaimer</a></p>
+      <p>Content is for educational and research purposes only, not financial or investment advice. Crypto markets are volatile; conduct your own due diligence.</p>
+    </div>
+  </footer>
+  <script src="/js/site.js?v=8c70680c"></script>
+</body>
+</html>

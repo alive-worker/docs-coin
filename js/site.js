@@ -165,6 +165,8 @@
 
   // Publish dates keyed by article URL — single source for the sidebar time labels.
   var DATES = {
+    '/en/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html': '2026-11-27 23:04:00',
+    '/research/market/lending-bad-debt-liquidation-incentive-auction-cascade-verification-guide.html': '2026-11-27 23:04:00',
     '/en/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html': '2026-11-25 09:58:51',
     '/research/protocol/eip-7702-eoa-delegation-storage-collision-revocation-verification-guide.html': '2026-11-25 09:58:51',
     '/en/research/basics/proof-of-reserves-merkle-liability-snapshot-verification-guide.html': '2026-11-22 14:06:47',
