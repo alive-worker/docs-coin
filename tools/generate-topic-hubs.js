@@ -119,7 +119,7 @@ function buildHub(topic, lang) {
   <link rel="alternate" type="application/rss+xml" title="${isEn ? 'Crypto Research Notes RSS' : '加密货币研究 RSS'}" href="${isEn ? '/en/feed.xml' : '/feed.xml'}">
   <meta name="theme-color" content="#2f5b8c">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
   <link rel="stylesheet" href="/styles.css?v=__CSS_HASH__">
   <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -210,7 +210,7 @@ ${linkList}
       <p>© 2026 ${isEn ? 'Crypto Research Notes' : '加密货币研究'} · <a href="${isEn ? '/en/about.html' : '/about.html'}">${isEn ? 'About & Disclaimer' : '关于本站与免责声明'}</a></p>
     </div>
   </footer>
-  <script src="/js/site.js?v=__JS_HASH__"></script>
+  <script src="/js/site.js?v=__JS_HASH__" defer></script>
 </body>
 </html>
 `;
