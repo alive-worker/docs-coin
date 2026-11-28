@@ -79,7 +79,7 @@ function buildHub(topic, lang) {
     : `        <a href="/">首页</a>\n        <a href="/articles.html">全部文章</a>\n        <a href="/about.html">关于</a>\n        <a class="lang-switch" href="${`/en/research/${topic}/`}" hreflang="en" lang="en">EN</a>`;
 
   const backRow = isEn
-    ? `<a href="/articles.html?topic=${topic}">Filter all articles by this topic</a> · <a href="/en/">Back to home</a>`
+    ? `<a href="/en/articles.html?topic=${topic}">Filter all articles by this topic</a> · <a href="/en/">Back to home</a>`
     : `<a href="/articles.html?topic=${topic}">在全部文章中按此主题筛选</a> · <a href="/">返回首页</a>`;
 
   return `<!doctype html>
@@ -96,17 +96,27 @@ function buildHub(topic, lang) {
   <link rel="alternate" hreflang="en" href="${host}/en/research/${topic}/">
   <link rel="alternate" hreflang="x-default" href="${host}/research/${topic}/">
   <meta property="og:locale" content="${isEn ? 'en_US' : 'zh_CN'}">
+  <meta property="og:locale:alternate" content="${isEn ? 'zh_CN' : 'en_US'}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="${isEn ? 'Crypto Research Notes' : '加密货币研究'}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${desc}">
   <meta property="og:url" content="${host}${urlPath}">
+  <meta property="og:image" content="${host}/og/og-home.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${title}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${desc}">
+  <meta name="twitter:image" content="${host}/og/og-home.png">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="alternate" type="application/rss+xml" title="${isEn ? 'Crypto Research Notes RSS' : '加密货币研究 RSS'}" href="/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="${isEn ? 'Crypto Research Notes RSS' : '加密货币研究 RSS'}" href="${isEn ? '/en/feed.xml' : '/feed.xml'}">
   <meta name="theme-color" content="#2f5b8c">
   <script>(function(){try{var t=localStorage.getItem('theme');var d=t!=='light';if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">

@@ -544,6 +544,14 @@ ${hotpicksHtml}
 
   let t = fs.readFileSync(path.join(root, homeFile), 'utf-8');
 
+  // Keep the homepage LCP hero preload aligned with the #1 featured carousel cover.
+  if (carouselItems[0] && carouselItems[0].cover) {
+    t = t.replace(
+      /<link rel="preload" as="image" href="[^"]*" fetchpriority="high">/,
+      `<link rel="preload" as="image" href="${carouselItems[0].cover}" fetchpriority="high">`
+    );
+  }
+
   // "篇文章" bumps with the true archive-item count. "个主题" is the curated
   // reading-paths category count (see countDistinctTopics) — NOT bumped here.
   const topicCount = countDistinctTopics(lang);
